@@ -1,0 +1,5 @@
+Setup scripts for various environments.
+
+setup_dev_enviroment.sh - installs required packages for developers
+setup_environment_kinect.sh - sets up for kinect (run once)
+setup_environment_packages.sh - installs required packages for running software
