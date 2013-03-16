@@ -1,4 +1,4 @@
 #!/bin/bash
 
-apt-get install freenect libzmq-dev libzmq-dbg
+apt-get install freenect libsdl-dev
 
