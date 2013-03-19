@@ -29,9 +29,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include <libfreenect.h>
+#include "libfreenect.h"
 
 #include <pthread.h>
+
+#if defined(__APPLE__)
+#include <GLUT/glut.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#else
+#include <GL/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#endif
 
 #include <math.h>
 
@@ -51,6 +61,9 @@ pthread_mutex_t gl_backbuf_mutex = PTHREAD_MUTEX_INITIALIZER;
 uint8_t *depth_mid, *depth_front;
 uint8_t *rgb_back, *rgb_mid, *rgb_front;
 
+GLuint gl_depth_tex;
+GLuint gl_rgb_tex;
+
 freenect_context *f_ctx;
 freenect_device *f_dev;
 int freenect_angle = 0;
@@ -63,30 +76,243 @@ pthread_cond_t gl_frame_cond = PTHREAD_COND_INITIALIZER;
 int got_rgb = 0;
 int got_depth = 0;
 
+void DrawGLScene()
+{
+	pthread_mutex_lock(&gl_backbuf_mutex);
+
+	// When using YUV_RGB mode, RGB frames only arrive at 15Hz, so we shouldn't force them to draw in lock-step.
+	// However, this is CPU/GPU intensive when we are receiving frames in lockstep.
+	if (current_format == FREENECT_VIDEO_YUV_RGB) {
+		while (!got_depth && !got_rgb) {
+			pthread_cond_wait(&gl_frame_cond, &gl_backbuf_mutex);
+		}
+	} else {
+		while ((!got_depth || !got_rgb) && requested_format != current_format) {
+			pthread_cond_wait(&gl_frame_cond, &gl_backbuf_mutex);
+		}
+	}
+
+	if (requested_format != current_format) {
+		pthread_mutex_unlock(&gl_backbuf_mutex);
+		return;
+	}
+
+	uint8_t *tmp;
+
+	if (got_depth) {
+		tmp = depth_front;
+		depth_front = depth_mid;
+		depth_mid = tmp;
+		got_depth = 0;
+	}
+	if (got_rgb) {
+		tmp = rgb_front;
+		rgb_front = rgb_mid;
+		rgb_mid = tmp;
+		got_rgb = 0;
+	}
+
+	pthread_mutex_unlock(&gl_backbuf_mutex);
+
+	glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, depth_front);
+
+	glBegin(GL_TRIANGLE_FAN);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glTexCoord2f(0, 0); glVertex3f(0,0,0);
+	glTexCoord2f(1, 0); glVertex3f(640,0,0);
+	glTexCoord2f(1, 1); glVertex3f(640,480,0);
+	glTexCoord2f(0, 1); glVertex3f(0,480,0);
+	glEnd();
+
+	glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
+	if (current_format == FREENECT_VIDEO_RGB || current_format == FREENECT_VIDEO_YUV_RGB)
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, rgb_front);
+	else
+		glTexImage2D(GL_TEXTURE_2D, 0, 1, 640, 480, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, rgb_front+640*4);
+
+	glBegin(GL_TRIANGLE_FAN);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glTexCoord2f(0, 0); glVertex3f(640,0,0);
+	glTexCoord2f(1, 0); glVertex3f(1280,0,0);
+	glTexCoord2f(1, 1); glVertex3f(1280,480,0);
+	glTexCoord2f(0, 1); glVertex3f(640,480,0);
+	glEnd();
+
+	glutSwapBuffers();
+}
+
+void keyPressed(unsigned char key, int x, int y)
+{
+	if (key == 27) {
+		die = 1;
+		pthread_join(freenect_thread, NULL);
+		glutDestroyWindow(window);
+		free(depth_mid);
+		free(depth_front);
+		free(rgb_back);
+		free(rgb_mid);
+		free(rgb_front);
+		// Not pthread_exit because OSX leaves a thread lying around and doesn't exit
+		exit(0);
+	}
+	if (key == 'w') {
+		freenect_angle++;
+		if (freenect_angle > 30) {
+			freenect_angle = 30;
+		}
+	}
+	if (key == 's') {
+		freenect_angle = 0;
+	}
+	if (key == 'f') {
+		if (requested_format == FREENECT_VIDEO_IR_8BIT)
+			requested_format = FREENECT_VIDEO_RGB;
+		else if (requested_format == FREENECT_VIDEO_RGB)
+			requested_format = FREENECT_VIDEO_YUV_RGB;
+		else
+			requested_format = FREENECT_VIDEO_IR_8BIT;
+	}
+	if (key == 'x') {
+		freenect_angle--;
+		if (freenect_angle < -30) {
+			freenect_angle = -30;
+		}
+	}
+	if (key == '1') {
+		freenect_set_led(f_dev,LED_GREEN);
+	}
+	if (key == '2') {
+		freenect_set_led(f_dev,LED_RED);
+	}
+	if (key == '3') {
+		freenect_set_led(f_dev,LED_YELLOW);
+	}
+	if (key == '4') {
+		freenect_set_led(f_dev,LED_BLINK_GREEN);
+	}
+	if (key == '5') {
+		// 5 is the same as 4
+		freenect_set_led(f_dev,LED_BLINK_GREEN);
+	}
+	if (key == '6') {
+		freenect_set_led(f_dev,LED_BLINK_RED_YELLOW);
+	}
+	if (key == '0') {
+		freenect_set_led(f_dev,LED_OFF);
+	}
+	freenect_set_tilt_degs(f_dev,freenect_angle);
+}
+
+void ReSizeGLScene(int Width, int Height)
+{
+	glViewport(0,0,Width,Height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho (0, 1280, 480, 0, -1.0f, 1.0f);
+	glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+void InitGL(int Width, int Height)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.0);
+	glDepthFunc(GL_LESS);
+    glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+    glDisable(GL_ALPHA_TEST);
+    glEnable(GL_TEXTURE_2D);
+	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glShadeModel(GL_FLAT);
+
+	glGenTextures(1, &gl_depth_tex);
+	glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glGenTextures(1, &gl_rgb_tex);
+	glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	ReSizeGLScene(Width, Height);
+}
+
+void *gl_threadfunc(void *arg)
+{
+	printf("GL thread\n");
+
+	glutInit(&g_argc, g_argv);
+
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
+	glutInitWindowSize(1280, 480);
+	glutInitWindowPosition(0, 0);
+
+	window = glutCreateWindow("LibFreenect");
+
+	glutDisplayFunc(&DrawGLScene);
+	glutIdleFunc(&DrawGLScene);
+	glutReshapeFunc(&ReSizeGLScene);
+	glutKeyboardFunc(&keyPressed);
+
+	InitGL(1280, 480);
+
+	glutMainLoop();
+
+	return NULL;
+}
+
 uint16_t t_gamma[2048];
 
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 {
-   //     printf("-");
 	int i;
 	uint16_t *depth = (uint16_t*)v_depth;
 
 	pthread_mutex_lock(&gl_backbuf_mutex);
-        int nearest=10000;
-        int posx=-1;
-        int posy=-1;
 	for (i=0; i<640*480; i++) {
 		int pval = t_gamma[depth[i]];
-                int y=i/640;
-                int x=i%640;
-                  if (pval<nearest) {
-                     posy=y;
-                     posx=x;
-                     nearest=pval;
-                  }
-		
+		int lb = pval & 0xff;
+		switch (pval>>8) {
+			case 0:
+				depth_mid[3*i+0] = 255;
+				depth_mid[3*i+1] = 255-lb;
+				depth_mid[3*i+2] = 255-lb;
+				break;
+			case 1:
+				depth_mid[3*i+0] = 255;
+				depth_mid[3*i+1] = lb;
+				depth_mid[3*i+2] = 0;
+				break;
+			case 2:
+				depth_mid[3*i+0] = 255-lb;
+				depth_mid[3*i+1] = 255;
+				depth_mid[3*i+2] = 0;
+				break;
+			case 3:
+				depth_mid[3*i+0] = 0;
+				depth_mid[3*i+1] = 255;
+				depth_mid[3*i+2] = lb;
+				break;
+			case 4:
+				depth_mid[3*i+0] = 0;
+				depth_mid[3*i+1] = 255-lb;
+				depth_mid[3*i+2] = 255;
+				break;
+			case 5:
+				depth_mid[3*i+0] = 0;
+				depth_mid[3*i+1] = 0;
+				depth_mid[3*i+2] = 255-lb;
+				break;
+			default:
+				depth_mid[3*i+0] = 0;
+				depth_mid[3*i+1] = 0;
+				depth_mid[3*i+2] = 0;
+				break;
+		}
 	}
-        printf("Nearest %d at %d,%d\r",nearest,posx,posy);
 	got_depth++;
 	pthread_cond_signal(&gl_frame_cond);
 	pthread_mutex_unlock(&gl_backbuf_mutex);
@@ -94,7 +320,6 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 
 void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 {
-     //   printf("#");
 	pthread_mutex_lock(&gl_backbuf_mutex);
 
 	// swap buffers
@@ -103,7 +328,7 @@ void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 	freenect_set_video_buffer(dev, rgb_back);
 	rgb_mid = (uint8_t*)rgb;
 
-        got_rgb++;	
+	got_rgb++;
 	pthread_cond_signal(&gl_frame_cond);
 	pthread_mutex_unlock(&gl_backbuf_mutex);
 }
@@ -123,11 +348,11 @@ void *freenect_threadfunc(void *arg)
 	freenect_start_depth(f_dev);
 	freenect_start_video(f_dev);
 
-//	printf("'w'-tilt up, 's'-level, 'x'-tilt down, '0'-'6'-select LED mode, 'f'-video format\n");
+	printf("'w'-tilt up, 's'-level, 'x'-tilt down, '0'-'6'-select LED mode, 'f'-video format\n");
 
 	while (!die && freenect_process_events(f_ctx) >= 0) {
 		//Throttle the text output
-		if (accelCount++ >= 200)
+		if (accelCount++ >= 2000)
 		{
 			accelCount = 0;
 			freenect_raw_tilt_state* state;
@@ -135,8 +360,8 @@ void *freenect_threadfunc(void *arg)
 			state = freenect_get_tilt_state(f_dev);
 			double dx,dy,dz;
 			freenect_get_mks_accel(state, &dx, &dy, &dz);
-			//printf("\r raw acceleration: %4d %4d %4d  mks acceleration: %4f %4f %4f", state->accelerometer_x, state->accelerometer_y, state->accelerometer_z, dx, dy, dz);
-			//fflush(stdout);
+			printf("\r raw acceleration: %4d %4d %4d  mks acceleration: %4f %4f %4f", state->accelerometer_x, state->accelerometer_y, state->accelerometer_z, dx, dy, dz);
+			fflush(stdout);
 		}
 
 		if (requested_format != current_format) {
@@ -161,7 +386,7 @@ void *freenect_threadfunc(void *arg)
 
 int main(int argc, char **argv)
 {
-	//int res;
+	int res;
 
 	depth_mid = (uint8_t*)malloc(640*480*3);
 	depth_front = (uint8_t*)malloc(640*480*3);
@@ -174,7 +399,7 @@ int main(int argc, char **argv)
 	int i;
 	for (i=0; i<2048; i++) {
 		float v = i/2048.0;
-		v = v*v*v* 6;
+		v = powf(v, 3)* 6;
 		t_gamma[i] = v*6*256;
 	}
 
@@ -186,7 +411,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 
-	freenect_set_log_level(f_ctx, FREENECT_LOG_ERROR);
+	freenect_set_log_level(f_ctx, FREENECT_LOG_DEBUG);
 	freenect_select_subdevices(f_ctx, (freenect_device_flags)(FREENECT_DEVICE_MOTOR | FREENECT_DEVICE_CAMERA));
 
 	int nr_devices = freenect_num_devices (f_ctx);
@@ -206,7 +431,16 @@ int main(int argc, char **argv)
 		freenect_shutdown(f_ctx);
 		return 1;
 	}
-        freenect_threadfunc(NULL);
+
+	res = pthread_create(&freenect_thread, NULL, freenect_threadfunc, NULL);
+	if (res) {
+		printf("pthread_create failed\n");
+		freenect_shutdown(f_ctx);
+		return 1;
+	}
+
+	// OS X requires GLUT to run on the main thread
+	gl_threadfunc(NULL);
 
 	return 0;
 }

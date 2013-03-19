@@ -37,6 +37,7 @@
 							<tool command="g++" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} -Wl,--whole-archive -lusb-1.0 -Wl,--no-whole-archive ${INPUTS}" id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.506450611" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 								<option id="gnu.cpp.link.option.libs.1042244773" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="freenect"/>
+									<listOptionValue builtIn="false" value="glut"/>
 									<listOptionValue builtIn="false" value="rt"/>
 									<listOptionValue builtIn="false" value="pthread"/>
 								</option>
