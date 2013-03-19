@@ -1,4 +1,4 @@
 #!/bin/bash
 
-apt-get install freenect libsdl-dev
+apt-get install freeglut3 libsdl-dev
 
