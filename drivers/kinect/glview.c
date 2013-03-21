@@ -81,6 +81,7 @@ int got_depth = 0;
 
 volatile int took_screenshot = 0;
 volatile int take_screenshot = 0;
+int screenshot_number = 0;
 
 void DrawGLScene()
 {
@@ -344,6 +345,8 @@ void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 
 void rgb_screenshot_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 {
+	char temp[64] = {0};
+
 	pthread_mutex_lock(&gl_backbuf_mutex);
 
 	if (took_screenshot > 0)
@@ -356,16 +359,20 @@ void rgb_screenshot_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 
 	if(current_format == FREENECT_VIDEO_IR_8BIT)
 	{
+		sprintf(temp, "screenshot_ir_%04d.png", screenshot_number);
+
 		FIBITMAP * bitmap = FreeImage_Allocate(200, 200, 8, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 		memcpy(FreeImage_GetBits(bitmap), rgb + 640 * 4, 640 * 480 * 3 - (640 * 4));
-		FreeImage_Save(FIF_PNG, bitmap, "screenshot_ir.png", 0);
+		FreeImage_Save(FIF_PNG, bitmap, temp, 0);
 		FreeImage_Unload(bitmap);
 	}
 	else
 	{
+		sprintf(temp, "screenshot_rgb_%04d.png", screenshot_number);
+
 		FIBITMAP * bitmap = FreeImage_Allocate(200, 200, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
 		memcpy(FreeImage_GetBits(bitmap), rgb, 640 * 480 * 3);
-		FreeImage_Save(FIF_PNG, bitmap, "screenshot_rgb.png", 0);
+		FreeImage_Save(FIF_PNG, bitmap, temp, 0);
 		FreeImage_Unload(bitmap);
 	}
 
@@ -454,6 +461,7 @@ void *freenect_threadfunc(void *arg)
 			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
 			freenect_start_video(f_dev);
 
+			screenshot_number++;
 			take_screenshot--;
 		}
 	}
