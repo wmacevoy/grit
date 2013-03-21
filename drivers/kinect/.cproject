@@ -37,6 +37,7 @@
 							<tool command="g++" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} -Wl,--whole-archive -lusb-1.0 -Wl,--no-whole-archive ${INPUTS}" id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.506450611" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 								<option id="gnu.cpp.link.option.libs.1042244773" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="freenect"/>
+									<listOptionValue builtIn="false" value="freeimage"/>
 									<listOptionValue builtIn="false" value="glut"/>
 									<listOptionValue builtIn="false" value="rt"/>
 									<listOptionValue builtIn="false" value="pthread"/>
@@ -45,8 +46,8 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/freenect/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/usb-1.0/Debug}&quot;"/>
 								</option>
-								<option id="gnu.cpp.link.option.userobjs.1475126999" name="Other objects" superClass="gnu.cpp.link.option.userobjs" valueType="userObjs"/>
-								<option id="gnu.cpp.link.option.other.1727674881" name="Other options (-Xlinker [option])" superClass="gnu.cpp.link.option.other" valueType="stringList"/>
+								<option id="gnu.cpp.link.option.userobjs.1475126999" name="Other objects" superClass="gnu.cpp.link.option.userobjs"/>
+								<option id="gnu.cpp.link.option.other.1727674881" name="Other options (-Xlinker [option])" superClass="gnu.cpp.link.option.other"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1535145067" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 									<additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -137,4 +138,5 @@
 	<storageModule moduleId="refreshScope" versionNumber="1">
 		<resource resourceType="PROJECT" workspacePath="/kinect"/>
 	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 </cproject>

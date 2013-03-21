@@ -43,6 +43,8 @@
 #include <GL/glu.h>
 #endif
 
+#include <FreeImage.h>
+
 #include <math.h>
 
 pthread_t freenect_thread;
@@ -73,8 +75,11 @@ freenect_video_format requested_format = FREENECT_VIDEO_RGB;
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
 
 pthread_cond_t gl_frame_cond = PTHREAD_COND_INITIALIZER;
+pthread_cond_t took_screenshot_cond = PTHREAD_COND_INITIALIZER;
 int got_rgb = 0;
 int got_depth = 0;
+
+volatile int take_screenshot = 0;
 
 void DrawGLScene()
 {
@@ -164,6 +169,9 @@ void keyPressed(unsigned char key, int x, int y)
 	}
 	if (key == 's') {
 		freenect_angle = 0;
+	}
+	if (key == 't') {
+		take_screenshot++;
 	}
 	if (key == 'f') {
 		if (requested_format == FREENECT_VIDEO_IR_8BIT)
@@ -333,8 +341,37 @@ void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 	pthread_mutex_unlock(&gl_backbuf_mutex);
 }
 
+void rgb_screenshot_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
+{
+	pthread_mutex_lock(&gl_backbuf_mutex);
+
+	FreeImage_Initialise(1);
+
+	if(current_format == FREENECT_VIDEO_IR_8BIT)
+	{
+		FIBITMAP * bitmap = FreeImage_Allocate(200, 200, 8, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+		memcpy(FreeImage_GetBits(bitmap), rgb + 640 * 4, 640 * 480 * 3 - (640 * 4));
+		FreeImage_Save(FIF_PNG, bitmap, "screenshot_ir.png", 0);
+		FreeImage_Unload(bitmap);
+	}
+	else
+	{
+		FIBITMAP * bitmap = FreeImage_Allocate(200, 200, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
+		memcpy(FreeImage_GetBits(bitmap), rgb, 640 * 480 * 3);
+		FreeImage_Save(FIF_PNG, bitmap, "screenshot_rgb.png", 0);
+		FreeImage_Unload(bitmap);
+	}
+
+	FreeImage_DeInitialise();
+
+	pthread_cond_signal(&took_screenshot_cond);
+	pthread_mutex_unlock(&gl_backbuf_mutex);
+}
+
+
 void *freenect_threadfunc(void *arg)
 {
+	freenect_video_format old_format;
 	int accelCount = 0;
 
 	freenect_set_tilt_degs(f_dev,freenect_angle);
@@ -348,7 +385,7 @@ void *freenect_threadfunc(void *arg)
 	freenect_start_depth(f_dev);
 	freenect_start_video(f_dev);
 
-	printf("'w'-tilt up, 's'-level, 'x'-tilt down, '0'-'6'-select LED mode, 'f'-video format\n");
+	printf("'w'-tilt up, 's'-level, 'x'-tilt down, '0'-'6'-select LED mode, 'f'-video format 't'-take screenshot\n");
 
 	while (!die && freenect_process_events(f_ctx) >= 0) {
 		//Throttle the text output
@@ -369,6 +406,37 @@ void *freenect_threadfunc(void *arg)
 			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, requested_format));
 			freenect_start_video(f_dev);
 			current_format = requested_format;
+		}
+
+		while (take_screenshot > 0)
+		{
+			old_format = current_format;
+
+			freenect_stop_video(f_dev);
+			freenect_set_video_callback(f_dev, rgb_screenshot_cb);
+			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB));
+			freenect_start_video(f_dev);
+
+			pthread_mutex_lock(&gl_backbuf_mutex);
+			pthread_cond_wait(&took_screenshot_cond, &gl_backbuf_mutex);
+			pthread_mutex_unlock(&gl_backbuf_mutex);
+
+			freenect_stop_video(f_dev);
+			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
+			freenect_start_video(f_dev);
+
+			pthread_mutex_lock(&gl_backbuf_mutex);
+			pthread_cond_wait(&took_screenshot_cond, &gl_backbuf_mutex);
+			pthread_mutex_unlock(&gl_backbuf_mutex);
+
+			current_format = old_format;
+
+			freenect_stop_video(f_dev);
+			freenect_set_video_callback(f_dev, rgb_cb);
+			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
+			freenect_start_video(f_dev);
+
+			take_screenshot--;
 		}
 	}
 
