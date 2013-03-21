@@ -79,6 +79,7 @@ pthread_cond_t took_screenshot_cond = PTHREAD_COND_INITIALIZER;
 int got_rgb = 0;
 int got_depth = 0;
 
+volatile int took_screenshot = 0;
 volatile int take_screenshot = 0;
 
 void DrawGLScene()
@@ -345,6 +346,12 @@ void rgb_screenshot_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 {
 	pthread_mutex_lock(&gl_backbuf_mutex);
 
+	if (took_screenshot > 0)
+	{
+		pthread_mutex_unlock(&gl_backbuf_mutex);
+		return;
+	}
+
 	FreeImage_Initialise(1);
 
 	if(current_format == FREENECT_VIDEO_IR_8BIT)
@@ -363,6 +370,8 @@ void rgb_screenshot_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 	}
 
 	FreeImage_DeInitialise();
+
+	took_screenshot++;
 
 	pthread_cond_signal(&took_screenshot_cond);
 	pthread_mutex_unlock(&gl_backbuf_mutex);
@@ -412,22 +421,31 @@ void *freenect_threadfunc(void *arg)
 		{
 			old_format = current_format;
 
+			// take rgb
+
 			freenect_stop_video(f_dev);
 			freenect_set_video_callback(f_dev, rgb_screenshot_cb);
-			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_RGB));
-			freenect_start_video(f_dev);
-
+			current_format = FREENECT_VIDEO_RGB;
+			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
 			pthread_mutex_lock(&gl_backbuf_mutex);
+			took_screenshot = 0;
+			freenect_start_video(f_dev);
 			pthread_cond_wait(&took_screenshot_cond, &gl_backbuf_mutex);
 			pthread_mutex_unlock(&gl_backbuf_mutex);
+
+			/*
+			// take ir
 
 			freenect_stop_video(f_dev);
-			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_VIDEO_IR_8BIT));
-			freenect_start_video(f_dev);
-
+			freenect_set_video_callback(f_dev, rgb_screenshot_cb);
+			current_format = FREENECT_VIDEO_IR_8BIT;
+			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
 			pthread_mutex_lock(&gl_backbuf_mutex);
+			took_screenshot = 0;
+			freenect_start_video(f_dev);
 			pthread_cond_wait(&took_screenshot_cond, &gl_backbuf_mutex);
 			pthread_mutex_unlock(&gl_backbuf_mutex);
+			*/
 
 			current_format = old_format;
 
