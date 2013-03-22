@@ -43,8 +43,6 @@
 #include <GL/glu.h>
 #endif
 
-#include <FreeImage.h>
-
 #include <math.h>
 
 pthread_t freenect_thread;
@@ -75,16 +73,90 @@ freenect_video_format requested_format = FREENECT_VIDEO_RGB;
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
 
 pthread_cond_t gl_frame_cond = PTHREAD_COND_INITIALIZER;
-pthread_cond_t took_screenshot_cond = PTHREAD_COND_INITIALIZER;
 int got_rgb = 0;
 int got_depth = 0;
 
-volatile int took_screenshot = 0;
-volatile int take_screenshot = 0;
-int screenshot_number = 0;
+
+int saveImage=0;
+
+#define LONG  int
+#define DWORD unsigned int
+#define WORD unsigned short
+
+typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
+{
+ WORD bfType;
+ DWORD bfSize;
+ WORD bfReserved1;
+ WORD bfReserved2;
+ DWORD bfOffBits;
+} BITMAPFILEHEADER;
+
+typedef struct tagBITMAPINFOHEADER
+{
+ DWORD biSize;
+ LONG biWidth;
+ LONG biHeight;
+ WORD biPlanes;
+ WORD biBitCount;
+ DWORD biCompression;
+ DWORD biSizeImage;
+ LONG biXPelsPerMeter;
+ LONG biYPelsPerMeter;
+ DWORD biClrUsed;
+ DWORD biClrImportant;
+} BITMAPINFOHEADER;
+
+void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
+{
+BITMAPFILEHEADER bf;
+BITMAPINFOHEADER bi;
+char filename[255];
+
+//unsigned char *image	= (unsigned char*)malloc(sizeof(unsigned char)*Width*Height*3);
+sprintf(filename,"%s%d.bmp",fname,fcount);
+
+FILE *file	 = fopen(filename, "wb");
+
+if( image!=NULL )
+{
+if( file!=NULL ) 
+{
+//glReadPixels( 0, 0, Width, Height, GL_BGR_EXT, GL_UNSIGNED_BYTE, image );
+
+memset( &bf, 0, sizeof( bf ) );
+memset( &bi, 0, sizeof( bi ) );
+
+
+bf.bfType	 = 'MB';
+bf.bfSize	 = sizeof(bf)+sizeof(bi)+Width*Height*3;
+bf.bfOffBits	 = sizeof(bf)+sizeof(bi);
+bi.biSize	 = sizeof(bi);
+bi.biWidth	 = Width;
+bi.biHeight	 = Height;
+bi.biPlanes	 = 1;
+bi.biBitCount	 = 24;
+bi.biSizeImage	 = Width*Height*3;
+
+fwrite( &bf, sizeof(bf), 1, file );
+fwrite( &bi, sizeof(bi), 1, file );
+int i;
+for (i=0;i<bi.biSizeImage;i+=3) {
+	uint8_t c = image[i];
+	image[i] = image[i+2];
+	image[i+2] = c;
+}
+fwrite( image, sizeof(unsigned char), Height*Width*3, file );
+
+fclose( file );
+}
+//free( image );
+}
+}
 
 void DrawGLScene()
 {
+	static fcount=0;
 	pthread_mutex_lock(&gl_backbuf_mutex);
 
 	// When using YUV_RGB mode, RGB frames only arrive at 15Hz, so we shouldn't force them to draw in lock-step.
@@ -123,7 +195,6 @@ void DrawGLScene()
 
 	glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, depth_front);
-
 	glBegin(GL_TRIANGLE_FAN);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glTexCoord2f(0, 0); glVertex3f(0,0,0);
@@ -145,12 +216,20 @@ void DrawGLScene()
 	glTexCoord2f(1, 1); glVertex3f(1280,480,0);
 	glTexCoord2f(0, 1); glVertex3f(640,480,0);
 	glEnd();
+	if (saveImage) {
+	 CaptureScreen(640,480,rgb_front,"color",fcount);
+	 CaptureScreen(640,480,depth_front,"depth",fcount);
+	  fcount++;
+	  saveImage=0;
+	}
 
 	glutSwapBuffers();
 }
 
 void keyPressed(unsigned char key, int x, int y)
 {
+	//static fcount=0;
+
 	if (key == 27) {
 		die = 1;
 		pthread_join(freenect_thread, NULL);
@@ -163,6 +242,12 @@ void keyPressed(unsigned char key, int x, int y)
 		// Not pthread_exit because OSX leaves a thread lying around and doesn't exit
 		exit(0);
 	}
+        if (key=='c') {
+      //    CaptureScreen(640,480,depth_mid,"depth",fcount);
+      //    CaptureScreen(640,480,rgb_mid,"color",fcount);
+       //   fcount++;
+         saveImage=1;
+        }
 	if (key == 'w') {
 		freenect_angle++;
 		if (freenect_angle > 30) {
@@ -171,9 +256,6 @@ void keyPressed(unsigned char key, int x, int y)
 	}
 	if (key == 's') {
 		freenect_angle = 0;
-	}
-	if (key == 't') {
-		take_screenshot++;
 	}
 	if (key == 'f') {
 		if (requested_format == FREENECT_VIDEO_IR_8BIT)
@@ -343,51 +425,8 @@ void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 	pthread_mutex_unlock(&gl_backbuf_mutex);
 }
 
-void rgb_screenshot_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
-{
-	char temp[64] = {0};
-
-	pthread_mutex_lock(&gl_backbuf_mutex);
-
-	if (took_screenshot > 0)
-	{
-		pthread_mutex_unlock(&gl_backbuf_mutex);
-		return;
-	}
-
-	FreeImage_Initialise(1);
-
-	if(current_format == FREENECT_VIDEO_IR_8BIT)
-	{
-		sprintf(temp, "screenshot_ir_%04d.png", screenshot_number);
-
-		FIBITMAP * bitmap = FreeImage_Allocate(200, 200, 8, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
-		memcpy(FreeImage_GetBits(bitmap), rgb + 640 * 4, 640 * 480 * 3 - (640 * 4));
-		FreeImage_Save(FIF_PNG, bitmap, temp, 0);
-		FreeImage_Unload(bitmap);
-	}
-	else
-	{
-		sprintf(temp, "screenshot_rgb_%04d.png", screenshot_number);
-
-		FIBITMAP * bitmap = FreeImage_Allocate(200, 200, 24, FI_RGBA_RED_MASK, FI_RGBA_GREEN_MASK, FI_RGBA_BLUE_MASK);
-		memcpy(FreeImage_GetBits(bitmap), rgb, 640 * 480 * 3);
-		FreeImage_Save(FIF_PNG, bitmap, temp, 0);
-		FreeImage_Unload(bitmap);
-	}
-
-	FreeImage_DeInitialise();
-
-	took_screenshot++;
-
-	pthread_cond_signal(&took_screenshot_cond);
-	pthread_mutex_unlock(&gl_backbuf_mutex);
-}
-
-
 void *freenect_threadfunc(void *arg)
 {
-	freenect_video_format old_format;
 	int accelCount = 0;
 
 	freenect_set_tilt_degs(f_dev,freenect_angle);
@@ -401,7 +440,7 @@ void *freenect_threadfunc(void *arg)
 	freenect_start_depth(f_dev);
 	freenect_start_video(f_dev);
 
-	printf("'w'-tilt up, 's'-level, 'x'-tilt down, '0'-'6'-select LED mode, 'f'-video format 't'-take screenshot\n");
+	printf("'w'-tilt up, 's'-level, 'x'-tilt down, '0'-'6'-select LED mode, 'f'-video format\n");
 
 	while (!die && freenect_process_events(f_ctx) >= 0) {
 		//Throttle the text output
@@ -422,47 +461,6 @@ void *freenect_threadfunc(void *arg)
 			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, requested_format));
 			freenect_start_video(f_dev);
 			current_format = requested_format;
-		}
-
-		while (take_screenshot > 0)
-		{
-			old_format = current_format;
-
-			// take rgb
-
-			freenect_stop_video(f_dev);
-			freenect_set_video_callback(f_dev, rgb_screenshot_cb);
-			current_format = FREENECT_VIDEO_RGB;
-			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
-			pthread_mutex_lock(&gl_backbuf_mutex);
-			took_screenshot = 0;
-			freenect_start_video(f_dev);
-			pthread_cond_wait(&took_screenshot_cond, &gl_backbuf_mutex);
-			pthread_mutex_unlock(&gl_backbuf_mutex);
-
-			/*
-			// take ir
-
-			freenect_stop_video(f_dev);
-			freenect_set_video_callback(f_dev, rgb_screenshot_cb);
-			current_format = FREENECT_VIDEO_IR_8BIT;
-			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
-			pthread_mutex_lock(&gl_backbuf_mutex);
-			took_screenshot = 0;
-			freenect_start_video(f_dev);
-			pthread_cond_wait(&took_screenshot_cond, &gl_backbuf_mutex);
-			pthread_mutex_unlock(&gl_backbuf_mutex);
-			*/
-
-			current_format = old_format;
-
-			freenect_stop_video(f_dev);
-			freenect_set_video_callback(f_dev, rgb_cb);
-			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
-			freenect_start_video(f_dev);
-
-			screenshot_number++;
-			take_screenshot--;
 		}
 	}
 
