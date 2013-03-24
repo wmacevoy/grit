@@ -25,6 +25,7 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.572038758" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1022604872" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/libcentaur/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/zmq/include}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.2013439995" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 							</tool>
@@ -37,10 +38,13 @@
 							<tool commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS}" id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.926126409" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
 								<option id="gnu.cpp.link.option.paths.826296054" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/libcentaur/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/zmq/Debug}&quot;"/>
 								</option>
 								<option id="gnu.cpp.link.option.libs.1339170243" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="centaur"/>
 									<listOptionValue builtIn="false" value="boost_thread"/>
+									<listOptionValue builtIn="false" value="zmq"/>
+									<listOptionValue builtIn="false" value="rt"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1116850375" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

@@ -10,6 +10,6 @@ public:
 	virtual ~ThreadDriverRegistry() {}
 
 protected:
-	virtual void * DoWork();
+	virtual void DoWork();
 
 };

@@ -7,10 +7,7 @@ CentaurThread::CentaurThread()
 {}
 
 CentaurThread::~CentaurThread()
-{
-	if (!!m_pThread)
-		m_pThread->join();
-}
+{}
 
 boost::shared_ptr<boost::thread> CentaurThread::Start()
 {
@@ -20,11 +17,13 @@ boost::shared_ptr<boost::thread> CentaurThread::Start()
 
 void CentaurThread::Stop()
 {
+	m_stopThread = true;
+
 	if (!!m_pThread)
-		m_pThread->interrupt();
+		m_pThread->join();
 }
 
-void CentaurThread::Run(CentaurThread * thread)
+void CentaurThread::Run(CentaurThread * pCentaurThread)
 {
-	thread->DoWork();
+	pCentaurThread->DoWork();
 }
