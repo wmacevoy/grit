@@ -16,7 +16,8 @@ int main() {
 
 	Centaur& centaur = Centaur::Get();
 
-	centaur.Start();
+	if (!centaur.Start())
+		return 1;
 
 	while(!g_stopCentaur) {
 		sleep(10);

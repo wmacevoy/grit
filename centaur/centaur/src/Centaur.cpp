@@ -9,8 +9,12 @@ Centaur& Centaur::Get()
 	return centaur;
 }
 
+
 bool Centaur::Start()
 {
+	if (!m_threadDriverRegistry.m_socket.Open())
+		return false;
+
 	m_threadDriverRegistry.Start();
 
 	return true;
