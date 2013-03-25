@@ -12,6 +12,8 @@ public:
 
 	CentaurSocket m_socket;
 
+	virtual bool Start();
+
 protected:
 
 	virtual void DoWork();

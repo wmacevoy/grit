@@ -6,6 +6,14 @@ ThreadDriverRegistry::ThreadDriverRegistry()
 :	m_socket(ZMQ_REP, "tcp://*:31337", 1)
 {}
 
+bool ThreadDriverRegistry::Start()
+{
+	if (!m_socket.Open())
+		return false;
+
+	return CentaurThread::Start();
+}
+
 void ThreadDriverRegistry::DoWork()
 {
 	const char * threadName = "Thread Driver Registry";

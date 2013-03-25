@@ -12,8 +12,8 @@ public:
 
 	boost::shared_ptr<boost::thread> GetBoostThread() { return m_pThread; }
 
-	boost::shared_ptr<boost::thread> Start();
-	void Stop();
+	virtual bool Start();
+	virtual void Stop();
 
 protected:
 

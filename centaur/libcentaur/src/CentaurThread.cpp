@@ -9,10 +9,10 @@ CentaurThread::CentaurThread()
 CentaurThread::~CentaurThread()
 {}
 
-boost::shared_ptr<boost::thread> CentaurThread::Start()
+bool CentaurThread::Start()
 {
 	m_pThread.reset(new boost::thread(Run, this));
-	return m_pThread;
+	return !!m_pThread;
 }
 
 void CentaurThread::Stop()
