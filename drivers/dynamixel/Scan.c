@@ -9,27 +9,89 @@
 #include <dynamixel.h>
 
 // Control table address
-#define P_GOAL_POSITION_L	30
-#define P_GOAL_POSITION_H	31
-#define P_PRESENT_POSITION_L	36
-#define P_PRESENT_POSITION_H	37
-#define P_MOVING		46
+#define P_CW_ANGLE_LIMIT    6
+#define P_CCW_ANGLE_LIMIT   8
+#define P_MOVING_SPEED      32
+#define P_GOAL_POSITION	    30
+#define P_PRESENT_POSITION	36
+#define P_MOVING		    46
 
-// Defulat setting
+// number of values that are within the jitter of the servo
+#define JITTER 10
+
+// Default setting
 #define DEFAULT_BAUDNUM		1 // 1Mbps
 #define DEFAULT_ID		1
 
 void PrintCommStatus(int CommStatus);
 void PrintErrorCode(void);
 
+//int joint=0;
+//int wheel=0;
+int result;
+
+void wheelMode(int id,int speed) {
+//  if (!wheel) {
+    dxl_write_word(id,P_CCW_ANGLE_LIMIT,0);
+    int result = dxl_get_result( );
+    if( result == COMM_TXSUCCESS ) printf("CCW Good\n");
+    dxl_write_word(id,P_CW_ANGLE_LIMIT,0);
+    if( result == COMM_TXSUCCESS ) printf("CW Good\n");
+//    wheel=1;
+//    joint=0;
+//  }
+  dxl_write_word(id,P_MOVING_SPEED,speed);
+  if( result == COMM_TXSUCCESS ) printf("Speed Good\n");
+}
+
+
+void jointMode(int id,int angle) {
+  int pos=((180+angle)*4095)/360;
+//  if (!joint) {
+	dxl_write_word(id,P_CCW_ANGLE_LIMIT,4095);
+    int result = dxl_get_result( );
+    if( result == COMM_TXSUCCESS ) printf("CCW Good\n");
+    dxl_write_word(id,P_CW_ANGLE_LIMIT,0);
+    if( result == COMM_TXSUCCESS ) printf("CW Good\n");
+//    joint=1;
+//    wheel=0;
+//  }
+  printf("Joint %d is at %d\n",id,pos);
+  dxl_write_word(id,P_GOAL_POSITION,pos);
+  if( result == COMM_TXSUCCESS ) printf("Position Good\n");
+}
+
+void servoGoto(int id,int angle) {
+	// Can handle angles > -180 to +180
+	int cw=0;
+	int ccw=0;
+	while (angle>180) { angle-=360; cw++;}
+	while (angle<-180) {angle+=360; ccw++;}
+	printf("Final angle %d\n",angle);
+	printf("Clockwise revolutions %d\n",cw);
+	printf("Counterclockwise revolutions %d\n",ccw);
+	int oldValue=dxl_read_byte(id,P_PRESENT_POSITION);
+	while (cw>0) {
+	  wheelMode(id,1023); 
+	  int newValue=dxl_read_byte(id,P_PRESENT_POSITION);
+      if ((newValue-oldValue)<-2*JITTER) { 
+        cw--;
+      }
+ 	}
+	while (ccw>0) {
+	  wheelMode(id,-1023); 
+	  int newValue=dxl_read_byte(id,P_PRESENT_POSITION);
+      if ((oldValue-newValue)<-2*JITTER) { 
+        ccw--;
+      }
+	}
+	jointMode(id,angle);
+}
+
 int main()
 {
 	int baudnum = 34;
-	int GoalPos[2] = {0, 1023};
-	int index = 0;
 	int deviceIndex = 0;
-	int Moving, PresentPos;
-	int CommStatus;
 
 	printf( "\n\nRead/Write example for Linux\n\n" );
 	///////// Open USB2Dynamixel ////////////
@@ -47,8 +109,11 @@ int main()
 		printf( "Press Enter key to continue!(press ESC and Enter to quit)\n" );
 		if(getchar() == 0x1b)
 			break;
-                int i;
-                for (i=0;i<3;i++)  {
+		  jointMode(4,180);
+		  jointMode(5,180);
+
+/*                int i;
+                for (i=4;i<=5;i++)  {
                   dxl_ping(i);
                   printf("%i",i);
                   int result = dxl_get_result( );
@@ -87,7 +152,7 @@ int main()
                     printf("W?");
 		  }
                   printf("\n");
-                }
+                } */
 	}
 
 	// Close device
