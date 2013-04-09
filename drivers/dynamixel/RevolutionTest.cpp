@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <dynamixel.h>
 #include <termio.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -177,7 +178,7 @@ public:
   }
   void wheel(int speed){
 	 if (!wheelMode){
-		 cout << "w";
+//		 cout << "w" <<endl;
 		 sendWord(DXL_CCW_ANGLE_LIMIT_WORD,0);
 		 wheelMode=true;
 	 }
@@ -185,7 +186,7 @@ public:
   }
   void joint(int position){
 	  if(wheelMode){
-		  cout << "j"<<position<<" ";
+//		  cout << "j"<<position<<" "<<endl;
 		  sendWord(DXL_CCW_ANGLE_LIMIT_WORD,4095);
 		  wheelMode=false;
 	  }
@@ -193,62 +194,67 @@ public:
   }
   void angle(float newAngle) {
 	 int rev=0;
-	 cout << "NewAngle:"<<newAngle<<endl;
-	 cout <<"PresentAngle:"<<presentAngle <<endl;
+//	 cout << "NewAngle:"<<newAngle<<endl;
+//	 cout <<"PresentAngle:"<<presentAngle <<endl;
 	 float diffAngle=newAngle-presentAngle;
 	 presentAngle=newAngle;
 	 while (diffAngle>180.0) {
-		 rev++;
+		 rev--;
 		 diffAngle-=360.0;
 	 }
 	 while(diffAngle<-180.0){
-		 rev--;
+		 rev++;
 		 diffAngle+=360.0;
      }
-	 cout << "Revs:"<<rev<<" diffAngle:"<<diffAngle<<endl;
 	 int pos=readWord(DXL_PRESENT_POSITION_WORD);
+//	 cout << "Revs:"<<rev<<" diffAngle:"<<diffAngle<<" pos:"<<pos<<endl;
 	 while (rev>0){
-	    wheel(1023+500);
+	    wheel(1023);
 	    int newpos=readWord(DXL_PRESENT_POSITION_WORD);
-	    cout << "cw:"<<pos <<"," << newpos << endl;
-	    if (newpos-pos>DynamixelInterface::JITTER) rev--;
+//	    cout << "ccw:"<<pos <<"," << newpos << endl;
+	    if (pos-newpos>DynamixelInterface::JITTER) rev--;
 	    pos=newpos;
 	 }
 	 while (rev<0){
-		 wheel(500);
+		 wheel(1024+1023);
 		 int newpos=readWord(DXL_PRESENT_POSITION_WORD);
-		 cout << "ccw:"<<pos <<"," << newpos << endl;
-		 if (pos-newpos>DynamixelInterface::JITTER) rev++;
+//		 cout << "cw:"<<pos <<"," << newpos << endl;
+		 if (newpos-pos>DynamixelInterface::JITTER) rev++;
 		 pos=newpos;
 	 }
-	 int angle=(diffAngle+180.0)*2047.0/180.0;
+	 diffAngle=presentAngle;
+	 while (diffAngle>180)diffAngle-=360.0;
+	 while (diffAngle<-180) diffAngle+=360.0;
+//	 cout <<"diffAngle:"<<diffAngle<<endl;
+	 int angle=((180-diffAngle)*2047)/180;
+/*	 int newpos=readWord(DXL_PRESENT_POSITION_WORD);
+	 while (abs(newpos-angle)>1024){
+		newpos=readWord(DXL_PRESENT_POSITION_WORD);
+	 } */
 	 joint(angle);
   }
 };
 
-
-
 int main()
 {
-	Servo a(54);
-	Servo b(55);
-	b.joint(16384);
-//	b.wheel(0);
-	a.angle(0);
+	Servo a(12);
+	Servo b(22);
+	b.joint(2048);
+	a.joint(2048);
 	sleep(2);
 	while(1)
 	{
 		cout <<"Press Enter key to continue!(press q and Enter to quit)"<<endl;
 		if(getchar() == 'q')
 			break;
-		a.angle(-500);
-
-	//	sleep(3);
-
-	//	a.angle(500);
-	//	sleep(3);
+		a.angle(-400);
+		sleep(3);
+		a.angle(0);
+		sleep(3);
+		a.angle(400);
+		sleep(3);
 	}
-	a.wheel(0);
-	b.wheel(0);
+	a.joint(2048);
+	b.joint(2048);
 	return 0;
 }
