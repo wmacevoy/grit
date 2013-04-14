@@ -194,8 +194,6 @@ public:
   }
   void angle(float newAngle) {
 	 int rev=0;
-//	 cout << "NewAngle:"<<newAngle<<endl;
-//	 cout <<"PresentAngle:"<<presentAngle <<endl;
 	 float diffAngle=newAngle-presentAngle;
 	 presentAngle=newAngle;
 	 while (diffAngle>180.0) {
@@ -207,54 +205,107 @@ public:
 		 diffAngle+=360.0;
      }
 	 int pos=readWord(DXL_PRESENT_POSITION_WORD);
-//	 cout << "Revs:"<<rev<<" diffAngle:"<<diffAngle<<" pos:"<<pos<<endl;
 	 while (rev>0){
 	    wheel(1023);
 	    int newpos=readWord(DXL_PRESENT_POSITION_WORD);
-//	    cout << "ccw:"<<pos <<"," << newpos << endl;
 	    if (pos-newpos>DynamixelInterface::JITTER) rev--;
 	    pos=newpos;
 	 }
 	 while (rev<0){
 		 wheel(1024+1023);
 		 int newpos=readWord(DXL_PRESENT_POSITION_WORD);
-//		 cout << "cw:"<<pos <<"," << newpos << endl;
 		 if (newpos-pos>DynamixelInterface::JITTER) rev++;
 		 pos=newpos;
 	 }
 	 diffAngle=presentAngle;
 	 while (diffAngle>180)diffAngle-=360.0;
 	 while (diffAngle<-180) diffAngle+=360.0;
-//	 cout <<"diffAngle:"<<diffAngle<<endl;
 	 int angle=((180-diffAngle)*2047)/180;
 /*	 int newpos=readWord(DXL_PRESENT_POSITION_WORD);
-	 while (abs(newpos-angle)>1024){
+	 while (abs(newpos-angle)>256){
 		newpos=readWord(DXL_PRESENT_POSITION_WORD);
-	 } */
+	 }*/
 	 joint(angle);
   }
 };
 
 int main()
 {
-	Servo a(12);
-	Servo b(22);
-	b.joint(2048);
-	a.joint(2048);
+	Servo l1k(11);
+	Servo l1f(12);
+	Servo l1h(13);
+	Servo l2k(21);
+	Servo l2f(22);
+	Servo l2h(23);
+	Servo l3k(31);
+	Servo l3f(32);
+	Servo l3h(33);
+	Servo l4k(41);
+	Servo l4f(42);
+	Servo l4h(43);
+
+/*	int k=3000;
+	int f=1048;
+	int h=2048; */
+
+	int k=2048;
+	int f=2048;
+	int h=2048;
+	l1k.joint(k);
+	l1f.joint(f);
+	l1h.joint(h);
+	l2k.joint(k);
+	l2f.joint(f);
+	l2h.joint(h);
+	l3k.joint(k);
+	l3f.joint(f);
+	l3h.joint(h);
+	l4k.joint(k);
+	l4f.joint(f);
+	l4h.joint(h);
 	sleep(2);
+
 	while(1)
 	{
 		cout <<"Press Enter key to continue!(press q and Enter to quit)"<<endl;
-		if(getchar() == 'q')
+		char key=getchar();
+		if( key == 'q')
 			break;
-		a.angle(-400);
-		sleep(3);
-		a.angle(0);
-		sleep(3);
-		a.angle(400);
-		sleep(3);
+        if(key=='k')k-=100;
+        if(key=='j')k+=100;
+        if (k<0)k=0;
+        if (k>4095)k=4095;
+        if(key=='f')f-=100;
+        if(key=='d')f+=100;
+        if (f<0)f=0;
+        if (f>4095)f=4095;
+        if(key=='h')h-=100;
+        if(key=='g')h+=100;
+        if (h<0)h=0;
+        if (h>4095)h=4095;
+        if (key=='1') {
+            k=1024;
+            f=4095;
+            h=2048;
+        }
+        if (key=='2'){
+          k=4095;
+          f=0;
+          h=2048;
+        }
+		l1k.joint(k);
+		l2k.joint(k);
+		l3k.joint(k);
+		l4k.joint(k);
+		l1f.joint(f);
+		l2f.joint(f);
+		l3f.joint(f);
+		l4f.joint(f);
+		l1h.joint(h);
+		l2h.joint(h);
+		l3h.joint(h);
+		l4h.joint(h);
+		key=' ';
 	}
-	a.joint(2048);
-	b.joint(2048);
 	return 0;
 }
