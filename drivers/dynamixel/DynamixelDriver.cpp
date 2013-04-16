@@ -141,7 +141,7 @@ DynamixelInterface DXL2USB;
 	//  sendWord(DXL_MAX_TORQUE_WORD,value);
 	  sendWord(DXL_TORQUE_WORD,value);
 	  sendByte(DXL_TORQUE_MODE_BYTE,0);
-	  sendWord(DXL_MOVING_SPEED_WORD,100);
+	  sendWord(DXL_MOVING_SPEED_WORD,150);
   }
   void Servo::joint(int position){
 	  if(wheelMode){

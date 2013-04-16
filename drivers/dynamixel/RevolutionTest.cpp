@@ -1,6 +1,9 @@
 #include <iostream>
 #include <termio.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <cmath>
+#include <ctime>
 #include "DynamixelDriver.hpp"
 
 using namespace std;
@@ -36,9 +39,124 @@ public:
 	}
 };
 
+const int MAXPOS=10;
+
+class LegSequence {
+  int hAngle[MAXPOS];
+  int fAngle[MAXPOS];
+  int kAngle[MAXPOS];
+  long time[MAXPOS];
+  protected:
+  int pos;
+  long total,offset;
+  bool reverse,interp;
+  public:
+  LegSequence() {
+    init(0,false,false);
+  }
+  virtual void init(long newOffset,bool newReverse,bool newInterp) {
+   total=0;
+   pos=0;
+   offset=newOffset;
+   reverse=newReverse;
+   interp=newInterp;
+  }
+  void add(int k,int f,int h,long t) {
+    if (pos>=MAXPOS) return;
+    hAngle[pos]=h;
+    fAngle[pos]=f;
+    kAngle[pos]=k;
+    time[pos]=t;
+    total+=t;
+    pos++;
+  }
+  void pose(Leg &l) {
+ //   long millis=std::time(0);
+    clock_t t;
+    t = clock();
+    long long millis=(((long long)t)*1000)/CLOCKS_PER_SEC;
+    long s=(millis+offset) % total;
+   // l.report();
+   // cout <<"s" <<s << endl;
+    if (reverse) s=total-s;
+    for (int i=0;i<pos;i++) {
+      if (s<time[i]) {
+        float t=(float)s/(float)time[i];
+        if (!interp) t=0.0;
+        int nf=fAngle[0];
+        int nh=hAngle[0];
+        int nk=kAngle[0];
+        if (i+1<pos) {
+         nf=fAngle[i+1];
+         nh=hAngle[i+1];
+         nk=kAngle[i+1];
+        }
+        int f=fAngle[i]+t*(nf-fAngle[i]);
+        int h=hAngle[i]+t*(nh-hAngle[i]);
+        int k=kAngle[i]+t*(nk-kAngle[i]);
+        l.setPos(k,f,h);
+        return;
+      }
+      s-=time[i];
+    }
+  }
+};
+
+void compute2D(float x,float y,float l,float &knee,float &femur) {
+  float h=sqrt(x*x+y*y);
+  float theta1=atan(x/y)*180.0/M_PI;
+  knee=2.0*asin((h/2.0)/l)*180.0/M_PI; // assumes femur=tibia=l
+  float theta2=180.0-90.0-knee/2;
+  femur=180.0-theta1-theta2;
+}
+
+void compute3D(float x,float y,float z,float l,float &knee,float &femur,float &hip,bool invert) {
+  float h=sqrt(x*x+z*z);
+  hip=180-acos(x/h)*180.0/M_PI;
+  compute2D(h,y,l,knee,femur);
+  if (invert) {
+    hip=180.0-hip;
+  }
+}
+
+class Crab:public LegSequence {
+public:
+	void init(int offset,bool reverse,bool interp) {
+		LegSequence::init(offset,reverse,true);
+		add(2048,2048,2048,1500);
+		add(2448,2048,1548,500);
+		add(2448,1023,1548,1500);
+		add(2048,1023,2048,500);
+	}
+};
+
+class Center:public LegSequence {
+public:
+	void init(int offset,bool reverse,bool interp) {
+		LegSequence::init(offset,reverse,interp);
+		add(2048,2048,2048,1000);
+	}
+};
+
+
 class Quad {
 	Leg l1,l2,l3,l4;
+	LegSequence *l1s,*l2s,*l3s,*l4s;
+	Center f1,f2,f3,f4;
 public:
+	Quad() {
+		f1.init(0,false,false);
+		f2.init(0,false,false);
+		f3.init(0,false,false);
+		f4.init(0,false,false);
+		setSequences(&f1,&f2,&f3,&f4);
+	}
+	void setSequences(LegSequence *newl1s,LegSequence *newl2s,LegSequence *newl3s,LegSequence *newl4s){
+		l1s=newl1s;
+		l2s=newl2s;
+		l3s=newl3s;
+		l4s=newl4s;
+	}
 	void init(int torque) {
 	  l1.init(11,12,13,"l1");
 	  l2.init(21,22,23,"l2");
@@ -61,12 +179,24 @@ public:
     	l3.setPos(knee,femur,hip);
     	l4.setPos(knee,femur,hip);
     }
+    void programmed(){
+    	l1s->pose(l1);
+    	l2s->pose(l2);
+    	l3s->pose(l3);
+    	l4s->pose(l4);
+;    }
 };
 
 int main()
 {
     Quad legs;
     legs.init(512);
+    Crab   l1s,l2s,l3s,l4s;
+    l1s.init(0,false,true);
+    l2s.init(2000,false,true);
+    l3s.init(1000,false,true);
+    l4s.init(3000,false,true);
+    legs.setSequences(&l1s,&l2s,&l3s,&l4s);
 
 	int k=2048;
 	int f=2048;
@@ -107,6 +237,11 @@ int main()
         }
         if (key=='r'){
           legs.report();
+        }
+        if (key=='p'){
+          while (true) {
+            legs.programmed();
+          }
         }
         legs.setPosAll(k,f,h);
         key=' ';
