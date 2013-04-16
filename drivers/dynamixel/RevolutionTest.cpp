@@ -3,6 +3,7 @@
 #include <dynamixel.h>
 #include <termio.h>
 #include <stdlib.h>
+#include <string>
 
 using namespace std;
 
@@ -138,6 +139,7 @@ class Servo {
   int id;
   bool wheelMode;
   float presentAngle;
+  string name;
 public:
   float getAngle() {
 	 return presentAngle;
@@ -168,10 +170,11 @@ public:
       if (!ce.isOK())throw ce;
       else return value;
   }
-  Servo(int newId) {
+  Servo(int newId,string newName) {
 	  if (!DXL2USB.isOk())
 		  throw DXL_ComError(-1);
 	  id=newId;
+	  name=newName;
 	  int mode=readWord(DXL_CCW_ANGLE_LIMIT_WORD);
 	  wheelMode=(mode==0);
 	  presentAngle=(readWord(DXL_PRESENT_POSITION_WORD)-2048.0)*180.0/4096.0;
@@ -184,6 +187,12 @@ public:
 	 }
 	 sendWord(DXL_MOVING_SPEED_WORD,speed);
   }
+  void setTorque(int value=255){
+	//  sendWord(DXL_MAX_TORQUE_WORD,value);
+	  sendWord(DXL_TORQUE_WORD,value);
+	  sendByte(DXL_TORQUE_MODE_BYTE,0);
+	  sendWord(DXL_MOVING_SPEED_WORD,100);
+  }
   void joint(int position){
 	  if(wheelMode){
 //		  cout << "j"<<position<<" "<<endl;
@@ -191,6 +200,13 @@ public:
 		  wheelMode=false;
 	  }
 	  sendWord(DXL_GOAL_POSITION_WORD,position);
+  }
+  void report () {
+	  int load=readWord(DXL_PRESENT_LOAD_WORD);
+	 cout << name << " ";
+	 if (load & 1024!=0) cout << "cw  ";
+	 else cout << "ccw ";
+	 cout << (load & 1023) <<",";
   }
   void angle(float newAngle) {
 	 int rev=0;
@@ -231,18 +247,31 @@ public:
 
 int main()
 {
-	Servo l1k(11);
-	Servo l1f(12);
-	Servo l1h(13);
-	Servo l2k(21);
-	Servo l2f(22);
-	Servo l2h(23);
-	Servo l3k(31);
-	Servo l3f(32);
-	Servo l3h(33);
-	Servo l4k(41);
-	Servo l4f(42);
-	Servo l4h(43);
+	Servo l1k(11,"l1k");
+	Servo l1f(12,"l1f");
+	Servo l1h(13,"l1h");
+	Servo l2k(21,"l2k");
+	Servo l2f(22,"l2f");
+	Servo l2h(23,"l2h");
+	Servo l3k(31,"l3k");
+	Servo l3f(32,"l3f");
+	Servo l3h(33,"l3h");
+	Servo l4k(41,"l4k");
+	Servo l4f(42,"l4f");
+	Servo l4h(43,"l4h");
+	int torque=512;
+	l1k.setTorque(torque);
+	l1f.setTorque(torque);
+	l1h.setTorque(torque);
+	l2k.setTorque(torque);
+	l2f.setTorque(torque);
+	l2h.setTorque(torque);
+	l3k.setTorque(torque);
+	l3f.setTorque(torque);
+	l3h.setTorque(torque);
+	l4k.setTorque(torque);
+	l4f.setTorque(torque);
+	l4h.setTorque(torque);
 
 /*	int k=3000;
 	int f=1048;
@@ -284,14 +313,25 @@ int main()
         if (h<0)h=0;
         if (h>4095)h=4095;
         if (key=='1') {
-            k=1024;
-            f=4095;
+            k=4000;
+            f=95;
             h=2048;
         }
         if (key=='2'){
-          k=4095;
-          f=0;
+          k=2648;
+          f=2048;
           h=2048;
+        }
+        if (key=='3'){
+          k=95;
+          f=4000;
+          h=2048;
+        }
+        if (key=='r'){
+    		l1k.report(); l1f.report(); l1h.report(); cout << endl;
+    		l2k.report(); l2f.report(); l2h.report(); cout << endl;
+    		l3k.report(); l3f.report(); l3h.report(); cout << endl;
+    		l4k.report(); l4f.report(); l4h.report(); cout << endl;
         }
 		l1k.joint(k);
 		l2k.joint(k);
@@ -306,6 +346,7 @@ int main()
 		l3h.joint(h);
 		l4h.joint(h);
 		key=' ';
+		cout << "h:" <<h<<" f: "<<f<<" k:"<< k << endl;
 	}
 	return 0;
 }
