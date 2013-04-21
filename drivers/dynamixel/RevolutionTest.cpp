@@ -6,6 +6,8 @@
 #include <ctime>
 #include "DynamixelDriver.hpp"
 
+const int divider=2;
+
 using namespace std;
 
 class Leg {
@@ -75,14 +77,14 @@ class LegSequence {
     clock_t t;
     t = clock();
     long long millis=(((long long)t)*1000)/CLOCKS_PER_SEC;
-    long s=(millis+offset) % total;
+    long s=(millis-offset) % total;
    // l.report();
    // cout <<"s" <<s << endl;
     if (reverse) s=total-s;
     for (int i=0;i<pos;i++) {
       if (s<time[i]) {
-        float t=(float)s/(float)time[i];
-        if (!interp) t=0.0;
+        float fraction=(float)s/(float)time[i];
+        if (!interp) fraction=0.0;
         int nf=fAngle[0];
         int nh=hAngle[0];
         int nk=kAngle[0];
@@ -91,14 +93,16 @@ class LegSequence {
          nh=hAngle[i+1];
          nk=kAngle[i+1];
         }
-        int f=fAngle[i]+t*(nf-fAngle[i]);
-        int h=hAngle[i]+t*(nh-hAngle[i]);
-        int k=kAngle[i]+t*(nk-kAngle[i]);
+        int f=fAngle[i]+fraction*(nf-fAngle[i]);
+        int h=hAngle[i]+fraction*(nh-hAngle[i]);
+        int k=kAngle[i]+fraction*(nk-kAngle[i]);
         l.setPos(k,f,h);
         return;
       }
       s-=time[i];
     }
+  }
+  virtual ~LegSequence() {
   }
 };
 
@@ -119,14 +123,44 @@ void compute3D(float x,float y,float z,float l,float &knee,float &femur,float &h
   }
 }
 
-class Crab:public LegSequence {
+class Crab1:public LegSequence {
 public:
 	void init(int offset,bool reverse,bool interp) {
 		LegSequence::init(offset,reverse,true);
-		add(2048,2048,2048,1500);
-		add(2448,2048,1548,500);
-		add(2448,1023,1548,1500);
-		add(2048,1023,2048,500);
+		add(2048,2048,2048,3000/divider);
+		add(2748,2048,1548,333/divider);
+		add(2748,300,1548,333/divider);
+		add(2048,300,2048,333/divider);
+	}
+};
+class Crab2:public LegSequence {
+public:
+	void init(int offset,bool reverse,bool interp) {
+		LegSequence::init(offset,reverse,true);
+		add(2048,2048,2048,3000/divider);
+		add(2748,2048,2548,333/divider);
+		add(2748,300,2548,333/divider);
+		add(2048,300,2048,333/divider);
+	}
+};
+class Crab3:public LegSequence {
+public:
+	void init(int offset,bool reverse,bool interp) {
+		LegSequence::init(offset,reverse,true);
+		add(2748,2048,1548,3000/divider);
+		add(2048,2048,2048,333/divider);
+		add(2048,300,2048,333/divider);
+		add(2748,300,1548,333/divider);
+	}
+};
+class Crab4:public LegSequence {
+public:
+	void init(int offset,bool reverse,bool interp) {
+		LegSequence::init(offset,reverse,true);
+		add(2748,2048,2548,3000/divider);
+		add(2048,2048,2048,333/divider);
+		add(2048,300,2048,333/divider);
+		add(2748,300,2548,333/divider);
 	}
 };
 
@@ -184,18 +218,23 @@ public:
     	l2s->pose(l2);
     	l3s->pose(l3);
     	l4s->pose(l4);
-;    }
+    }
 };
 
 int main()
 {
+	try {
     Quad legs;
+    sleep(2);
     legs.init(512);
-    Crab   l1s,l2s,l3s,l4s;
+    Crab1 l1s;
+    Crab2 l2s;
+    Crab3 l3s;
+    Crab4 l4s;
     l1s.init(0,false,true);
-    l2s.init(2000,false,true);
-    l3s.init(1000,false,true);
-    l4s.init(3000,false,true);
+    l2s.init(3000/divider,false,true);
+    l3s.init(1000/divider,false,true);
+    l4s.init(2000/divider,false,true);
     legs.setSequences(&l1s,&l2s,&l3s,&l4s);
 
 	int k=2048;
@@ -239,13 +278,22 @@ int main()
           legs.report();
         }
         if (key=='p'){
-          while (true) {
+    	  clock_t t;
+    	  t = clock();
+    	  long long millis=(((long long)t)*1000)/CLOCKS_PER_SEC;
+    	  long long start=millis;
+          while ((millis-start)<20000) {
             legs.programmed();
+            t = clock();
+            millis=(((long long)t)*1000)/CLOCKS_PER_SEC;
           }
         }
         legs.setPosAll(k,f,h);
         key=' ';
 		cout << "h:" <<h<<" f: "<<f<<" k:"<< k << endl;
+	}
+	} catch (DXL_ComError dce){
+		dce.describe();
 	}
 	return 0;
 }

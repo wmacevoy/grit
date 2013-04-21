@@ -57,10 +57,13 @@ void DXL_PrintCommStatus(int CommStatus);
 void DXL_PrintErrorCode();
 
 class DXL_ComError:public exception {
-	int status;
+	int status,line,id;
+	string file;
 public:
-	DXL_ComError(int newStatus=-1) ;
-	bool isOK();
+	static bool isOK(int status);
+	DXL_ComError(int newStatus=-1,int newId=0,string fname="",int linenumber=0) ;
+	void describe();
+	~DXL_ComError() throw();
 };
 
 class DynamixelInterface {
@@ -69,9 +72,14 @@ class DynamixelInterface {
 	  bool ok;
 public:
 	  static const int JITTER; // How much will the position jitter
+	  static const int RETRIES;
 	  DynamixelInterface();
 	  bool isOk() ;
 	  ~DynamixelInterface() ;
+	  void sendWord(int id,int address,int word) ;
+	  void sendByte(int id,int address,unsigned char byte) ;
+	  int readWord(int id,int address);
+	  unsigned char readByte(int id,int address);
 };
 
 extern DynamixelInterface DXL2USB;
@@ -83,10 +91,6 @@ class Servo {
   string name;
 public:
   float getAngle() ;
-  void sendWord(int address,int word) ;
-  void sendByte(int address,unsigned char byte) ;
-  int readWord(int address);
-  unsigned char readByte(int address);
   void init(int newId,string newName) ;
   void wheel(int speed);
   void setTorque(int value=255);

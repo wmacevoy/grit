@@ -11,7 +11,7 @@
 
 #include "DynamixelDriver.hpp"
 
-void PrintCommStatus(int CommStatus)
+void DXL_PrintCommStatus(int CommStatus)
 {
 	switch(CommStatus)
 	{
@@ -40,12 +40,12 @@ void PrintCommStatus(int CommStatus)
 		break;
 
 	default:
-		cerr << "This is unknown error code!" <<endl;
+		cerr << "This is unknown error code!" << CommStatus << endl;
 		break;
 	}
 }
 
-void PrintErrorCode()
+void DXL_PrintErrorCode()
 {
 	if(dxl_get_rxpacket_error(ERRBIT_VOLTAGE) == 1)
 		cerr <<"Input voltage error!"<<endl;
@@ -64,20 +64,31 @@ void PrintErrorCode()
 }
 
 
- DXL_ComError::DXL_ComError(int newStatus) {
+ DXL_ComError::DXL_ComError(int newStatus,int newId,string newFile,int newLine) {
 		status=newStatus;
+		id=newId;
+		line=newLine;
+		file=newFile;
 //	    cerr<< "Status "<<status<<endl;
 	}
-bool DXL_ComError::isOK(){
+bool DXL_ComError::isOK(int status){
 		return status==COMM_RXSUCCESS || status==COMM_TXSUCCESS
 				|| status==COMM_RXWAITING || status==COMM_RXTIMEOUT;
 	}
+
+void DXL_ComError::describe() {
+	cerr <<"Dynamixel Error: id "<< id << " file: " << file <<" at "<<line<<endl;
+	DXL_PrintCommStatus(status);
+}
+DXL_ComError::~DXL_ComError() throw() {
+
+}
 
 
 DynamixelInterface::DynamixelInterface() {
 		  int status=dxl_initialize(DEVICEINDEX,BAUDNUM) == 0;
 	//	  cout << status << endl;
-		  ok=(status==0);
+		  ok=DXL_ComError::isOK(status);
 	  }
 bool DynamixelInterface::isOk() {
 		  return ok;
@@ -85,74 +96,100 @@ bool DynamixelInterface::isOk() {
 DynamixelInterface::~DynamixelInterface() {
 		  dxl_terminate();
 	  }
+void DynamixelInterface::sendWord(int id,int address,int word)  {
+	  if (!DXL2USB.isOk()) throw DXL_ComError(-1,id,__FILE__,__LINE__);
+	  int retry=DynamixelInterface::RETRIES;
+	  int status=0;
+	  do {
+		  dxl_write_word(id,address,word);
+		  retry--;
+		    status=dxl_get_result();
+		    if (!DXL_ComError::isOK(status)) usleep(10000);
+	  }while (!DXL_ComError::isOK(status) && retry>0);
+    if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,0,__FILE__,__LINE__);
+}
+void DynamixelInterface::sendByte(int id,int address,unsigned char byte) {
+	  if (!DXL2USB.isOk()) throw DXL_ComError(-1,id,__FILE__,__LINE__);
+	  int retry=DynamixelInterface::RETRIES;
+	  int status=0;
+	  do {
+		  dxl_write_byte(id,address,byte);
+		  retry--;
+		    status=dxl_get_result();
+		    if (!DXL_ComError::isOK(status)) usleep(10000);
+	  }while (!DXL_ComError::isOK(status) && retry>0);
+    if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,id,__FILE__,__LINE__);
+}
+int DynamixelInterface::readWord(int id,int address) {
+	  if (!DXL2USB.isOk())throw DXL_ComError(-1,id,__FILE__,__LINE__);
+	  int retry=DynamixelInterface::RETRIES;
+	  int status=0;
+	  int value=0;
+	  do {
+		  value=dxl_read_word(id,address);
+		  retry--;
+		    status=dxl_get_result();
+		    if (!DXL_ComError::isOK(status)) usleep(10000);
+	  }while (!DXL_ComError::isOK(status) && retry>0);
+    if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,id,__FILE__,__LINE__);
+    return value;
+}
+unsigned char DynamixelInterface::readByte(int id,int address) {
+	if (!DXL2USB.isOk())throw DXL_ComError(-1,id,__FILE__,__LINE__);
+	int retry=DynamixelInterface::RETRIES;
+	int status=0;
+	unsigned char value=0;
+	do {
+		value=dxl_read_byte(id,address);
+	    retry--;
+	    status=dxl_get_result();
+	    if (!DXL_ComError::isOK(status)) usleep(10000);
+   }while (!DXL_ComError::isOK(status) && retry>0);
+  if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,id,__FILE__,__LINE__);
+  return value;
+}
+
 const int DynamixelInterface::DEVICEINDEX=0;
 const int DynamixelInterface::BAUDNUM=34;
 const int DynamixelInterface::JITTER=1000;
+const int DynamixelInterface::RETRIES=10;
 DynamixelInterface DXL2USB;
-
 
   float Servo::getAngle() {
 	 return presentAngle;
   }
-  void Servo::sendWord(int address,int word)  {
-	  if (!DXL2USB.isOk())throw DXL_ComError(-1);
-	  dxl_write_word(id,address,word);
-	  DXL_ComError ce2(dxl_get_result());
-      if (!ce2.isOK())throw ce2;
-  }
-  void Servo::sendByte(int address,unsigned char byte) {
-	  if (!DXL2USB.isOk())throw DXL_ComError(-1);
-	  dxl_write_byte(id,address,byte);
-	  DXL_ComError ce(dxl_get_result());
-      if (!ce.isOK())throw ce;
-  }
-  int Servo::readWord(int address) {
-	  if (!DXL2USB.isOk())throw DXL_ComError(-1);
-	  int value=dxl_read_word(id,address);
-	  DXL_ComError ce(dxl_get_result());
-      if (!ce.isOK())throw ce;
-      else return value;
-  }
-  unsigned char Servo::readByte(int address) {
-	  if (!DXL2USB.isOk())throw DXL_ComError(-1);
-	  unsigned char value=dxl_read_word(id,address);
-	  DXL_ComError ce(dxl_get_result());
-      if (!ce.isOK())throw ce;
-      else return value;
-  }
   void Servo::init(int newId,string newName) {
-	  if (!DXL2USB.isOk())
-		  throw DXL_ComError(-1);
+	  if (!DXL2USB.isOk()) throw DXL_ComError(-1,id,__FILE__,__LINE__);
 	  id=newId;
 	  name=newName;
-	  int mode=readWord(DXL_CCW_ANGLE_LIMIT_WORD);
+	  int mode=DXL2USB.readWord(id,DXL_CCW_ANGLE_LIMIT_WORD);
 	  wheelMode=(mode==0);
-	  presentAngle=(readWord(DXL_PRESENT_POSITION_WORD)-2048.0)*180.0/4096.0;
+	  presentAngle=(DXL2USB.readWord(id,DXL_PRESENT_POSITION_WORD)-2048.0)*180.0/4096.0;
   }
   void Servo::wheel(int speed){
 	 if (!wheelMode){
 //		 cout << "w" <<endl;
-		 sendWord(DXL_CCW_ANGLE_LIMIT_WORD,0);
+		 DXL2USB.sendWord(id,DXL_CCW_ANGLE_LIMIT_WORD,0);
 		 wheelMode=true;
 	 }
-	 sendWord(DXL_MOVING_SPEED_WORD,speed);
+	 DXL2USB.sendWord(id,DXL_MOVING_SPEED_WORD,speed);
   }
   void Servo::setTorque(int value){
 	//  sendWord(DXL_MAX_TORQUE_WORD,value);
-	  sendWord(DXL_TORQUE_WORD,value);
-	  sendByte(DXL_TORQUE_MODE_BYTE,0);
-	  sendWord(DXL_MOVING_SPEED_WORD,150);
+	  DXL2USB.sendWord(id,DXL_TORQUE_WORD,value);
+	  DXL2USB.sendByte(id,DXL_TORQUE_MODE_BYTE,0);
+	  DXL2USB.sendWord(id,DXL_MOVING_SPEED_WORD,150);
   }
   void Servo::joint(int position){
 	  if(wheelMode){
 //		  cout << "j"<<position<<" "<<endl;
-		  sendWord(DXL_CCW_ANGLE_LIMIT_WORD,4095);
+		  DXL2USB.sendWord(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
 		  wheelMode=false;
 	  }
-	  sendWord(DXL_GOAL_POSITION_WORD,position);
+	  DXL2USB.sendWord(id,DXL_GOAL_POSITION_WORD,position);
   }
   void Servo::report () {
-	  int load=readWord(DXL_PRESENT_LOAD_WORD);
+	  int load=DXL2USB.readWord(id,DXL_PRESENT_LOAD_WORD);
 	 cout << name << " ";
 	 if ((load & 1024)!=0) cout << "cw  ";
 	 else cout << "ccw ";
@@ -170,16 +207,16 @@ DynamixelInterface DXL2USB;
 		 rev++;
 		 diffAngle+=360.0;
      }
-	 int pos=readWord(DXL_PRESENT_POSITION_WORD);
+	 int pos=DXL2USB.readWord(id,DXL_PRESENT_POSITION_WORD);
 	 while (rev>0){
 	    wheel(1023);
-	    int newpos=readWord(DXL_PRESENT_POSITION_WORD);
+	    int newpos=DXL2USB.readWord(id,DXL_PRESENT_POSITION_WORD);
 	    if (pos-newpos>DynamixelInterface::JITTER) rev--;
 	    pos=newpos;
 	 }
 	 while (rev<0){
 		 wheel(1024+1023);
-		 int newpos=readWord(DXL_PRESENT_POSITION_WORD);
+		 int newpos=DXL2USB.readWord(id,DXL_PRESENT_POSITION_WORD);
 		 if (newpos-pos>DynamixelInterface::JITTER) rev++;
 		 pos=newpos;
 	 }
@@ -187,10 +224,6 @@ DynamixelInterface DXL2USB;
 	 while (diffAngle>180)diffAngle-=360.0;
 	 while (diffAngle<-180) diffAngle+=360.0;
 	 int angle=((180-diffAngle)*2047)/180;
-/*	 int newpos=readWord(DXL_PRESENT_POSITION_WORD);
-	 while (abs(newpos-angle)>256){
-		newpos=readWord(DXL_PRESENT_POSITION_WORD);
-	 }*/
 	 joint(angle);
   }
 
