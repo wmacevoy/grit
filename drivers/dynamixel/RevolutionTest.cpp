@@ -14,12 +14,16 @@ class Leg {
 	Servo knee,femur,hip;
 	string name;
 	int kneePos,femurPos,hipPos;
+	float l0,l1,l2;
 public:
 	void init(int kneeid,int femurid,int hipid,string newName) {
 	  name=newName;
 	  knee.init(kneeid,name+"k");
 	  femur.init(femurid,name+"f");
 	  hip.init(hipid,name+"h");
+	  l0=2.5; //inches
+	  l1=8.0;
+	  l2=15.5;
 	}
 	void setPos(int newKnee=2048,int newFemur=2048,int newHip=2048) {
 	  kneePos=newKnee;
