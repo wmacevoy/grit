@@ -1,4 +1,4 @@
-#include "CentaurSocket.h"
+#include "CentaurSockets.h"
 
 CentaurSocket::CentaurSocket(int socketType, const char * addr, int nIOThreads)
 :	m_ctx(0)
@@ -52,3 +52,15 @@ bool CentaurSocket::Close()
 
 	return true;
 }
+
+CentaurSocketPub::CentaurSocketPub(const char *addr, int nIOThreads)
+:	CentaurSocket(ZMQ_PUB, addr, nIOThreads)
+{}
+
+CentaurSocketSub::CentaurSocketSub(const char *addr, int nIOThreads)
+:	CentaurSocket(ZMQ_SUB, addr, nIOThreads)
+{}
+
+CentaurSocketRep::CentaurSocketRep(const char *addr, int nIOThreads)
+:	CentaurSocket(ZMQ_REP, addr, nIOThreads)
+{}

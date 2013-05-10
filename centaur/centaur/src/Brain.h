@@ -2,19 +2,20 @@
 
 #include "ThreadDriverRegistry.h"
 
-class Centaur {
+class Brain {
 
 protected:
 
-	Centaur();
 
+	Brain();
+	bool started;
 	ThreadDriverRegistry m_threadDriverRegistry;
 
 public:
 
-	static Centaur& Get();
-
-	bool Start();
-	bool Stop();
+	static Brain& get();
+	bool start();
+	bool loop();
+	void stop();
 
 };

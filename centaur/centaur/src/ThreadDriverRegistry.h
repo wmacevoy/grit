@@ -1,7 +1,7 @@
 #pragma once
 
 #include <CentaurThread.h>
-#include <CentaurSocket.h>
+#include <CentaurSockets.h>
 
 class ThreadDriverRegistry : public CentaurThread
 {
@@ -10,7 +10,7 @@ public:
 	ThreadDriverRegistry();
 	virtual ~ThreadDriverRegistry() {}
 
-	CentaurSocket m_socket;
+	CentaurSocketRep m_socket;
 
 	virtual bool Start();
 
