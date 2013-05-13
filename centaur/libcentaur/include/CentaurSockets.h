@@ -40,7 +40,7 @@ public:
 
 	CentaurSocketSub(const char *addr, int nIOThreads);
 	void subscribe();
-	virtual ~CentaurSocketPub();
+	virtual ~CentaurSocketSub();
 };
 
 class CentaurSocketRep : public CentaurSocket{
