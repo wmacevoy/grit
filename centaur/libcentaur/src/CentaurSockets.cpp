@@ -8,6 +8,9 @@ CentaurSocket::CentaurSocket(int socketType, const char * addr, int nIOThreads)
 ,	m_nIOThreads(nIOThreads)
 {}
 
+CentaurSocket::~CentaurSocket()
+{}
+
 bool CentaurSocket::Open()
 {
 
@@ -57,10 +60,21 @@ CentaurSocketPub::CentaurSocketPub(const char *addr, int nIOThreads)
 :	CentaurSocket(ZMQ_PUB, addr, nIOThreads)
 {}
 
+CentaurSocketPub::~CentaurSocketPub()
+{}
+
 CentaurSocketSub::CentaurSocketSub(const char *addr, int nIOThreads)
 :	CentaurSocket(ZMQ_SUB, addr, nIOThreads)
 {}
 
+CentaurSocketSub::~CentaurSocketSub()
+{}
+
+
 CentaurSocketRep::CentaurSocketRep(const char *addr, int nIOThreads)
 :	CentaurSocket(ZMQ_REP, addr, nIOThreads)
 {}
+
+CentaurSocketRep::~CentaurSocketRep()
+{}
+

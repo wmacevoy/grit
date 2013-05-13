@@ -18,6 +18,7 @@ protected:
 public:
 
 	CentaurSocket(int socketType, const char * addr, int nIOThreads = 1);
+	virtual ~CentaurSocket();
 
 	bool Send(void * data);
 	bool Open();
