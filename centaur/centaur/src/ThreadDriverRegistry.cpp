@@ -19,6 +19,7 @@ void ThreadDriverRegistry::DoWork()
 	const char * threadName = "Thread Driver Registry";
 	printf("Starting %s...\n", threadName);
 
+
 /*
 	//  Bounce the message back.
 	    char buf1 [32];

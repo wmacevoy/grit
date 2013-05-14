@@ -1,5 +1,7 @@
 #include "CentaurThread.h"
 
+#include "CentaurMessage.h"
+
 // *****************************************************************
 // CentaurThread
 
