@@ -1,44 +1,21 @@
 #pragma once
 
-#include "CentaurTypes.h"
+#include <vector>
 
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_oarchive.hpp>
-
-#include <boost/serialization/binary_object.hpp>
-
-#define CENTAUR_MESSAGE_VERSION 		1
-
-enum CentaurMessageType {
-	CENTAUR_MESSAGE_INVALID	= 0
-};
+// ****************************************************************************
+// CentaurMessage
 
 class CentaurMessage {
 
-	friend class boost::serialization::access;
-
-	template<class Archive>
-	void serialize(Archive &ar, const unsigned int version = CENTAUR_MESSAGE_VERSION)
-	{
-		ar << m_type;
-	}
-
 protected:
 
-	CentaurMessageType m_type;
+
 
 public:
 
-	CentaurMessage(CentaurMessageType type)
-	:	m_type(type)
-	{}
+	void save(std::vector<unsigned char> data);
+	void load(const unsigned char * pData, size_t sizeData);
 
+	CentaurMessage();
 	virtual ~CentaurMessage(){}
-
-	CentaurMessageType getType() { return m_type; }
-
-	bool serialize(CentaurBlob &serialization, bool compress = false)
-	{
-
-	}
 };
