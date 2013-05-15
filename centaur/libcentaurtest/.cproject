@@ -25,6 +25,7 @@
 								<option id="gnu.cpp.compiler.exe.debug.option.debugging.level.317065518" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.cpp.compiler.option.include.paths.1353877364" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/bson}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/bzip2}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cppunit/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/libcentaur/include}&quot;"/>
 								</option>
@@ -41,10 +42,12 @@
 									<listOptionValue builtIn="false" value="centaur"/>
 									<listOptionValue builtIn="false" value="cppunit"/>
 									<listOptionValue builtIn="false" value="bson"/>
+									<listOptionValue builtIn="false" value="bzip2"/>
 									<listOptionValue builtIn="false" value="boost_thread"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.843235310" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cppunit/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/bzip2/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/bson/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/libcentaur/Debug}&quot;"/>
 								</option>
