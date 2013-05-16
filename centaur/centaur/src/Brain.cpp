@@ -15,7 +15,7 @@ bool Brain::start()
 {
 	if(started)
 		return true;
-	if (!m_threadDriverRegistry.Start())
+	if (!m_threadDriverRegistry.start())
 		return false;
 	started = true;
 
@@ -27,7 +27,7 @@ void Brain::stop()
 {
 	if(!started)
 		return;
-	m_threadDriverRegistry.Stop();
+	m_threadDriverRegistry.stop();
 	started = false;
 }
 

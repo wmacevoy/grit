@@ -12,10 +12,10 @@ public:
 
 	CentaurSocketRep m_socket;
 
-	virtual bool Start();
+	virtual bool start();
 
 protected:
 
-	virtual void DoWork();
+	virtual void doWork();
 
 };

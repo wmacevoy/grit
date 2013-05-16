@@ -11,13 +11,13 @@ CentaurThread::CentaurThread()
 CentaurThread::~CentaurThread()
 {}
 
-bool CentaurThread::Start()
+bool CentaurThread::start()
 {
-	m_pThread.reset(new boost::thread(Run, this));
+	m_pThread.reset(new boost::thread(run, this));
 	return !!m_pThread;
 }
 
-void CentaurThread::Stop()
+void CentaurThread::stop()
 {
 	m_stopThread = true;
 
@@ -25,7 +25,7 @@ void CentaurThread::Stop()
 		m_pThread->join();
 }
 
-void CentaurThread::Run(CentaurThread * pCentaurThread)
+void CentaurThread::run(CentaurThread * pCentaurThread)
 {
-	pCentaurThread->DoWork();
+	pCentaurThread->doWork();
 }

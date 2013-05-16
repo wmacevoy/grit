@@ -43,10 +43,13 @@
 									<listOptionValue builtIn="false" value="cppunit"/>
 									<listOptionValue builtIn="false" value="bson"/>
 									<listOptionValue builtIn="false" value="bzip2"/>
+									<listOptionValue builtIn="false" value="zmq"/>
 									<listOptionValue builtIn="false" value="boost_thread"/>
+									<listOptionValue builtIn="false" value="rt"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.843235310" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cppunit/Debug}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/zmq/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/bzip2/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/bson/Debug}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/libcentaur/Debug}&quot;"/>
@@ -135,5 +138,7 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="org.eclipse.cdt.managedbuilder.core.GCCManagedMakePerProjectProfileC"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="refreshScope"/>
+	<storageModule moduleId="refreshScope" versionNumber="1">
+		<resource resourceType="PROJECT" workspacePath="/libcentaurtest"/>
+	</storageModule>
 </cproject>

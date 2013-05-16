@@ -17,7 +17,7 @@ int main() {
 
 	signal(SIGINT, intHandler);
 	CentaurSocketSub subSocket(MAIN_STOPADDRESS, 1);
-	if(!subSocket.Open()){
+	if(!subSocket.open()){
 		printf("Unable to open subscriber socket\n");
 		return 1;
 	}

@@ -10,10 +10,10 @@ public:
 	CentaurThread();
 	virtual ~CentaurThread();
 
-	boost::shared_ptr<boost::thread> GetBoostThread() { return m_pThread; }
+	boost::shared_ptr<boost::thread> getBoostThread() { return m_pThread; }
 
-	virtual bool Start();
-	virtual void Stop();
+	virtual bool start();
+	virtual void stop();
 
 protected:
 
@@ -21,8 +21,8 @@ protected:
 
 	boost::shared_ptr<boost::thread> m_pThread;
 
-	virtual void DoWork() = 0;
+	virtual void doWork() = 0;
 
-	static void Run(CentaurThread * pCentaurThread);
+	static void run(CentaurThread * pCentaurThread);
 
 };

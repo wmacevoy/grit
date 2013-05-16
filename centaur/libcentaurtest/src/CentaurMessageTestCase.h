@@ -10,8 +10,9 @@
 
 class CentaurMessageTestCase : public CPPUNIT_NS::TestFixture
 {
-	CPPUNIT_TEST_SUITE( CentaurMessageTestCase );
-	CPPUNIT_TEST( testBSON );
+	CPPUNIT_TEST_SUITE(CentaurMessageTestCase);
+	CPPUNIT_TEST(testBSON);
+	CPPUNIT_TEST(testZMQ);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -20,4 +21,5 @@ public:
 
 protected:
 	void testBSON();
+	void testZMQ();
 };

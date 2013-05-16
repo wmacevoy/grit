@@ -6,15 +6,15 @@ ThreadDriverRegistry::ThreadDriverRegistry()
 :	m_socket("tcp://*:31337", 1)
 {}
 
-bool ThreadDriverRegistry::Start()
+bool ThreadDriverRegistry::start()
 {
-	if (!m_socket.Open())
+	if (!m_socket.open())
 		return false;
 
-	return CentaurThread::Start();
+	return CentaurThread::start();
 }
 
-void ThreadDriverRegistry::DoWork()
+void ThreadDriverRegistry::doWork()
 {
 	const char * threadName = "Thread Driver Registry";
 	printf("Starting %s...\n", threadName);
