@@ -39,18 +39,19 @@ protected:
 	const char * m_name;
 	void * m_socket;
 	int m_type;
-	const char * m_addr;
 	bool m_connect;
 
 public:
 
-	CentaurSocket(int socketType, const char * name, const char * addr, bool connect = true);
+	CentaurSocket(int socketType, const char * name, bool connect = true);
 	virtual ~CentaurSocket();
 
 	int getError(const char **error = 0);
 
-	bool open();
+	bool open(const char * addr);
 	bool close();
+
+	bool bind(const char * addr);
 
 	int send(const char * pData, int nData, bool block = true);
 
@@ -106,7 +107,7 @@ class CentaurSocketPub : public CentaurSocket{
 
 public:
 
-	CentaurSocketPub(const char *addr, bool connect = false);
+	CentaurSocketPub(bool connect = false);
 	virtual ~CentaurSocketPub();
 };
 
@@ -114,10 +115,10 @@ class CentaurSocketSub : public CentaurSocket{
 
 public:
 
-	CentaurSocketSub(const char *addr, bool connect = true);
+	CentaurSocketSub(bool connect = true);
 	virtual ~CentaurSocketSub();
 
-	bool open(bool defaultSubscribe = true);
+	bool open(const char * addr, bool defaultSubscribe = true);
 	int subscribe(const void * pFilter, size_t nFilter);
 	int unsubscribe(const void * pFilter, size_t nFilter);
 };
@@ -126,7 +127,7 @@ class CentaurSocketRep : public CentaurSocket{
 
 public:
 
-	CentaurSocketRep(const char *addr);
+	CentaurSocketRep();
 	virtual ~CentaurSocketRep();
 };
 
@@ -134,6 +135,6 @@ class CentaurSocketReq : public CentaurSocket{
 
 public:
 
-	CentaurSocketReq(const char *addr);
+	CentaurSocketReq();
 	virtual ~CentaurSocketReq();
 };

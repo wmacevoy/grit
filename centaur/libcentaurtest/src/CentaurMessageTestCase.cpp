@@ -103,18 +103,27 @@ void CentaurMessageTestCase::testZMQ_ReqRep()
 		}
 	}
 
-	CentaurSocketRep rep("tcp://127.0.0.1:5560");
-	CPPUNIT_ASSERT(rep.open());
+	CentaurSocketRep rep;
+	CPPUNIT_ASSERT(rep.open("tcp://127.0.0.1:5560"));
+	CPPUNIT_ASSERT(rep.bind("ipc://ReqRepTest_1.ipc"));
 
-	CentaurSocketReq req("tcp://127.0.0.1:5560");
-	CPPUNIT_ASSERT(req.open());
+	{
+		CentaurSocketReq req;
+		CPPUNIT_ASSERT(req.open("tcp://127.0.0.1:5560"));
 
-	testZMQ_ReqRep_helper(dataOriginal, rep, req);
+		testZMQ_ReqRep_helper(dataOriginal, rep, req);
+	}
+
+	{
+		CentaurSocketReq req;
+		CPPUNIT_ASSERT(req.open("ipc://ReqRepTest_1.ipc"));
+
+		testZMQ_ReqRep_helper(dataOriginal, rep, req);
+	}
 }
 
-void CentaurMessageTestCase::testZMQ_ReqRep_10000()
+void CentaurMessageTestCase::testZMQ_ReqRep_10000_helper(const char * addr)
 {
-
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 
@@ -133,11 +142,11 @@ void CentaurMessageTestCase::testZMQ_ReqRep_10000()
 		}
 	}
 
-	CentaurSocketRep rep("tcp://127.0.0.1:5561");
-	CPPUNIT_ASSERT(rep.open());
+	CentaurSocketRep rep;
+	CPPUNIT_ASSERT(rep.open(addr));
 
-	CentaurSocketReq req("tcp://127.0.0.1:5561");
-	CPPUNIT_ASSERT(req.open());
+	CentaurSocketReq req;
+	CPPUNIT_ASSERT(req.open(addr));
 
 	for (int i = 0; i < 10000; i++)
 	{
@@ -152,6 +161,16 @@ void CentaurMessageTestCase::testZMQ_ReqRep_10000()
 		}
 		testZMQ_ReqRep_helper(dataOriginal, rep, req);
 	}
+}
+
+void CentaurMessageTestCase::testZMQ_ReqRep_10000_IPC()
+{
+	return testZMQ_ReqRep_10000_helper("ipc://ReqRepTest_2.ipc");
+}
+
+void CentaurMessageTestCase::testZMQ_ReqRep_10000_TCP()
+{
+	return testZMQ_ReqRep_10000_helper("tcp://127.0.0.1:5561");
 }
 
 void CentaurMessageTestCase::testZMQ_PubSub()
@@ -169,11 +188,11 @@ void CentaurMessageTestCase::testZMQ_PubSub()
 		}
 	}
 
-	CentaurSocketPub pub("tcp://127.0.0.1:5562");
-	CPPUNIT_ASSERT(pub.open());
+	CentaurSocketPub pub;
+	CPPUNIT_ASSERT(pub.open("tcp://127.0.0.1:5562"));
 
-	CentaurSocketSub sub("tcp://127.0.0.1:5562");
-	CPPUNIT_ASSERT(sub.open(false));
+	CentaurSocketSub sub;
+	CPPUNIT_ASSERT(sub.open("tcp://127.0.0.1:5562", false));
 
 	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> dataFromSubscriber;
 	CPPUNIT_ASSERT_EQUAL(-1, sub.recv(dataFromSubscriber, false));

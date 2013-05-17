@@ -32,11 +32,10 @@ void * ZeroMQContext::getContext()
 // ***************************************************************************
 // CentaurSocket
 
-CentaurSocket::CentaurSocket(int socketType, const char * name, const char * addr, bool connect)
+CentaurSocket::CentaurSocket(int socketType, const char * name, bool connect)
 :	m_name(name)
 ,	m_socket(0)
 ,	m_type(socketType)
-,	m_addr(addr)
 ,	m_connect(connect)
 {}
 
@@ -53,43 +52,38 @@ int CentaurSocket::getError(const char ** error)
 	return errorNumber;
 }
 
-bool CentaurSocket::open()
+bool CentaurSocket::open(const char * addr)
 {
-
-	fprintf(stderr, "%s %s to %s...\n", m_name, m_connect ? "connecting" : "binding", m_addr);
 
 	void * ctx = ZeroMQContext::getContext();
 	if (!ctx)
 	{
-		fprintf(stderr, "%s: no ctx available.", m_addr);
+		fprintf(stderr, "%s: no ctx available.", addr);
 		return false;
 	}
 
 	m_socket = zmq_socket(ctx, m_type);
 	if (!m_socket)
 	{
-		fprintf(stderr, "%s: zmq_socket: %d '%s'", m_addr, errno, zmq_strerror(errno));
+		fprintf(stderr, "%s: zmq_socket: %d '%s'", addr, errno, zmq_strerror(errno));
 		close();
 		return false;
 	}
 
 	if (m_connect)
 	{
-		if (zmq_connect(m_socket, m_addr))
+		fprintf(stderr, "%s connecting to %s...\n", m_name, addr);
+		if (zmq_connect(m_socket, addr))
 		{
-			fprintf(stderr, "%s: zmq_connect: %d '%s'", m_addr, errno, zmq_strerror(errno));
+			fprintf(stderr, "%s: zmq_connect: %d '%s'", addr, errno, zmq_strerror(errno));
 			close();
 			return false;
 		}
 	}
 	else
 	{
-		if (zmq_bind(m_socket, m_addr))
-		{
-			fprintf(stderr, "%s: zmq_bind: %d '%s'", m_addr, errno, zmq_strerror(errno));
-			close();
+		if (!bind(addr))
 			return false;
-		}
 	}
 
 	return true;
@@ -103,6 +97,21 @@ bool CentaurSocket::close()
 		zmq_close(m_socket);
 	m_socket = 0;
 
+	return true;
+}
+
+bool CentaurSocket::bind(const char * addr)
+{
+	if (m_connect)
+		return false;
+
+	fprintf(stderr, "%s binding to %s...\n", m_name, addr);
+	if (zmq_bind(m_socket, addr))
+	{
+		fprintf(stderr, "%s: zmq_bind: %d '%s'", addr, errno, zmq_strerror(errno));
+		close();
+		return false;
+	}
 	return true;
 }
 
@@ -134,8 +143,8 @@ int CentaurSocket::send(const char * pData, int nData, bool block)
 // ***************************************************************************
 // CentaurSocketPub
 
-CentaurSocketPub::CentaurSocketPub(const char *addr, bool connect)
-:	CentaurSocket(ZMQ_PUB, "Publisher", addr, connect)
+CentaurSocketPub::CentaurSocketPub(bool connect)
+:	CentaurSocket(ZMQ_PUB, "Publisher", connect)
 {}
 
 CentaurSocketPub::~CentaurSocketPub()
@@ -144,16 +153,16 @@ CentaurSocketPub::~CentaurSocketPub()
 // ***************************************************************************
 // CentaurSocketSub
 
-CentaurSocketSub::CentaurSocketSub(const char *addr, bool connect)
-:	CentaurSocket(ZMQ_SUB, "Subscriber", addr, connect)
+CentaurSocketSub::CentaurSocketSub(bool connect)
+:	CentaurSocket(ZMQ_SUB, "Subscriber", connect)
 {}
 
 CentaurSocketSub::~CentaurSocketSub()
 {}
 
-bool CentaurSocketSub::open(bool defaultSubscribe)
+bool CentaurSocketSub::open(const char * addr, bool defaultSubscribe)
 {
-	if (!CentaurSocket::open())
+	if (!CentaurSocket::open(addr))
 		return false;
 
 	if (defaultSubscribe)
@@ -175,8 +184,8 @@ int CentaurSocketSub::unsubscribe(const void * pFilter, size_t nFilter)
 // ***************************************************************************
 // CentaurSocketRep
 
-CentaurSocketRep::CentaurSocketRep(const char *addr)
-:	CentaurSocket(ZMQ_REP, "Response", addr, false)
+CentaurSocketRep::CentaurSocketRep()
+:	CentaurSocket(ZMQ_REP, "Response", false)
 {}
 
 CentaurSocketRep::~CentaurSocketRep()
@@ -185,8 +194,8 @@ CentaurSocketRep::~CentaurSocketRep()
 // ***************************************************************************
 // CentaurSocketReq
 
-CentaurSocketReq::CentaurSocketReq(const char *addr)
-:	CentaurSocket(ZMQ_REQ, "Request", addr, true)
+CentaurSocketReq::CentaurSocketReq()
+:	CentaurSocket(ZMQ_REQ, "Request", true)
 {}
 
 CentaurSocketReq::~CentaurSocketReq()

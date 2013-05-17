@@ -16,8 +16,8 @@ void intHandler(int dummy = 0) {
 int main() {
 
 	signal(SIGINT, intHandler);
-	CentaurSocketSub subSocket(MAIN_STOPADDRESS, 1);
-	if(!subSocket.open()){
+	CentaurSocketSub subSocket;
+	if(!subSocket.open(MAIN_STOPADDRESS)){
 		printf("Unable to open subscriber socket\n");
 		return 1;
 	}

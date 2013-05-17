@@ -3,12 +3,12 @@
 #include <stdio.h>
 
 ThreadDriverRegistry::ThreadDriverRegistry()
-:	m_socket("tcp://*:31337")
+:	m_socket()
 {}
 
 bool ThreadDriverRegistry::start()
 {
-	if (!m_socket.open())
+	if (!m_socket.open("tcp://*:31337"))
 		return false;
 
 	return CentaurThread::start();
