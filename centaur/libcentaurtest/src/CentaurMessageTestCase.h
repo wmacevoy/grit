@@ -4,11 +4,7 @@
 
 #include <CentaurSockets.h>
 
-/*
- * A test case that is designed to produce
- * example errors and failures
- *
- */
+#define ZEROMQ_DATA_FACTOR		4096
 
 class CentaurMessageTestCase : public CPPUNIT_NS::TestFixture
 {
@@ -25,7 +21,7 @@ public:
 
 protected:
 	void testBSON();
-	void testZMQ_ReqRep_helper(std::vector<char> &dataOriginal, CentaurSocketRep &rep, CentaurSocketReq &req);
+	void testZMQ_ReqRep_helper(CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> &dataOriginal, CentaurSocketRep &rep, CentaurSocketReq &req);
 	void testZMQ_ReqRep();
 	void testZMQ_ReqRep_10000();
 	void testZMQ_PubSub();

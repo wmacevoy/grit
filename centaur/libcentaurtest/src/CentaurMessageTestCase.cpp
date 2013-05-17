@@ -9,8 +9,6 @@
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CentaurMessageTestCase);
 
-#define ZEROMQ_DATA_FACTOR		16
-
 void CentaurMessageTestCase::testBSON()
 {
 
@@ -22,85 +20,85 @@ void CentaurMessageTestCase::testBSON()
 		objOrginal = objBuilder.obj();
 	}
 
-	std::vector<char> compressedData;
-	compressedData.resize(objOrginal.objsize() * 4);
-	unsigned int compressedDataSize = compressedData.size();
-	CPPUNIT_ASSERT_EQUAL(BZ_OK, BZ2_bzBuffToBuffCompress(compressedData.data(), &compressedDataSize, (char *)objOrginal.objdata(), objOrginal.objsize(), 9, 0, 30));
-	compressedData.resize(compressedDataSize);
+	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> compressedData;
+	compressedData.setCount(objOrginal.objsize() * 4);
+	unsigned int compressedDataSize = compressedData.getCount();
+	CPPUNIT_ASSERT_EQUAL(BZ_OK, BZ2_bzBuffToBuffCompress(compressedData.getData(), &compressedDataSize, (char *)objOrginal.objdata(), objOrginal.objsize(), 9, 0, 30));
+	compressedData.setCount(compressedDataSize);
 
-	std::vector<char> uncompressedData;
-	uncompressedData.resize(compressedData.size() * 4);
-	unsigned int uncompressedDataSize = uncompressedData.size();
-	CPPUNIT_ASSERT_EQUAL(BZ_OK, BZ2_bzBuffToBuffDecompress(uncompressedData.data(), &uncompressedDataSize, (char *)compressedData.data(), compressedData.size(), 0, 0));
-	uncompressedData.resize(uncompressedDataSize);
+	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> uncompressedData;
+	uncompressedData.setCount(compressedData.getCount() * 4);
+	unsigned int uncompressedDataSize = uncompressedData.getCount();
+	CPPUNIT_ASSERT_EQUAL(BZ_OK, BZ2_bzBuffToBuffDecompress(uncompressedData.getData(), &uncompressedDataSize, (char *)compressedData.getData(), compressedData.getCount(), 0, 0));
+	uncompressedData.setCount(uncompressedDataSize);
 
-	CPPUNIT_ASSERT_EQUAL(uncompressedData.size(), (std::vector<char>::size_type)objOrginal.objsize());
+	CPPUNIT_ASSERT_EQUAL(uncompressedData.getCount(), objOrginal.objsize());
 
-	for (unsigned int i = 0; i < uncompressedData.size(); i++)
+	for (int i = 0; i < uncompressedData.getCount(); i++)
 		CPPUNIT_ASSERT_EQUAL(uncompressedData.operator [](i), objOrginal.objdata()[i]);
 
-	bson::bo objUnpacked(uncompressedData.data());
+	bson::bo objUnpacked(uncompressedData.getData());
 
 	CPPUNIT_ASSERT_EQUAL(std::string("joe"), objUnpacked.getField("name").String());
 	CPPUNIT_ASSERT_EQUAL(33.7, objUnpacked.getField("age").Number());
 
 }
 
-void CentaurMessageTestCase::testZMQ_ReqRep_helper(std::vector<char> &dataOriginal, CentaurSocketRep &rep, CentaurSocketReq &req)
+void CentaurMessageTestCase::testZMQ_ReqRep_helper(CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> &dataOriginal, CentaurSocketRep &rep, CentaurSocketReq &req)
 {
-	std::vector<char> dataFromRequest;
+	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> dataFromRequest;
 	CPPUNIT_ASSERT_EQUAL(-1, rep.recv(dataFromRequest, false));
 	CPPUNIT_ASSERT_EQUAL(EAGAIN, rep.getError());
 
-	CPPUNIT_ASSERT_EQUAL((int)dataOriginal.size(), req.send(dataOriginal, true));
+	CPPUNIT_ASSERT_EQUAL((int)dataOriginal.getCount(), req.send(dataOriginal, true));
 
 	for (int tries = 0; tries < 1000; tries++)
 	{
 		int rc = rep.recv(dataFromRequest, false);
 		if (rc >= 0)
 		{
-			CPPUNIT_ASSERT_EQUAL((int)dataOriginal.size(), rc);
+			CPPUNIT_ASSERT_EQUAL((int)dataOriginal.getCount(), rc);
 			break;
 		}
 		CPPUNIT_ASSERT_EQUAL(EAGAIN, rep.getError());
 		usleep(1);
 	}
-	CPPUNIT_ASSERT_EQUAL(dataOriginal.size(), dataFromRequest.size());
-	CPPUNIT_ASSERT_EQUAL(0, memcmp(dataOriginal.data(), dataFromRequest.data(), dataOriginal.size()));
+	CPPUNIT_ASSERT_EQUAL(dataOriginal.getCount(), dataFromRequest.getCount());
+	CPPUNIT_ASSERT_EQUAL(0, memcmp(dataOriginal.getData(), dataFromRequest.getData(), dataOriginal.getSize()));
 
 
-	std::vector<char> dataFromResponse;
+	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> dataFromResponse;
 	CPPUNIT_ASSERT_EQUAL(-1, req.recv(dataFromResponse, false));
 	CPPUNIT_ASSERT_EQUAL(EAGAIN, req.getError());
 
-	CPPUNIT_ASSERT_EQUAL((int)dataOriginal.size(), rep.send(dataOriginal, true));
+	CPPUNIT_ASSERT_EQUAL((int)dataOriginal.getCount(), rep.send(dataOriginal, true));
 
 	for (int tries = 0; tries < 1000; tries++)
 	{
 		int rc = req.recv(dataFromResponse, false);
 		if (rc >= 0)
 		{
-			CPPUNIT_ASSERT_EQUAL((int)dataOriginal.size(), rc);
+			CPPUNIT_ASSERT_EQUAL((int)dataOriginal.getCount(), rc);
 			break;
 		}
 		CPPUNIT_ASSERT_EQUAL(EAGAIN, req.getError());
 		usleep(1);
 	}
-	CPPUNIT_ASSERT_EQUAL(dataOriginal.size(), dataFromResponse.size());
-	CPPUNIT_ASSERT_EQUAL(0, memcmp(dataOriginal.data(), dataFromResponse.data(), dataOriginal.size()));
+	CPPUNIT_ASSERT_EQUAL(dataOriginal.getCount(), dataFromResponse.getCount());
+	CPPUNIT_ASSERT_EQUAL(0, memcmp(dataOriginal.getData(), dataFromResponse.getData(), dataOriginal.getSize()));
 }
 
 void CentaurMessageTestCase::testZMQ_ReqRep()
 {
-	std::vector<char> dataOriginal;
-	dataOriginal.resize(ZEROMQ_DATA_FACTOR * 256);
+	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> dataOriginal;
+	dataOriginal.setCount(ZEROMQ_DATA_FACTOR * 256);
 
 	for (int i = 0; i < ZEROMQ_DATA_FACTOR; i++)
 	{
 		for (int j = 0; j < 256; j++)
 		{
 			int index = (i * 256) + j;
-			CPPUNIT_ASSERT(index < (int)dataOriginal.size());
+			CPPUNIT_ASSERT(index < (int)dataOriginal.getCount());
 			dataOriginal.operator [](index) = j;
 		}
 	}
@@ -122,15 +120,15 @@ void CentaurMessageTestCase::testZMQ_ReqRep_10000()
 
 	double t1 = (tv.tv_sec) * 1000 + (tv.tv_usec) / 1000 ; // convert tv_sec & tv_usec to millisecond
 
-	std::vector<char> dataOriginal;
-	dataOriginal.resize(ZEROMQ_DATA_FACTOR * 256);
+	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> dataOriginal;
+	dataOriginal.setCount(ZEROMQ_DATA_FACTOR * 256);
 
 	for (int i = 0; i < ZEROMQ_DATA_FACTOR; i++)
 	{
 		for (int j = 0; j < 256; j++)
 		{
 			int index = (i * 256) + j;
-			CPPUNIT_ASSERT(index < (int)dataOriginal.size());
+			CPPUNIT_ASSERT(index < (int)dataOriginal.getCount());
 			dataOriginal.operator [](index) = j;
 		}
 	}
@@ -150,7 +148,7 @@ void CentaurMessageTestCase::testZMQ_ReqRep_10000()
 
 			double diff = ((tv.tv_sec) * 1000 + (tv.tv_usec) / 1000) - t1; // convert tv_sec & tv_usec to millisecond
 
-			std::cerr << i << " in " << diff << " milliseconds (" << diff / (double)i << " milliseconds per bounce) of " << dataOriginal.size() / 1024 << "KB" << "\n";
+			std::cerr << i << " in " << diff << " milliseconds (" << diff / (double)i << " milliseconds per bounce) of " << dataOriginal.getCount() / 1024 << "KB" << "\n";
 		}
 		testZMQ_ReqRep_helper(dataOriginal, rep, req);
 	}
@@ -158,15 +156,15 @@ void CentaurMessageTestCase::testZMQ_ReqRep_10000()
 
 void CentaurMessageTestCase::testZMQ_PubSub()
 {
-	std::vector<char> dataOriginal;
-	dataOriginal.resize(ZEROMQ_DATA_FACTOR * 256);
+	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> dataOriginal;
+	dataOriginal.setCount(ZEROMQ_DATA_FACTOR * 256);
 
 	for (int i = 0; i < ZEROMQ_DATA_FACTOR; i++)
 	{
 		for (int j = 0; j < 256; j++)
 		{
 			int index = (i * 256) + j;
-			CPPUNIT_ASSERT(index < (int)dataOriginal.size());
+			CPPUNIT_ASSERT(index < (int)dataOriginal.getCount());
 			dataOriginal.operator [](index) = j;
 		}
 	}
@@ -177,11 +175,11 @@ void CentaurMessageTestCase::testZMQ_PubSub()
 	CentaurSocketSub sub("tcp://127.0.0.1:5562");
 	CPPUNIT_ASSERT(sub.open(false));
 
-	std::vector<char> dataFromSubscriber;
+	CM_Array<char, 256 * ZEROMQ_DATA_FACTOR> dataFromSubscriber;
 	CPPUNIT_ASSERT_EQUAL(-1, sub.recv(dataFromSubscriber, false));
 	CPPUNIT_ASSERT_EQUAL(EAGAIN, sub.getError());
 
-	CPPUNIT_ASSERT_EQUAL((int)dataOriginal.size(), pub.send(dataOriginal, true));
+	CPPUNIT_ASSERT_EQUAL((int)dataOriginal.getCount(), pub.send(dataOriginal, true));
 
 	CPPUNIT_ASSERT_EQUAL(-1, sub.recv(dataFromSubscriber, false));
 	CPPUNIT_ASSERT_EQUAL(EAGAIN, sub.getError());
@@ -191,22 +189,22 @@ void CentaurMessageTestCase::testZMQ_PubSub()
 
 	sleep(1); // give the socket the chance to apply the filter...
 
-	memcpy(dataOriginal.data(), filter, strlen(filter));
+	memcpy(dataOriginal.getData(), filter, strlen(filter));
 
-	CPPUNIT_ASSERT_EQUAL((int)dataOriginal.size(), pub.send(dataOriginal, true));
+	CPPUNIT_ASSERT_EQUAL((int)dataOriginal.getCount(), pub.send(dataOriginal, true));
 
 	for (int tries = 0; tries < 1000; tries++)
 	{
 		int rc = sub.recv(dataFromSubscriber, false);
 		if (rc >= 0)
 		{
-			CPPUNIT_ASSERT_EQUAL((int)dataOriginal.size(), rc);
+			CPPUNIT_ASSERT_EQUAL((int)dataOriginal.getCount(), rc);
 			break;
 		}
 		CPPUNIT_ASSERT_EQUAL(EAGAIN, sub.getError());
 		usleep(1);
 	}
-	CPPUNIT_ASSERT_EQUAL(dataOriginal.size(), dataFromSubscriber.size());
-	CPPUNIT_ASSERT_EQUAL(0, memcmp(dataOriginal.data(), dataFromSubscriber.data(), dataOriginal.size()));
+	CPPUNIT_ASSERT_EQUAL(dataOriginal.getCount(), dataFromSubscriber.getCount());
+	CPPUNIT_ASSERT_EQUAL(0, memcmp(dataOriginal.getData(), dataFromSubscriber.getData(), dataOriginal.getSize()));
 
 }

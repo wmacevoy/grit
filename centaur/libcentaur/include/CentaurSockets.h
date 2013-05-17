@@ -3,8 +3,12 @@
 #include <vector>
 #include <cstring>
 
+#include <zmq.h>
+
+#include "CentaurTypes.h"
+
 #define ZEROMQ_CONTEXT_NUMBER_IO_THREADS		1
-#define ZEROMQ_MSG_BLOCK_SIZE					32 // not sure what is optimal
+#define ZEROMQ_MSG_BLOCK_SIZE					1024 // not sure what is optimal
 
 #define CENTAURSOCKET_RECV_NOT_ENOUGH_SPACE		-2
 
@@ -27,6 +31,7 @@ public:
 	static void * getContext();
 };
 
+
 class CentaurSocket {
 
 protected:
@@ -48,9 +53,52 @@ public:
 	bool close();
 
 	int send(const char * pData, int nData, bool block = true);
-	int send(std::vector<char> &data, bool block = true);
 
-	int recv(std::vector<char> &data, bool block = false);
+	template <class T, unsigned int staticCount, class Alloc>
+	int send(CM_Array<T, staticCount, Alloc> &data, bool block = true)
+	{
+		return send((const char *)data.getData(), data.getSize());
+	}
+
+	template <unsigned int staticCount, class Alloc>
+	int recv(CM_Array<char, staticCount, Alloc> &data, bool block = false)
+	{
+		int flags = block ? 0 : ZMQ_NOBLOCK;
+
+		int nData = 0;
+
+		int rcvmore = 1;
+		size_t sz = sizeof(rcvmore);
+
+		while (rcvmore)
+		{
+			data.setCount(data.getCount() + ZEROMQ_MSG_BLOCK_SIZE);
+			char * pData = data.getData() + (data.getCount() - ZEROMQ_MSG_BLOCK_SIZE);
+
+		    int rc = zmq_recv(m_socket, pData, ZEROMQ_MSG_BLOCK_SIZE, flags);
+
+		    if (rc < 0)
+		    {
+		    	data.setCount(data.getCount() - ZEROMQ_MSG_BLOCK_SIZE);
+		    	return rc;
+		    }
+
+		    nData += rc;
+
+		    if (rc < (int)ZEROMQ_MSG_BLOCK_SIZE)
+		    	data.setCount(nData);
+
+		    rc = zmq_getsockopt(m_socket, ZMQ_RCVMORE, &rcvmore, &sz);
+		    if (rc)
+		    {
+		    	data.setCount(nData);
+		    	return rc;
+		    }
+		}
+
+		data.setCount(nData);
+		return nData;
+	}
 
 };
 

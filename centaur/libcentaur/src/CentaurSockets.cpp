@@ -1,7 +1,5 @@
 #include "CentaurSockets.h"
 
-#include <zmq.h>
-
 // ***************************************************************************
 // ZeroMQContext
 
@@ -132,46 +130,6 @@ int CentaurSocket::send(const char * pData, int nData, bool block)
 	return nData;
 }
 
-int CentaurSocket::send(std::vector<char> &data, bool block)
-{
-	return send(data.data(), data.size(), block);
-}
-
-int CentaurSocket::recv(std::vector<char> &data, bool block)
-{
-	int flags = block ? 0 : ZMQ_NOBLOCK;
-
-	int nData = 0;
-
-	int rcvmore = 1;
-	size_t sz = sizeof(rcvmore);
-
-	while (rcvmore)
-	{
-		data.resize(data.size() + ZEROMQ_MSG_BLOCK_SIZE);
-		char * pData = data.data() + (data.size() - ZEROMQ_MSG_BLOCK_SIZE);
-
-	    int rc = zmq_recv(m_socket, pData, ZEROMQ_MSG_BLOCK_SIZE, flags);
-
-	    if (rc < 0)
-	    {
-	    	data.resize(data.size() - ZEROMQ_MSG_BLOCK_SIZE);
-	    	return rc;
-	    }
-
-	    nData += rc;
-
-	    rc = zmq_getsockopt(m_socket, ZMQ_RCVMORE, &rcvmore, &sz);
-	    if (rc)
-	    {
-	    	data.resize(nData);
-	    	return rc;
-	    }
-	}
-
-	data.resize(nData);
-	return nData;
-}
 
 // ***************************************************************************
 // CentaurSocketPub
