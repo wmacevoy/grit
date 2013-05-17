@@ -6,24 +6,103 @@
 #include <ctime>
 #include "DynamixelDriver.hpp"
 
-const int divider=2;
+const int divider=1;
 
 using namespace std;
 
-class Leg {
+const int MAXPOSITION=4095;
+const float ANGLE180=(float)360.0/2.0;
+const float ANGLE90=ANGLE180/2.0;
+const int MINPOSITION=0;
+const int MAXLIMIT=4000;
+const int MINLIMIT=100;
+
+class point {
+	public:
+	float x,y,z;
+};
+class angles {
+	public:
+	float knee,femur,hip;
+};
+
+class Point {  // A point is space or set of angles
+	public:
+	union {
+		point p;
+		angles a;  
+	};
+	Point(float newX=0,float newY=0,float newZ=0) {
+		p.x=newX;
+		p.y=newY;
+		p.z=newZ;
+	}
+	Point interp(float t,const Point &b) {
+	  Point newp(t*(b.p.x-p.x)+p.x,t*(b.p.y-p.y)+p.y,t*(b.p.z-p.z)+p.z);
+	  return newp;
+	}
+	Point interp(int i,int max,const Point &b) {
+	  float t=(float)i/(float)max;
+	  return interp(t,b);
+	}
+	void mapAngle(float min,float max,float newMin,float newMax) {
+		a.knee=(a.knee-min)*(newMax-newMin)/(max-min)+newMin;
+		a.femur=(a.femur-min)*(newMax-newMin)/(max-min)+newMin;
+		a.hip=(a.hip-min)*(newMax-newMin)/(max-min)+newMin;		
+	}
+	void reportPoint() {
+	  cout << "Point:"<<p.x << "," << p.y <<","<< p.z<<endl;
+	}
+	void reportAngle() {
+	  cout << "Angle:"<<a.knee << "," << a.femur <<","<< a.hip <<endl;
+	}
+};
+
+class LegGeometry {
+	float l0,l1,l2;
+	public:
+	LegGeometry() {
+	  l0=2.5; //inches
+	  l1=8.5;
+	  l2=15.5;
+	}
+	// Do not worry about the hip rotation
+	void compute2D(float x,float z,float &knee,float &femur) {
+	  float d=sqrt(x*x+z*z); // distance from hip point in space
+	  float theta1=acos((l1*l1+l2*l2-d*d)/2.0*l1*l2)*ANGLE180/M_PI;
+	  float theta2=acos((d*d+l1*l1-l2*l2)/2.0*d*l1)*ANGLE180/M_PI;
+	  float theta3=acos((d*d+z*z-x*x)/2.0*d*z)*ANGLE180/M_PI;
+	  cout << "x="<<x << " z="<<z << " d="<<d<<endl;
+	  cout << "l0="<<l0<<" l1="<<l1<<" l2="<<l2<<endl;
+	  cout << "Theta 1:"<< theta1 << endl;
+	  cout << "Theta 2:"<< theta2 << endl;	  
+	  cout << "Theta 3:"<< theta3 << endl;      
+	  knee=theta1;
+	  femur=ANGLE180-theta2-theta3;
+	}
+	void compute3D(float x,float y,float z,float &knee,float &femur,float &hip,bool invert) {
+	  float d=sqrt(x*x+y*y);
+	  hip=ANGLE180-acos(x/d)*ANGLE180/M_PI;
+	  compute2D(d,z,knee,femur);
+	  if (invert) {
+	    hip=ANGLE180-hip;
+	  }
+	}
+	void compute(Point &p,Point &joint,bool invert) {
+	  compute3D(p.p.x,p.p.y,p.p.z,joint.a.knee,joint.a.femur,joint.a.hip,invert);
+	}
+};
+
+class Leg:public LegGeometry {
 	Servo knee,femur,hip;
 	string name;
 	int kneePos,femurPos,hipPos;
-	float l0,l1,l2;
 public:
 	void init(int kneeid,int femurid,int hipid,string newName) {
 	  name=newName;
 	  knee.init(kneeid,name+"k");
 	  femur.init(femurid,name+"f");
 	  hip.init(hipid,name+"h");
-	  l0=2.5; //inches
-	  l1=8.0;
-	  l2=15.5;
 	}
 	void setPos(int newKnee=2048,int newFemur=2048,int newHip=2048) {
 	  kneePos=newKnee;
@@ -56,8 +135,10 @@ class LegSequence {
   int pos;
   long total,offset;
   bool reverse,interp;
+  LegGeometry lg;
   public:
-  LegSequence() {
+  LegSequence(LegGeometry newLg) {
+	 lg=newLg;
     init(0,false,false);
   }
   virtual void init(long newOffset,bool newReverse,bool newInterp) {
@@ -106,39 +187,52 @@ class LegSequence {
       s-=time[i];
     }
   }
+  void rectangle(Point top_front,Point top_back,Point bottom_front,Point bottom_back,int time,bool invert) {
+    Point angles;
+    lg.compute(top_front,angles,invert);
+    add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
+    top_front.reportPoint();
+    angles.reportAngle();
+    for (int i=0;i<MAXPOS-2;i++) {
+	  	Point m;
+	  	m=bottom_front.interp(i,MAXPOS-2,bottom_back);
+	  	lg.compute(m,angles,invert);
+	  	add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
+        m.reportPoint();
+        angles.reportAngle();
+	}
+    lg.compute(top_back,angles,invert);
+    add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
+    top_back.reportPoint();
+    angles.reportAngle();
+  }
+  void write() {
+  }
   virtual ~LegSequence() {
   }
 };
 
-void compute2D(float x,float y,float l,float &knee,float &femur) {
-  float h=sqrt(x*x+y*y);
-  float theta1=atan(x/y)*180.0/M_PI;
-  knee=2.0*asin((h/2.0)/l)*180.0/M_PI; // assumes femur=tibia=l
-  float theta2=180.0-90.0-knee/2;
-  femur=180.0-theta1-theta2;
-}
-
-void compute3D(float x,float y,float z,float l,float &knee,float &femur,float &hip,bool invert) {
-  float h=sqrt(x*x+z*z);
-  hip=180-acos(x/h)*180.0/M_PI;
-  compute2D(h,y,l,knee,femur);
-  if (invert) {
-    hip=180.0-hip;
-  }
-}
-
 class Crab1:public LegSequence {
 public:
-	void init(int offset,bool reverse,bool interp) {
-		LegSequence::init(offset,reverse,true);
-		add(2048,2048,2048,3000/divider);
-		add(2748,2048,1548,333/divider);
-		add(2748,300,1548,333/divider);
-		add(2048,300,2048,333/divider);
+    Crab1(LegGeometry lg):LegSequence(lg) {
+	}
+	void init(int start,int total) {
+		LegSequence::init(start,false,true);
+		Point top_front   (10.0,10.0,10.0);
+		Point top_back    ( 0.0,10.0,10.0);
+		Point bottom_back ( 0.0,10.0,15.0);
+		Point bottom_front(10.0,10.0,15.0);
+		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
+//		add(2048,2048,2048,3000/divider);
+//		add(2748,2048,1548,333/divider);
+//		add(2748,300,1548,333/divider);
+//		add(2048,300,2048,333/divider);
 	}
 };
 class Crab2:public LegSequence {
 public:
+    Crab2(LegGeometry lg):LegSequence(lg) {
+	}
 	void init(int offset,bool reverse,bool interp) {
 		LegSequence::init(offset,reverse,true);
 		add(2048,2048,2048,3000/divider);
@@ -149,6 +243,8 @@ public:
 };
 class Crab3:public LegSequence {
 public:
+    Crab3(LegGeometry lg):LegSequence(lg) {
+	}
 	void init(int offset,bool reverse,bool interp) {
 		LegSequence::init(offset,reverse,true);
 		add(2748,2048,1548,3000/divider);
@@ -159,6 +255,8 @@ public:
 };
 class Crab4:public LegSequence {
 public:
+    Crab4(LegGeometry lg):LegSequence(lg) {
+	}
 	void init(int offset,bool reverse,bool interp) {
 		LegSequence::init(offset,reverse,true);
 		add(2748,2048,2548,3000/divider);
@@ -170,6 +268,8 @@ public:
 
 class Center:public LegSequence {
 public:
+    Center(LegGeometry lg):LegSequence(lg) {
+	}
 	void init(int offset,bool reverse,bool interp) {
 		LegSequence::init(offset,reverse,interp);
 		add(2048,2048,2048,1000);
@@ -180,15 +280,23 @@ public:
 class Quad {
 	Leg l1,l2,l3,l4;
 	LegSequence *l1s,*l2s,*l3s,*l4s;
-	Center f1,f2,f3,f4;
+	Center *f1,*f2,*f3,*f4;
 public:
 	Quad() {
-		f1.init(0,false,false);
-		f2.init(0,false,false);
-		f3.init(0,false,false);
-		f4.init(0,false,false);
-		setSequences(&f1,&f2,&f3,&f4);
+		f1=new Center(l1);
+		f2=new Center(l2);
+		f3=new Center(l3);
+		f4=new Center(l4);
+		f1->init(0,false,false);
+		f2->init(0,false,false);
+		f3->init(0,false,false);
+		f4->init(0,false,false);
+		setSequences(f1,f2,f3,f4);
 	}
+	LegGeometry leg1() {return l1;}
+	LegGeometry leg2() {return l2;}
+	LegGeometry leg3() {return l3;}
+	LegGeometry leg4() {return l4;}
 	void setSequences(LegSequence *newl1s,LegSequence *newl2s,LegSequence *newl3s,LegSequence *newl4s){
 		l1s=newl1s;
 		l2s=newl2s;
@@ -229,13 +337,13 @@ int main()
 {
 	try {
     Quad legs;
-    sleep(2);
-    legs.init(512);
-    Crab1 l1s;
-    Crab2 l2s;
-    Crab3 l3s;
-    Crab4 l4s;
-    l1s.init(0,false,true);
+  //2   sleep(2);
+    legs.init(255);
+    Crab1 l1s(legs.leg1());
+    Crab2 l2s(legs.leg2());
+    Crab3 l3s(legs.leg3());
+    Crab4 l4s(legs.leg4());
+    l1s.init(0,4000);
     l2s.init(3000/divider,false,true);
     l3s.init(1000/divider,false,true);
     l4s.init(2000/divider,false,true);

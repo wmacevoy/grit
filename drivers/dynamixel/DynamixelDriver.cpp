@@ -6,6 +6,7 @@
  */
 
 #include <iostream>
+#include <unistd.h>
 
 #include <dynamixel.h>
 
@@ -104,6 +105,7 @@ void DynamixelInterface::sendWord(int id,int address,int word)  {
 		  dxl_write_word(id,address,word);
 		  retry--;
 		    status=dxl_get_result();
+		    cout << status << endl;
 		    if (!DXL_ComError::isOK(status)) usleep(10000);
 	  }while (!DXL_ComError::isOK(status) && retry>0);
     if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,0,__FILE__,__LINE__);
@@ -116,6 +118,7 @@ void DynamixelInterface::sendByte(int id,int address,unsigned char byte) {
 		  dxl_write_byte(id,address,byte);
 		  retry--;
 		    status=dxl_get_result();
+		    cout << status << endl;
 		    if (!DXL_ComError::isOK(status)) usleep(10000);
 	  }while (!DXL_ComError::isOK(status) && retry>0);
     if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,id,__FILE__,__LINE__);
@@ -129,7 +132,12 @@ int DynamixelInterface::readWord(int id,int address) {
 		  value=dxl_read_word(id,address);
 		  retry--;
 		    status=dxl_get_result();
-		    if (!DXL_ComError::isOK(status)) usleep(10000);
+		    cout << status << endl;
+		    if (!DXL_ComError::isOK(status)) {
+		//		dxl_terminate();
+				usleep(10000);
+		//		dxl_initialize(DEVICEINDEX,BAUDNUM);
+			}
 	  }while (!DXL_ComError::isOK(status) && retry>0);
     if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,id,__FILE__,__LINE__);
     return value;
@@ -177,8 +185,11 @@ DynamixelInterface DXL2USB;
   void Servo::setTorque(int value){
 	//  sendWord(DXL_MAX_TORQUE_WORD,value);
 	  DXL2USB.sendWord(id,DXL_TORQUE_WORD,value);
+	  usleep(100);
 	  DXL2USB.sendByte(id,DXL_TORQUE_MODE_BYTE,0);
+	  usleep(100);
 	  DXL2USB.sendWord(id,DXL_MOVING_SPEED_WORD,150);
+	  usleep(100);
   }
   void Servo::joint(int position){
 	  if(wheelMode){
