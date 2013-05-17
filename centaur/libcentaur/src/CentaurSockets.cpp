@@ -47,6 +47,14 @@ CentaurSocket::~CentaurSocket()
 	close();
 }
 
+int CentaurSocket::getError(const char ** error)
+{
+	int errorNumber = errno;
+	if (error)
+		*error = zmq_strerror(errorNumber);
+	return errorNumber;
+}
+
 bool CentaurSocket::open()
 {
 
@@ -146,13 +154,19 @@ int CentaurSocket::recv(std::vector<char> &data, bool block)
 	    int rc = zmq_recv(m_socket, pData, ZEROMQ_MSG_BLOCK_SIZE, flags);
 
 	    if (rc < 0)
+	    {
+	    	data.resize(data.size() - ZEROMQ_MSG_BLOCK_SIZE);
 	    	return rc;
+	    }
 
 	    nData += rc;
 
 	    rc = zmq_getsockopt(m_socket, ZMQ_RCVMORE, &rcvmore, &sz);
 	    if (rc)
+	    {
+	    	data.resize(nData);
 	    	return rc;
+	    }
 	}
 
 	data.resize(nData);
@@ -178,6 +192,27 @@ CentaurSocketSub::CentaurSocketSub(const char *addr, bool connect)
 
 CentaurSocketSub::~CentaurSocketSub()
 {}
+
+bool CentaurSocketSub::open(bool defaultSubscribe)
+{
+	if (!CentaurSocket::open())
+		return false;
+
+	if (defaultSubscribe)
+		return subscribe("", 0) == 0;
+
+	return true;
+}
+
+int CentaurSocketSub::subscribe(const void * pFilter, size_t nFilter)
+{
+	return zmq_setsockopt(m_socket, ZMQ_SUBSCRIBE, pFilter, nFilter);
+}
+
+int CentaurSocketSub::unsubscribe(const void * pFilter, size_t nFilter)
+{
+	return zmq_setsockopt(m_socket, ZMQ_UNSUBSCRIBE, pFilter, nFilter);
+}
 
 // ***************************************************************************
 // CentaurSocketRep

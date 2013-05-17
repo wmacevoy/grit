@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 ThreadDriverRegistry::ThreadDriverRegistry()
-:	m_socket("tcp://*:31337", 1)
+:	m_socket("tcp://*:31337")
 {}
 
 bool ThreadDriverRegistry::start()
