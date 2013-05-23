@@ -10,12 +10,16 @@ const int divider=1;
 
 using namespace std;
 
-const int MAXPOSITION=4095;
-const float ANGLE180=(float)360.0/2.0;
+const int XCOORD=0;
+const int YCOORD=1;
+const float MAXPOSITION=4095.0;
+const float ANGLE360=360.0;
+const float ANGLE180=ANGLE360/2.0;
 const float ANGLE90=ANGLE180/2.0;
-const int MINPOSITION=0;
-const int MAXLIMIT=4000;
-const int MINLIMIT=100;
+const float ANGLE45=ANGLE90/2.0;
+const float MINPOSITION=0;
+const int MAXLIMIT=4046;
+const int MINLIMIT=50;
 
 class point {
 	public:
@@ -59,31 +63,78 @@ class Point {  // A point is space or set of angles
 };
 
 class LegGeometry {
-	float l0,l1,l2;
+	// Length of the members of the leg starting with hip
+	float l0,l1,l2,zoffset,koffset,ktibia,kangle;
+	// Multiplier for gear ration from full circle movement
+    protected:
+	float g0,g1,g2;
+	// Angular offset for 0
+	float o0,o1,o2;
+    float coordinateMap[2][2];
 	public:
+    void setMap(float mxx=1.0,float mxy=0.0,float myx=0.0,float myy=1.0) {
+  	  coordinateMap[0][0]=mxx;
+  	  coordinateMap[1][0]=mxy;
+  	  coordinateMap[0][1]=myx;
+  	  coordinateMap[1][1]=myy;
+    }
 	LegGeometry() {
-	  l0=2.5; //inches
-	  l1=8.5;
-	  l2=15.5;
+	  koffset=2.25;
+	  ktibia=15.25;
+	  l0=2.375; //inches
+	  l1=8.25;
+	  l2=sqrt(ktibia*ktibia+koffset*koffset);
+	  kangle=acos(koffset*koffset+ktibia*ktibia-l2*l2)/(2.0*koffset*ktibia)*ANGLE180/M_PI;
+	  g0=1.0;
+	  g1=4.0;
+	  g2=4.0;
+	  zoffset=1.25;
+	//  o0=500.0;
+	//  o1=-5700.0;
+	//  o2=-1400.0;
+	  o0=180.0; // degrees
+	  o1=180.0;
+	  o2=180.0;
+	  setMap(); // The identity map
 	}
+/*	float robustACos(float cosvalue) {
+		float retval=0.0;
+//		cout <<"CosValue:"<<cosvalue<<endl;
+		while (cosvalue > 1.0) {
+			cosvalue-=2.0;
+			retval+=M_PI/2.0;
+		}
+		while (cosvalue<-1.0) {
+			cosvalue+=2.0;
+			retval-=M_PI/2.0;
+		}
+		retval+=acos(cosvalue);
+//		cout <<"ACos:" << retval <<endl;
+		return retval;
+	} */
 	// Do not worry about the hip rotation
 	void compute2D(float x,float z,float &knee,float &femur) {
 	  float d=sqrt(x*x+z*z); // distance from hip point in space
-	  float theta1=acos((l1*l1+l2*l2-d*d)/2.0*l1*l2)*ANGLE180/M_PI;
-	  float theta2=acos((d*d+l1*l1-l2*l2)/2.0*d*l1)*ANGLE180/M_PI;
-	  float theta3=acos((d*d+z*z-x*x)/2.0*d*z)*ANGLE180/M_PI;
-	  cout << "x="<<x << " z="<<z << " d="<<d<<endl;
-	  cout << "l0="<<l0<<" l1="<<l1<<" l2="<<l2<<endl;
+	  cout << "2D x="<<x << " z="<<z << " d="<<d<<endl;
+	  cout << "l0="<<l0<<" l1="<<l1<<" l2="<<l2<<" kangle="<<kangle<<endl;
+	  float theta1=acos((l1*l1+l2*l2-d*d)/(2.0*l1*l2))*ANGLE180/M_PI-kangle;
+	  float theta2=acos((d*d+l1*l1-l2*l2)/(2.0*d*l1))*ANGLE180/M_PI;
+	  float theta3=acos((d*d+z*z-x*x)/(2.0*d*z))*ANGLE180/M_PI;
 	  cout << "Theta 1:"<< theta1 << endl;
 	  cout << "Theta 2:"<< theta2 << endl;	  
-	  cout << "Theta 3:"<< theta3 << endl;      
-	  knee=theta1;
-	  femur=ANGLE180-theta2-theta3;
+	  cout << "Theta 3:"<< theta3 << endl;
+	  knee=(ANGLE90-theta1);
+	  femur=-(theta2+theta3-ANGLE90);
 	}
 	void compute3D(float x,float y,float z,float &knee,float &femur,float &hip,bool invert) {
+	  cout << "3D x="<<x << " y="<<y << " z="<<z<<endl;
+	  float nx=x*coordinateMap[0][0]+y*coordinateMap[0][1];
+	  float ny=x*coordinateMap[0][1]+y*coordinateMap[1][1];
+	  x=nx;
+	  y=ny;
 	  float d=sqrt(x*x+y*y);
-	  hip=ANGLE180-acos(x/d)*ANGLE180/M_PI;
-	  compute2D(d,z,knee,femur);
+	  hip=-(ANGLE90-acos(x/d)*ANGLE180/M_PI-ANGLE45);
+	  compute2D(d-l0,z+zoffset,knee,femur);
 	  if (invert) {
 	    hip=ANGLE180-hip;
 	  }
@@ -104,10 +155,15 @@ public:
 	  femur.init(femurid,name+"f");
 	  hip.init(hipid,name+"h");
 	}
-	void setPos(int newKnee=2048,int newFemur=2048,int newHip=2048) {
-	  kneePos=newKnee;
-	  femurPos=newFemur;
-	  hipPos=newHip;
+	void setPos(int newKnee=0,int newFemur=0,int newHip=0) {
+		  cout << "Knee Angle:"<<newKnee<<endl;
+		  cout << "Femur Angle:"<<newFemur<<endl;
+		  cout << "Hip Angle:"<<newHip<<endl;	  hipPos  =(newHip  *g0+o0)*MAXPOSITION/ANGLE360;
+	  femurPos=(newFemur*g1+o1)*MAXPOSITION/ANGLE360;
+	  kneePos =(newKnee *g2+o2)*MAXPOSITION/ANGLE360;
+	  cout << "Knee:"<<kneePos<<endl;
+	  cout << "Femur:"<<femurPos<<endl;
+	  cout << "Hip:"<<hipPos<<endl;
 	  knee.joint(kneePos);
 	  femur.joint(femurPos);
 	  hip.joint(hipPos);
@@ -124,7 +180,7 @@ public:
 	}
 };
 
-const int MAXPOS=10;
+const int MAXPOS=20;
 
 class LegSequence {
   int hAngle[MAXPOS];
@@ -162,7 +218,7 @@ class LegSequence {
     clock_t t;
     t = clock();
     long long millis=(((long long)t)*1000)/CLOCKS_PER_SEC;
-    long s=(millis-offset) % total;
+    long s=(millis+offset) % total;
    // l.report();
    // cout <<"s" <<s << endl;
     if (reverse) s=total-s;
@@ -218,53 +274,106 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (10.0,10.0,10.0);
-		Point top_back    ( 0.0,10.0,10.0);
-		Point bottom_back ( 0.0,10.0,15.0);
-		Point bottom_front(10.0,10.0,15.0);
+		Point top_front   (8.0,8.0,9.0);
+		Point top_back    (8.0,0.0,9.0);
+		Point bottom_back (8.0,0.0,13.0);
+		Point bottom_front(8.0,8.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
-//		add(2048,2048,2048,3000/divider);
-//		add(2748,2048,1548,333/divider);
-//		add(2748,300,1548,333/divider);
-//		add(2048,300,2048,333/divider);
 	}
 };
 class Crab2:public LegSequence {
 public:
     Crab2(LegGeometry lg):LegSequence(lg) {
 	}
-	void init(int offset,bool reverse,bool interp) {
-		LegSequence::init(offset,reverse,true);
-		add(2048,2048,2048,3000/divider);
-		add(2748,2048,2548,333/divider);
-		add(2748,300,2548,333/divider);
-		add(2048,300,2048,333/divider);
+	void init(int start,int total) {
+		LegSequence::init(start,false,true);
+		Point top_front   (-8.0,8.0,9.0);
+		Point top_back    (-8.0,0.0,9.0);
+		Point bottom_back (-8.0,0.0,13.0);
+		Point bottom_front(-8.0,8.0,13.0);
+		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
 	}
 };
 class Crab3:public LegSequence {
 public:
     Crab3(LegGeometry lg):LegSequence(lg) {
 	}
-	void init(int offset,bool reverse,bool interp) {
-		LegSequence::init(offset,reverse,true);
-		add(2748,2048,1548,3000/divider);
-		add(2048,2048,2048,333/divider);
-		add(2048,300,2048,333/divider);
-		add(2748,300,1548,333/divider);
+	void init(int start,int total) {
+		LegSequence::init(start,false,true);
+		Point top_front   (-8.0,0.0,9.0);
+		Point top_back    (-8.0,8.0,9.0);
+		Point bottom_back (-8.0,8.0,13.0);
+		Point bottom_front(-8.0,0.0,13.0);
+		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
 	}
 };
 class Crab4:public LegSequence {
 public:
     Crab4(LegGeometry lg):LegSequence(lg) {
 	}
-	void init(int offset,bool reverse,bool interp) {
-		LegSequence::init(offset,reverse,true);
-		add(2748,2048,2548,3000/divider);
-		add(2048,2048,2048,333/divider);
-		add(2048,300,2048,333/divider);
-		add(2748,300,2548,333/divider);
+	void init(int start,int total) {
+		LegSequence::init(start,false,true);
+		Point top_front   (8.0,0.0,9.0);
+		Point top_back    (8.0,-8.0,9.0);
+		Point bottom_back (8.0,-8.0,13.0);
+		Point bottom_front(8.0,0.0,13.0);
+		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
 	}
 };
+
+class Dog1:public LegSequence {
+public:
+    Dog1(LegGeometry lg):LegSequence(lg) {
+	}
+	void init(int start,int total) {
+		LegSequence::init(start,false,true);
+		Point top_front   (0.0,16.0,7.0);
+		Point top_back    (0.0,2.0,7.0);
+		Point bottom_back (0.0,2.0,13.0);
+		Point bottom_front(0.0,16.0,13.0);
+		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
+	}
+};
+class Dog2:public LegSequence {
+public:
+    Dog2(LegGeometry lg):LegSequence(lg) {
+	}
+	void init(int start,int total) {
+		LegSequence::init(start,false,true);
+		Point top_front   (0.0,16.0,7.0);
+		Point top_back    (0.0,2.0,7.0);
+		Point bottom_back (0.0,2.0,13.0);
+		Point bottom_front(0.0,16.0,13.0);
+		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
+	}
+};
+class Dog3:public LegSequence {
+public:
+    Dog3(LegGeometry lg):LegSequence(lg) {
+	}
+	void init(int start,int total) {
+		LegSequence::init(start,false,true);
+		Point top_front   (0.0,-2.0,7.0);
+		Point top_back    (0.0,-16.0,7.0);
+		Point bottom_back (0.0,-16.0,13.0);
+		Point bottom_front(0.0,-2.0,13.0);
+		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
+	}
+};
+class Dog4:public LegSequence {
+public:
+    Dog4(LegGeometry lg):LegSequence(lg) {
+	}
+	void init(int start,int total) {
+		LegSequence::init(start,false,true);
+		Point top_front   (0.0,-2.0,7.0);
+		Point top_back    (0.0,-16.0,7.0);
+		Point bottom_back (0.0,-16.0,13.0);
+		Point bottom_front(0.0,-2.0,13.0);
+		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
+	}
+};
+
 
 class Center:public LegSequence {
 public:
@@ -272,7 +381,7 @@ public:
 	}
 	void init(int offset,bool reverse,bool interp) {
 		LegSequence::init(offset,reverse,interp);
-		add(2048,2048,2048,1000);
+		add(0,0,0,1000);
 	}
 };
 
@@ -281,22 +390,28 @@ class Quad {
 	Leg l1,l2,l3,l4;
 	LegSequence *l1s,*l2s,*l3s,*l4s;
 	Center *f1,*f2,*f3,*f4;
+	float legDistance;
 public:
 	Quad() {
+		legDistance=11.5;
 		f1=new Center(l1);
 		f2=new Center(l2);
 		f3=new Center(l3);
 		f4=new Center(l4);
+		l1.setMap(); // The identity x<=x,  y<=y
+		l2.setMap(0.0,-1.0,1.0,0.0); // x<=-y, y<=x
+		l3.setMap(-1.0,0.0,0.0,-1.0); // x<=-x, y<=-y
+		l4.setMap(0.0,1.0,-1.0,0.0); // x<=y, y<=-x
 		f1->init(0,false,false);
 		f2->init(0,false,false);
 		f3->init(0,false,false);
 		f4->init(0,false,false);
 		setSequences(f1,f2,f3,f4);
 	}
-	LegGeometry leg1() {return l1;}
-	LegGeometry leg2() {return l2;}
-	LegGeometry leg3() {return l3;}
-	LegGeometry leg4() {return l4;}
+	Leg leg1() {return l1;}
+	Leg leg2() {return l2;}
+	Leg leg3() {return l3;}
+	Leg leg4() {return l4;}
 	void setSequences(LegSequence *newl1s,LegSequence *newl2s,LegSequence *newl3s,LegSequence *newl4s){
 		l1s=newl1s;
 		l2s=newl2s;
@@ -335,23 +450,36 @@ public:
 
 int main()
 {
+	bool angleMode=true;
 	try {
     Quad legs;
   //2   sleep(2);
-    legs.init(255);
+    legs.init(400);
     Crab1 l1s(legs.leg1());
     Crab2 l2s(legs.leg2());
     Crab3 l3s(legs.leg3());
     Crab4 l4s(legs.leg4());
+    Dog1 d1s(legs.leg1());
+    Dog2 d2s(legs.leg2());
+    Dog3 d3s(legs.leg3());
+    Dog4 d4s(legs.leg4());
     l1s.init(0,4000);
-    l2s.init(3000/divider,false,true);
-    l3s.init(1000/divider,false,true);
-    l4s.init(2000/divider,false,true);
+    l2s.init(3000,4000);
+    l3s.init(1000,4000);
+    l4s.init(2000,4000);
+    d1s.init(0,4000);
+    d2s.init(3000,4000);
+    d3s.init(1000,4000);
+    d4s.init(2000,4000);
     legs.setSequences(&l1s,&l2s,&l3s,&l4s);
 
-	int k=2048;
-	int f=2048;
-	int h=2048;
+	float k=0;
+	float f=0;
+	float h=0;
+	float x=8;
+	float y=8;
+	float z=13;
+	int step=5;
 	legs.setPosAll(k,f,h);
 	while(1)
 	{
@@ -359,33 +487,60 @@ int main()
 		char key=getchar();
 		if( key == 'q')
 			break;
-        if(key=='k')k-=100;
-        if(key=='j')k+=100;
-        if (k<0)k=0;
-        if (k>4095)k=4095;
-        if(key=='f')f-=100;
-        if(key=='d')f+=100;
-        if (f<0)f=0;
-        if (f>4095)f=4095;
-        if(key=='h')h-=100;
-        if(key=='g')h+=100;
-        if (h<0)h=0;
-        if (h>4095)h=4095;
-        if (key=='1') {
-            k=4000;
-            f=95;
-            h=2048;
-        }
-        if (key=='2'){
-          k=2648;
-          f=2048;
-          h=2048;
-        }
-        if (key=='3'){
-          k=95;
-          f=4000;
-          h=2048;
-        }
+		if (key=='A') angleMode=true;
+		if (key=='a') angleMode=false;
+		if (key=='c') legs.setSequences(&l1s,&l2s,&l3s,&l4s);
+		if (key=='d') legs.setSequences(&d1s,&d2s,&d3s,&d4s);
+		if (angleMode) {
+          if(key=='k')k-=step;
+          if(key=='K')k+=step;
+          if (k<=-45)k=-44;
+          if (k>=45)k=44;
+          if(key=='f')f-=step;
+          if(key=='F')f+=step;
+          if (f<=-45)f=-44;
+          if (f>=45)f=44;
+          if(key=='h')h-=step;
+          if(key=='H')h+=step;
+          if (h<=-90)h=-89;
+          if (h>=90)h=89;
+          if (key=='0') {
+            k=0;
+            f=0;
+            h=0;
+          }
+          if (key=='1') {
+              k=44;
+              f=-44;
+              h=0;
+          }
+          if (key=='2'){
+            k=10;
+            f=0;
+            h=0;
+          }
+          if (key=='3'){
+            k=-44;
+            f=44;
+            h=0;
+          }
+          legs.setPosAll(k,f,h);
+		} else {
+			if (key=='x') x+=2;
+			if (key=='X') x-=2;
+			if (key=='y') y+=2;
+			if (key=='Y') y-=2;
+			if (key=='z') z+=2;
+			if (key=='Z') z-=2;
+            legs.leg1().compute3D(x,y,z,k,f,h,false);
+            legs.leg1().setPos(k,f,h);
+            legs.leg2().compute3D(-x,y,z,k,f,h,false);
+            legs.leg2().setPos((int)k,(int)f,(int)h);
+            legs.leg3().compute3D(-x,-y,z,k,f,h,false);
+            legs.leg3().setPos((int)k,(int)f,(int)h);
+            legs.leg4().compute3D(x,-y,z,k,f,h,false);
+            legs.leg4().setPos((int)k,(int)f,(int)h);
+		}
         if (key=='r'){
           legs.report();
         }
@@ -400,9 +555,9 @@ int main()
             millis=(((long long)t)*1000)/CLOCKS_PER_SEC;
           }
         }
-        legs.setPosAll(k,f,h);
         key=' ';
 		cout << "h:" <<h<<" f: "<<f<<" k:"<< k << endl;
+		cout << "x:" <<x<<" y: "<<y<<" z:"<< z << endl;
 	}
 	} catch (DXL_ComError dce){
 		dce.describe();
