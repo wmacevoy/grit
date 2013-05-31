@@ -274,8 +274,8 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (8.0,8.0,9.0);
-		Point top_back    (8.0,0.0,9.0);
+		Point top_front   (8.0,8.0,6.0);
+		Point top_back    (8.0,0.0,6.0);
 		Point bottom_back (8.0,0.0,13.0);
 		Point bottom_front(8.0,8.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
@@ -287,8 +287,8 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (-8.0,8.0,9.0);
-		Point top_back    (-8.0,0.0,9.0);
+		Point top_front   (-8.0,8.0,6.0);
+		Point top_back    (-8.0,0.0,6.0);
 		Point bottom_back (-8.0,0.0,13.0);
 		Point bottom_front(-8.0,8.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
@@ -300,8 +300,8 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (-8.0,0.0,9.0);
-		Point top_back    (-8.0,8.0,9.0);
+		Point top_front   (-8.0,0.0,6.0);
+		Point top_back    (-8.0,8.0,6.0);
 		Point bottom_back (-8.0,8.0,13.0);
 		Point bottom_front(-8.0,0.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
@@ -313,8 +313,8 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (8.0,0.0,9.0);
-		Point top_back    (8.0,-8.0,9.0);
+		Point top_front   (8.0,0.0,6.0);
+		Point top_back    (8.0,-8.0,6.0);
 		Point bottom_back (8.0,-8.0,13.0);
 		Point bottom_front(8.0,0.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
@@ -327,10 +327,10 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (0.0,16.0,7.0);
-		Point top_back    (0.0,2.0,7.0);
-		Point bottom_back (0.0,2.0,13.0);
-		Point bottom_front(0.0,16.0,13.0);
+		Point top_front   (0.0,11.0,6.0);
+		Point top_back    (0.0,1.0,6.0);
+		Point bottom_back (0.0,1.0,13.0);
+		Point bottom_front(0.0,11.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
 	}
 };
@@ -340,10 +340,10 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (0.0,16.0,7.0);
-		Point top_back    (0.0,2.0,7.0);
-		Point bottom_back (0.0,2.0,13.0);
-		Point bottom_front(0.0,16.0,13.0);
+		Point top_front   (0.0,11.0,6.0);
+		Point top_back    (0.0,1.0,6.0);
+		Point bottom_back (0.0,1.0,13.0);
+		Point bottom_front(0.0,11.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
 	}
 };
@@ -353,10 +353,10 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (0.0,-2.0,7.0);
-		Point top_back    (0.0,-16.0,7.0);
-		Point bottom_back (0.0,-16.0,13.0);
-		Point bottom_front(0.0,-2.0,13.0);
+		Point top_front   (0.0,-1.0,6.0);
+		Point top_back    (0.0,-13.0,6.0);
+		Point bottom_back (0.0,-13.0,13.0);
+		Point bottom_front(0.0,-1.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
 	}
 };
@@ -366,10 +366,10 @@ public:
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
-		Point top_front   (0.0,-2.0,7.0);
-		Point top_back    (0.0,-16.0,7.0);
-		Point bottom_back (0.0,-16.0,13.0);
-		Point bottom_front(0.0,-2.0,13.0);
+		Point top_front   (0.0,-1.0,6.0);
+		Point top_back    (0.0,-13.0,6.0);
+		Point bottom_back (0.0,-13.0,13.0);
+		Point bottom_front(0.0,-1.0,13.0);
 		rectangle(top_front,top_back,bottom_front,bottom_back,total,false);
 	}
 };
@@ -454,7 +454,7 @@ int main()
 	try {
     Quad legs;
   //2   sleep(2);
-    legs.init(400);
+    legs.init(768);
     Crab1 l1s(legs.leg1());
     Crab2 l2s(legs.leg2());
     Crab3 l3s(legs.leg3());
@@ -463,14 +463,15 @@ int main()
     Dog2 d2s(legs.leg2());
     Dog3 d3s(legs.leg3());
     Dog4 d4s(legs.leg4());
-    l1s.init(0,4000);
-    l2s.init(3000,4000);
-    l3s.init(1000,4000);
-    l4s.init(2000,4000);
-    d1s.init(0,4000);
-    d2s.init(3000,4000);
-    d3s.init(1000,4000);
-    d4s.init(2000,4000);
+    int cycle=4000;
+    l1s.init(0,cycle);
+    l2s.init(3*cycle/4,cycle);
+    l3s.init(cycle/4,cycle);
+    l4s.init(cycle/2,cycle);
+    d1s.init(0,cycle);
+    d2s.init(3*cycle/4,cycle);
+    d3s.init(cycle/4,cycle);
+    d4s.init(cycle/2,cycle);
     legs.setSequences(&l1s,&l2s,&l3s,&l4s);
 
 	float k=0;

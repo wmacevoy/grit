@@ -132,14 +132,18 @@ int DynamixelInterface::readWord(int id,int address) {
 		  value=dxl_read_word(id,address);
 		  retry--;
 		    status=dxl_get_result();
-		    cout << status << endl;
+	//	    cout << status << endl;
 		    if (!DXL_ComError::isOK(status)) {
 		//		dxl_terminate();
 				usleep(10000);
 		//		dxl_initialize(DEVICEINDEX,BAUDNUM);
 			}
 	  }while (!DXL_ComError::isOK(status) && retry>0);
-    if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,id,__FILE__,__LINE__);
+    if (!DXL_ComError::isOK(status)) {
+    	unsigned char b=dxl_read_byte(id,DXL_ALARM_SHUTDOWN_BYTE);
+    	cout << "Alarm Shutdown Byte:"<<((int)b)<<endl;
+    	throw DXL_ComError(status,id,__FILE__,__LINE__);
+    }
     return value;
 }
 unsigned char DynamixelInterface::readByte(int id,int address) {
@@ -153,7 +157,11 @@ unsigned char DynamixelInterface::readByte(int id,int address) {
 	    status=dxl_get_result();
 	    if (!DXL_ComError::isOK(status)) usleep(10000);
    }while (!DXL_ComError::isOK(status) && retry>0);
-  if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,id,__FILE__,__LINE__);
+  if (!DXL_ComError::isOK(status)){
+  	  unsigned char b=dxl_read_byte(id,DXL_ALARM_SHUTDOWN_BYTE);
+  	  cout << "Alarm Shutdown Byte:"<<((int)b)<<endl;
+	  throw DXL_ComError(status,id,__FILE__,__LINE__);
+  }
   return value;
 }
 
