@@ -20,7 +20,8 @@
 
 const int sz_img = 640*480*3;
 
-int saveImage = 0;
+int saveImagec = 0;
+int saveImaged = 0;
 
 int g_argc;
 char **g_argv;
@@ -75,11 +76,11 @@ void subscribe_color(void *zmq_sub)
 
 	printf("received!\n");
 	
-	if(img_color != NULL && saveImage)
+	if(img_color != NULL && saveImagec)
 	{
 		CaptureScreen(640, 480, img_color, "color_", fcount);
 		fcount++; 
-		saveImage = 0;
+		saveImagec = 0;
 	}
 }
 
@@ -96,11 +97,11 @@ void subscribe_depth(void *zmq_sub)
 
 	printf("received!\n");
 	
-	if(img_depth != NULL && saveImage)
+	if(img_depth != NULL && saveImaged)
 	{
 		CaptureScreen(640, 480, img_depth, "depth_", fcount);
 		fcount++; 
-		saveImage = 0;
+		saveImaged = 0;
 	}
 }
 
@@ -141,7 +142,8 @@ void keyPressed(unsigned char key, int x, int y)
 {
 
 	if (key == 'c'){
-		saveImage = 1;
+		saveImagec = 1;
+		saveImaged = 1;
 	}
 	if (key == 27) {
 		glutDestroyWindow(window);
