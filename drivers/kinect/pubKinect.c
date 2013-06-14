@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <zmq.h>
 #include <assert.h>
+#include <signal.h>
 
 #include "libfreenect.h"
 
@@ -22,6 +23,7 @@
 
 pthread_t freenect_thread;
 volatile int die = 0;
+volatile int quit = 0;
 
 // back: owned by libfreenect (implicit for depth)
 // mid: owned by callbacks, "latest frame ready"
@@ -30,10 +32,9 @@ uint8_t *rgb_back, *rgb_mid;
 
 freenect_context *f_ctx;
 freenect_device *f_dev;
-int freenect_angle = 0;
 int freenect_led;
 
-freenect_video_format requested_format = FREENECT_VIDEO_RGB;
+//freenect_video_format requested_format = FREENECT_VIDEO_RGB;
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
 
 pthread_mutex_t buf_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -67,58 +68,14 @@ typedef struct tagBITMAPINFOHEADER
  DWORD biClrImportant;
 } BITMAPINFOHEADER;
 
-void publish(uint8_t *image, void *zmq_pub)
+void publish_obj(char obj, void *zmq_pub)
 {
-	zmq_msg_t msg;
-	int rc = zmq_msg_init_size(&msg, sz_img);
-	assert(rc == 0);
-	memcpy(zmq_msg_data(&msg), image, sz_img);
-	rc = zmq_msg_send(&msg, zmq_pub, 0);
-	zmq_msg_close(&msg);
+	int rc = zmq_send(zmq_pub, &obj, sizeof(char), ZMQ_DONTWAIT);
 }
 
-//Used for debugging, will not be used int pub version
-void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
+void publish_img(uint8_t *image, void *zmq_pub)
 {
-	BITMAPFILEHEADER bf;
-	BITMAPINFOHEADER bi;
-	char filename[255];
-
-	sprintf(filename,"%s%d.bmp",fname,fcount);
-
-	FILE *file	 = fopen(filename, "wb");
-
-	if( image!=NULL )
-	{
-		if( file!=NULL ) 
-		{
-			memset( &bf, 0, sizeof( bf ) );
-			memset( &bi, 0, sizeof( bi ) );
-
-
-			bf.bfType	 = 'MB';
-			bf.bfSize	 = sizeof(bf)+sizeof(bi)+Width*Height*3;
-			bf.bfOffBits	 = sizeof(bf)+sizeof(bi);
-			bi.biSize	 = sizeof(bi);
-			bi.biWidth	 = Width;
-			bi.biHeight	 = Height;
-			bi.biPlanes	 = 1;
-			bi.biBitCount	 = 24;
-			bi.biSizeImage	 = Width*Height*3;
-
-			fwrite( &bf, sizeof(bf), 1, file );
-			fwrite( &bi, sizeof(bi), 1, file );
-			int i;
-			for (i=0;i<bi.biSizeImage;i+=3) {
-				uint8_t c = image[i];
-				image[i] = image[i+2];
-				image[i+2] = c;
-			}
-			fwrite( image, sizeof(unsigned char), Height*Width*3, file );
-
-			fclose( file );
-		}
-	}
+	int rc = zmq_send(zmq_pub, image, sz_img, ZMQ_DONTWAIT);
 }
 
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
@@ -200,13 +157,7 @@ void *freenect_threadfunc(void *arg)
 	freenect_start_video(f_dev);
 
 	while (!die && freenect_process_events(f_ctx) >= 0) {
-
-		if (requested_format != current_format) {
-			freenect_stop_video(f_dev);
-			freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, requested_format));
-			freenect_start_video(f_dev);
-			current_format = requested_format;
-		}
+		//Need to get *nix command for sleep in milliseconds
 	}
 
 	printf("\nshutting down streams...\n");
@@ -221,11 +172,19 @@ void *freenect_threadfunc(void *arg)
 	return NULL;
 }
 
+void SignalHandler(int sig)
+{
+	die = 1;
+	quit = 1;
+}
+
 int main(int argc, char** argv)
 {
 	int res;
-	int quit = 0;
-	int fcount = 0;
+	//tcp://*:5556 tcp://*:5557 tcp://*:5558
+	//void *context_obj = zmq_ctx_new ();
+	//void *pub_obj = zmq_socket(context_obj, ZMQ_PUB);
+	//int rco = zmq_bind(pub_obj, "tcp://*:5558");
 
 	void *context_color = zmq_ctx_new ();
 	void *pub_color = zmq_socket(context_color, ZMQ_PUB);
@@ -282,37 +241,57 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	struct sigaction new_action;
+	new_action.sa_handler = SignalHandler;
+	sigemptyset (&new_action.sa_mask);
+	new_action.sa_flags = 0;
+
+	sigaction (SIGTERM, &new_action, NULL);
+	sigaction (SIGINT, &new_action, NULL);
+
 	//Sleep for 1 second to allow thread to initialize
 	sleep(1);
 
-	while(!quit)
+	while(1)
 	{
+		if(quit == 1)
+		{
+			break;
+		}
+
 		pthread_mutex_lock(&buf_mutex);
 
-		/*Capture images to file, comment out following block {} for release
-		{
-		CaptureScreen(640,480,rgb_mid,"color",fcount);
-		CaptureScreen(640,480,depth_mid,"depth",fcount);
-		fcount++;
-		}
-		//*/
-
 		//Send image data via zmq
-		publish(rgb_mid, pub_color);
-		publish(depth_mid, pub_depth);
+		publish_img(rgb_mid, pub_color);
+		publish_img(depth_mid, pub_depth);
 		
 		pthread_cond_signal(&frame_cond);
 		pthread_mutex_unlock(&buf_mutex);
 
 	}
-	
-	//Cleanup
-	zmq_ctx_destroy(context_color);
-	zmq_ctx_destroy(context_depth);
 
+	//Cleanup
+	printf("Quitting...\n");
+
+	pthread_join(freenect_thread, NULL);
+	
 	free(depth_mid);
 	free(rgb_back);
 	free(rgb_mid);
+
+	printf("Memory for images is free\n");
+
+	//zmq_close(pub_obj);
+	zmq_close(pub_color);
+	zmq_close(pub_depth);
+
+	//zmq_ctx_destroy(context_obj);
+	zmq_ctx_destroy(context_color);
+	zmq_ctx_destroy(context_depth);
+
+	printf("zmq is closed and destroyed\n");
+
+	printf("-- done!\n");
 
 	return 0;
 }

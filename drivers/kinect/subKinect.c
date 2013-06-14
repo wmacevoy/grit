@@ -2,6 +2,7 @@
  * This is the subscriber for the kinect.
  * Written by Michaela Ervin & Karl Castleton and using modifications from the glview example from libfreenect
  * 
+ * For some reason this is eating up memory like crazy.  Something to do with 0mq.
 */
 
 #include <stdlib.h>
@@ -9,6 +10,7 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <assert.h>
+#include <pthread.h>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -20,22 +22,31 @@
 
 const int sz_img = 640*480*3;
 
-int saveImagec = 0;
-int saveImaged = 0;
+int saveImagec;
+int saveImaged;
 
 int g_argc;
-char **g_argv;
+char** g_argv;
 
 int window;
+int view_state;
 
+void* sub_obj;
 void* sub_color;
 void* sub_depth;
+
+void* context_obj;
+void* context_color;
+void* context_depth;
 
 uint8_t* img_color;
 uint8_t* img_depth;
 
 GLuint gl_depth_tex;
 GLuint gl_rgb_tex;
+
+pthread_mutex_t buf_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t frame_cond = PTHREAD_COND_INITIALIZER;
 
 typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
 {
@@ -63,18 +74,17 @@ typedef struct tagBITMAPINFOHEADER
 
 void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount);
 
+
+///////////////////////////////////////////////////////SUBSCRIBE START
 void subscribe_color(void *zmq_sub) 
 {
 	static int fcount = 0;
 
-	printf("waiting...\n");
+	//printf("waiting...\n");
 
-	zmq_msg_t msg;
-	zmq_msg_init(&msg);
-	zmq_msg_recv(&msg, zmq_sub, 0);
-	memcpy(img_color, zmq_msg_data(&msg), sz_img);
+	int rc = zmq_recv(zmq_sub, img_color, sz_img, ZMQ_DONTWAIT);
 
-	printf("received!\n");
+	//printf("received!\n");
 	
 	if(img_color != NULL && saveImagec)
 	{
@@ -88,14 +98,11 @@ void subscribe_depth(void *zmq_sub)
 {
 	static int fcount = 0;
 
-	printf("waiting...\n");
+	//printf("waiting...\n");
 
-	zmq_msg_t msg;
-	zmq_msg_init(&msg);
-	zmq_msg_recv(&msg, zmq_sub, 0);
-	memcpy(img_depth, zmq_msg_data(&msg), sz_img);
+	int rc = zmq_recv(zmq_sub, img_depth, sz_img, ZMQ_DONTWAIT);
 
-	printf("received!\n");
+	//printf("received!\n");
 	
 	if(img_depth != NULL && saveImaged)
 	{
@@ -104,36 +111,47 @@ void subscribe_depth(void *zmq_sub)
 		saveImaged = 0;
 	}
 }
+///////////////////////////////////////////////////////SUBSCRIBE END
 
 
 ///////////////////////////////////////////////////////OpenGL START
 void DrawGLScene()
 {
-	subscribe_color(sub_color);
-	subscribe_depth(sub_depth);	
+	switch(view_state)
+	{
+	case 0:
+		subscribe_depth(sub_depth);	
 
-	glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
+		glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
 
-	glBegin(GL_TRIANGLE_FAN);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glTexCoord2f(0, 0); glVertex3f(0,0,0);
-	glTexCoord2f(1, 0); glVertex3f(640,0,0);
-	glTexCoord2f(1, 1); glVertex3f(640,480,0);
-	glTexCoord2f(0, 1); glVertex3f(0,480,0);
-	glEnd();
+		glBegin(GL_TRIANGLE_FAN);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glTexCoord2f(0, 0); glVertex3f(0,0,0);
+		glTexCoord2f(1, 0); glVertex3f(640,0,0);
+		glTexCoord2f(1, 1); glVertex3f(640,480,0);
+		glTexCoord2f(0, 1); glVertex3f(0,480,0);
+		glEnd();
+		break;
 
-	glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
-	//glTexImage2D(GL_TEXTURE_2D, 0, 1, 640, 480, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, img_color+640*4);
+	case 1:
+		subscribe_color(sub_color);
 
-	glBegin(GL_TRIANGLE_FAN);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glTexCoord2f(0, 0); glVertex3f(640,0,0);
-	glTexCoord2f(1, 0); glVertex3f(1280,0,0);
-	glTexCoord2f(1, 1); glVertex3f(1280,480,0);
-	glTexCoord2f(0, 1); glVertex3f(640,480,0);
-	glEnd();
+		glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
+
+		glBegin(GL_TRIANGLE_FAN);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glTexCoord2f(0, 0); glVertex3f(0,0,0);
+		glTexCoord2f(1, 0); glVertex3f(640,0,0);
+		glTexCoord2f(1, 1); glVertex3f(640,480,0);
+		glTexCoord2f(0, 1); glVertex3f(0,480,0);
+		glEnd();
+		break;
+	default:
+		//Handle unknown state here.  Although it should never be unknown
+		break;
+	}
 
 	glutSwapBuffers();
 }
@@ -141,14 +159,25 @@ void DrawGLScene()
 void keyPressed(unsigned char key, int x, int y)
 {
 
-	if (key == 'c'){
-		saveImagec = 1;
-		saveImaged = 1;
+	if(key == 'c'){
+		if(view_state == 1){
+			saveImagec = 1;
+		}
+		else if(view_state == 0){
+			saveImaged = 1;
+		}
 	}
-	if (key == 27) {
+	else if(key == 't'){
+		if(view_state == 0){
+			view_state = 1;
+		}
+		else if(view_state == 1){
+			view_state = 0;
+		}
+	}
+	else if(key == 27) {
 		glutDestroyWindow(window);
-		// Not pthread_exit because OSX leaves a thread lying around and doesn't exit
-		exit(0);
+		glutLeaveMainLoop();		
 	}
 }
 
@@ -157,7 +186,7 @@ void ReSizeGLScene(int Width, int Height)
 	glViewport(0,0,Width,Height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho (0, 1280, 480, 0, -1.0f, 1.0f);
+	glOrtho (0, 640, 480, 0, -1.0f, 1.0f);
 	glMatrixMode(GL_MODELVIEW);
     	glLoadIdentity();
 }
@@ -188,24 +217,22 @@ void InitGL(int Width, int Height)
 	ReSizeGLScene(Width, Height);
 }
 
-void *gl_threadfunc(void *arg)
+void* gl_threadfunc(void* arg)
 {
-	printf("GL thread\n");
-
 	glutInit(&g_argc, g_argv);
 
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-	glutInitWindowSize(1280, 480);
+	glutInitWindowSize(640, 480);
 	glutInitWindowPosition(0, 0);
 
-	window = glutCreateWindow("LibFreenect");
+	window = glutCreateWindow("ICU");
 
 	glutDisplayFunc(&DrawGLScene);
 	glutIdleFunc(&DrawGLScene);
 	glutReshapeFunc(&ReSizeGLScene);
 	glutKeyboardFunc(&keyPressed);
 
-	InitGL(1280, 480);
+	InitGL(640, 480);
 
 	glutMainLoop();
 
@@ -256,42 +283,64 @@ void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 	}
 }
 
+void bye()
+{
+	printf("Quitting...\n");
+	printf("Memory for images is free\n");
+
+	free(img_color);
+	free(img_depth);
+
+	zmq_close(sub_obj);
+	zmq_close(sub_color);
+	zmq_close(sub_depth);
+
+	zmq_ctx_destroy(context_obj);
+	zmq_ctx_destroy(context_color);
+	zmq_ctx_destroy(context_depth);
+
+	printf("zmq is closed and destroyed\n");
+
+	printf("-- done!\n");
+}
+
 int main(int argc, char** argv)
 {
 	int quit = 0;
 
-	void *context_color = zmq_ctx_new ();
-	void *context_depth = zmq_ctx_new ();
+	g_argc = argc;
+	g_argv = argv;
 
+	context_obj = zmq_ctx_new ();
+	context_color = zmq_ctx_new ();
+	context_depth = zmq_ctx_new ();
+
+	sub_obj = zmq_socket(context_obj, ZMQ_SUB);
 	sub_color = zmq_socket(context_color, ZMQ_SUB);
 	sub_depth = zmq_socket(context_depth, ZMQ_SUB);
 
-	if (zmq_connect(sub_color, "tcp://localhost:5556") !=0 || zmq_connect(sub_depth, "tcp://localhost:5557") !=0 )
+	//tcp://localhost:5556  tcp://localhost:5556
+	if (zmq_connect(sub_obj, "tcp://localhost:5558") || zmq_connect(sub_color, "tcp://localhost:5556") !=0 || zmq_connect(sub_depth, "tcp://localhost:5557") !=0)
 	{
-
+		printf("Error initializing 0mq...\n");
 	}
 
-	int rcc = zmq_setsockopt (sub_color, ZMQ_SUBSCRIBE, "", 0);
-	int rcd = zmq_setsockopt (sub_depth, ZMQ_SUBSCRIBE, "", 0);
-	assert (rcc == 0 && rcd == 0);
+	int rco = zmq_setsockopt(sub_obj, ZMQ_SUBSCRIBE, "", 0);
+	int rcc = zmq_setsockopt(sub_color, ZMQ_SUBSCRIBE, "", 0);
+	int rcd = zmq_setsockopt(sub_depth, ZMQ_SUBSCRIBE, "", 0);
+	assert (rco == 0 && rcc == 0 && rcd == 0);
 	
-	img_color = (uint8_t*)malloc(sz_img);
-	img_depth = (uint8_t*)malloc(sz_img);
+	img_color = (uint8_t*)calloc(1, sz_img);
+	img_depth = (uint8_t*)calloc(1, sz_img);
+
+	saveImagec = 0;
+	saveImaged = 0;
+
+	view_state = 1;
+
+	assert(atexit(bye) == 0);
 
 	gl_threadfunc(NULL);
-
-	/*//Main Loop
-	while(!quit)
-	{
-		subscribe(sub);
-		sleep(1);
-	}*/
-
-	zmq_close (sub_color);
-	zmq_ctx_destroy (context_color);
-
-	zmq_close (sub_depth);
-	zmq_ctx_destroy (context_depth);
 
 	return 0;
 }
