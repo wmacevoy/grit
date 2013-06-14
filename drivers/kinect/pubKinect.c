@@ -183,18 +183,28 @@ void SignalHandler(int sig)
 int main(int argc, char** argv)
 {
 	int res;
+	int hwm = 10;
+	int rco = 0;
+	int rcc = 0;
+	int rcd = 0;
+
 	//tcp://*:5556 tcp://*:5557 tcp://*:5558
 	//void *context_obj = zmq_ctx_new ();
-	//void *pub_obj = zmq_socket(context_obj, ZMQ_PUB);
-	//int rco = zmq_bind(pub_obj, "tcp://*:5558");
-
-	void *context_color = zmq_ctx_new ();
-	void *pub_color = zmq_socket(context_color, ZMQ_PUB);
-	int rcc = zmq_bind(pub_color, "tcp://*:5556");
-
+	void *context_color = zmq_ctx_new ();	
 	void *context_depth = zmq_ctx_new ();
+
+	//void *pub_obj = zmq_socket(context_obj, ZMQ_PUB);
+	void *pub_color = zmq_socket(context_color, ZMQ_PUB);
 	void *pub_depth = zmq_socket(context_depth, ZMQ_PUB);
-	int rcd = zmq_bind(pub_depth, "tcp://*:5557");	
+
+	//rco = zmq_setsockopt(pub_obj, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+	rcc = zmq_setsockopt(pub_color, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+	rcd = zmq_setsockopt(pub_depth, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+	assert (rco == 0 && rcc == 0 && rcd == 0);
+
+	//rco = zmq_bind(pub_obj, "tcp://*:5558");
+	rcc = zmq_bind(pub_color, "tcp://*:5556");
+	rcd = zmq_bind(pub_depth, "tcp://*:5557");	
 
 	depth_mid = (uint8_t*)malloc(640*480*3);
 	rgb_back = (uint8_t*)malloc(640*480*3);

@@ -308,6 +308,10 @@ void bye()
 int main(int argc, char** argv)
 {
 	int quit = 0;
+	int hwm = 10;
+	int rco = 0;
+	int rcc = 0;
+	int rcd = 0;
 
 	g_argc = argc;
 	g_argv = argv;
@@ -320,16 +324,21 @@ int main(int argc, char** argv)
 	sub_color = zmq_socket(context_color, ZMQ_SUB);
 	sub_depth = zmq_socket(context_depth, ZMQ_SUB);
 
+	rco = zmq_setsockopt(sub_obj, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	rcc = zmq_setsockopt(sub_color, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	rcd = zmq_setsockopt(sub_depth, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	assert (rco == 0 && rcc == 0 && rcd == 0);
+
+	rco = zmq_setsockopt(sub_obj, ZMQ_SUBSCRIBE, "", 0);
+	rcc = zmq_setsockopt(sub_color, ZMQ_SUBSCRIBE, "", 0);
+	rcd = zmq_setsockopt(sub_depth, ZMQ_SUBSCRIBE, "", 0);
+	assert (rco == 0 && rcc == 0 && rcd == 0);
+
 	//tcp://localhost:5556  tcp://localhost:5556
 	if (zmq_connect(sub_obj, "tcp://localhost:5558") || zmq_connect(sub_color, "tcp://localhost:5556") !=0 || zmq_connect(sub_depth, "tcp://localhost:5557") !=0)
 	{
 		printf("Error initializing 0mq...\n");
 	}
-
-	int rco = zmq_setsockopt(sub_obj, ZMQ_SUBSCRIBE, "", 0);
-	int rcc = zmq_setsockopt(sub_color, ZMQ_SUBSCRIBE, "", 0);
-	int rcd = zmq_setsockopt(sub_depth, ZMQ_SUBSCRIBE, "", 0);
-	assert (rco == 0 && rcc == 0 && rcd == 0);
 	
 	img_color = (uint8_t*)calloc(1, sz_img);
 	img_depth = (uint8_t*)calloc(1, sz_img);
