@@ -183,7 +183,7 @@ void SignalHandler(int sig)
 int main(int argc, char** argv)
 {
 	int res;
-	int hwm = 10;
+	int hwm = 2;
 	int rco = 0;
 	int rcc = 0;
 	int rcd = 0;
