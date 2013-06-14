@@ -1,7 +1,9 @@
 /*
  * This is the publisher for the kinect.
- * Modified by Karl Castleton & Michaela Ervin from the glview example from libfreenect
+ * Written by Michaela Ervin, some code taken from the glview example from libfreenect
  * 
+ * Pressing ctrl-c in the terminal will cause normal cleanup and exit.
+ * Any SIGTERM or SIGINT will cause normal cleanup and exit.
 */
 
 #include <stdio.h>
@@ -25,6 +27,8 @@ pthread_t freenect_thread;
 volatile int die = 0;
 volatile int quit = 0;
 
+const int sleep_time = 100;
+
 // back: owned by libfreenect (implicit for depth)
 // mid: owned by callbacks, "latest frame ready"
 uint8_t *depth_mid;
@@ -43,30 +47,6 @@ pthread_cond_t frame_cond = PTHREAD_COND_INITIALIZER;
 const int sz_img = 640*480*3;
 
 uint16_t t_gamma[2048];
-
-typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
-{
- WORD bfType;
- DWORD bfSize;
- WORD bfReserved1;
- WORD bfReserved2;
- DWORD bfOffBits;
-} BITMAPFILEHEADER;
-
-typedef struct tagBITMAPINFOHEADER
-{
- DWORD biSize;
- LONG biWidth;
- LONG biHeight;
- WORD biPlanes;
- WORD biBitCount;
- DWORD biCompression;
- DWORD biSizeImage;
- LONG biXPelsPerMeter;
- LONG biYPelsPerMeter;
- DWORD biClrUsed;
- DWORD biClrImportant;
-} BITMAPINFOHEADER;
 
 void publish_obj(char obj, void *zmq_pub)
 {
@@ -157,7 +137,7 @@ void *freenect_threadfunc(void *arg)
 	freenect_start_video(f_dev);
 
 	while (!die && freenect_process_events(f_ctx) >= 0) {
-		//Need to get *nix command for sleep in milliseconds
+		usleep(sleep_time);
 	}
 
 	printf("shutting down streams...\n");
@@ -183,7 +163,7 @@ void SignalHandler(int sig)
 int main(int argc, char** argv)
 {
 	int res;
-	int hwm = 2;
+	int hwm = 1;
 	int rco = 0;
 	int rcc = 0;
 	int rcd = 0;
@@ -280,6 +260,7 @@ int main(int argc, char** argv)
 		pthread_cond_signal(&frame_cond);
 		pthread_mutex_unlock(&buf_mutex);
 
+		usleep(sleep_time);
 	}
 
 	//Cleanup

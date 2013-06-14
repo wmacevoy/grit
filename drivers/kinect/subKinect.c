@@ -2,7 +2,8 @@
  * This is the subscriber for the kinect.
  * Written by Michaela Ervin & Karl Castleton and using modifications from the glview example from libfreenect
  * 
- * For some reason this is eating up memory like crazy.  Something to do with 0mq.
+ * t - toggle view
+ * c - capture image
 */
 
 #include <stdlib.h>
@@ -44,9 +45,6 @@ uint8_t* img_depth;
 
 GLuint gl_depth_tex;
 GLuint gl_rgb_tex;
-
-pthread_mutex_t buf_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t frame_cond = PTHREAD_COND_INITIALIZER;
 
 typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
 {
@@ -308,7 +306,7 @@ void bye()
 int main(int argc, char** argv)
 {
 	int quit = 0;
-	int hwm = 2;
+	int hwm = 1;
 	int rco = 0;
 	int rcc = 0;
 	int rcd = 0;
