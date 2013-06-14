@@ -160,7 +160,9 @@ void *freenect_threadfunc(void *arg)
 		//Need to get *nix command for sleep in milliseconds
 	}
 
-	printf("\nshutting down streams...\n");
+	printf("shutting down streams...\n");
+
+	freenect_set_led(f_dev, LED_BLINK_GREEN);
 
 	freenect_stop_depth(f_dev);
 	freenect_stop_video(f_dev);
@@ -279,7 +281,7 @@ int main(int argc, char** argv)
 	free(rgb_back);
 	free(rgb_mid);
 
-	printf("Memory for images is free\n");
+	printf("memory for images is free\n");
 
 	//zmq_close(pub_obj);
 	zmq_close(pub_color);

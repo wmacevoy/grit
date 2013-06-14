@@ -286,10 +286,11 @@ void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 void bye()
 {
 	printf("Quitting...\n");
-	printf("Memory for images is free\n");
 
 	free(img_color);
 	free(img_depth);
+
+	printf("memory for images is free\n");
 
 	zmq_close(sub_obj);
 	zmq_close(sub_color);
