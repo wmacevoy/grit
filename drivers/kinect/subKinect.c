@@ -62,12 +62,54 @@ typedef struct tagBITMAPINFOHEADER
 
 void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount);
 
+void subscribe_color(void *zmq_sub) 
+{
+	static int fcount = 0;
+
+	printf("waiting...\n");
+
+	zmq_msg_t msg;
+	zmq_msg_init(&msg);
+	zmq_msg_recv(&msg, zmq_sub, 0);
+	memcpy(img_color, zmq_msg_data(&msg), sz_img);
+
+	printf("received!\n");
+	
+	if(img_color != NULL && saveImage)
+	{
+		CaptureScreen(640, 480, img_color, "color_", fcount);
+		fcount++; 
+		saveImage = 0;
+	}
+}
+
+void subscribe_depth(void *zmq_sub) 
+{
+	static int fcount = 0;
+
+	printf("waiting...\n");
+
+	zmq_msg_t msg;
+	zmq_msg_init(&msg);
+	zmq_msg_recv(&msg, zmq_sub, 0);
+	memcpy(img_depth, zmq_msg_data(&msg), sz_img);
+
+	printf("received!\n");
+	
+	if(img_depth != NULL && saveImage)
+	{
+		CaptureScreen(640, 480, img_depth, "depth_", fcount);
+		fcount++; 
+		saveImage = 0;
+	}
+}
+
 
 ///////////////////////////////////////////////////////OpenGL START
 void DrawGLScene()
 {
 	subscribe_color(sub_color);
-	//subscribe_depth(sub_depth);	
+	subscribe_depth(sub_depth);	
 
 	glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
@@ -82,7 +124,7 @@ void DrawGLScene()
 
 	glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
-	glTexImage2D(GL_TEXTURE_2D, 0, 1, 640, 480, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, img_depth+640*4);
+	//glTexImage2D(GL_TEXTURE_2D, 0, 1, 640, 480, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, img_color+640*4);
 
 	glBegin(GL_TRIANGLE_FAN);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -168,50 +210,6 @@ void *gl_threadfunc(void *arg)
 	return NULL;
 }
 ///////////////////////////////////////////////////////OpenGL END
-
-
-//Both subscribers need to be threaded
-void subscribe_color(void *zmq_sub) 
-{
-	static int fcount = 0;
-
-	printf("waiting...\n");
-
-	zmq_msg_t msg;
-	zmq_msg_init(&msg);
-	zmq_msg_recv(&msg, zmq_sub, 0);
-	memcpy(img_color, zmq_msg_data(&msg), sz_img);
-
-	printf("received!\n");
-	
-	if(img_color != NULL && saveImage)
-	{
-		CaptureScreen(640, 480, img_color, "color_", fcount);
-		fcount++; 
-		saveImage = 0;
-	}
-}
-
-void subscribe_depth(void *zmq_sub) 
-{
-	static int fcount = 0;
-
-	printf("waiting...\n");
-
-	zmq_msg_t msg;
-	zmq_msg_init(&msg);
-	zmq_msg_recv(&msg, zmq_sub, 0);
-	memcpy(img_depth, zmq_msg_data(&msg), sz_img);
-
-	printf("received!\n");
-	
-	if(img_depth != NULL && saveImage)
-	{
-		CaptureScreen(640, 480, img_depth, "depth_", fcount);
-		fcount++; 
-		saveImage = 0;
-	}
-}
 
 void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 {
