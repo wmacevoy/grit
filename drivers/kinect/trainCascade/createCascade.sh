@@ -2,12 +2,9 @@
 
 find ./negativeImages -name '*.jpg' >negatives.dat
 
-find ./positiveImages_left -name '*.png' >positivesl.dat
-find ./positiveImages_right -name '*.png' >positivesr.dat
+find ./positiveImages -name '*.png' >positives.dat
 
-perl createtrainsamples.pl positivesl.dat negatives.dat samples 5000 "./opencv_createsamples -bgcolor 0 -bgthresh 0 -maxxangle 1.1 -maxyangle 1.1 maxzangle 0.5 -maxidev 40 -w 50 -h 50"
-
-perl createtrainsamples.pl positivesr.dat negatives.dat samples 5000 "./opencv_createsamples -bgcolor 0 -bgthresh 0 -maxxangle 1.1 -maxyangle 1.1 maxzangle 0.5 -maxidev 40 -w 50 -h 50"
+perl createtrainsamples.pl positives.dat negatives.dat samples 5000 "./opencv_createsamples -bgcolor 0 -bgthresh 0 -maxxangle 1.1 -maxyangle 1.1 maxzangle 0.5 -maxidev 40 -w 50 -h 50"
 
 find samples/ -name '*.vec' > samples.dat
 ./mergevec samples.dat samples.vec
