@@ -9,10 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <zmq.h>
 #include <assert.h>
 #include <signal.h>
 
+#include <zmq.h>
 #include "libfreenect.h"
 
 #include <pthread.h>

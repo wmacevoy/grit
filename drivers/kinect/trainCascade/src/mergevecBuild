@@ -1,0 +1,1 @@
+gcc `pkg-config --cflags opencv` -o mergevec mergevec.cpp cvboost.cpp cvcommon.cpp cvsamples.cpp cvhaarclassifier.cpp cvhaartraining.cpp `pkg-config --libs opencv`

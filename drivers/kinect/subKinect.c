@@ -158,6 +158,7 @@ void keyPressed(unsigned char key, int x, int y)
 {
 
 	if(key == 'c'){
+		printf("c\n");
 		if(view_state == 1){
 			saveImagec = 1;
 		}
