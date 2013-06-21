@@ -1,1 +1,1 @@
-gcc pubKinect.c -lzmq -lfreenect -o pubKinect
+gcc -Wall -Iinclude src/pubKinect.c -lzmq -lfreenect -o bin/pubKinect
