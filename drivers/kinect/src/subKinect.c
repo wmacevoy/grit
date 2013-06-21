@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <assert.h>
@@ -307,21 +308,31 @@ int main(int argc, char** argv)
 	int rco = 0;
 	int rcc = 0;
 	int rcd = 0;
-	char* ip = "localhost";
+	char ip1[40];
+	char ip2[40];
+
+	strcpy(ip1, "tcp://");
+	strcpy(ip2, "tcp://");
 
 	if(argc > 1)
 	{
-		ip = argv[1];
+		strcat(ip1, argv[1]);
+		strcat(ip1, ":");
+		strcat(ip2, argv[1]);
+		strcat(ip2, ":");
 		g_argc = argc;
 		g_argv = argv;
 	}
 	else
 	{
-		ip = malloc(10);
-		strcpy(ip, "localhost\0");
+		strcat(ip1, "localhost:");
+		strcat(ip2, "localhost:");
 	}
 
-	printf("%s", ip);
+	strcat(ip1, "5556\0");
+	strcat(ip2, "5557\0");
+
+	printf("%s, %s", ip1, ip2);
 
 	context_color = zmq_ctx_new ();
 	context_depth = zmq_ctx_new ();
@@ -329,7 +340,6 @@ int main(int argc, char** argv)
 	sub_color = zmq_socket(context_color, ZMQ_SUB);
 	sub_depth = zmq_socket(context_depth, ZMQ_SUB);
 
-	rco = zmq_setsockopt(sub_obj, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rcc = zmq_setsockopt(sub_color, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rcd = zmq_setsockopt(sub_depth, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	assert (rco == 0 && rcc == 0 && rcd == 0);
@@ -339,7 +349,7 @@ int main(int argc, char** argv)
 	assert (rco == 0 && rcc == 0 && rcd == 0);
 
 	//tcp://localhost:5556  tcp://localhost:5556
-	if (zmq_connect(sub_color, "tcp://localhost:5556") !=0 || zmq_connect(sub_depth, "tcp://localhost:5557") !=0)
+	if (zmq_connect(sub_color, ip1) !=0 || zmq_connect(sub_depth, ip2) !=0)
 	{
 		printf("Error initializing 0mq...\n");
 	}
