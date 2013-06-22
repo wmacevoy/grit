@@ -284,19 +284,19 @@ void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 void bye()
 {
 	printf("Quitting...\n");
+	printf("freeing memory for images...\n");
 
 	free(img_color);
 	free(img_depth);
 
-	printf("memory for images is free\n");
+	printf("-- done!\n");
+	printf("shutting down zmq...\n");
 
 	zmq_close(sub_color);
 	zmq_close(sub_depth);
 
 	zmq_ctx_destroy(context_color);
 	zmq_ctx_destroy(context_depth);
-
-	printf("zmq is closed and destroyed\n");
 
 	printf("-- done!\n");
 }
@@ -305,7 +305,6 @@ int main(int argc, char** argv)
 {
 	int quit = 0;
 	int hwm = 1;
-	int rco = 0;
 	int rcc = 0;
 	int rcd = 0;
 	char ip1[40];
@@ -342,20 +341,21 @@ int main(int argc, char** argv)
 
 	rcc = zmq_setsockopt(sub_color, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rcd = zmq_setsockopt(sub_depth, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	assert (rco == 0 && rcc == 0 && rcd == 0);
+	assert (rcc == 0 && rcd == 0);
 
 	rcc = zmq_setsockopt(sub_color, ZMQ_SUBSCRIBE, "", 0);
 	rcd = zmq_setsockopt(sub_depth, ZMQ_SUBSCRIBE, "", 0);
-	assert (rco == 0 && rcc == 0 && rcd == 0);
+	assert (rcc == 0 && rcd == 0);
+
+	img_color = (uint8_t*)malloc(sz_img);
+	img_depth = (uint8_t*)malloc(sz_img);
 
 	//tcp://localhost:5556  tcp://localhost:5556
 	if (zmq_connect(sub_color, ip1) !=0 || zmq_connect(sub_depth, ip2) !=0)
 	{
 		printf("Error initializing 0mq...\n");
+		exit(1);
 	}
-	
-	img_color = (uint8_t*)calloc(1, sz_img);
-	img_depth = (uint8_t*)calloc(1, sz_img);
 
 	saveImagec = 0;
 	saveImaged = 0;

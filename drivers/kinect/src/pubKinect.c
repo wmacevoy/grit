@@ -25,7 +25,6 @@
 
 pthread_t freenect_thread;
 volatile int die = 0;
-volatile int quit = 0;
 
 const int sleep_time = 100;
 
@@ -124,7 +123,7 @@ void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 	pthread_mutex_unlock(&buf_mutex);
 }
 
-void *freenect_threadfunc(void *arg)
+/*void *freenect_threadfunc(void *arg)
 {
 	freenect_set_led(f_dev,LED_GREEN);
 	freenect_set_depth_callback(f_dev, depth_cb);
@@ -152,37 +151,31 @@ void *freenect_threadfunc(void *arg)
 
 	printf("-- done!\n");
 	return NULL;
-}
+}*/
 
 void SignalHandler(int sig)
 {
 	die = 1;
-	quit = 1;
 }
 
 int main(int argc, char** argv)
 {
 	int res;
 	int hwm = 1;
-	int rco = 0;
 	int rcc = 0;
 	int rcd = 0;
 
-	//tcp://*:5556 tcp://*:5557 tcp://*:5558
-	//void *context_obj = zmq_ctx_new ();
+	//tcp://*:5556 tcp://*:5557
 	void *context_color = zmq_ctx_new ();	
 	void *context_depth = zmq_ctx_new ();
 
-	//void *pub_obj = zmq_socket(context_obj, ZMQ_PUB);
 	void *pub_color = zmq_socket(context_color, ZMQ_PUB);
 	void *pub_depth = zmq_socket(context_depth, ZMQ_PUB);
 
-	//rco = zmq_setsockopt(pub_obj, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	rcc = zmq_setsockopt(pub_color, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	rcd = zmq_setsockopt(pub_depth, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	assert (rco == 0 && rcc == 0 && rcd == 0);
+	assert (rcc == 0 && rcd == 0);
 
-	//rco = zmq_bind(pub_obj, "tcp://*:5558");
 	rcc = zmq_bind(pub_color, "tcp://*:5556");
 	rcd = zmq_bind(pub_depth, "tcp://*:5557");	
 
@@ -203,8 +196,7 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	//freenect_set_log_level(f_ctx, FREENECT_LOG_DEBUG);
-	freenect_select_subdevices(f_ctx, (freenect_device_flags)(FREENECT_DEVICE_MOTOR | FREENECT_DEVICE_CAMERA));
+	freenect_select_subdevices(f_ctx, (freenect_device_flags)(FREENECT_DEVICE_CAMERA));
 
 	int nr_devices = freenect_num_devices (f_ctx);
 	printf ("Number of devices found: %d\n", nr_devices);
@@ -226,12 +218,22 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	res = pthread_create(&freenect_thread, NULL, freenect_threadfunc, NULL);
+	/*res = pthread_create(&freenect_thread, NULL, freenect_threadfunc, NULL);
 	if (res) {
 		printf("pthread_create failed\n");
 		freenect_shutdown(f_ctx);
 		return 1;
-	}
+	}*/
+
+	freenect_set_led(f_dev,LED_GREEN);
+	freenect_set_depth_callback(f_dev, depth_cb);
+	freenect_set_video_callback(f_dev, rgb_cb);
+	freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
+	freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_11BIT));
+	freenect_set_video_buffer(f_dev, rgb_back);
+
+	freenect_start_depth(f_dev);
+	freenect_start_video(f_dev);
 
 	struct sigaction new_action;
 	new_action.sa_handler = SignalHandler;
@@ -242,15 +244,10 @@ int main(int argc, char** argv)
 	sigaction (SIGINT, &new_action, NULL);
 
 	//Sleep for 1 second to allow thread to initialize
-	sleep(1);
+	//sleep(1);
 
-	while(1)
+	while(!die && freenect_process_events(f_ctx) >= 0)
 	{
-		if(quit == 1)
-		{
-			break;
-		}
-
 		pthread_mutex_lock(&buf_mutex);
 
 		//Send image data via zmq
@@ -265,24 +262,32 @@ int main(int argc, char** argv)
 
 	//Cleanup
 	printf("Quitting...\n");
+	//pthread_join(freenect_thread, NULL);
+	printf("shutting down streams...\n");
 
-	pthread_join(freenect_thread, NULL);
+	freenect_set_led(f_dev, LED_BLINK_GREEN);
+
+	freenect_stop_depth(f_dev);
+	freenect_stop_video(f_dev);
+
+	freenect_close_device(f_dev);
+	freenect_shutdown(f_ctx);
+
+	printf("-- done!\n");
+	printf("freeing memory for images...\n");
 	
 	free(depth_mid);
 	free(rgb_back);
 	free(rgb_mid);
 
-	printf("memory for images is free\n");
+	printf("-- done!\n");
+	printf("shutting down zmq...\n");
 
-	//zmq_close(pub_obj);
 	zmq_close(pub_color);
 	zmq_close(pub_depth);
 
-	//zmq_ctx_destroy(context_obj);
 	zmq_ctx_destroy(context_color);
 	zmq_ctx_destroy(context_depth);
-
-	printf("zmq is closed and destroyed\n");
 
 	printf("-- done!\n");
 
