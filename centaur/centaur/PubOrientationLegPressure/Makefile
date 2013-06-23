@@ -4,7 +4,7 @@ bin/$(TARGET):tmp/$(TARGET).o
 	g++ -o bin/$(TARGET)  $^ -lzmq
 	
 tmp/$(TARGET).o:src/$(TARGET).cpp
-	g++ -c -I../../libcentaur/include $< -o tmp/$(TARGET).o
+	g++ -std=c++11 -c -I../../libcentaur/include $< -o tmp/$(TARGET).o
 	
 clean:
 	rm tmp/*.o
