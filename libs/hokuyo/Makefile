@@ -36,8 +36,11 @@ tmp/%.o: src/%.cpp tmp/%.d
 $(TARGET) : $(OBJECTS)
 	ar crv $@ $^
 
+test: $(TARGET)
+	$(CC) test/main.cpp -Iinclude -lhokuyo -Llib -lSDL -I../catch -o bin/hokuyoTest
+	bin/hokuyoTest
 
 .PHONY: clean
 clean : 
-	/bin/rm -rf tmp/* lib/*
+	/bin/rm -rf tmp/* lib/* bin/*
 
