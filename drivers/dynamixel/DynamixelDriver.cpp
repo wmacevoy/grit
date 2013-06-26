@@ -65,7 +65,7 @@ void DXL_PrintErrorCode()
 }
 
 
- DXL_ComError::DXL_ComError(int newStatus,int newId,string newFile,int newLine) {
+DXL_ComError::DXL_ComError(int newStatus,int newId,string newFile,int newLine) {
 		status=newStatus;
 		id=newId;
 		line=newLine;
@@ -105,7 +105,7 @@ void DynamixelInterface::sendWord(int id,int address,int word)  {
 		  dxl_write_word(id,address,word);
 		  retry--;
 		    status=dxl_get_result();
-		    cout << status << endl;
+		    //		    cout << status << endl;
 		    if (!DXL_ComError::isOK(status)) usleep(10000);
 	  }while (!DXL_ComError::isOK(status) && retry>0);
     if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,0,__FILE__,__LINE__);
@@ -118,7 +118,7 @@ void DynamixelInterface::sendByte(int id,int address,unsigned char byte) {
 		  dxl_write_byte(id,address,byte);
 		  retry--;
 		    status=dxl_get_result();
-		    cout << status << endl;
+		    //		    cout << status << endl;
 		    if (!DXL_ComError::isOK(status)) usleep(10000);
 	  }while (!DXL_ComError::isOK(status) && retry>0);
     if (!DXL_ComError::isOK(status)) throw DXL_ComError(status,id,__FILE__,__LINE__);
@@ -146,6 +146,7 @@ int DynamixelInterface::readWord(int id,int address) {
     }
     return value;
 }
+
 unsigned char DynamixelInterface::readByte(int id,int address) {
 	if (!DXL2USB.isOk())throw DXL_ComError(-1,id,__FILE__,__LINE__);
 	int retry=DynamixelInterface::RETRIES;
@@ -169,6 +170,7 @@ const int DynamixelInterface::DEVICEINDEX=0;
 const int DynamixelInterface::BAUDNUM=34;
 const int DynamixelInterface::JITTER=1000;
 const int DynamixelInterface::RETRIES=10;
+
 DynamixelInterface DXL2USB;
 
   float Servo::getAngle() {
