@@ -3,10 +3,10 @@ CC=g++
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
-TARGET=lib/libcppunit2.a
+TARGET=lib/libcppunit2
 
 .PHONY: all
-all : $(TARGET)
+all : $(TARGET).a $(TARGET).so
 
 #We don't need to clean up when we're making these targets
 NODEPS:=clean tags svn
@@ -33,8 +33,11 @@ tmp/%.d: src/%.cpp
 tmp/%.o: src/%.cpp tmp/%.d
 	$(CC) $(CFLAGS) -o $@ -c $<
 
-$(TARGET) : $(OBJECTS)
+$(TARGET).a : $(OBJECTS)
 	ar crv $@ $^
+
+$(TARGET).so : $(OBJECTS)
+	$(CC) -shared -o $@ $^
 
 .PHONY: clean
 clean : 
