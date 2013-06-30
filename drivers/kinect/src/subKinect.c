@@ -2,6 +2,7 @@
  * This is the subscriber for the kinect.
  * Written by Michaela Ervin & Karl Castleton and using modifications from the glview example from libfreenect
  * 
+ * Press:
  * t - toggle view
  * c - capture image
 */
