@@ -84,7 +84,7 @@ void subscribe_color(void *zmq_sub)
 
 	//printf("received!\n");
 	
-	if(img_color != NULL && saveImagec)
+	if(saveImagec && img_color != NULL)
 	{
 		CaptureScreen(640, 480, img_color, "color_", fcount);
 		fcount++; 
@@ -102,7 +102,7 @@ void subscribe_depth(void *zmq_sub)
 
 	//printf("received!\n");
 	
-	if(img_depth != NULL && saveImaged)
+	if(saveImaged && img_depth != NULL)
 	{
 		CaptureScreen(640, 480, img_depth, "depth_", fcount);
 		fcount++; 
@@ -329,8 +329,8 @@ int main(int argc, char** argv)
 		strcat(ip2, "localhost:");
 	}
 
-	strcat(ip1, "7776\0");
-	strcat(ip2, "7777\0");
+	strcat(ip1, "9998\0");
+	strcat(ip2, "9999\0");
 
 	printf("%s, %s\n", ip1, ip2);
 
@@ -351,7 +351,7 @@ int main(int argc, char** argv)
 	img_color = (uint8_t*)malloc(sz_img);
 	img_depth = (uint8_t*)malloc(sz_img);
 
-	//tcp://localhost:7776  tcp://localhost:7777
+	//tcp://localhost:9998  tcp://localhost:9999
 	if (zmq_connect(sub_color, ip1) !=0 || zmq_connect(sub_depth, ip2) !=0)
 	{
 		printf("Error initializing 0mq...\n");

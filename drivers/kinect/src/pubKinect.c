@@ -47,11 +47,6 @@ const int sz_img = 640*480*3;
 
 uint16_t t_gamma[2048];
 
-void publish_obj(char obj, void *zmq_pub)
-{
-	int rc = zmq_send(zmq_pub, &obj, sizeof(char), ZMQ_DONTWAIT);
-}
-
 void publish_img(uint8_t *image, void *zmq_pub)
 {
 	int rc = zmq_send(zmq_pub, image, sz_img, ZMQ_DONTWAIT);
@@ -166,7 +161,7 @@ int main(int argc, char** argv)
 	int rcc = 0;
 	int rcd = 0;
 
-	//tcp://*:7776 tcp://*:7777
+	//tcp://*:9998 tcp://*:9999
 	void *context_color = zmq_ctx_new ();	
 	void *context_depth = zmq_ctx_new ();
 
@@ -177,8 +172,8 @@ int main(int argc, char** argv)
 	rcd = zmq_setsockopt(pub_depth, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	assert (rco == 0 && rcc == 0 && rcd == 0);
 
-	rcc = zmq_bind(pub_color, "tcp://*:7776");
-	rcd = zmq_bind(pub_depth, "tcp://*:7777");	
+	rcc = zmq_bind(pub_color, "tcp://*:9998");
+	rcd = zmq_bind(pub_depth, "tcp://*:9999");	
 
 	depth_mid = (uint8_t*)malloc(640*480*3);
 	rgb_back = (uint8_t*)malloc(640*480*3);
