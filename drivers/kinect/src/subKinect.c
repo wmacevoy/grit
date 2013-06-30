@@ -328,10 +328,10 @@ int main(int argc, char** argv)
 		strcat(ip2, "localhost:");
 	}
 
-	strcat(ip1, "5556\0");
-	strcat(ip2, "5557\0");
+	strcat(ip1, "7776\0");
+	strcat(ip2, "7777\0");
 
-	printf("%s, %s", ip1, ip2);
+	printf("%s, %s\n", ip1, ip2);
 
 	context_color = zmq_ctx_new ();
 	context_depth = zmq_ctx_new ();
@@ -350,7 +350,7 @@ int main(int argc, char** argv)
 	img_color = (uint8_t*)malloc(sz_img);
 	img_depth = (uint8_t*)malloc(sz_img);
 
-	//tcp://localhost:5556  tcp://localhost:5556
+	//tcp://localhost:7776  tcp://localhost:7777
 	if (zmq_connect(sub_color, ip1) !=0 || zmq_connect(sub_depth, ip2) !=0)
 	{
 		printf("Error initializing 0mq...\n");

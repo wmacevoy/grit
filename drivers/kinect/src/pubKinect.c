@@ -165,7 +165,7 @@ int main(int argc, char** argv)
 	int rcc = 0;
 	int rcd = 0;
 
-	//tcp://*:5556 tcp://*:5557
+	//tcp://*:7776 tcp://*:7777
 	void *context_color = zmq_ctx_new ();	
 	void *context_depth = zmq_ctx_new ();
 
@@ -176,8 +176,8 @@ int main(int argc, char** argv)
 	rcd = zmq_setsockopt(pub_depth, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	assert (rcc == 0 && rcd == 0);
 
-	rcc = zmq_bind(pub_color, "tcp://*:5556");
-	rcd = zmq_bind(pub_depth, "tcp://*:5557");	
+	rcc = zmq_bind(pub_color, "tcp://*:7776");
+	rcd = zmq_bind(pub_depth, "tcp://*:7777");	
 
 	depth_mid = (uint8_t*)malloc(640*480*3);
 	rgb_back = (uint8_t*)malloc(640*480*3);
