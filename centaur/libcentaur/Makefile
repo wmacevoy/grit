@@ -3,7 +3,7 @@ CC=g++
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
-TARGET=lib/libcentaur.a
+TARGET=lib/libcentaur.so
 
 .PHONY: all
 all : $(TARGET)
@@ -34,7 +34,7 @@ tmp/%.o: src/%.cpp tmp/%.d
 	$(CC) $(CFLAGS) -I../../libs/zmq/include -o $@ -c $<
 
 $(TARGET) : $(OBJECTS)
-	ar crv $@ $^
+	$(CC) -shared -o $@ $^
 
 .PHONY: clean
 clean : 

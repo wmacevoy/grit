@@ -1,6 +1,6 @@
-#include "CentaurThread.h"
+#include "../include/CentaurThread.h"
 
-#include "CentaurMessage.h"
+#include "../include/CentaurMessage.h"
 
 // *****************************************************************
 // CentaurThread

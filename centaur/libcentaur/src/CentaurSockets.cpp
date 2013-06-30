@@ -1,4 +1,4 @@
-#include "CentaurSockets.h"
+#include "../include/CentaurSockets.h"
 
 // ***************************************************************************
 // ZeroMQContext
