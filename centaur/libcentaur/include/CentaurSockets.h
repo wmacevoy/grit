@@ -3,8 +3,7 @@
 #include <vector>
 #include <cstring>
 
-#include "../../../libs/zmq/include/zmq.h"
-
+#include <zmq.h>
 #include "CentaurTypes.h"
 
 #define ZEROMQ_CONTEXT_NUMBER_IO_THREADS		1
