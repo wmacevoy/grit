@@ -3,7 +3,7 @@
 #include <vector>
 #include <cstring>
 
-#include <zmq.h>
+#include "../../../libs/zmq/include/zmq.h"
 
 #include "CentaurTypes.h"
 
