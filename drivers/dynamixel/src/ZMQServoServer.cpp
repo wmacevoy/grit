@@ -1,6 +1,6 @@
 #include <ctime>
 #include <csignal>
-#include <zmq.hpp>
+#include <zmq.h>
 #include <map>
 #include <thread>
 #include <iostream>
@@ -20,66 +20,104 @@
 
 using namespace std;
 
+FakeServoController NO_CONTROLLER;
+FakeServo NO_SERVO;
+
+const int TX_RATE=50;
+
+const struct { ServoController *controller; int id; } SERVOS [] =
+  {
+  //{ controller, id },
+    { &NO_CONTROLLER, 1  },
+    { &NO_CONTROLLER, 2  },
+    { &NO_CONTROLLER, 10 },
+    { &NO_CONTROLLER, 20 },
+    { 0,    0} // end
+  };
+
+static const char * SUBSCRIBERS [] = 
+  {
+    "tcp://localhost:5501",
+    "tcp://localhost:5502",
+    0 // end
+  };
+
+const char *PUBLISH = "tcp://*:5500";
+
 bool running = true;
 unsigned rxs = 0;
 unsigned txs = 0;
 
 
-FakeServo NO_SERVO;
 
-class ZMQSocket : public zmq::socket_t
+class ZMQContext
 {
 public:
-  ZMQSocket(zmq::context_t &context, int type) 
-    :  zmq::socket_t(context,type) 
-  {}
+  void *me;
+  ZMQContext() { me = zmq_ctx_new(); }
+  ~ZMQContext() { zmq_ctx_destroy(me); }
+};
 
+class ZMQSocket 
+{
+public:
+  void *me;
+  ZMQSocket() { me = 0; }
+  virtual ~ZMQSocket() { if (me != 0) ZMQ_OK(zmq_close(me)); }
   void highWaterMark(int value) {
-    setsockopt(ZMQ_SNDHWM,&value,sizeof(value));
+    ZMQ_OK(zmq_setsockopt(me,ZMQ_SNDHWM,&value,sizeof(value)));
   }
 };
 
 class ZMQSubscribeSocket : public ZMQSocket
 {
 public:
-  ZMQSubscribeSocket(zmq::context_t &context) 
-    : ZMQSocket(context,ZMQ_SUB)
+  ZMQSubscribeSocket(ZMQContext &context, const std::string &address)
   {
-    setsockopt(ZMQ_SUBSCRIBE, "", 0);
-
+    me=zmq_socket(context.me, ZMQ_SUB);
+    assert(me != 0);
+    assert(zmq_setsockopt(me, ZMQ_SUBSCRIBE, "", 0) == 0);
+    assert(zmq_connect(me,address.c_str()) == 0);
   }
 };
 
 class ZMQPublishSocket : public ZMQSocket
 {
 public:
-  ZMQPublishSocket(zmq::context_t &context, const std::string &address)
-    : ZMQSocket(context, ZMQ_PUB)
+  ZMQPublishSocket(ZMQContext &context, const std::string &address)
   {
-    bind(address.c_str());
+    me=zmq_socket(context.me, ZMQ_PUB);
+    ZMQ_OK(zmq_bind(me,address.c_str()));
   }
 };
 
-class ZMQMsg : public zmq::message_t
+class ZMQMsg
 {
 public:
-  ZMQMsg(size_t size) : zmq::message_t(size) {}
-  ZMQMsg(const void *source, size_t size) : zmq::message_t(size) {
-    memcpy(data(),source,size);
+  zmq_msg_t me;
+  ZMQMsg() { ZMQ_OK(zmq_msg_init (&me)); }
+  ZMQMsg(size_t size) { ZMQ_OK(zmq_msg_init_size(&me,size)); }
+  ZMQMsg(const void *data, size_t size) { 
+    ZMQ_OK(zmq_msg_init_size(&me,size)); 
+    memcpy(zmq_msg_data(&me),data,size);
   }
-  int recv(zmq::socket_t &socket, int arg=0) { return socket.recv(this,arg); }
+  void *data() { return zmq_msg_data(&me); }
+  int recv(ZMQSocket &socket, int arg=0) { 
+    return zmq_recvmsg(socket.me,&me,arg); 
+  }
   int recv_timeout(ZMQSocket &socket, int millisecondTimeout) { 
     zmq_pollitem_t items[1];
-    items[0].socket = socket;
+    items[0].socket = socket.me;
     items[0].events = ZMQ_POLLIN;
-    if (zmq::poll (items, 1, millisecondTimeout) > 0) {
-      return socket.recv(this,ZMQ_NOBLOCK);
+    if (zmq_poll (items, 1, millisecondTimeout) > 0) {
+      return zmq_recvmsg(socket.me,&me,ZMQ_NOBLOCK);
     } else {
       return -1;
     }
   }
 
-  int send(ZMQSocket &socket, int arg=0) { return socket.send(this,arg); }
+  int send(ZMQSocket &socket, int arg=0) { return zmq_sendmsg(socket.me,&me,arg); }
+  ~ZMQMsg() { ZMQ_OK(zmq_msg_close (&me)); }
 };
 
 typedef std::map<int,Servo*> Servos;
@@ -94,42 +132,69 @@ Servo* servo(ZMQServoMessage *message)
   return &NO_SERVO;
 }
 
+
 void rx() {
-  zmq::context_t context;
-  ZMQSubscribeSocket socket(context);
-  socket.highWaterMark(100);
+  ZMQContext context;
+  vector < shared_ptr <ZMQSubscribeSocket> > sockets;
+  vector < zmq_pollitem_t > items;
+
+  for (size_t i=0; SUBSCRIBERS[i] != 0; ++i) {
+    ZMQSubscribeSocket *p = new ZMQSubscribeSocket(context,SUBSCRIBERS[i]);
+    p->highWaterMark(100);
+    sockets.push_back(shared_ptr<ZMQSubscribeSocket>(p));
+  }
+  
+  items.resize(sockets.size());
+
+  for (size_t i=0; i < items.size(); ++i) {
+    items[i].socket = sockets[i]->me;
+    items[i].events = ZMQ_POLLIN;
+  }
+
+  //  ZMQMsg msg(sizeof(ZMQServoMessage));
+  //  ZMQServoMessage *data = (ZMQServoMessage *)msg.data();
 
   while (running) {
     ++rxs;
-    ZMQMsg msg;
-    if (msg.recv_timeout(socket,int(1.0*1000)) != 0) continue; // ) != 0) { usleep(int(0.25*1000000)); continue; }
-    ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
-    switch(data->messageId) {
-    case ZMQServoMessage::SET_ANGLE: servo(data)->angle(data->value); break;
+    if (zmq_poll(&items[0],items.size(),int(1.0*1000)) <= 0) continue;
+    for (size_t i=0; i != sockets.size(); ++i) {
+      if ((items[i].revents & ZMQ_POLLIN) != 0) {
+	ZMQMsg msg;
+	msg.recv(*sockets[i]);
+	ZMQServoMessage *data = (ZMQServoMessage *)msg.data();
+	//	cout << "msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+	switch(data->messageId) {
+	case ZMQServoMessage::SET_ANGLE: servo(data)->angle(data->value); break;
+	}
+	items[i].revents = 0;
+      }
     }
   }
 }
 
 
 void tx() {
-  zmq::context_t context;
-  ZMQPublishSocket socket(context,"tcp://*:5500");
+  ZMQContext context;
+  ZMQPublishSocket socket(context,PUBLISH);
   socket.highWaterMark(1);
 
   while (running) {
     ++txs;
-    usleep(int(0.02*1000000));
+    usleep(int(double(1.0/TX_RATE)*1000000));
     size_t k = 0, n = servos.size();
     for (Servos::iterator i = servos.begin();
 	 i != servos.end();
 	 ++i) {
-      ZMQServoMessage data;
-      data.messageId = ZMQServoMessage::GET_ANGLE;
-      data.servoId = i->first;
-      data.value = i->second->angle();
 
-      ZMQMsg msg(&data,sizeof(data));
-      msg.send(socket,(++k < n) ? ZMQ_SNDMORE : 0);
+      ZMQMsg msg(sizeof(ZMQServoMessage));
+      ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+
+      data->messageId = ZMQServoMessage::GET_ANGLE;
+      data->servoId = i->first;
+      data->value = i->second->angle();
+
+      //      msg.send(socket,(++k < n) ? ZMQ_SNDMORE : 0);
+      msg.send(socket);
     }
   }
 }
@@ -153,16 +218,6 @@ void report() {
   }
 }
 
-FakeServoController fake;
-
-const struct { ServoController *controller; int id; } SERVO_MAP [] =
-  {
-  //{ controller, id },
-    { &fake, 1  },
-    { &fake, 10 },
-    { &fake, 21 },
-    { 0,    0} // end
-  };
 
 void SigIntHandler(int arg) { 
   running = false; 
@@ -172,8 +227,8 @@ void SigIntHandler(int arg) {
 int main(int argc,char **argv) {
   signal(SIGINT, SigIntHandler);
 
-  for (int i=0; SERVO_MAP[i].id != 0; ++i) {
-    servos[SERVO_MAP[i].id]=SERVO_MAP[i].controller->servo(SERVO_MAP[i].id);
+  for (int i=0; SERVOS[i].id != 0; ++i) {
+    servos[SERVOS[i].id]=SERVOS[i].controller->servo(SERVOS[i].id);
   }
 
   std::thread reportThread(report);

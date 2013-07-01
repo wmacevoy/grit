@@ -4,7 +4,7 @@ LDFLAGS=-L../../libs/lib -ldxl -lzmq -lpthread -lboost_thread-mt -Wl,--no-as-nee
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
-TARGET=bin/ZMQServoServer
+TARGET=bin/ZMQServoServer bin/TestZMQServoController
 
 all : $(TARGET)
 
@@ -38,7 +38,9 @@ bin/RevolutionTest : tmp/RevolutionTest.o tmp/DynamixelDriver.o
 
 bin/TestDrive1 : tmp/TestDrive1.o tmp/DynamixelDriver.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-bin/ZMQServoServer : tmp/ZMQServoServer.o tmp/ServoController.o tmp/FakeServoController.o tmp/FakeServo.o tmp/Servo.o
+bin/ZMQServoServer : tmp/ZMQServoServer.o tmp/ServoController.o tmp/FakeServoController.o tmp/FakeServo.o tmp/Servo.o tmp/now.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+bin/TestZMQServoController : tmp/TestZMQServoController.o tmp/CreateZMQServoController.o tmp/ServoController.o tmp/FakeServoController.o tmp/FakeServo.o tmp/Servo.o tmp/now.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 clean : 
