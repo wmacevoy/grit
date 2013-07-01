@@ -7,4 +7,5 @@ all :
 clean :
 	for d in $(DIRS); do $(MAKE) -C $$d clean ; done
 	/bin/rm -rf lib include
+	find . -regex '.*[~#]' -print0 | xargs -0 /bin/rm -rf
 

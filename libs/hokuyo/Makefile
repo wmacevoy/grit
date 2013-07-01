@@ -1,12 +1,11 @@
-CFLAGS=-O2 -Wall -Iinclude -fPIC
-CC=g++ 
+CXXFLAGS=-O2 -Wall -Iinclude -fPIC
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
-TARGET=lib/libhokuyo.a
+TARGET=lib/libhokuyo
 
 .PHONY: all
-all : $(TARGET)
+all : $(TARGET).a
 
 #We don't need to clean up when we're making these targets
 NODEPS:=clean tags svn
@@ -27,14 +26,17 @@ endif
 #This is the rule for creating the dependency files
 tmp/%.d: src/%.cpp
 	mkdir -p `dirname $@`
-	$(CC) $(CFLAGS) -MM -MT  '$(patsubst src/%.cpp,tmp/%.o,$<)' $< -MF $@
+	$(CXX) $(CXXFLAGS) -MM -MT  '$(patsubst src/%.cpp,tmp/%.o,$<)' $< -MF $@
 
 #This rule does the compilation
 tmp/%.o: src/%.cpp tmp/%.d
-	$(CC) $(CFLAGS) -o $@ -c $<
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
-$(TARGET) : $(OBJECTS)
+$(TARGET).a : $(OBJECTS)
 	ar crv $@ $^
+
+$(TARGET).so : $(OBJECTS)
+	$(CXX) -shared  -o $@ $^
 
 test: $(TARGET)
 	$(CC) test/main.cpp -Iinclude -lhokuyo -Llib -lSDL -I../catch -o bin/hokuyoTest
