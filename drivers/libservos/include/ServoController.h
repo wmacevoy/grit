@@ -1,13 +1,11 @@
-// warren macevoy
-
 #pragma once
 
-#include <string>
-#include "Servo.hpp"
+#include "Servo.h"
 
-class ServoConroller
+class ServoController
 {
 public:
-  virtual Servo* servo(const std::string &id)=0;
+  virtual Servo* servo(int id)=0;
+  virtual void start();
   virtual ~ServoController();
 };

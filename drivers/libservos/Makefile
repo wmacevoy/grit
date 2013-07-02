@@ -1,16 +1,18 @@
-CXXFLAGS=-O2 -Wall -Iinclude -fPIC
+CXXFLAGS=-std=c++0x -g -O2 -Wall -Iinclude -fPIC -I../../libs/include
+LDFLAGS=-L../../libs/lib -ldxl -lzmq -lpthread -lboost_thread-mt -Wl,--no-as-needed -lrt
+
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
-TARGET=lib/libservos
+TARGET=bin/ZMQServoServer bin/TestZMQServoController
 
-.PHONY: all
-all : includes $(TARGET).a $(TARGET).so
+all : $(TARGET)
 
 #We don't need to clean up when we're making these targets
 NODEPS:=clean tags svn
-#Find all the CPP files in the src/ directory
+#Find all the C++ files in the src/ directory
 SOURCES:=$(shell find src/ -name "*.cpp")
+
 OBJECTS:=$(patsubst src/%,tmp/%,$(patsubst %.cpp,%.o,$(SOURCES)))
 
 #These are the dependency files, which make will clean up after it creates them
@@ -25,22 +27,24 @@ endif
 
 #This is the rule for creating the dependency files
 tmp/%.d: src/%.cpp
-	mkdir -p `dirname $@`
-	$(CXX) $(CXXFLAGS) -MM -MT  '$(patsubst src/%.cpp,tmp/%.o,$<)' $< -MF $@
+	$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst src/%.cpp,tmp/%.o,$<)' $< -MF $@
 
 #This rule does the compilation
 tmp/%.o: src/%.cpp tmp/%.d
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
-$(TARGET).a : $(OBJECTS)
-	mkdir -p `dirname '$@'`
-	ar crv $@ $^
+bin/RevolutionTest : tmp/RevolutionTest.o tmp/DynamixelDriver.o
+	$(CXX) $(CXXFLAGS) -o $@ tmp/RevolutionTest.o $(LDFLAGS)
 
-$(TARGET).so : $(OBJECTS)
-	mkdir -p `dirname '$@'`
-	$(CXX) -shared -o $@ $^
+bin/TestDrive1 : tmp/TestDrive1.o tmp/DynamixelDriver.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+bin/ZMQServoServer : tmp/ZMQServoServer.o tmp/ServoController.o tmp/CreateFakeServoController.o tmp/CreateDynamixelServoController.o tmp/FakeServoController.o tmp/FakeServo.o tmp/Servo.o tmp/now.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+bin/TestZMQServoController : tmp/TestZMQServoController.o tmp/CreateZMQServoController.o tmp/ServoController.o tmp/Servo.o tmp/now.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
-.PHONY: clean
+bin/basic : tmp/basic.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
 clean : 
-	/bin/rm -rf tmp/* lib/*
-
+	/bin/rm -rf tmp/* bin/*

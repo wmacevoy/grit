@@ -2,5 +2,6 @@
 
 #include "ServoController.h"
 
-ServoController* CreateDynamixelServoController(int DeviceNumber, int BaudRate);
+ServoController* CreateDynamixelServoController(int deviceIndex,int baudNum);
+ServoController* CreateDynamixelServoController();
 
