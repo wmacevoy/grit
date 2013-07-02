@@ -1,12 +1,16 @@
-CFLAGS=-O2 -Wall -Iinclude -fPIC
+CFLAGS=-O2 -Wall -Iinclude -fPIC -std=c++0x
 CC=g++ 
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
-TARGET=lib/libcentaur.so
+SHAREd=lib/libcentaur.so
+STATIC=lib/libcentaur.a
 
-.PHONY: all
-all : $(TARGET)
+.PHONY: static
+static : $(STATIC)
+
+.PHONY: shared
+shared : $(SHARED)
 
 #We don't need to clean up when we're making these targets
 NODEPS:=clean tags svn
@@ -33,7 +37,10 @@ tmp/%.d: src/%.cpp
 tmp/%.o: src/%.cpp tmp/%.d
 	$(CC) $(CFLAGS) -I../../libs/zmq/include -o $@ -c $<
 
-$(TARGET) : $(OBJECTS)
+$(STATIC): $(OBJECTS)
+	ar crv $@ $^
+	
+$(SHARED): $(OBJECTS)
 	$(CC) -shared -o $@ $^
 
 .PHONY: clean
