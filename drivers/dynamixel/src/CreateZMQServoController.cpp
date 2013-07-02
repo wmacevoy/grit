@@ -97,16 +97,13 @@ struct ZMQServo : Servo
   void angle(float value) { goalAngle = value; }
 };
 
-static void starttx(void *arg);
-static void startrx(void *arg);
-
 struct ZMQServoController : ServoController
 {
   typedef std::map < int , ZMQServo* > Servos;
   Servos servos;
 
-  std::thread *runRx;
-  std::thread *runTx;
+  std::thread *goRx;
+  std::thread *goTx;
 
   std::string me;
   std::string server;
@@ -178,23 +175,21 @@ struct ZMQServoController : ServoController
     : me(me_), server(server_)
   { 
     running = false;
-    runRx = 0;
-    runTx = 0;
   }
 
   void start() { 
     if (running == false) {
       running = true;
-      runTx = new std::thread(starttx,this);
-      runRx = new std::thread(startrx,this);
+      goTx = new std::thread(&ZMQServoController::tx,this);
+      goRx = new std::thread(&ZMQServoController::rx,this);
     }
   }
 
   ~ZMQServoController() { 
     if (running) {
       running=false;
-      runTx->join(); 
-      runRx->join(); 
+      goTx->join(); delete goTx;
+      goRx->join(); delete goRx; 
     }
   }
 
@@ -206,16 +201,6 @@ struct ZMQServoController : ServoController
     return servos[id] = new ZMQServo();
   }
 };
-
-static void startrx(void *arg)
-{
-  ((ZMQServoController*)arg)->rx();
-}
-
-static void starttx(void *arg)
-{
-  ((ZMQServoController*)arg)->tx();
-}
 
 ServoController* CreateZMQServoController(const std::string &me,const std::string &server)
 {

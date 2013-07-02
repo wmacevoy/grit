@@ -12,7 +12,8 @@
 #include "zmq.hpp"
 #include "ZMQServo.h"
 #include "ZMQServoMessage.h"
-#include "FakeServoController.h"
+#include "CreateFakeServoController.h"
+#include "CreateDynamixelServoController.h"
 #include "FakeServo.h"
 #include "Servo.h"
 
@@ -20,18 +21,35 @@
 
 using namespace std;
 
-FakeServoController NO_CONTROLLER;
 FakeServo NO_SERVO;
+
+struct Controllers
+{
+  shared_ptr<ServoController> fake;
+  shared_ptr<ServoController> dynamixel;
+  vector < shared_ptr<ServoController> > all;
+  Controllers() :
+    fake(CreateFakeServoController()),
+    dynamixel(CreateDynamixelServoController())
+  {
+    all.push_back(fake);
+    all.push_back(dynamixel);
+  }
+  void start()
+  {
+    for (size_t i=0; i<all.size(); ++i) all[i]->start();
+  }
+} ctrl;
 
 const int TX_RATE=50;
 
 const struct { ServoController *controller; int id; } SERVOS [] =
   {
   //{ controller, id },
-    { &NO_CONTROLLER, 1  },
-    { &NO_CONTROLLER, 2  },
-    { &NO_CONTROLLER, 10 },
-    { &NO_CONTROLLER, 20 },
+    { &*ctrl.dynamixel, 1  },
+    { &*ctrl.fake, 2  },
+    { &*ctrl.fake, 10 },
+    { &*ctrl.fake, 20 },
     { 0,    0} // end
   };
 
@@ -181,7 +199,6 @@ void tx() {
   while (running) {
     ++txs;
     usleep(int(double(1.0/TX_RATE)*1000000));
-    size_t k = 0, n = servos.size();
     for (Servos::iterator i = servos.begin();
 	 i != servos.end();
 	 ++i) {
@@ -192,8 +209,6 @@ void tx() {
       data->messageId = ZMQServoMessage::GET_ANGLE;
       data->servoId = i->first;
       data->value = i->second->angle();
-
-      //      msg.send(socket,(++k < n) ? ZMQ_SNDMORE : 0);
       msg.send(socket);
     }
   }
@@ -230,6 +245,8 @@ int main(int argc,char **argv) {
   for (int i=0; SERVOS[i].id != 0; ++i) {
     servos[SERVOS[i].id]=SERVOS[i].controller->servo(SERVOS[i].id);
   }
+
+  ctrl.start(); // start all controllers
 
   std::thread reportThread(report);
   std::thread txThread(tx);

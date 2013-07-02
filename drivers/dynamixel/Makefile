@@ -1,4 +1,4 @@
-CXXFLAGS=-std=c++0x -O2 -Wall -Iinclude -fPIC -I../../libs/include
+CXXFLAGS=-std=c++0x -g -O2 -Wall -Iinclude -fPIC -I../../libs/include
 LDFLAGS=-L../../libs/lib -ldxl -lzmq -lpthread -lboost_thread-mt -Wl,--no-as-needed -lrt
 
 # Add .d to Make's recognized suffixes.
@@ -38,9 +38,12 @@ bin/RevolutionTest : tmp/RevolutionTest.o tmp/DynamixelDriver.o
 
 bin/TestDrive1 : tmp/TestDrive1.o tmp/DynamixelDriver.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-bin/ZMQServoServer : tmp/ZMQServoServer.o tmp/ServoController.o tmp/FakeServoController.o tmp/FakeServo.o tmp/Servo.o tmp/now.o
+bin/ZMQServoServer : tmp/ZMQServoServer.o tmp/ServoController.o tmp/CreateFakeServoController.o tmp/CreateDynamixelServoController.o tmp/FakeServoController.o tmp/FakeServo.o tmp/Servo.o tmp/now.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-bin/TestZMQServoController : tmp/TestZMQServoController.o tmp/CreateZMQServoController.o tmp/ServoController.o tmp/FakeServoController.o tmp/FakeServo.o tmp/Servo.o tmp/now.o
+bin/TestZMQServoController : tmp/TestZMQServoController.o tmp/CreateZMQServoController.o tmp/ServoController.o tmp/Servo.o tmp/now.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+bin/basic : tmp/basic.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 clean : 

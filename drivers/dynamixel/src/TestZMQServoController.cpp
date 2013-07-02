@@ -24,8 +24,9 @@ int main()
     usleep(int((1.0/n)*1000000));
 
     double t = now()-t0;
-    double s1=cos(t/10.0);
-    double s2=sin(t/10.0);
+    double theta = 2*M_PI/4.0*t;
+    double s1=90*sin(theta);
+    double s2=90*cos(theta);
     servo1->angle(s1);
     servo2->angle(s2);
 
