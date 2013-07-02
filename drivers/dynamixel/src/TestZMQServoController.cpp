@@ -2,6 +2,7 @@
 #include <memory>
 #include <iostream>
 #include <iomanip>
+#include <unistd.h>
 #include "CreateZMQServoController.h"
 #include "now.h"
 
