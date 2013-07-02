@@ -76,8 +76,8 @@ struct dxio
     FD_ZERO(&read_fds);
     FD_SET(fd,&read_fds);
     
-    currentTimeout.tv_sec=1;
-    currentTimeout.tv_nsec=0;
+    currentTimeout.tv_sec=0;
+    currentTimeout.tv_nsec=100000000*0.010;
   }
 
   void timeout(double t)
@@ -90,7 +90,7 @@ struct dxio
   bool write(ssize_t size, const unsigned char *data)
   {
     ssize_t ans = ::write(fd,data,size);
-    cout << "wrote " << ans << " of " << size << " bytes" << endl;
+    //    cout << "wrote " << ans << " of " << size << " bytes" << endl;
     return ans == size;
   }
 
@@ -98,11 +98,9 @@ struct dxio
   {
     ssize_t total = 0;
     while (size > 0) {
-      currentTimeout.tv_sec = 1;
-      currentTimeout.tv_nsec = 0;
-      cout << "pselect start" << endl;
+      currentTimeout.tv_sec=0;
+      currentTimeout.tv_nsec=100000000*0.010;
       int status = pselect(1,&read_fds,0,0,&currentTimeout,0);
-      cout << "pselect = " << status << endl;
       if (status == 1) {
 	ssize_t ans = ::read(fd,data,size);
 	if (ans == -1) break;
@@ -119,7 +117,7 @@ struct dxio
   bool read(ssize_t size, unsigned char *data)
   {
     ssize_t ans = read0(size,data);
-    cout << "read " << ans << " bytes" << endl;
+    //    cout << "read " << ans << " bytes" << endl;
     return (ans == size);
   }
 
@@ -184,7 +182,7 @@ struct dxio
 };
 
 
-int _main()
+int main()
 {
   const char *dev="/dev/ttyUSB0";
   int baud=57600;
@@ -194,7 +192,7 @@ int _main()
   double t0=now();
 
   for (;;) {
-    usleep(int(1.0*1000000));
+    usleep(int(0.01*1000000));
     double t=now()-t0;
 
     if (t > 100) break;
@@ -203,12 +201,12 @@ int _main()
     dxl.write_word(id,DXL_GOAL_POSITION_WORD,(goalPosition & 4095));
     // int presentPosition = 0;
     int presentPosition=dxl.read_word(id,DXL_PRESENT_POSITION_WORD);
-    cout << "t=" << t << " goal=" << goalPosition << " present=" << presentPosition << endl;
+    //    cout << "t=" << t << " goal=" << goalPosition << " present=" << presentPosition << endl;
   }
   return 0;
 }
 
-int main()
+int _main()
 {
   int deviceIndex = 0;
   int baudNum = 34;
