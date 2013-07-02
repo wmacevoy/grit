@@ -1,5 +1,5 @@
 #ifndef LegPressure_HPP
-#define LegPressure
+#define LegPressure_HPP
 
 #include <cstring>
 #include <iostream>
@@ -11,7 +11,7 @@ using namespace std;
 
 class LegPressure{
   public:
-  static const char *LOCATION;
+ // static const char *LOCATION;
   int l1,l2,l3,l4;
   void set(int newl1,int newl2,int newl3,int newl4) {
 	  l1=newl1;

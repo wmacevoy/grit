@@ -24,7 +24,7 @@ class ThreeTuple {
 
 class Orientation{
   public:
-  static const char *LOCATION;
+//  static const char *LOCATION;
   ThreeTuple acceleration,direction,rotation;
   void subscribe(void *zmq_sub) {
 	 zmq_msg_t msg;
@@ -32,6 +32,11 @@ class Orientation{
 	 zmq_msg_recv(&msg,zmq_sub,0);
 	 memcpy(this,zmq_msg_data(&msg),sizeof(Orientation));
 	 zmq_msg_close(&msg);
+  }
+  void set(int ax,int ay,int az,int cx,int cy,int cz,int gx,int gy,int gz) {
+	  acceleration=ThreeTuple(ax,ay,az);
+	  direction=ThreeTuple(cx,cy,cz);
+	  rotation=ThreeTuple(gx,gy,gz);
   }
   void print(ostream &out) {
 	out <<"A:";
