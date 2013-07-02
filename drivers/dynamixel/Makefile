@@ -1,6 +1,6 @@
 CXXFLAGS=-std=c++0x -g -O2 -Wall -Iinclude -fPIC -I../../libs/include
-LDFLAGS=-L../../libs/lib -ldxl -lzmq -lpthread -lboost_thread-mt -Wl,--no-as-needed -lrt
-
+# LDFLAGS=-L../../libs/lib -ldxl -lzmq -lpthread -lboost_thread-mt -Wl,--no-as-needed -lrt
+LDFLAGS=-L../../libs/lib -ldxl -lzmq -lpthread -Wl,--no-as-needed -lrt
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
