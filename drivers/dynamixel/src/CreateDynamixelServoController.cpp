@@ -212,7 +212,7 @@ ServoController* CreateDynamixelServoController(int deviceIndex,int baudNum)
   return new DynamixelServoController(deviceIndex,baudNum);
 }
 
-const int DEVICEINDEX=0;
+const int DEVICEINDEX=1;
 const int BAUDNUM=34;
 
 ServoController* CreateDynamixelServoController()

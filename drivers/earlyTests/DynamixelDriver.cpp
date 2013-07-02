@@ -8,7 +8,7 @@
 #include <iostream>
 #include <unistd.h>
 
-#include <dynamixel.h>
+#include "dynamixel.h"
 
 #include "DynamixelDriver.hpp"
 
@@ -165,7 +165,7 @@ unsigned char DynamixelInterface::readByte(int id,int address) {
   return value;
 }
 
-const int DynamixelInterface::DEVICEINDEX=0;
+const int DynamixelInterface::DEVICEINDEX=1;
 const int DynamixelInterface::BAUDNUM=34;
 const int DynamixelInterface::JITTER=1000;
 const int DynamixelInterface::RETRIES=10;

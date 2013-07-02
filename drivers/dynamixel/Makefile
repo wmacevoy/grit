@@ -33,7 +33,7 @@ tmp/%.d: src/%.cpp
 tmp/%.o: src/%.cpp tmp/%.d
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
-bin/RevolutionTest : tmp/RevolutionTest.o tmp/CreateZMQServoController.o tmp/ServoController.o tmp/Servo.o tmp/now.o tmp/DynamixelDriver.o
+bin/RevolutionTest : tmp/RevolutionTest.o tmp/CreateZMQServoController.o tmp/ServoController.o tmp/Servo.o tmp/now.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 bin/TestDrive1 : tmp/TestDrive1.o tmp/DynamixelDriver.o

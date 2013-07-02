@@ -14,8 +14,8 @@ int main()
   string me = "tcp://*:5501";
   string server = "tcp://localhost:5500";
   shared_ptr<ServoController> controller(CreateZMQServoController(me,server));
-  Servo *servo1 = controller->servo(1);
-  Servo *servo2 = controller->servo(2);
+  Servo *servo1 = controller->servo(93);
+  //  Servo *servo2 = controller->servo(2);
   controller->start();
 
   size_t i = 0, n = 100;
@@ -26,13 +26,14 @@ int main()
 
     double t = now()-t0;
     double theta = 2*M_PI/4.0*t;
-    double s1=90*sin(theta);
-    double s2=90*cos(theta);
+    double s1=45*sin(theta);
+    //    double s2=45*cos(theta);
     servo1->angle(s1);
-    servo2->angle(s2);
+    //    servo2->angle(s2);
 
     if (i % n ==  0) {
-      cout << "client: servo1=" << servo1->angle() << " servo2=" << servo2->angle() << endl;
+      cout << "client: servo1 goal=" << s1 << " pos=" << servo1->angle() << endl;
+      //      cout << "client: servo1=" << servo1->angle() << " servo2=" << servo2->angle() << endl;
     }
   }
 }

@@ -5,7 +5,7 @@
 #include <cmath>
 #include <ctime>
 #include <memory>
-#include "DynamixelDriver.h"
+// #include "DynamixelDriver.h"
 #include "CreateZMQServoController.h"
 
 using namespace std;
@@ -502,7 +502,7 @@ int main()
 	int wpos=2048-1200;
 	int necklr=2048;
 	int neckud=2048;
-	try {
+	/*	try { */
 	MyServo w;
 	w.init(91,"Waist");
 	w.setTorque(315);
@@ -656,8 +656,8 @@ int main()
 		cout << "h:" <<h<<" f: "<<f<<" k:"<< k << endl;
 		cout << "x:" <<x<<" y: "<<y<<" z:"<< z << endl;
 	}
-	} catch (DXL_ComError dce){
+	/* } catch (DXL_ComError dce){
 		dce.describe();
-	}
+		} */
 	return 0;
 }
