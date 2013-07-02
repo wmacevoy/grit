@@ -182,7 +182,7 @@ struct dxio
 };
 
 
-int main()
+int _main()
 {
   const char *dev="/dev/ttyUSB0";
   int baud=57600;
@@ -206,7 +206,7 @@ int main()
   return 0;
 }
 
-int _main()
+int main()
 {
   int deviceIndex = 0;
   int baudNum = 34;
