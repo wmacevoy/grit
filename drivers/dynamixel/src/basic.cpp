@@ -70,7 +70,7 @@ struct dxio
   unsigned char inb[32];
 
   dxio(const char *dev, size_t baud) {
-    fd = open(dev,O_RDWR|O_NONBLOCK);
+    fd = open(dev,O_RDWR); // |O_NONBLOCK);
     assert(fd != -1);
 
     FD_ZERO(&read_fds);
@@ -90,7 +90,7 @@ struct dxio
   bool write(ssize_t size, const unsigned char *data)
   {
     ssize_t ans = ::write(fd,data,size);
-    //    cout << "wrote " << ans << " of " << size << " bytes" << endl;
+    cout << "wrote " << ans << " of " << size << " bytes" << endl;
     return ans == size;
   }
 
@@ -98,10 +98,13 @@ struct dxio
   {
     ssize_t total = 0;
     while (size > 0) {
-      currentTimeout.tv_sec=0;
-      currentTimeout.tv_nsec=100000000*0.010;
-      int status = pselect(1,&read_fds,0,0,&currentTimeout,0);
+      currentTimeout.tv_sec=1;
+      currentTimeout.tv_nsec=1000000000*0.100;
+      //      int status = pselect(1,&read_fds,0,0,&currentTimeout,0);
+      //cout << "status=" << status << endl;
+      int status = 1;
       if (status == 1) {
+	usleep(int(0.1*1000000));
 	ssize_t ans = ::read(fd,data,size);
 	if (ans == -1) break;
 	data += ans;
@@ -117,7 +120,7 @@ struct dxio
   bool read(ssize_t size, unsigned char *data)
   {
     ssize_t ans = read0(size,data);
-    //    cout << "read " << ans << " bytes" << endl;
+    cout << "read " << ans << " bytes" << endl;
     return (ans == size);
   }
 
@@ -133,8 +136,8 @@ struct dxio
     obuf[6]=value;
     obuf[7]=(value >> 8);
     obuf[8]=~(obuf[2]+obuf[3]+obuf[4]+obuf[5]+obuf[6]+obuf[7]);
-    return write(sizeof(obuf),obuf) == sizeof(obuf);
-#if 0
+    //    return write(sizeof(obuf),obuf) == sizeof(obuf);
+#if 1
     if (write(sizeof(obuf),obuf) && read(sizeof(ibuf),ibuf)) {
       if (~(ibuf[2]+ibuf[3]+ibuf[4]) == ibuf[5]) {
 	return ibuf[4] == 0;
@@ -182,7 +185,7 @@ struct dxio
 };
 
 
-int _main()
+int main()
 {
   const char *dev="/dev/ttyUSB0";
   int baud=57600;
@@ -192,7 +195,7 @@ int _main()
   double t0=now();
 
   for (;;) {
-    usleep(int(0.01*1000000));
+    usleep(int(1.0*1000000));
     double t=now()-t0;
 
     if (t > 100) break;
@@ -206,7 +209,7 @@ int _main()
   return 0;
 }
 
-int main()
+int _main()
 {
   int deviceIndex = 0;
   int baudNum = 34;
