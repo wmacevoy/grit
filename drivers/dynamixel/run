@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 HERE=`dirname $0`
 HERE=`realpath "$HERE"`
 # add this binary's directory to path
