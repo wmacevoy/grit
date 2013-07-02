@@ -98,11 +98,16 @@ struct dxio
   {
     ssize_t total = 0;
     while (size > 0) {
-      currentTimeout.tv_sec=1;
-      currentTimeout.tv_nsec=1000000000*0.100;
-      //      int status = pselect(1,&read_fds,0,0,&currentTimeout,0);
-      //cout << "status=" << status << endl;
-      int status = 1;
+      struct timeval timeout;
+      fd_set fds;
+      timeout.tv_sec=1;
+      timeout.tv_usec=1000;
+      FD_ZERO(&fds);
+      FD_SET(fd,&fds);
+
+      int status = select(1,&fds,0,0,&timeout);
+      cout << "status=" << status << endl;
+      // int status = 1;
       if (status == 1) {
 	usleep(int(0.1*1000000));
 	ssize_t ans = ::read(fd,data,size);
@@ -204,7 +209,7 @@ int main()
     dxl.write_word(id,DXL_GOAL_POSITION_WORD,(goalPosition & 4095));
     // int presentPosition = 0;
     int presentPosition=dxl.read_word(id,DXL_PRESENT_POSITION_WORD);
-    //    cout << "t=" << t << " goal=" << goalPosition << " present=" << presentPosition << endl;
+    cout << "t=" << t << " goal=" << goalPosition << " present=" << presentPosition << endl;
   }
   return 0;
 }

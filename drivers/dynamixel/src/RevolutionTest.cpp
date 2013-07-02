@@ -4,7 +4,55 @@
 #include <stdlib.h>
 #include <cmath>
 #include <ctime>
-#include "DynamixelDriver.hpp"
+#include <memory>
+#include "DynamixelDriver.h"
+#include "CreateZMQServoController.h"
+
+using namespace std;
+
+const char *ME = "tcp://*:5502";
+const char *SERVER = "tcp://localhost:5500";
+
+class MyController : public ServoController
+{
+public:
+  shared_ptr<ServoController> me;
+  MyController() : me(CreateZMQServoController(ME,SERVER)) {}
+  Servo* servo(int id) { return me->servo(id); }
+  void start() { me->start(); }
+};
+MyController controller;
+
+class MyServo : public Servo
+{
+private:
+  //  MyServo(const MyServo &copy) {}
+public:
+  shared_ptr<Servo> me;
+  string name;
+
+  void init(int id_, const string &name_)
+  {
+    me = shared_ptr<Servo>(controller.servo(id_));
+    name=name_;
+  }
+
+  float angle() const { return me->angle(); }
+  void angle(float value) { me->angle(value); }
+
+  void joint(float value) {
+    angle((value-2048)*(180.0/2048.0));
+  }
+
+  void setTorque(float value) { 
+    // ignored
+  }
+
+  void report()
+  {
+    cout << "servo " << name << " at " << angle() << endl;
+  }
+};
 
 const int divider=1;
 
@@ -145,7 +193,7 @@ class LegGeometry {
 };
 
 class Leg:public LegGeometry {
-	Servo knee,femur,hip;
+	MyServo knee,femur,hip;
 	string name;
 	int kneePos,femurPos,hipPos;
 public:
@@ -451,7 +499,22 @@ public:
 int main()
 {
 	bool angleMode=true;
+	int wpos=2048-1200;
+	int necklr=2048;
+	int neckud=2048;
 	try {
+	MyServo w;
+	w.init(91,"Waist");
+	w.setTorque(315);
+	w.joint(wpos);
+	MyServo n1;
+	n1.init(93,"Waist");
+	n1.setTorque(315);
+	n1.joint(neckud);
+	MyServo n2;
+	n2.init(94,"Waist");
+	n2.setTorque(315);
+	n2.joint(necklr);
     Quad legs;
   //2   sleep(2);
     legs.init(768);
@@ -463,10 +526,10 @@ int main()
     Dog2 d2s(legs.leg2());
     Dog3 d3s(legs.leg3());
     Dog4 d4s(legs.leg4());
-    int cycle=4000;
+    int cycle=8000;
     l1s.init(0,cycle);
-    l2s.init(3*cycle/4,cycle);
-    l3s.init(cycle/4,cycle);
+    l2s.init(cycle/4,cycle);
+    l3s.init(3*cycle/4,cycle);
     l4s.init(cycle/2,cycle);
     d1s.init(0,cycle);
     d2s.init(3*cycle/4,cycle);
@@ -482,12 +545,45 @@ int main()
 	float z=13;
 	int step=5;
 	legs.setPosAll(k,f,h);
+
+    controller.start();
 	while(1)
 	{
 		cout <<"Press Enter key to continue!(press q and Enter to quit)"<<endl;
 		char key=getchar();
 		if( key == 'q')
 			break;
+		if (key=='w') {
+			wpos+=100;
+			if (wpos>4095) wpos=4095;
+			w.joint(wpos);
+			cout <<"Waist "<<wpos<<endl;
+		}
+		if (key=='W') {
+			wpos-=100;
+			if (wpos<0) wpos=0;
+			w.joint(wpos);
+		}
+		if (key=='u') {
+			neckud+=100;
+			if (neckud>4095) neckud=4095;
+			n2.joint(neckud);
+		}
+		if (key=='U') {
+			neckud-=100;
+			if (neckud<0) neckud=0;
+			n2.joint(neckud);
+		}
+		if (key=='l') {
+			necklr+=100;
+			if (necklr>4095) necklr=4095;
+			n1.joint(necklr);
+		}
+		if (key=='L') {
+			necklr-=100;
+			if (necklr<0) necklr=0;
+			n1.joint(necklr);
+		}
 		if (key=='A') angleMode=true;
 		if (key=='a') angleMode=false;
 		if (key=='c') legs.setSequences(&l1s,&l2s,&l3s,&l4s);

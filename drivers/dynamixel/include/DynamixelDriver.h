@@ -9,7 +9,6 @@
 #define DYNAMIXELDRIVER_HPP_
 
 #include <string>
-#include "Servo.h"
 
 using namespace std;
 
@@ -85,19 +84,19 @@ public:
 
 extern DynamixelInterface DXL2USB;
 
-class DynamixelServo : public Servo {
+class DynamixelServo {
   int id;
   bool wheelMode;
   float presentAngle;
   string name;
 public:
-  float angle() const;
-  void angle(float newAngle);
+  float getAngle() ;
   void init(int newId,string newName) ;
   void wheel(int speed);
   void setTorque(int value=255);
   void joint(int position);
   void report ();
+  void angle(float newAngle);
 };
 
 #endif /* DYNAMIXELDRIVER_HPP_ */

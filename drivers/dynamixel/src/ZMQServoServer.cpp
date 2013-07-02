@@ -44,20 +44,40 @@ struct Controllers
 
 const int TX_RATE=50;
 
+
 const struct { ServoController *controller; int id; } SERVOS [] =
   {
   //{ controller, id },
+#if 0
     { &*ctrl.dynamixel, 1  },
     { &*ctrl.fake, 2  },
     { &*ctrl.fake, 10 },
     { &*ctrl.fake, 20 },
+#endif
+#if 1
+    { &*ctrl.fake, 11  },
+    { &*ctrl.fake, 12  },
+    { &*ctrl.fake, 13  },
+    { &*ctrl.fake, 21  },
+    { &*ctrl.fake, 22  },
+    { &*ctrl.fake, 23  },
+    { &*ctrl.fake, 31  },
+    { &*ctrl.fake, 32  },
+    { &*ctrl.fake, 33  },
+    { &*ctrl.fake, 41  },
+    { &*ctrl.fake, 42  },
+    { &*ctrl.fake, 43  },
+    { &*ctrl.fake, 91  },
+    { &*ctrl.dynamixel, 93  },
+    { &*ctrl.fake, 94  },
+#endif
     { 0,    0} // end
   };
 
 static const char * SUBSCRIBERS [] = 
   {
-    "tcp://localhost:5501",
-    "tcp://localhost:5502",
+    "tcp://localhost:5501", /* TestZMQServerController */
+    "tcp://localhost:5502", /* RevolutionTest */
     0 // end
   };
 

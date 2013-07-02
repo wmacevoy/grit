@@ -1,6 +1,6 @@
 #include <ctime>
 #include <math.h>
-#include "DynamixelDriver.hpp"
+#include "DynamixelDriver.h"
 
 using namespace std;
 

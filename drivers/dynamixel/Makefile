@@ -4,7 +4,7 @@ LDFLAGS=-L../../libs/lib -ldxl -lzmq -lpthread -Wl,--no-as-needed -lrt
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
-TARGET=bin/ZMQServoServer bin/TestZMQServoController
+TARGET=bin/ZMQServoServer bin/TestZMQServoController bin/RevolutionTest bin/basic
 
 all : $(TARGET)
 
@@ -33,8 +33,8 @@ tmp/%.d: src/%.cpp
 tmp/%.o: src/%.cpp tmp/%.d
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
-bin/RevolutionTest : tmp/RevolutionTest.o tmp/DynamixelDriver.o
-	$(CXX) $(CXXFLAGS) -o $@ tmp/RevolutionTest.o $(LDFLAGS)
+bin/RevolutionTest : tmp/RevolutionTest.o tmp/CreateZMQServoController.o tmp/ServoController.o tmp/Servo.o tmp/now.o tmp/DynamixelDriver.o
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 bin/TestDrive1 : tmp/TestDrive1.o tmp/DynamixelDriver.o
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
