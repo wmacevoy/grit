@@ -77,7 +77,7 @@ const struct { ServoController *controller; int id; } SERVOS [] =
 static const char * SUBSCRIBERS [] = 
   {
     "tcp://localhost:5501", /* TestZMQServerController */
-    "tcp://localhost:5502", /* RevolutionTest */
+    "tcp://192.168.2.135:5502", /* RevolutionTest */
     0 // end
   };
 

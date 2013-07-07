@@ -59,6 +59,7 @@ const int UPDATE_RATE = 100;
 struct DynamixelServo : Servo
 {
   int id;
+  bool enabled;
   int presentPosition;
   int goalPosition;
 
@@ -67,6 +68,7 @@ struct DynamixelServo : Servo
   {
     dxl_write_word(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
     //    io->write_word(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
+    dxl_write_word(id,DXL_TORQUE_WORD,1);
     update();
   }
 
@@ -98,20 +100,25 @@ struct DynamixelServo : Servo
     rx();
     tx();
   }
+  ~DynamixelServo()
+  {
+    dxl_write_word(id,DXL_TORQUE_WORD,0);
+  }
 };
 
 
 struct DynamixelServoController : ServoController
 {
-  typedef std::map < int , DynamixelServo* > Servos;
+  typedef std::map < int , std::shared_ptr <DynamixelServo> > Servos;
   Servos servos;
   bool running;
   Servo* servo(int id) {
     Servos::iterator i = servos.find(id);
-    if (i != servos.end()) return i->second;
+    if (i != servos.end()) return &*i->second;
     assert(running == false);
 
-    return servos[id] = new DynamixelServo(id);
+    return &*(servos[id] = 
+	      std::shared_ptr <DynamixelServo> (new DynamixelServo(id)));
   }
 
   void update() {
