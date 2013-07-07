@@ -157,7 +157,6 @@ int main(int argc, char** argv)
 {
 	int res;
 	int hwm = 1;
-	int rco = 0;
 	int rcc = 0;
 	int rcd = 0;
 
@@ -170,7 +169,7 @@ int main(int argc, char** argv)
 
 	rcc = zmq_setsockopt(pub_color, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	rcd = zmq_setsockopt(pub_depth, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	assert (rco == 0 && rcc == 0 && rcd == 0);
+	assert (rcc == 0 && rcd == 0);
 
 	rcc = zmq_bind(pub_color, "tcp://*:9998");
 	rcd = zmq_bind(pub_depth, "tcp://*:9999");	
