@@ -11,7 +11,7 @@
 using namespace std;
 
 const char *ME = "tcp://*:5502";
-const char *SERVER = "tcp://localhost:5500";
+const char *SERVER = "tcp://192.168.2.113:5500";
 
 class MyController : public ServoController
 {
