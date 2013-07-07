@@ -305,7 +305,7 @@ void bye()
 int main(int argc, char** argv)
 {
 	int quit = 0;
-	int hwm = 1;
+	int hwm = 100;
 	int rcc = 0;
 	int rcd = 0;
 	char ip1[40];

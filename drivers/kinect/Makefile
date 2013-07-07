@@ -12,10 +12,10 @@ tmp/subKinect.o : src/subKinect.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 bin/pubKinect : tmp/pubKinect.o
-	$(CC) $(CFLAGS) -o $@ tmp/pubKinect.o $(LDFLAGSP)
+	$(CXX) $(CFLAGS) -o $@ tmp/pubKinect.o $(LDFLAGSP)
 
 bin/subKinect : tmp/subKinect.o
-	$(CC) $(CFLAGS) -o $@ tmp/subKinect.o $(LDFLAGSS)
+	$(CXX) $(CFLAGS) -o $@ tmp/subKinect.o $(LDFLAGSS)
 
 pub: bin/pubKinect
 
@@ -31,7 +31,7 @@ tmp/subKinect.o : src/subKinect.c
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 bin/subKinect : tmp/subKinect.o
-	$(CC) $(CFLAGS) -o $@ tmp/subKinect.o $(LDFLAGSS)
+	$(CXX) $(CFLAGS) -o $@ tmp/subKinect.o $(LDFLAGSS)
 
 clean :
 	/bin/rm -rf tmp/* bin/*
