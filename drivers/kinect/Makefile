@@ -1,6 +1,7 @@
-CFLAGS=-Iinclude
-LDFLAGSS=-lzmq -lglut -lGLU -lGL -lXmu -lX11
-LDFLAGSP=-lzmq -lfreenect
+CFLAGS= -g -O2 -Iinclude -I../../libs/include
+CXXFLAGS=-std=c++0x $(CFLAGS)
+LDFLAGSS=-L../../libs/lib -lzmq -lglut -lGLU -lGL -lXmu -lX11
+LDFLAGSP=-L../../libs/lib -lzmq -lfreenect
 
 all : bin/pubKinect bin/subKinect
 
@@ -22,7 +23,7 @@ tmp/pubKinect.o : src/pubKinect.c include/libfreenect.h
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 bin/pubKinect : tmp/pubKinect.o
-	$(CC) $(CFLAGS) -o $@ tmp/pubKinect.o $(LDFLAGSP)
+	$(CXX) $(CXXFLAGS) -o $@ tmp/pubKinect.o $(LDFLAGSP)
 
 sub: bin/subKinect
 
