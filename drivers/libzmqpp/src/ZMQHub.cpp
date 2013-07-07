@@ -108,11 +108,19 @@ void ZMQHub::start()
   }
 }
 
+void ZMQHub::join() 
+{
+  if (goTx) { goTx->join(); delete goTx; goTx=0; }
+  if (goRx) { goRx->join(); delete goRx; goRx=0; }
+  if (goReport) { goReport->join(); delete goReport; goReport=0; }
+}
+
+void ZMQHub::stop()
+{
+  running=false;
+}
+
 ZMQHub::~ZMQHub() { 
-  if (running) {
-    running=false;
-    goTx->join(); delete goTx;
-    goRx->join(); delete goRx; 
-    goReport->join(); delete goReport;
-  }
+  stop();
+  join();
 }

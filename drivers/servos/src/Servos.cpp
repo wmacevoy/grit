@@ -109,17 +109,16 @@ public:
   }
 };
 
-bool *running=0;
+ZMQServoServer *pserver=0;
 
 void SigIntHandler(int arg) { 
-  if (running !=0) running = false; 
+  cout << "sigint caught" << endl;
+  pserver->stop();
 }
 
 int main(int argc,char **argv) {
-  signal(SIGINT, SigIntHandler);
   {
     ZMQServoServer server;
-
     server.NO_SERVO = controllers.fake->servo(999); 
 
     server.rate = TX_RATE;
@@ -138,10 +137,14 @@ int main(int argc,char **argv) {
       server.servos[SERVOS[i].id]=SERVOS[i].controller->servo(SERVOS[i].id);
     }
 
-    running = &server.running;
+    pserver = &server;
 
-    controllers.start(); // start all controllers
+    controllers.start();
     server.start();
+
+    signal(SIGINT, SigIntHandler);
+
+    server.join();
   }
 
   cout << "done" << endl;

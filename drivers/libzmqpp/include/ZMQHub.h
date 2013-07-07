@@ -16,7 +16,7 @@ class ZMQHub
   std::string publish;
 
   int rate;
-  bool running;
+  volatile bool running;
   int highWaterMark;
   int rxCount,txCount;
   float rxRate,txRate;
@@ -26,6 +26,8 @@ class ZMQHub
   std::thread *goReport;
 
   void start();
+  void join();
+  void stop();
   void rxLoop();
   void txLoop();
   void reportLoop();
