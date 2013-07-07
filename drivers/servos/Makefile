@@ -63,3 +63,6 @@ bin/$(TARGET) : $(OBJECTS)
 
 clean : 
 	/bin/rm -rf tmp/* bin/* lib/*
+
+run : dep bin/$(TARGET)
+	./run bin/$(TARGET)
