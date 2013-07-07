@@ -1,6 +1,6 @@
 CFLAGS=-g -O2 -Wall -Iinclude -fPIC -I../../libs/include -I../libzmqpp/include -I../libnow/include
 CXXFLAGS=$(CFLAGS) -std=c++0x
-LDFLAGS=-L../../libs/lib -L../libnow/lib -ldxl -lnow -lpthread -lrt
+LDFLAGS=-L../../libs/lib -L../libzmqpp/lib -lzmqpp -L../libnow/lib -lnow -ldxl -lpthread -Wl,--no-as-needed -lrt
 
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
