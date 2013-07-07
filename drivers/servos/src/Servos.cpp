@@ -38,14 +38,33 @@ struct Controllers
 const struct { ServoController *controller; int id; } SERVOS [] =
   {
     //{ controller, id },
+#if 0
     { &*controllers.dynamixel, 1  },
     { &*controllers.fake, 2  },
     { &*controllers.fake, 10 },
     { &*controllers.fake, 20 },
+#endif
+#if 1
+    { &*controllers.fake, 11  },
+    { &*controllers.fake, 12  },
+    { &*controllers.fake, 13  },
+    { &*controllers.fake, 21  },
+    { &*controllers.fake, 22  },
+    { &*controllers.fake, 23  },
+    { &*controllers.fake, 31  },
+    { &*controllers.fake, 32  },
+    { &*controllers.fake, 33  },
+    { &*controllers.fake, 41  },
+    { &*controllers.fake, 42  },
+    { &*controllers.fake, 43  },
+    { &*controllers.fake, 91  },
+    { &*controllers.dynamixel, 93  },
+    { &*controllers.fake, 94  },
+#endif
     { 0,    0} // end
   };
 
-const int TX_RATE=50;
+const int TX_RATE=20;
 
 static const char * SUBSCRIBERS [] = 
   {
