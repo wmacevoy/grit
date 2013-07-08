@@ -32,9 +32,10 @@ class ZMQHub
   void txLoop();
   void reportLoop();
 
+  ZMQHub();
+
   virtual void report();
   virtual void rx(ZMQSubscribeSocket &socket)=0;
   virtual void tx(ZMQPublishSocket &socket)=0;
-  ZMQHub();
-  ~ZMQHub();
+  virtual ~ZMQHub();
 };
