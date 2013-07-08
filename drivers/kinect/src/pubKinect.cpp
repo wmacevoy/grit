@@ -28,7 +28,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/core/utility.hpp"
 
-#include "opencv2/highgui/highgui_c.h"
+//#include "opencv2/highgui/highgui_c.h"
 
 #define LONG  int
 #define DWORD unsigned int
@@ -89,7 +89,7 @@ typedef struct tagBITMAPINFOHEADER
 
 void publish_img(uint8_t *image, void *zmq_pub)
 {
-	int rc = zmq_send(zmq_pub, image, sz_img, ZMQ_DONTWAIT);
+	int rc = zmq_send(zmq_pub, &frame, sizeof(frame), ZMQ_DONTWAIT);
 }
 
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
@@ -201,11 +201,11 @@ void detectAndDisplay( cv::Mat frame )
 
    for( size_t i = 0; i < objects.size(); i++ )
     {
-      cv::Mat faceROI = frame_gray( objects[i] );
+	cv::Mat faceROI = frame_gray( objects[i] );
 
-         //-- Draw the face
-         cv::Point center( objects[i].x + objects[i].width/2, objects[i].y + objects[i].height/2 );
-         cv::ellipse( frame, center, cv::Size( objects[i].width/2, objects[i].height/2), 0, 0, 360, cv::Scalar( 255, 0, 0 ), 2, 8, 0 );
+	//-- Draw the face
+	cv::Point center( objects[i].x + objects[i].width/2, objects[i].y + objects[i].height/2 );
+	cv::ellipse( frame, center, cv::Size( objects[i].width/2, objects[i].height/2), 0, 0, 360, cv::Scalar( 255, 0, 0 ), 2, 8, 0 );
     }
    //-- Show what you got
    imshow( "DETECTED", frame );
@@ -223,7 +223,7 @@ int main(int argc, char** argv)
 	int rcc = 0;
 	int rcd = 0;
 
-	int fcount = 0; //DELETE AFTER DEBuG
+	std::string winame = "poop";
 	std::vector<char> data;
 	char* index = 0;
 	BITMAPFILEHEADER bf;
@@ -343,6 +343,7 @@ int main(int argc, char** argv)
 		frame = cv::imdecode(cv::Mat(data), 1);
 		detectAndDisplay(frame);
 
+		//imwrite("./img.bmp", frame);	Image is properly formed and working!
 		data.clear();		
 
 		pthread_cond_signal(&frame_cond);

@@ -19,6 +19,12 @@
 #include <GL/glu.h>
 #include <zmq.h>
 
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/core/utility.hpp"
+#include "opencv2/highgui/highgui_c.h"
+cv::Mat frame;
+
 #define LONG  int
 #define DWORD unsigned int
 #define WORD unsigned short
@@ -80,7 +86,7 @@ void subscribe_color(void *zmq_sub)
 
 	//printf("waiting...\n");
 
-	int rc = zmq_recv(zmq_sub, img_color, sz_img, ZMQ_DONTWAIT);
+	int rc = zmq_recv(zmq_sub, frame, sizeof(frame), ZMQ_DONTWAIT);
 
 	//printf("received!\n");
 	
@@ -365,7 +371,14 @@ int main(int argc, char** argv)
 
 	assert(atexit(bye) == 0);
 
-	gl_threadfunc(NULL);
+
+	while(1)
+	{
+		subscribe_color(sub_color);
+		imshow("yay", frame);
+	}
+
+	//gl_threadfunc(NULL);
 
 	return 0;
 }

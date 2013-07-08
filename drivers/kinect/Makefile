@@ -1,6 +1,6 @@
 CFLAGS= -g -O2 -Iinclude -I../../libs/include
 CXXFLAGS=-std=c++0x $(CFLAGS) `pkg-config --cflags opencv`
-LDFLAGSS=-L../../libs/lib -lzmq -lglut -lGLU -lGL -lXmu -lX11
+LDFLAGSS=-L../../libs/lib -lzmq -lglut -lGLU -lGL -lXmu -lX11 `pkg-config --libs opencv` 
 LDFLAGSP=-L../../libs/lib -lzmq -lfreenect `pkg-config --libs opencv` 
 
 all : bin/pubKinect bin/subKinect
@@ -8,7 +8,7 @@ all : bin/pubKinect bin/subKinect
 tmp/pubKinect.o : src/pubKinect.cpp include/libfreenect.h
 	$(CC) -c $(CFLAGS) -o $@ $<
 
-tmp/subKinect.o : src/subKinect.c
+tmp/subKinect.o : src/subKinect.cpp
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 bin/pubKinect : tmp/pubKinect.o
@@ -27,7 +27,7 @@ bin/pubKinect : tmp/pubKinect.o
 
 sub: bin/subKinect
 
-tmp/subKinect.o : src/subKinect.c
+tmp/subKinect.o : src/subKinect.cpp
 	$(CC) -c $(CFLAGS) -o $@ $<
 
 bin/subKinect : tmp/subKinect.o
