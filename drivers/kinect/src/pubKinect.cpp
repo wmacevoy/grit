@@ -46,8 +46,8 @@ uint8_t *rgb_back, *rgb_mid;
 
 //openCV Mat
 cv::Mat frame;
-string cascade_name = "detection.xml";
-CascadeClassifier cascade;
+std::string cascade_name = "detection.xml"; //Will eventually rewrite so it takes an input filename
+cv::CascadeClassifier cascade;
 
 freenect_context *f_ctx;
 freenect_device *f_dev;
@@ -188,6 +188,29 @@ void *freenect_threadfunc(void *arg)
 	return NULL;
 }
 
+void detectAndDisplay( cv::Mat frame )
+{
+   std::vector<cv::Rect> objects;
+   cv::Mat frame_gray;
+
+   cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
+   equalizeHist( frame_gray, frame_gray );
+
+   //-- Detect faces
+   cascade.detectMultiScale( frame_gray, objects, 1.1, 2, 0, cv::Size(80, 80) );
+
+   for( size_t i = 0; i < objects.size(); i++ )
+    {
+      cv::Mat faceROI = frame_gray( objects[i] );
+
+         //-- Draw the face
+         cv::Point center( objects[i].x + objects[i].width/2, objects[i].y + objects[i].height/2 );
+         cv::ellipse( frame, center, cv::Size( objects[i].width/2, objects[i].height/2), 0, 0, 360, cv::Scalar( 255, 0, 0 ), 2, 8, 0 );
+    }
+   //-- Show what you got
+   imshow( "DETECTED", frame );
+}
+
 void SignalHandler(int sig)
 {
 	die = 1;
@@ -239,8 +262,9 @@ int main(int argc, char** argv)
 	rgb_mid = (uint8_t*)malloc(sz_img);
 
 	//Initialize
-	int i;
-	for (i=0; i<2048; i++) {
+	if( !cascade.load( cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+
+	for (int i = 0; i < 2048; ++i) {
 		float v = i/2048.0;
 		v = powf(v, 3)* 6;
 		t_gamma[i] = v*6*256;
@@ -316,7 +340,8 @@ int main(int argc, char** argv)
 			data.push_back(rgb_mid[i]);
 		}
 
-		frame = cv::imdecode(cv::Mat(data), 1);////End DELETE
+		frame = cv::imdecode(cv::Mat(data), 1);
+		detectAndDisplay(frame);
 
 		data.clear();		
 
