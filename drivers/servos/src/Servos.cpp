@@ -17,52 +17,34 @@ using namespace std;
 const int DXL_DEVICE_INDEX = 1;
 const int DXL_BAUD_NUM = 34;
 
-struct Controllers
-{
-  shared_ptr<ServoController> fake;
-  shared_ptr<ServoController> dynamixel;
-  vector < shared_ptr<ServoController> > all;
-  Controllers() :
-    fake(CreateFakeServoController()),
-    dynamixel(CreateDynamixelServoController(DXL_DEVICE_INDEX,DXL_BAUD_NUM))
-  {
-    all.push_back(fake);
-    all.push_back(dynamixel);
-  }
-  void start()
-  {
-    for (size_t i=0; i<all.size(); ++i) all[i]->start();
-  }
-} controllers;
+struct ServoMap { const char *device; int id; };
 
-const struct { ServoController *controller; int id; } SERVOS [] =
+const ServoMap TEST_SERVOS[] =
   {
-    //{ controller, id },
-#if 0
-    { &*controllers.dynamixel, 1  },
-    { &*controllers.fake, 2  },
-    { &*controllers.fake, 10 },
-    { &*controllers.fake, 20 },
-#endif
-#if 1
-    { &*controllers.dynamixel, 11  },
-    { &*controllers.dynamixel, 12  },
-    { &*controllers.dynamixel, 13  },
-    { &*controllers.dynamixel, 21  },
-    { &*controllers.dynamixel, 22  },
-    { &*controllers.dynamixel, 23  },
-    { &*controllers.dynamixel, 31  },
-    { &*controllers.dynamixel, 32  },
-    { &*controllers.dynamixel, 33  },
-    { &*controllers.dynamixel, 41  },
-    { &*controllers.dynamixel, 42  },
-    { &*controllers.dynamixel, 43  },
-    { &*controllers.dynamixel, 91  },
-    { &*controllers.dynamixel, 93  },
-    { &*controllers.dynamixel, 94  },
-#endif
-    { 0,    0} // end
+    { "generic", 1  },
+    { 0, -1} // end
   };
+
+const ServoMap ROBOT_SERVOS[] =
+  {
+    { "generic", 11  },
+    { "generic", 12  },
+    { "generic", 13  },
+    { "generic", 21  },
+    { "generic", 22  },
+    { "generic", 23  },
+    { "generic", 31  },
+    { "generic", 32  },
+    { "generic", 33  },
+    { "generic", 41  },
+    { "generic", 42  },
+    { "generic", 43  },
+    { "generic", 91  },
+    { "generic", 93  },
+    { "generic", 94  },
+    { 0, -1 } // end
+  };
+
 
 const int TX_RATE=20;
 
@@ -75,6 +57,63 @@ static const char * SUBSCRIBERS [] =
 
 const char *PUBLISH = "tcp://*:5500";
 
+bool verbose;
+
+// manage all servo controllers (real or fake)
+struct Controllers
+{
+  typedef map < string , shared_ptr < ServoController > > All;
+  All all;
+  string genericName;
+  int deviceIndex;
+  int baudNum;
+
+  Controllers() { 
+    genericName="real";
+    deviceIndex = DXL_DEVICE_INDEX;
+    baudNum = DXL_BAUD_NUM;
+  }
+
+  ServoController* create(const std::string &deviceName)
+  {
+    if (deviceName == "fake") {
+      return CreateFakeServoController();
+    }
+    if (deviceName == "real") {
+      return CreateDynamixelServoController(deviceIndex,baudNum);
+    }
+    cout << "unknown device " << deviceName << endl;
+    assert(false);
+  }
+
+  ServoController *lookup(const std::string &deviceName)
+  {
+    string nonGenericDeviceName = deviceName == "generic" ? genericName : deviceName;
+    All::iterator i=all.find(nonGenericDeviceName);
+    if (i != all.end()) return &*(i->second);
+    ServoController *device = create(nonGenericDeviceName);
+    all[deviceName]=shared_ptr<ServoController>(device);
+    return device;
+  }
+  
+  Servo* servo(const std::string &device, int id)
+  {
+    if (verbose) {
+      cout << "servo " << device << ":" << id << endl;
+    }
+    return lookup(device)->servo(id);
+  }
+
+  void start()
+  {
+    for (All::iterator i=all.begin(); i!=all.end(); ++i) {
+      if (verbose) {
+	cout << "controller " << i->first << " start." << endl;
+      }
+      i->second->start();
+    }
+  }
+};
 
 class ZMQServoServer : public ZMQHub
 {
@@ -96,7 +135,9 @@ public:
     ZMQMessage msg;
     msg.recv(socket);
     ZMQServoMessage *data = (ZMQServoMessage *)msg.data();
-    //	cout << "msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+    if (verbose) {
+      cout << "rx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+    }
     switch(data->messageId) {
     case ZMQServoMessage::SET_ANGLE: servo(data)->angle(data->value); break;
     }
@@ -110,6 +151,11 @@ public:
       data->messageId = ZMQServoMessage::GET_ANGLE;
       data->servoId = i->first;
       data->value = i->second->angle();
+
+      if (verbose) {
+	cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+      }
+
       msg.send(socket);
     }
   }
@@ -130,43 +176,133 @@ public:
 
 ZMQServoServer *pserver=0;
 
-void SigIntHandler(int arg) { 
-  cout << "sigint caught" << endl;
+void SigIntHandler(int arg) {
   pserver->stop();
 }
 
-int main(int argc,char **argv) {
-  {
-    ZMQServoServer server;
-    server.NO_SERVO = controllers.fake->servo(999); 
+void run(int argc, char **argv) {
 
-    server.rate = TX_RATE;
+  // basic objects
+  Controllers controllers;
+  ZMQServoServer server;
 
-    for (int i=0; SERVOS[i].id != 0; ++i) {
-      server.servos[SERVOS[i].id]=SERVOS[i].controller->servo(SERVOS[i].id);
+  // default configuration
+  verbose = false;
+  const ServoMap *servoMap = ROBOT_SERVOS;
+  controllers.genericName = "real";
+
+  server.NO_SERVO = controllers.servo("fake",999);
+  server.rate = TX_RATE;
+
+  for (int i=0; SUBSCRIBERS[i] != 0; ++i) {
+    server.subscribers.push_back(SUBSCRIBERS[i]);
+  }
+  server.publish = PUBLISH;
+
+  for (int argi=1; argi<argc; ++argi) {
+    if (strcmp(argv[argi],"--help") == 0) {
+      cout << "usage: " << argv[0] << " options" << endl;
+      cout << "\t --help (print help)"  << endl;
+      cout << "\t --verbose (guess)" << endl;
+      cout << "\t --fake (use fake generic servos)" << endl;
+      cout << "\t --real (use real generic servos)" << endl;
+      cout << "\t --robot (use robot servo map)" << endl;
+      cout << "\t --test (use test servo map)" << endl;
+      cout << "\t --deviceIndex [num] (use dynamixel deviceNum)" << endl;
+      cout << "\t --baudNum [num] (use dynamixel baudNum)" << endl;
+      cout << "\t --rate [num] (use give tx rate)" << endl;
+      cout << "\t --publish [name] (zmq publish as this name)" << endl;
+      cout << "\t --subscribers [names,...] (zmq subscribers)" << endl;
+      cout << "\t --servos [ids,...] (servo ids)" << endl;
+      return;
     }
-    
-    for (int i=0; SUBSCRIBERS[i] != 0; ++i) {
-      server.subscribers.push_back(SUBSCRIBERS[i]);
+    if (strcmp(argv[argi],"--verbose") == 0) {
+      verbose=true;
+      continue;
     }
-    
-    server.publish = PUBLISH;
-
-    for (int i=0; SERVOS[i].id != 0; ++i) {
-      server.servos[SERVOS[i].id]=SERVOS[i].controller->servo(SERVOS[i].id);
+    if (strcmp(argv[argi],"--fake") == 0) {
+      controllers.genericName = "fake";
+      continue;
     }
-
-    pserver = &server;
-
-    controllers.start();
-    server.start();
-
-    signal(SIGINT, SigIntHandler);
-
-    server.join();
+    if (strcmp(argv[argi],"--real") == 0) {
+      controllers.genericName = "real";
+      continue;
+    }
+    if (strcmp(argv[argi],"--test") == 0) {
+      servoMap = TEST_SERVOS;
+      continue;
+    }
+    if (strcmp(argv[argi],"--robot") == 0) {
+      servoMap = ROBOT_SERVOS;
+      continue;
+    }
+    if (strcmp(argv[argi],"--deviceIndex") == 0) {
+      ++argi;
+      controllers.deviceIndex = atoi(argv[argi]);
+      continue;
+    }
+    if (strcmp(argv[argi],"--baudNum") == 0) {
+      ++argi;
+      controllers.baudNum = atoi(argv[argi]);
+      continue;
+    }
+    if (strcmp(argv[argi],"--rate") == 0) {
+      ++argi;
+      server.rate = atoi(argv[argi]);
+      continue;
+    }
+    if (strcmp(argv[argi],"--publish") == 0) {
+      ++argi;
+      server.publish = argv[argi];
+      continue;
+    }
+    if (strcmp(argv[argi],"--subscribers") == 0) {
+      ++argi;
+      string arg=argv[argi];
+      server.subscribers.clear();
+      size_t comma;
+      while ((comma = arg.find(',')) != string::npos)  {
+	server.subscribers.push_back(arg.substr(0,comma));
+	arg=arg.substr(comma+1);
+      }
+      server.subscribers.push_back(arg);
+      continue;
+    }
+    if (strcmp(argv[argi],"--servos") == 0) {
+      ++argi;
+      string arg=argv[argi];
+      size_t comma;
+      while ((comma = arg.find(',')) != string::npos)  {
+	int id=atoi(arg.substr(0,comma).c_str());
+	server.servos[id]=controllers.servo("generic",id);
+	arg=arg.substr(comma+1);
+      }
+      int id=atoi(arg.c_str());
+      server.servos[id]=controllers.servo("generic",id);
+      servoMap = 0;
+      continue;
+    }
+    cout << "unkown arg '" << argv[argi] << "' ignored."  << endl;
   }
 
-  cout << "done" << endl;
+  if (servoMap != 0) {
+    for (const ServoMap *i=servoMap; i->id != -1; ++i) {
+      server.servos[i->id]=controllers.servo(i->device,i->id);
+    }
+  }
+    
+  pserver = &server;
 
-  return 0;
+  controllers.start();
+  server.start();
+
+  signal(SIGINT, SigIntHandler);
+
+  server.join();
 }
+
+int main(int argc,char **argv) {
+  run(argc,argv);
+  cout << "done" << endl;
+}
+

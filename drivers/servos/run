@@ -12,5 +12,4 @@ for name in now zmqpp servos ; do
 done
 
 echo $LD_LIBRARY_PATH
-# run 
-"$*"
+"$@"

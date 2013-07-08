@@ -1,6 +1,12 @@
-CFLAGS=-g -O2 -Wall -Iinclude -fPIC -I../../libs/include
-CXXFLAGS=$(CFLAGS) -std=c++0x
-LDFLAGS=
+include ../../config.mk
+include ../config.mk
+
+MY_FLAGS=
+MY_LIBS=
+
+CFLAGS += $(MY_FLAGS)
+CXXFLAGS += $(MY_FLAGS)
+LDFLAGS += $(MY_LIBS)
 
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
@@ -31,10 +37,12 @@ tmp/%.cpp.d: src/%.cpp
 
 #This is the rule for creating the dependency files
 tmp/%.c.d: src/%.c
+	mkdir -p `dirname $@`
 	$(CC) $(CFLAGS) -MM -MT '$(patsubst src/%.c,tmp/%.o,$<)' $< -MF $@
 
 #This rule does the compilation
 tmp/%.cpp.o: src/%.cpp tmp/%.cpp.d
+	mkdir -p `dirname $@`
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 tmp/%.c.o: src/%.c tmp/%.c.d
@@ -44,7 +52,7 @@ lib/$(TARGET).a : $(OBJECTS)
 	ar crv $@ $^
 
 lib/$(TARGET).so : $(OBJECTS)
-	$(CXX) -shared  -o $@ $^
+	$(CXX) $(CXXFLAGS) -shared  -o $@ $^ $(LDFLAGS)
 
 bin/$(TARGET) : $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)

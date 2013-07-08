@@ -1,22 +1,18 @@
-CFLAGS=-g -O2 -Wall -Iinclude -fPIC -I../../libs/include -I../libservos/include -I../libzmqpp/include -I../libnow/include 
-CXXFLAGS=$(CFLAGS) -std=c++0x
-LDFLAGS=-L../libservos/lib -lservos -L../libzmqpp/lib -lzmqpp -L../libnow/lib -lnow -L../../libs/lib -lzmq -ldxl -lpthread -Wl,--no-as-needed -lrt
+include ../../config.mk
+include ../config.mk
+
+MY_FLAGS=-I../libservos/include -I../libzmqpp/include -I../libnow/include
+MY_LIBS=-L../libservos/lib -lservos -L../libzmqpp/lib -lzmqpp -L../libnow/lib -lnow -lzmq
+
+CFLAGS += $(MY_FLAGS)
+CXXFLAGS += $(MY_FLAGS)
+LDFLAGS += $(MY_LIBS)
 
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
 TARGET=$(shell basename `realpath .`)
-all : dep bin/$(TARGET)
-
-dep :
-	$(MAKE) -C ../libnow all
-	$(MAKE) -C ../libzmqpp all
-	$(MAKE) -C ../libservos all
-
-depclean :
-	$(MAKE) -C ../libnow clean
-	$(MAKE) -C ../libzmqpp clean
-	$(MAKE) -C ../libservos clean
+all : bin/$(TARGET)
 
 #We don't need to clean up when we're making these targets
 NODEPS:=clean tags svn
@@ -37,7 +33,6 @@ endif
 
 #This is the rule for creating the dependency files
 tmp/%.cpp.d: src/%.cpp
-	mkdir -p `dirname $@`
 	$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst src/%.cpp,tmp/%.o,$<)' $< -MF $@
 
 #This is the rule for creating the dependency files
@@ -47,6 +42,7 @@ tmp/%.c.d: src/%.c
 
 #This rule does the compilation
 tmp/%.cpp.o: src/%.cpp tmp/%.cpp.d
+	mkdir -p `dirname $@`
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 tmp/%.c.o: src/%.c tmp/%.c.d
@@ -56,7 +52,7 @@ lib/$(TARGET).a : $(OBJECTS)
 	ar crv $@ $^
 
 lib/$(TARGET).so : $(OBJECTS)
-	$(CXX) -shared  -o $@ $^
+	$(CXX) $(CXXFLAGS) -shared  -o $@ $^ $(LDFLAGS)
 
 bin/$(TARGET) : $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)

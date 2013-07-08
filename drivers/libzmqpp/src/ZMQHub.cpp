@@ -85,12 +85,14 @@ void ZMQHub::txLoop()
 
 void ZMQHub::reportLoop()
 {
-  const float dt = 0.25;
+  const float dt = 1.00;
   while (running) {
     usleep(int(dt*1000000));
     rxRate = rxCount/dt;
     txRate = txCount/dt;
     report();
+    rxCount = 0;
+    txCount = 0;
   }
 }
 
