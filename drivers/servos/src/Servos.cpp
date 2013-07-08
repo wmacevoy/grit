@@ -200,6 +200,8 @@ void run(int argc, char **argv) {
   }
   server.publish = PUBLISH;
 
+  // parse arguments for run-time configuration
+
   for (int argi=1; argi<argc; ++argi) {
     if (strcmp(argv[argi],"--help") == 0) {
       cout << "usage: " << argv[0] << " options" << endl;
@@ -285,11 +287,11 @@ void run(int argc, char **argv) {
   }
 
   if (servoMap != 0) {
-    for (const ServoMap *i=servoMap; i->id != -1; ++i) {
+    for (const ServoMap *i=servoMap; i->device != 0; ++i) {
       server.servos[i->id]=controllers.servo(i->device,i->id);
     }
   }
-    
+
   pserver = &server;
 
   controllers.start();
@@ -304,4 +306,3 @@ int main(int argc,char **argv) {
   run(argc,argv);
   cout << "done" << endl;
 }
-
