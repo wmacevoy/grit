@@ -55,10 +55,10 @@ using namespace std;
 
 const int UPDATE_RATE = 100;
 
+#if 1
 struct DynamixelServo : Servo
 {
   int id;
-  bool enabled;
   int presentPosition;
   int goalPosition;
 
@@ -104,7 +104,58 @@ struct DynamixelServo : Servo
     dxl_write_word(id,DXL_TORQUE_WORD,0);
   }
 };
+#endif
 
+#if 0
+struct DynamixelServo : Servo
+{
+  int id;
+  int presentPosition;
+  int goalPosition;
+
+  DynamixelServo(int id_) 
+    : id(id_), presentPosition(0), goalPosition(0) 
+  {
+    dxl_write_word(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
+    //    io->write_word(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
+    dxl_write_word(id,DXL_TORQUE_WORD,1);
+    update();
+  }
+
+  float angle() const { return (180.0/2048)*(presentPosition-2048); }
+
+  void angle(float value) {
+    goalPosition = value*(2048/180.0)+2048;
+  }
+
+  void tx()
+  {
+    dxl_write_word(id,DXL_GOAL_POSITION_WORD,(goalPosition & 4095));
+    // io->write_word(id,DXL_GOAL_POSITION_WORD,(goalPosition & 4095));
+  }
+
+  void rx()
+  {
+    int inp = dxl_read_word(id,DXL_PRESENT_POSITION_WORD);
+    if (dxl_get_result() == COMM_RXSUCCESS) {
+      presentPosition = inp;
+      //      cout << "pos = " << presentPosition << endl;
+    } else {
+      cout << "comm error" << endl;
+    }
+  }
+
+  void update()
+  {
+    rx();
+    tx();
+  }
+  ~DynamixelServo()
+  {
+    dxl_write_word(id,DXL_TORQUE_WORD,0);
+  }
+};
+#endif
 
 struct DynamixelServoController : ServoController
 {

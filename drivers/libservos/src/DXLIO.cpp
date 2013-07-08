@@ -52,6 +52,8 @@ struct DXLIO
   int fd;
   double okSince;
   void reopen();
+  void close();
+  void open();
   DXLIO(const char *dev_, size_t baud_);
   ~DXLIO();
   bool write(ssize_t size, const unsigned char *data);
@@ -62,3 +64,59 @@ struct DXLIO
   int read_word(int id, int address);
   int read_byte(int id, int address);
 };
+
+void DXLIO::DXLIO(const char *device_, size_t baud_)
+{
+  device=device_;
+  baud=baud_;
+  fd=-1;
+  open();
+}
+
+void DXLIO::close()
+{
+  if (fd != -1) {
+    close(fd);
+    fd=-1;
+  }
+}
+
+void DXLIO::open()
+{
+  struct termios newtio;
+  struct serial_struct serinfo;
+
+  close();
+  fd = open(device,O_RDWR|O_NOCTTY|O_NONBLOCK);
+  if (fd == -1) {
+    cerr << "DXLIO::open(): cannot open device " << device << endl;
+  }
+
+  memset(&newtio, 0, sizeof(newtio));
+
+  newtio.c_cflag	= B38400|CS8|CLOCAL|CREAD;
+  newtio.c_iflag	= IGNPAR;
+  newtio.c_oflag	= 0;
+  newtio.c_lflag	= 0;
+  newtio.c_cc[VTIME]	= 0;
+  newtio.c_cc[VMIN]	= 0;
+
+  tcflush(fd, TCIFLUSH);
+  tcsetattr(fd, TCSANOW, &newtio);
+
+  if(ioctl(fd, TIOCGSERIAL, &serinfo) < 0) {
+    cerr << "DXLIO::open() cannot get serial info" << endl;
+    close();
+    return;
+  }
+
+  serinfo.flags &= ~ASYNC_SPD_MASK;
+  serinfo.flags |= ASYNC_SPD_CUST;
+  serinfo.custom_divisor = serinfo.baud_base / baud;
+	
+  if(ioctl(fd, TIOCSSERIAL, &serinfo) < 0) {
+    cerr << "DXLIO::open() cannot set serial info" << endl;
+    close();
+    return;
+  }
+}
