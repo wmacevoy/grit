@@ -17,6 +17,11 @@ struct ZMQServoController : ServoController, ZMQHub
   typedef std::map < int , ZMQServo* > Servos;
   Servos servos;
 
+  void start()
+  {
+    ServoController::start();
+    ZMQHub::start();
+  }
 
   void rx(ZMQSubscribeSocket &socket) 
   {

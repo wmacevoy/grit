@@ -88,20 +88,21 @@ struct Controllers
 
   ServoController *lookup(const std::string &deviceName)
   {
-    string nonGenericDeviceName = deviceName == "generic" ? genericName : deviceName;
+    string nonGenericDeviceName = (deviceName == "generic") ? genericName : deviceName;
     All::iterator i=all.find(nonGenericDeviceName);
     if (i != all.end()) return &*(i->second);
     ServoController *device = create(nonGenericDeviceName);
-    all[deviceName]=shared_ptr<ServoController>(device);
+    all[nonGenericDeviceName]=shared_ptr<ServoController>(device);
     return device;
   }
   
   Servo* servo(const std::string &device, int id)
   {
+    Servo *ans = lookup(device)->servo(id);
     if (verbose) {
-      cout << "servo " << device << ":" << id << endl;
+      cout << "servo " << device << ":" << id << " at " << (void*) ans << endl;
     }
-    return lookup(device)->servo(id);
+    return ans;
   }
 
   void start()
@@ -260,25 +261,23 @@ void run(int argc, char **argv) {
       ++argi;
       string arg=argv[argi];
       server.subscribers.clear();
-      size_t comma;
-      while ((comma = arg.find(',')) != string::npos)  {
-	server.subscribers.push_back(arg.substr(0,comma));
-	arg=arg.substr(comma+1);
+      while (arg.length() > 0) {
+	size_t comma = arg.find(',');
+	string subscriber = arg.substr(0,(comma != string::npos) ? comma : arg.length());
+	server.subscribers.push_back(subscriber);
+	arg=arg.substr((comma != string::npos) ? comma+1 : arg.length());
       }
-      server.subscribers.push_back(arg);
       continue;
     }
     if (strcmp(argv[argi],"--servos") == 0) {
       ++argi;
       string arg=argv[argi];
-      size_t comma;
-      while ((comma = arg.find(',')) != string::npos)  {
-	int id=atoi(arg.substr(0,comma).c_str());
+      while (arg.length() > 0) {
+	size_t comma = arg.find(',');
+	int id=atoi(arg.substr(0,(comma != string::npos) ? comma : arg.length()).c_str());
 	server.servos[id]=controllers.servo("generic",id);
-	arg=arg.substr(comma+1);
+	arg=arg.substr((comma != string::npos) ? comma+1 : arg.length());
       }
-      int id=atoi(arg.c_str());
-      server.servos[id]=controllers.servo("generic",id);
       servoMap = 0;
       continue;
     }

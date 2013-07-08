@@ -1,4 +1,3 @@
-//#include "DynamixelDriver.h"
 #include "ServoController.h"
 #include <sstream>
 #include <iostream>
@@ -143,7 +142,7 @@ struct DynamixelServoController : ServoController
   DynamixelServoController(int deviceIndex, int baudNum)
   {
     running = false;
-    //    assert(dxl_initialize(deviceIndex,baudNum)==1);
+    assert(dxl_initialize(deviceIndex,baudNum)==1);
   }
 
   ~DynamixelServoController()
@@ -153,7 +152,7 @@ struct DynamixelServoController : ServoController
       go->join();
       delete go;
     }
-    //    dxl_terminate();
+    dxl_terminate();
   }
 };
 
