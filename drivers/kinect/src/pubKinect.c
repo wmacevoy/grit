@@ -1,9 +1,10 @@
 /*
  * This is the publisher for the kinect.
- * Written by Michaela Ervin, some code taken from the glview example from libfreenect
+ * Written by Michaela Ervin, some* code taken from the glview example from libfreenect
  * 
  * Pressing ctrl-c in the terminal will cause normal cleanup and exit.
  * Any SIGTERM or SIGINT will cause normal cleanup and exit.
+ *lots
 */
 
 #include <stdio.h>
@@ -19,6 +20,13 @@
 
 #include <math.h>
 
+#include "opencv2/objdetect/objdetect.hpp"
+#include "opencv2/highgui/highgui.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/core/utility.hpp"
+
+#include "opencv2/highgui/highgui_c.h"
+
 #define LONG  int
 #define DWORD unsigned int
 #define WORD unsigned short
@@ -32,6 +40,9 @@ const int sleep_time = 100;
 // mid: owned by callbacks, "latest frame ready"
 uint8_t *depth_mid;
 uint8_t *rgb_back, *rgb_mid;
+
+//openCV Mat
+cv::Mat frame;
 
 freenect_context *f_ctx;
 freenect_device *f_dev;
@@ -238,6 +249,8 @@ int main(int argc, char** argv)
 		//Send image data via zmq
 		publish_img(rgb_mid, pub_color);
 		publish_img(depth_mid, pub_depth);
+
+		frame = cv::imdecode(Mat(rgb_mid), 1);
 		
 		pthread_cond_signal(&frame_cond);
 		pthread_mutex_unlock(&buf_mutex);
