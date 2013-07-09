@@ -28,8 +28,8 @@ struct DynamixelServo : Servo
   DynamixelServo(DXLIO &io_, int id_) 
     : io(io_),id(id_), presentPosition(0), goalPosition(0) 
   {
-    io.writeWord(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
-    io.writeWord(id,DXL_TORQUE_WORD,1023);
+    //    io.writeWord(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
+    //    io.writeWord(id,DXL_TORQUE_WORD,1023);
     update();
   }
 
@@ -49,7 +49,6 @@ struct DynamixelServo : Servo
     int inp;
     if (io.readWord(id,DXL_PRESENT_POSITION_WORD,&inp)) {
       presentPosition = inp;
-      cout << "comm ok" << endl;
     } else {
       cout << "comm error" << endl;
     }
@@ -57,7 +56,7 @@ struct DynamixelServo : Servo
 
   void update()
   {
-    //    rx();
+    rx();
     tx();
   }
   ~DynamixelServo()

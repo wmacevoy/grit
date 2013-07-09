@@ -129,6 +129,7 @@ int DynamixelInterface::readWord(int id,int address) {
 	  int status=0;
 	  int value=0;
 	  do {
+	    cout << "retry = " << retry << endl;
 		  value=dxl_read_word(id,address);
 		  retry--;
 		    status=dxl_get_result();

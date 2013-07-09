@@ -51,7 +51,7 @@ struct DXLIO
   double okSince;
   struct timespec timeout;
   fd_set fds;
-  DXLIO(int deviceIndex=0, int baudNum=34);
+  DXLIO(int deviceIndex_=0, int baudNum_=34);
   DXLIO(const char *dev_, size_t baud_);
 
   void open();

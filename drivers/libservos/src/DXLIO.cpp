@@ -11,7 +11,7 @@
 #include "now.h"
 
 #include "DXLIO.h"
-#define USE_DXL 0
+#define USE_DXL 1
 
 #if USE_DXL
 #include <dynamixel.h>
@@ -19,13 +19,16 @@
 
 using namespace std;
 
-DXLIO::DXLIO(int deviceIndex, int baudNum)
+#define OK_TIMEOUT 1.0
+
+DXLIO::DXLIO(int deviceIndex_, int baudNum_)
 {
   char tmp[32];
   snprintf(tmp,sizeof(tmp),"/dev/ttyUSB%d",deviceIndex);
   dev=tmp;
-  
   baud = 2000000.0/(baudNum + 1)+0.5;
+  deviceIndex=deviceIndex_;
+  baudNum=baudNum_;
 
   fd = -1;
   open();
@@ -46,6 +49,7 @@ DXLIO::DXLIO(const char *dev_, size_t baud_)
 void DXLIO::open()
 {
 #if USE_DXL
+  cout << "dxl_initialize(" << deviceIndex << "," << baudNum << ")" << endl;
   dxl_initialize(deviceIndex,baudNum);
 #else
 
@@ -91,7 +95,7 @@ void DXLIO::open()
   FD_ZERO(&fds);
   FD_SET(fd,&fds);
 
-  double dt = 0.25;
+  double dt = 0.01;
   timeout.tv_sec=dt;
   timeout.tv_nsec=1e9*(dt-timeout.tv_sec);
 #endif
@@ -100,6 +104,7 @@ void DXLIO::open()
 void DXLIO::close()
 {
 #if USE_DXL
+  cout << "dxl_terminate()" << endl;
   dxl_terminate();
 #else
   if (fd != -1) {
@@ -120,7 +125,9 @@ bool DXLIO::write(ssize_t size, const unsigned char *data)
   } else if (now()-okSince > 0.500) {
     open();
   }
-  //  cout << "wrote " << ans << " of " << size << " bytes" << endl;
+  if (ans != size) {
+    cout << "wrote " << ans << " of " << size << " bytes" << endl;
+  }
   return ans == size;
 #endif
 }
@@ -149,7 +156,9 @@ bool DXLIO::read(ssize_t size, unsigned char *data)
   return false;
 #else
   ssize_t ans = read0(size,data);
-  if (ans != size) cout << "read " << ans << " bytes" << endl;
+  if (ans != size) {
+    cout << "read " << ans << " of " << size << " bytes" << endl;
+  }
   return (ans == size);
 #endif
 }
@@ -158,7 +167,20 @@ bool DXLIO::writeWord(int id, int address, int value)
 {
 #if USE_DXL
   dxl_write_word(id,address,value);
-  return dxl_get_result() == COMM_TXSUCCESS;
+  int result = dxl_get_result();
+  bool ok = (result == COMM_RXSUCCESS || result == COMM_RXTIMEOUT || result == COMM_RXCORRUPT);
+  if (ok) {
+    okSince = now();
+  } else {
+    cout << "DXLIO::writeWord(" 
+	 << id << "," 
+	 << address << "," 
+	 << value << ")" << "result=" << result << endl;
+    if (now()-okSince > OK_TIMEOUT) {
+      close(); open();
+    }
+  }
+  return ok;
 #else
   unsigned char obuf[9],ibuf[6];
   obuf[0]=0xFF;
@@ -213,13 +235,21 @@ bool DXLIO::readWord(int id, int address, int *value)
 {
 #if USE_DXL
   int ans = dxl_read_word(id,address);
-  if (dxl_get_result() == COMM_TXSUCCESS) {
+  int result = dxl_get_result();
+  bool ok = (result == COMM_RXSUCCESS || result == COMM_RXTIMEOUT || result == COMM_RXCORRUPT);
+  if (ok) {
     if (value != 0) *value = ans;
-    return true;
+    okSince = now();
   } else {
-    cout << "dxl read error." << endl;
-    return false;
+    cout << "DXLIO::readWord(" 
+	 << id << "," 
+	 << address << ")=" 
+	 << ans << ", result=" << result << endl;
+    if (now()-okSince > OK_TIMEOUT) {
+      close(); open();
+    }
   }
+  return ok;
 #else
   unsigned char obuf[8],ibuf[9];
 
@@ -231,16 +261,16 @@ bool DXLIO::readWord(int id, int address, int *value)
   obuf[5]=address;
   obuf[6]=2;
   obuf[7]=~(obuf[2]+obuf[3]+obuf[4]+obuf[5]+obuf[6]);
-  
+
+#if 0  
   char tmp[64];
   sprintf(tmp,"%02x %02x %02x %02x %02x %02x %02x %02x",
 	  obuf[0],obuf[1],obuf[2],obuf[3],
 	  obuf[4],obuf[5],obuf[6],obuf[7]);
   cerr << "read command: " << tmp << endl;
   
-  usleep(100000);
+#endif
   if (write(sizeof(obuf),obuf)) {
-    usleep(100000);
     if (read(sizeof(ibuf),ibuf)) {
       if ((unsigned char)(~(ibuf[0]+ibuf[1]+ibuf[2]+ibuf[3]+ibuf[4]+ibuf[5]+ibuf[6])) == ibuf[7]) {
 	if (ibuf[4] == 0) {
