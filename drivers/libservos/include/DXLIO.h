@@ -43,12 +43,15 @@
 struct DXLIO
 {
   std::string dev;
+  int deviceIndex;
   int baud;
+  int baudNum;
 
   int fd;
   double okSince;
   struct timespec timeout;
   fd_set fds;
+  DXLIO(int deviceIndex=0, int baudNum=34);
   DXLIO(const char *dev_, size_t baud_);
 
   void open();
@@ -56,8 +59,8 @@ struct DXLIO
   bool write(ssize_t size, const unsigned char *data);
   ssize_t read0(size_t size, unsigned char *data);
   bool read(ssize_t size, unsigned char *data);
-  bool writeWord(int id, int address, unsigned value);
-  int readWord(int id, int address);
+  bool writeWord(int id, int address, int value);
+  bool readWord(int id, int address, int *value);
 
   ~DXLIO();
 };

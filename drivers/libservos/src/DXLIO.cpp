@@ -11,19 +11,47 @@
 #include "now.h"
 
 #include "DXLIO.h"
+#define USE_DXL 0
+
+#if USE_DXL
+#include <dynamixel.h>
+#endif
 
 using namespace std;
+
+
+
+
+DXLIO::DXLIO(int deviceIndex, int baudNum)
+{
+  char tmp[32];
+  snprintf(tmp,sizeof(tmp),"/dev/ttyUSB%d",deviceIndex);
+  dev=tmp;
+  
+  baud = 2000000.0/(baudNum + 1)+0.5;
+
+  fd = -1;
+  open();
+}
 
 DXLIO::DXLIO(const char *dev_, size_t baud_)
 {
   dev=dev_;
   baud=baud_;
+
+  deviceIndex=0;
+  sscanf(dev_,"/dev/ttyUSB%d",&deviceIndex);
+  baudNum=2000000.0/baud -0.5;
   fd=-1;
   open();
 }
 
 void DXLIO::open()
 {
+#if USE_DXL
+  dxl_initialize(deviceIndex,baudNum);
+#else
+
   struct termios newtio;
   struct serial_struct serinfo;
 
@@ -68,30 +96,42 @@ void DXLIO::open()
     
   timeout.tv_sec=0;
   timeout.tv_nsec=1e9*1000.0*12.0/baud;
+#endif
 }
 
 void DXLIO::close()
 {
+#if USE_DXL
+  dxl_terminate();
+#else
   if (fd != -1) {
     ::close(fd);
     fd=-1;
   }
+#endif
 }
 
 bool DXLIO::write(ssize_t size, const unsigned char *data)
 {
+#if USE_DXL
+  return false;
+#else
   ssize_t ans = ::write(fd,data,size);
   if (ans == size) {
     okSince = now();
   } else if (now()-okSince > 0.500) {
     open();
   }
-  //    cout << "wrote " << ans << " of " << size << " bytes" << endl;
+  cout << "wrote " << ans << " of " << size << " bytes" << endl;
   return ans == size;
+#endif
 }
 
 ssize_t DXLIO::read0(size_t size, unsigned char *data)
 {
+#if USE_DXL
+  return 0;
+#else
   ssize_t total = 0;
   while (size > 0) {
     int status = pselect(1,&fds,0,0,&timeout,0);
@@ -106,17 +146,26 @@ ssize_t DXLIO::read0(size_t size, unsigned char *data)
     }
   }
   return total;
+#endif
 }
 
 bool DXLIO::read(ssize_t size, unsigned char *data)
 {
+#if USE_DXL
+  return false;
+#else
   ssize_t ans = read0(size,data);
-  //    cout << "read " << ans << " bytes" << endl;
+  cout << "read " << ans << " bytes" << endl;
   return (ans == size);
+#endif
 }
 
-bool DXLIO::writeWord(int id, int address, unsigned value)
+bool DXLIO::writeWord(int id, int address, int value)
 {
+#if USE_DXL
+  dxl_write_word(id,address,value);
+  return dxl_get_result() == COMM_TXSUCCESS;
+#else
   unsigned char obuf[9],ibuf[6];
   obuf[0]=0xFF;
   obuf[1]=0xFF;
@@ -138,10 +187,11 @@ bool DXLIO::writeWord(int id, int address, unsigned value)
   }
   return false;
 #endif
+#endif
 }
 
 #if 0
-bool DXLIO::writeByte(int id, int address, unsigned value)
+bool DXLIO::writeByte(int id, int address, int value)
 {
   unsigned char obuf[8],ibuf[6];
   obuf[0]=0xFF;
@@ -156,8 +206,17 @@ bool DXLIO::writeByte(int id, int address, unsigned value)
 }
 #endif
 
-int DXLIO::readWord(int id, int address)
+bool DXLIO::readWord(int id, int address, int *value)
 {
+#if USE_DXL
+  int ans = dxl_read_word(id,address);
+  if (dxl_get_result() == COMM_TXSUCCESS) {
+    if (value != 0) *value = ans;
+    return true;
+  } else {
+    return false;
+  }
+#else
   unsigned char obuf[8],ibuf[9];
 
   obuf[0]=0xFF;
@@ -171,10 +230,15 @@ int DXLIO::readWord(int id, int address)
   if (write(sizeof(obuf),obuf) && read(sizeof(ibuf),ibuf)) {
     if (~(ibuf[0]+ibuf[1]+ibuf[2]+ibuf[3]+ibuf[4]+ibuf[5]+ibuf[6]) == ibuf[7]) {
       if (ibuf[4] == 0) {
-	return ibuf[5]+(ibuf[6]<<8);
+	if (value != 0) {
+	  *value = ibuf[5]+(ibuf[6]<<8);
+	}
+	return true;
       }
     }
   }
-  return -1;
+  return false;
+#endif
 }
 
+DXLIO::~DXLIO() { close(); }

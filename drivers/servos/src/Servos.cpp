@@ -14,8 +14,9 @@
 
 using namespace std;
 
-const int DXL_DEVICE_INDEX = 1;
-const int DXL_BAUD_NUM = 34;
+const char * const DEFAULT_GENERIC_SERVO = "real";
+const int DEFAULT_DYNAMIXEL_DEVICE_INDEX = 1;
+const int DEFAULT_DYNAMIXEL_BAUD_NUM = 34;
 
 struct ServoMap { const char *device; int id; };
 
@@ -69,9 +70,9 @@ struct Controllers
   int baudNum;
 
   Controllers() { 
-    genericName="real";
-    deviceIndex = DXL_DEVICE_INDEX;
-    baudNum = DXL_BAUD_NUM;
+    genericName=DEFAULT_GENERIC_SERVO;
+    deviceIndex = DEFAULT_DYNAMIXEL_DEVICE_INDEX;
+    baudNum = DEFAULT_DYNAMIXEL_BAUD_NUM;
   }
 
   ServoController* create(const std::string &deviceName)

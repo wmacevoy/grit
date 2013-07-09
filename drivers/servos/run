@@ -1,15 +1,12 @@
 #!/bin/bash
-HERE=`dirname $0`
-HERE=`realpath "$HERE"`
-# add this binary's directory to path
-PATH="$HERE/bin:$PATH"
 
-# add required dynamic libraries
-export LD_LIBRARY_PATH="$HERE/../../libs/lib:$LD_LIBRARY_PATH"    
-for name in now zmqpp servos ; do 
-  libpath=`realpath ../lib$name/lib`
-  export LD_LIBRARY_PATH="$libpath:$LD_LIBRARY_PATH"    
+# add this scripts folder's bin directory to path
+PATH="$(realpath $(dirname $0))/bin:$PATH"
+
+# add 3rd party and project library paths
+for lib in ../../libs/lib ../lib*/lib
+do
+  export LD_LIBRARY_PATH="$(realpath $lib):$LD_LIBRARY_PATH"
 done
 
-echo $LD_LIBRARY_PATH
 "$@"
