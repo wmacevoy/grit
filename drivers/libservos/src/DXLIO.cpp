@@ -19,9 +19,6 @@
 
 using namespace std;
 
-
-
-
 DXLIO::DXLIO(int deviceIndex, int baudNum)
 {
   char tmp[32];
@@ -56,7 +53,7 @@ void DXLIO::open()
   struct serial_struct serinfo;
 
   close();
-  fd = ::open(dev.c_str(),O_RDWR|O_NOCTTY|O_NONBLOCK);
+  fd = ::open(dev.c_str(),O_RDWR|O_NOCTTY);
   if (fd == -1) {
     cerr << "DXLIO::open(): cannot open device " << dev << endl;
   }
@@ -67,8 +64,8 @@ void DXLIO::open()
   newtio.c_iflag	= IGNPAR;
   newtio.c_oflag	= 0;
   newtio.c_lflag	= 0;
-  newtio.c_cc[VTIME]	= 0;
-  newtio.c_cc[VMIN]	= 0;
+  newtio.c_cc[VTIME]	= 1;
+  newtio.c_cc[VMIN]	= 1;
 
   tcflush(fd, TCIFLUSH);
   tcsetattr(fd, TCSANOW, &newtio);
@@ -93,9 +90,10 @@ void DXLIO::open()
 
   FD_ZERO(&fds);
   FD_SET(fd,&fds);
-    
-  timeout.tv_sec=0;
-  timeout.tv_nsec=1e9*1000.0*12.0/baud;
+
+  double dt = 0.25;
+  timeout.tv_sec=dt;
+  timeout.tv_nsec=1e9*(dt-timeout.tv_sec);
 #endif
 }
 
@@ -134,16 +132,12 @@ ssize_t DXLIO::read0(size_t size, unsigned char *data)
 #else
   ssize_t total = 0;
   while (size > 0) {
-    int status = pselect(1,&fds,0,0,&timeout,0);
-    if (status == 1) {
-      ssize_t ans = ::read(fd,data,size);
-      if (ans == -1) break;
-      data += ans;
-      size -= ans;
-      total += ans;
-    } else {
-      break;
-    }
+    if (pselect(fd+1,&fds,0,0,&timeout,0) != 1) break;
+    ssize_t ans = ::read(fd,data,size);
+    if (ans == -1) break;
+    data += ans;
+    size -= ans;
+    total += ans;
   }
   return total;
 #endif
@@ -176,17 +170,26 @@ bool DXLIO::writeWord(int id, int address, int value)
   obuf[6]=value;
   obuf[7]=(value >> 8);
   obuf[8]=~(obuf[2]+obuf[3]+obuf[4]+obuf[5]+obuf[6]+obuf[7]);
-#if 0
-  return write(sizeof(obuf),obuf) == sizeof(obuf);
-#endif
-#if 1
-  if (write(sizeof(obuf),obuf) && read(sizeof(ibuf),ibuf)) {
-    if (~(ibuf[2]+ibuf[3]+ibuf[4]) == ibuf[5]) {
-      return ibuf[4] == 0;
+  if (write(sizeof(obuf),obuf)) {
+    if (read(sizeof(ibuf),ibuf)) {
+      if ((unsigned char)(~(ibuf[2]+ibuf[3]+ibuf[4])) == ibuf[5]) {
+	if (ibuf[4] == 0) {
+	  return true;
+	} else {
+	  cerr << "write nonzero reply code = " << ibuf[4] << endl;
+	}
+      } else {
+	char tmp[64];
+	sprintf(tmp,"%02x %02x %02x %02x %02x %02x",ibuf[0],ibuf[1],ibuf[2],ibuf[3],ibuf[4],ibuf[5]);
+	cerr << "write reply corrupted:" << tmp << endl;
+      }
+    } else {
+      cerr << "write reply timeout" << endl;
     }
+  } else {
+    cerr << "write failed" << endl;
   }
   return false;
-#endif
 #endif
 }
 
@@ -214,6 +217,7 @@ bool DXLIO::readWord(int id, int address, int *value)
     if (value != 0) *value = ans;
     return true;
   } else {
+    cout << "dxl read error." << endl;
     return false;
   }
 #else
@@ -227,15 +231,38 @@ bool DXLIO::readWord(int id, int address, int *value)
   obuf[5]=address;
   obuf[6]=2;
   obuf[7]=~(obuf[2]+obuf[3]+obuf[4]+obuf[5]+obuf[6]);
-  if (write(sizeof(obuf),obuf) && read(sizeof(ibuf),ibuf)) {
-    if (~(ibuf[0]+ibuf[1]+ibuf[2]+ibuf[3]+ibuf[4]+ibuf[5]+ibuf[6]) == ibuf[7]) {
-      if (ibuf[4] == 0) {
-	if (value != 0) {
-	  *value = ibuf[5]+(ibuf[6]<<8);
+  
+  char tmp[64];
+  sprintf(tmp,"%02x %02x %02x %02x %02x %02x %02x %02x",
+	  obuf[0],obuf[1],obuf[2],obuf[3],
+	  obuf[4],obuf[5],obuf[6],obuf[7]);
+  cerr << "read command: " << tmp << endl;
+  
+  usleep(100000);
+  if (write(sizeof(obuf),obuf)) {
+    usleep(100000);
+    if (read(sizeof(ibuf),ibuf)) {
+      if ((unsigned char)(~(ibuf[0]+ibuf[1]+ibuf[2]+ibuf[3]+ibuf[4]+ibuf[5]+ibuf[6])) == ibuf[7]) {
+	if (ibuf[4] == 0) {
+	  if (value != 0) {
+	    *value = ibuf[5]+(ibuf[6]<<8);
+	  }
+	  return true;
+	} else {
+	  cerr << "read nonzero reply code = " << ibuf[4] << endl;
 	}
-	return true;
+      } else {
+	char tmp[64];
+	sprintf(tmp,"%02x %02x %02x %02x %02x %02x %02x %02x",
+		ibuf[0],ibuf[1],ibuf[2],ibuf[3],
+		ibuf[4],ibuf[5],ibuf[6],ibuf[7]);
+	cerr << "read reply corrupted " << tmp << endl;
       }
+    } else {
+      cerr << "read reply timeout" << endl;
     }
+  } else {
+    cerr << "read request failed" << endl;
   }
   return false;
 #endif
