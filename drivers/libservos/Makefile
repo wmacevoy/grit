@@ -12,13 +12,14 @@ LDFLAGS += $(MY_LIBS)
 SUFFIXES += .d
 
 TARGET=$(shell basename `realpath .`)
+.PHONY: all
 all : lib/$(TARGET).a lib/$(TARGET).so
 
 #We don't need to clean up when we're making these targets
 NODEPS:=clean tags svn
 
 #Find all the C++ files in the src/ directory
-SOURCES:=$(shell find src/ -regex "[a-zA-Z0-9].*\.\(c\|cpp\)")
+SOURCES:=$(shell find src/ -regex ".*/[a-zA-Z0-9][^/]*\.\(c\|cpp\)")
 OBJECTS=$(patsubst src/%,tmp/%.o,$(SOURCES))
 
 #These are the dependency files, which make will clean up after it creates them

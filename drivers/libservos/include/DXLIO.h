@@ -1,7 +1,7 @@
 #pragma once
 
-
 #include <string>
+#include <sys/time.h>
 
 #define DXL_MODEL_WORD_BYTE      0
 #define DXL_FIRMWARE_BYTE        2
@@ -40,13 +40,6 @@
 #define DXL_GOAL_TORQUE_WORD     71
 #define DXL_GOAL_ACCEL_BYTE      73
 
-#define DXL_DEFAULT_BAUDNUM	 34
-#define DXL_DEFAULT_ID	          0
-#define DXL_DEFAULT_DEV          "/dev/ttyUSB1"
-
-void DXL_PrintCommStatus(int CommStatus);
-void DXL_PrintErrorCode();
-
 struct DXLIO
 {
   std::string dev;
@@ -54,14 +47,17 @@ struct DXLIO
 
   int fd;
   double okSince;
-  void reopen();
+  struct timespec timeout;
+  fd_set fds;
   DXLIO(const char *dev_, size_t baud_);
-  ~DXLIO();
+
+  void open();
+  void close();
   bool write(ssize_t size, const unsigned char *data);
   ssize_t read0(size_t size, unsigned char *data);
   bool read(ssize_t size, unsigned char *data);
-  bool write_word(int id, int address, unsigned value);
-  bool write_byte(int id, int address, unsigned value);
-  int read_word(int id, int address);
-  int read_byte(int id, int address);
+  bool writeWord(int id, int address, unsigned value);
+  int readWord(int id, int address);
+
+  ~DXLIO();
 };
