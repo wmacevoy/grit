@@ -1,5 +1,6 @@
 #include "dxl_hal.h"
 #include "dynamixel.h"
+#include <stdio.h>
 
 #define ID					(2)
 #define LENGTH				(3)
@@ -320,7 +321,7 @@ int dxl_read_word( int id, int address )
 	gbInstructionPacket[PARAMETER] = (unsigned char)address;
 	gbInstructionPacket[PARAMETER+1] = 2;
 	gbInstructionPacket[LENGTH] = 4;
-	
+
 	dxl_txrx_packet();
 
 	return dxl_makeword((int)gbStatusPacket[PARAMETER], (int)gbStatusPacket[PARAMETER+1]);
