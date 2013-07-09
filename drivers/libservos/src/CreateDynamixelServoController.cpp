@@ -29,7 +29,7 @@ struct DynamixelServo : Servo
     : io(io_),id(id_), presentPosition(0), goalPosition(0) 
   {
     io.writeWord(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
-    io.writeWord(id,DXL_TORQUE_WORD,1);
+    io.writeWord(id,DXL_TORQUE_WORD,1023);
     update();
   }
 
@@ -62,7 +62,6 @@ struct DynamixelServo : Servo
   }
   ~DynamixelServo()
   {
-    //    io->writeWord(id,DXL_TORQUE_WORD,0);
   }
 };
 

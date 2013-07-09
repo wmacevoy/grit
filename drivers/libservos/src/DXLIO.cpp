@@ -120,7 +120,7 @@ bool DXLIO::write(ssize_t size, const unsigned char *data)
   } else if (now()-okSince > 0.500) {
     open();
   }
-  cout << "wrote " << ans << " of " << size << " bytes" << endl;
+  //  cout << "wrote " << ans << " of " << size << " bytes" << endl;
   return ans == size;
 #endif
 }
@@ -149,7 +149,7 @@ bool DXLIO::read(ssize_t size, unsigned char *data)
   return false;
 #else
   ssize_t ans = read0(size,data);
-  cout << "read " << ans << " bytes" << endl;
+  if (ans != size) cout << "read " << ans << " bytes" << endl;
   return (ans == size);
 #endif
 }

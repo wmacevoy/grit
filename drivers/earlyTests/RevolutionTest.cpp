@@ -4,52 +4,10 @@
 #include <stdlib.h>
 #include <cmath>
 #include <ctime>
-//#include "DynamixelDriver.hpp"
-#include "CreateZMQServoController.h"
+#include "DynamixelDriver.hpp"
 
 using namespace std;
 
-class MyServo
-{
-public:
-  static ServoController *controller;
-  static int count;
-  Servo *servo;
-  string name;
-
-  void init(int id_, const string &name_)
-  {
-    servo = controller->servo(id_);
-    name=name_;
-  }
-
-  void joint(float value) {
-    servo->angle((value-2048)*(180.0/2048.0));
-  }
-
-  void setTorque(float value) { 
-    // ignored
-  }
-
-  MyServo()
-  {
-    if (++count == 1) controller = new CreateZMQServoController();
-    servo = 0;
-  }
-
-  ~MyServo()
-  {
-    if (--count == 0) delete controller;
-  }
-
-  static void start()
-  {
-    if (controller != 0) controller->start();
-  }
-};
-
-ServoController *MyServo::controller = 0;
-int MyServo::count = 0;
 
 const int divider=1;
 
@@ -190,7 +148,7 @@ class LegGeometry {
 };
 
 class Leg:public LegGeometry {
-	MyServo knee,femur,hip;
+	Servo knee,femur,hip;
 	string name;
 	int kneePos,femurPos,hipPos;
 public:
@@ -495,22 +453,20 @@ public:
 
 int main()
 {
-  controller = CreateZMQServoController();
-
 	bool angleMode=true;
 	int wpos=2048-1200;
 	int necklr=2048;
 	int neckud=2048;
 	try {
-	MyServo w;
+	Servo w;
 	w.init(91,"Waist");
 	w.setTorque(315);
 	w.joint(wpos);
-	MyServo n1;
+	Servo n1;
 	n1.init(93,"Waist");
 	n1.setTorque(315);
 	n1.joint(neckud);
-	MyServo n2;
+	Servo n2;
 	n2.init(94,"Waist");
 	n2.setTorque(315);
 	n2.joint(necklr);
@@ -545,7 +501,6 @@ int main()
 	int step=5;
 	legs.setPosAll(k,f,h);
 
-    MyServo::start();
 	while(1)
 	{
 		cout <<"Press Enter key to continue!(press q and Enter to quit)"<<endl;
