@@ -1,4 +1,4 @@
-include ../../config.mk
+include ../../setup/config.mk
 include ../config.mk
 
 MY_FLAGS=-I../libnow/include

@@ -1,4 +1,4 @@
-include ../../config.mk
+include ../../setup/config.mk
 include ../config.mk
 
 MY_FLAGS=-I../libservos/include -I../libzmqpp/include -I../libnow/include
