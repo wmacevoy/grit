@@ -1,4 +1,4 @@
-include config.mk
+include setup/config.mk
 all :
 	$(MAKE) -C libs all
 	$(MAKE) -C drivers all

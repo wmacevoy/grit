@@ -49,8 +49,11 @@ DXLIO::DXLIO(const char *dev_, size_t baud_)
 void DXLIO::open()
 {
 #if USE_DXL
-  cout << "dxl_initialize(" << deviceIndex << "," << baudNum << ")" << endl;
-  dxl_initialize(deviceIndex,baudNum);
+  if (dxl_initialize(deviceIndex,baudNum) == 0) {
+    cerr << "DXLIO::open() "
+	 << "dxl_initialize(" << deviceIndex << "," << baudNum << ")"
+	 << " failed." << endl;
+  }
 #else
 
   struct termios newtio;
@@ -104,7 +107,6 @@ void DXLIO::open()
 void DXLIO::close()
 {
 #if USE_DXL
-  cout << "dxl_terminate()" << endl;
   dxl_terminate();
 #else
   if (fd != -1) {
@@ -122,11 +124,12 @@ bool DXLIO::write(ssize_t size, const unsigned char *data)
   ssize_t ans = ::write(fd,data,size);
   if (ans == size) {
     okSince = now();
-  } else if (now()-okSince > 0.500) {
+  } else if (now()-okSince > OK_TIMEOUT) {
     open();
   }
   if (ans != size) {
-    cout << "wrote " << ans << " of " << size << " bytes" << endl;
+    cerr << "DXLIO::write() wrote " 
+	 << ans << " of " << size << " bytes" << endl;
   }
   return ans == size;
 #endif
@@ -157,7 +160,7 @@ bool DXLIO::read(ssize_t size, unsigned char *data)
 #else
   ssize_t ans = read0(size,data);
   if (ans != size) {
-    cout << "read " << ans << " of " << size << " bytes" << endl;
+    cerr << "DXLIO::read() read " << ans << " of " << size << " bytes" << endl;
   }
   return (ans == size);
 #endif
@@ -198,18 +201,22 @@ bool DXLIO::writeWord(int id, int address, int value)
 	if (ibuf[4] == 0) {
 	  return true;
 	} else {
-	  cerr << "write nonzero reply code = " << ibuf[4] << endl;
+	  cerr << "DXLIO::writeWord() "
+	       << "nonzero reply code = " << ibuf[4] << endl;
 	}
       } else {
 	char tmp[64];
 	sprintf(tmp,"%02x %02x %02x %02x %02x %02x",ibuf[0],ibuf[1],ibuf[2],ibuf[3],ibuf[4],ibuf[5]);
-	cerr << "write reply corrupted:" << tmp << endl;
+	  cerr << "DXLIO::writeWord() "
+	       << "reply corrupted:" << tmp << endl;
       }
     } else {
-      cerr << "write reply timeout" << endl;
+      cerr << "DXLIO::writeWord() "
+	   << "reply timeout" << endl;
     }
   } else {
-    cerr << "write failed" << endl;
+    cerr << "DXLIO::writeWord() "
+	 << "failed" << endl;
   }
   return false;
 #endif
@@ -279,20 +286,24 @@ bool DXLIO::readWord(int id, int address, int *value)
 	  }
 	  return true;
 	} else {
-	  cerr << "read nonzero reply code = " << ibuf[4] << endl;
+	  cerr << "DXLIO::readWord() " 
+	       << "nonzero reply code = " << ibuf[4] << endl;
 	}
       } else {
 	char tmp[64];
 	sprintf(tmp,"%02x %02x %02x %02x %02x %02x %02x %02x",
 		ibuf[0],ibuf[1],ibuf[2],ibuf[3],
 		ibuf[4],ibuf[5],ibuf[6],ibuf[7]);
-	cerr << "read reply corrupted " << tmp << endl;
+	cerr << "DXLIO::readWord() " 
+	     << "reply corrupted " << tmp << endl;
       }
     } else {
-      cerr << "read reply timeout" << endl;
+      cerr << "DXLIO::readWord() " 
+	   << "reply timeout" << endl;
     }
   } else {
-    cerr << "read request failed" << endl;
+      cerr << "DXLIO::readWord() " 
+	   << "request failed" << endl;
   }
   return false;
 #endif
