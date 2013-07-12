@@ -115,9 +115,10 @@ bool CentaurSocket::bind(const char * addr)
 	return true;
 }
 
-int CentaurSocket::send(const char * pData, int nData, bool block)
+template <class T>
+int CentaurSocket::send(T * pData, int nData, bool block)
 {
-	const char * pDataEnd = pData + nData;
+	T * pDataEnd = pData + nData;
 
 	int flags = block ? 0 : ZMQ_NOBLOCK;
 

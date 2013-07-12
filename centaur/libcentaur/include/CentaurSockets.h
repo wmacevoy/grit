@@ -52,12 +52,13 @@ public:
 
 	bool bind(const char * addr);
 
-	int send(const char * pData, int nData, bool block = true);
+	template <class T>
+	int send(T * pData, int nData, bool block = true);
 
 	template <class T, unsigned int staticCount, class Alloc>
 	int send(CM_Array<T, staticCount, Alloc> &data, bool block = true)
 	{
-		return send((const char *)data.getData(), data.getSize());
+		return send(data.getData(), data.getSize());
 	}
 
 	template <unsigned int staticCount, class Alloc>
@@ -127,7 +128,9 @@ class CentaurSocketRep : public CentaurSocket{
 public:
 
 	CentaurSocketRep();
+	
 	virtual ~CentaurSocketRep();
+	void WaitForData(const char * data);
 };
 
 class CentaurSocketReq : public CentaurSocket{
