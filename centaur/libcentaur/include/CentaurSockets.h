@@ -53,12 +53,34 @@ public:
 	bool bind(const char * addr);
 
 	template <class T>
-	int send(T * pData, int nData, bool block = true);
+	int send(const T * pData, int nData, bool block = true)
+	{
+		const T * pDataEnd = pData + nData;
 
+		int flags = block ? 0 : ZMQ_NOBLOCK;
+
+		nData = 0;
+
+		while (pDataEnd - pData > ZEROMQ_MSG_BLOCK_SIZE)
+		{
+			int rc = zmq_send(m_socket, pData, ZEROMQ_MSG_BLOCK_SIZE, flags | ZMQ_SNDMORE);
+			if (rc != ZEROMQ_MSG_BLOCK_SIZE)
+				return rc;
+			nData += rc;
+			pData += ZEROMQ_MSG_BLOCK_SIZE;
+		}
+
+		int rc = zmq_send(m_socket, pData, pDataEnd - pData, flags);
+		if (rc != pDataEnd - pData)
+			return rc;
+		nData += rc;
+		return nData;
+	}
+	
 	template <class T, unsigned int staticCount, class Alloc>
 	int send(CM_Array<T, staticCount, Alloc> &data, bool block = true)
 	{
-		return send(data.getData(), data.getSize());
+		return send(data.getData(), data.getSize(), block);
 	}
 
 	template <unsigned int staticCount, class Alloc>

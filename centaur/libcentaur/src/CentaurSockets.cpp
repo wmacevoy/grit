@@ -115,32 +115,6 @@ bool CentaurSocket::bind(const char * addr)
 	return true;
 }
 
-template <class T>
-int CentaurSocket::send(T * pData, int nData, bool block)
-{
-	T * pDataEnd = pData + nData;
-
-	int flags = block ? 0 : ZMQ_NOBLOCK;
-
-	nData = 0;
-
-	while (pDataEnd - pData > ZEROMQ_MSG_BLOCK_SIZE)
-	{
-		int rc = zmq_send(m_socket, pData, ZEROMQ_MSG_BLOCK_SIZE, flags | ZMQ_SNDMORE);
-		if (rc != ZEROMQ_MSG_BLOCK_SIZE)
-			return rc;
-		nData += rc;
-		pData += ZEROMQ_MSG_BLOCK_SIZE;
-	}
-
-	int rc = zmq_send(m_socket, pData, pDataEnd - pData, flags);
-	if (rc != pDataEnd - pData)
-		return rc;
-	nData += rc;
-	return nData;
-}
-
-
 // ***************************************************************************
 // CentaurSocketPub
 
