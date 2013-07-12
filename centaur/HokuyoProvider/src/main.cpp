@@ -11,7 +11,8 @@ int main( int argc, const char* argv[] )
 	signal(SIGINT, quitproc);
 	signal(SIGQUIT, quitproc);
 	HokuyoProvider provider;
-	provider.start();
+	if(!provider.start())
+		std::cout << "Unable to start Hokuyo Provider\n";
 	while(!HokuyoProvider::isDone()){
 		std::cout << "MAIN: Nothing to do, sleeping for 5 seconds\n";
 		std::chrono::milliseconds dura( 5000 );
