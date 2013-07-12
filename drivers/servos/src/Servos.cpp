@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <signal.h>
 
+#include "config.h"
 #include "zmq.hpp"
 #include "ZMQHub.h"
 #include "ZMQServoMessage.h"
@@ -13,10 +14,6 @@
 
 
 using namespace std;
-
-const char * const DEFAULT_GENERIC_SERVO = "real";
-const int DEFAULT_DYNAMIXEL_DEVICE_INDEX = 1;
-const int DEFAULT_DYNAMIXEL_BAUD_NUM = 34;
 
 struct ServoMap { const char *device; int id; };
 
@@ -28,21 +25,25 @@ const ServoMap TEST_SERVOS[] =
 
 const ServoMap ROBOT_SERVOS[] =
   {
-    { "generic", 11  },
-    { "generic", 12  },
-    { "generic", 13  },
-    { "generic", 21  },
-    { "generic", 22  },
-    { "generic", 23  },
-    { "generic", 31  },
-    { "generic", 32  },
-    { "generic", 33  },
-    { "generic", 41  },
-    { "generic", 42  },
-    { "generic", 43  },
-    { "generic", 91  },
-    { "generic", 93  },
-    { "generic", 94  },
+    { "generic", LEG1_SERVO_ID_KNEE  },
+    { "generic", LEG1_SERVO_ID_FEMUR  },
+    { "generic", LEG1_SERVO_ID_HIP  },
+
+    { "generic", LEG2_SERVO_ID_KNEE  },
+    { "generic", LEG2_SERVO_ID_FEMUR  },
+    { "generic", LEG2_SERVO_ID_HIP  },
+
+    { "generic", LEG3_SERVO_ID_KNEE  },
+    { "generic", LEG3_SERVO_ID_FEMUR  },
+    { "generic", LEG3_SERVO_ID_HIP  },
+
+    { "generic", LEG4_SERVO_ID_KNEE  },
+    { "generic", LEG4_SERVO_ID_FEMUR  },
+    { "generic", LEG4_SERVO_ID_HIP  },
+
+    { "generic", WAIST_SERVO_ID  },
+    { "generic", NECKUD_SERVO_ID  },
+    { "generic", NECKLR_SERVO_ID  },
     { 0, -1 } // end
   };
 
@@ -51,12 +52,12 @@ const int TX_RATE=20;
 
 static const char * SUBSCRIBERS [] = 
   {
-    "tcp://localhost:5501",
-    "tcp://localhost:5502",
+    TEST_SERVO_CONNECT,
+    BODY_CONNECT,
     0 // end
   };
 
-const char *PUBLISH = "tcp://*:5500";
+const char *PUBLISH = SERVOS_LISTEN ;
 
 bool verbose;
 
@@ -70,9 +71,9 @@ struct Controllers
   int baudNum;
 
   Controllers() { 
-    genericName=DEFAULT_GENERIC_SERVO;
-    deviceIndex = DEFAULT_DYNAMIXEL_DEVICE_INDEX;
-    baudNum = DEFAULT_DYNAMIXEL_BAUD_NUM;
+    genericName="real";
+    deviceIndex = DYNAMIXEL_DEVICE_INDEX;
+    baudNum = DYNAMIXEL_BAUD_NUM;
   }
 
   ServoController* create(const std::string &deviceName)

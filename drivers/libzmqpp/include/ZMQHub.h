@@ -26,11 +26,11 @@ class ZMQHub
   std::thread *goReport;
 
   virtual void start();
-  void join();
-  void stop();
-  void rxLoop();
-  void txLoop();
-  void reportLoop();
+  virtual void join();
+  virutal void stop();
+  virtual void rxLoop();
+  virtual void txLoop();
+  virtual void reportLoop();
 
   ZMQHub();
 

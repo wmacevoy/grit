@@ -1,5 +1,6 @@
 #pragma once
 
+#include "zmq.h"
 #include "ZMQSocket.h"
 
 class ZMQMessage

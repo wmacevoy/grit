@@ -5,6 +5,8 @@ all :
 	$(MAKE) -C servos all
 	$(MAKE) -C testservo all
 	$(MAKE) -C walker all
+	$(MAKE) -C body all
+	$(MAKE) -C commander all
 
 clean :
 	$(MAKE) -C libnow clean
@@ -13,4 +15,6 @@ clean :
 	$(MAKE) -C servos clean
 	$(MAKE) -C testservos clean
 	$(MAKE) -C walker clean
+	$(MAKE) -C body all
+	$(MAKE) -C commander all
 

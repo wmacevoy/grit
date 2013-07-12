@@ -7,51 +7,15 @@
 #include <memory>
 #include <thread>
 
-// #include "DynamixelDriver.h"
+#include "config.h"
 #include "CreateZMQServoController.h"
+#include "BodyMessage.h"
+#include "ZMQHub.h"
 
 using namespace std;
 
-const char *ME = "tcp://*:5502";
-const char *SERVER = "tcp://localhost:5500";
-
-class MyController : public ServoController
-{
-public:
-  shared_ptr<ServoController> me;
-  MyController() : me(CreateZMQServoController(ME,SERVER)) {}
-  Servo* servo(int id) { return me->servo(id); }
-  void start() { cout << "start mycontroller"; me->start(); }
-};
-MyController controller;
-
-
-class MyServo : public Servo
-{
-private:
-  //  MyServo(const MyServo &copy) {}
-public:
-  shared_ptr<Servo> me;
-  string name;
-
-  void init(int id_, const string &name_)
-  {
-    me = shared_ptr<Servo>(controller.servo(id_));
-    name=name_;
-  }
-
-  float angle() const { return me->angle(); }
-  void angle(float value) { me->angle(value); }
-
-  void report()
-  {
-    cout << "servo " << name << " at " << angle() << endl;
-  }
-};
-
-
-
-using namespace std;
+typedef shared_ptr < Servo > SPServo;
+typedef shared_ptr < ServoController > SPServoController;
 
 const float ANGLE360=360.0;
 const float ANGLE180=ANGLE360/2.0;
@@ -177,17 +141,19 @@ public:
 };
 
 class Leg: public LegGeometry {
-  MyServo knee,femur,hip;
+  SpServoController controller;
+  SpServo knee,femur,hip;
   string name;
   float kneeAngle,femurAngle,hipAngle;
   bool inverted;
+
 public:
 
-  void init(int kneeid,int femurid,int hipid,string newName) {
+  void init(SPServoController &controller, int kneeid,int femurid,int hipid,string newName, bool inverted) {
     name=newName;
-    knee.init(kneeid,name+"k");
-    femur.init(femurid,name+"f");
-    hip.init(hipid,name+"h");
+    knee = SPServo(controller->servo(kneeid));
+    femur= SPServo(controller->servo(femurid));
+    hip = SPServo(controller->servo(hipid));
     inverted = false;
   }
 
@@ -213,9 +179,7 @@ public:
     hip.setTorque(torque);
   }
   void report() {
-    knee.report();
-    femur.report();
-    hip.report();
+    cout << name << ":" << " knee=" << knee.angle() << " femur=" << hip.angle() << " hip=" << hip.angle() << endl;
   }
 };
 
@@ -225,11 +189,10 @@ public:
   typedef vector < Point > Angles;
   Angles angles;
 
-  Leg *leg;
   float t0,T;
   LegMover() {}
 
-  void at(float t)
+  void move(float t, Leg &leg)
   {
     if (sequence.size() >= 2) {
       float s= (t-t0)/T;
@@ -238,11 +201,11 @@ public:
       int i0=int(s);
       int i1=(i0+1) % size();
       float ds = s-floor(s);
-      leg->setAngles(s[i0].interp(ds,s[i1]));
+      leg.setAngles(s[i0].interp(ds,s[i1]));
     } else if (sequence.size() == 1) {
-      leg->setAngles(s[0]);
+      leg.setAngles(s[0]);
     } else {
-      leg->setAngles(Point(0,0,0));
+      leg.setAngles(Point(0,0,0));
     }
   }
 
@@ -295,277 +258,226 @@ public:
   }
 };
 
+class Legs;
+
+class LegsMovers
+{
+public:
+  LegMover legMover1;
+  LegMover legMover2;
+  LegMover legMover3;
+  LegMover legMover4;
+
+  void move(double t, Legs &legs);
+};
+
 class Legs
 {
   Leg leg1,leg2,leg3,leg4;
-  LegMover legMover1,legMover2,legMover3,legMover4;
-
-  void pointfile(const char *file)
-  {
-
-  }
 
   Legs()
   {
     leg1.setMap(-1.0,0.0,0.0,1.0);// (x,y)=>(-x,y)
     leg1.setOrigin(-5.75,5.75,1.50);
     leg1.inverted = true;
-    legMover1.leg = &leg1;
-
     
     leg2.setMap(1.0,0.0,0.0,1.0);//  (x,y)=>(x,y)
     leg2.setOrigin(5.75,5.75,1.50);
     leg2.inverted = false;
-    legMover2.leg = &leg2;
     
     leg3.setMap(1.0,0.0,0.0,-1.0);// (x,y)=->(x,-y)
     leg3.setOrigin(5.75,-5.75,1.50);
     leg3.inverted = true;
-    legMover3.leg = &leg3;
     
     leg4.setMap(-1.0,0.0,0.0,-1.0);
     leg4.setOrigin(-5.75,-5.75,1.50);
     leg4.inverted = false;
-    legMover4.leg = &leg4;
+  }
 
-    l1.init(11,12,13,"leg1");
-    l2.init(21,22,23,"leg2");
-    l3.init(31,32,33,"leg3");
-    l4.init(41,42,43,"leg4");
+  void init(SPServoController &controller)
+  {
+    leg1.init(controller,
+	      LEG1_SERVO_ID_KNEE,LEG1_SERVO_ID_FEMUR,LEG1_SERVO_ID_HIP,"leg1");
+    leg2.init(controller,
+	      LEG2_SERVO_ID_KNEE,LEG2_SERVO_ID_FEMUR,LEG2_SERVO_ID_HIP,"leg2");
+    leg3.init(controller,
+	      LEG3_SERVO_ID_KNEE,LEG3_SERVO_ID_FEMUR,LEG3_SERVO_ID_HIP,"leg3");
+    leg4.init(controller,
+	      LEG4_SERVO_ID_KNEE,LEG4_SERVO_ID_FEMUR,LEG4_SERVO_ID_HIP,"leg4");
   }
 
   void report() {
-    l1.report();
-    l2.report();
-    l3.report();
-    l4.report();
-  }
-  
-  void setAnglesAll(float knee,float femur,float hip) {
-    l1.setAngles(knee,femur,hip);
-    l2.setAngles(knee,femur,hip);
-    l3.setAngles(knee,femur,hip);
-    l4.setAngles(knee,femur,hip);
-  }
-  
-  void at(float t)
-  {
-    l1m->at(t);
-    l2m->at(t);
-    l3m->at(t);
-    l4m->at(t);
-  }
-
-  void pointfile(string filename)
-  {
-    
+    leg1.report();
+    leg2.report();
+    leg3.report();
+    leg4.report();
   }
 };
 
+class LegsMover::move(double t, Legs &legs)
+{
+  legMover1->move(t,legs->leg1);
+  legMover2->move(t,legs->leg2);
+  legMover3->move(t,legs->leg3);
+  legMover4->move(t,legs->leg4);
+}
 
-class Quad {
+class Body {
   Legs legs;
-  MyServo waistServo;
+  shared_ptr<LegsMover> legsMover;
+  SpServo waistServo;
   float waistAngle;
-  MyServo neckLeftRightServo;
+  SpServo neckLeftRightServo;
   float neckLeftRgihtAngle;
-  MyServo neckUpDownServo;
+  SpServo neckUpDownServo;
   float neckUpDownAngle;
   
-  Quad() {
-    waistServo.init(91,"waist");
-    neckUpDown.init(93,"neckud");
-    neckLeftRight.init(94,"necklr");
+  void init(SpServoController controller)
+  {
+    waistServo=SpServo(controller->servo(WAIST_SERVO_ID));
+    neckUpDown=SpServo(controller->servo(NECKUD_SERVO_ID));
+    neckLeftRight=SpServo(controller->servo(NECKLR_SERVO_ID));
   }
   
-  void at(double s)
+  void move(double s)
   {
-    legs.at(s);
+    legMover->move(s,legs);
     waistServo.angle(waistServoAngle);
     neckUpDownServo.angle(neckUpDownAngle);
     neckLeftRightServo.angle(neckLeftRightAngle);
   }
-    
-  void run()
-  {
-    double t0=now();
-    double s=0;
-    while (running) {
-      if (!paused) {
-	double t1=now();
-	  float deltat=t1-t;
-	  t=t1;
-	  if (deltat < 1.0) {
-	    s += speed*deltat;
-	  }
-      }
-      at(s);
-    }
-  }
-
-  thread *go;
-
-  void start()
-  {
-    if (go != 0) {
-      running = true;
-      go = new thread(&Body::run,this);
-    }
-  }
 };
 
+class BodyController : ZMQHub
+{
+  list < string > replies;
+  shared_ptr < Body > body;
+
+  double time;
+  double speed;
+
+  void answer(const string &reply)
+  {
+    replies.push_back(reply);
+  }
+
+  void answer(ostringstream &oss)
+  {
+    answer(oss.str());
+  }
+
+  void act(string &command)
+  {
+    istringstream iss(command);
+    ostringstream oss;
+
+    string head;
+    iss >> head;
+    if (head == "load") {
+      string file;
+      iss >> file;
+      ostringstream oss;
+      answer(oss << "load file '" << file << "' :" 
+	     << (load(file) ? "ok" : "failed") << ".");
+    }
+    if (head == "time") {
+      double value;
+      iss >> value;
+      t = value;
+      answer(oss << "set time to " << value << ".");
+    }
+    if (head == "speed") {
+      double value;
+      iss >> value;
+      speed = value;
+      answer(oss << "set speed to " << value << ".");      
+    }
+  }
+
+  void update()
+  {
+    double lastRealTime=now();
+    while (running) {
+      double thisRealTime = now();
+      time += speed*(thisRealTime-lastRealTime);
+      thisTime = lastTime;
+      body->move(time);
+    }
+  }
+
+  void rx(ZMQSubscribeSocket &socket)
+  {
+    ZMQMessage msg;
+    msg.recv(socket);
+    ZMQServoMessage *data = (ZMQServoMessage *)msg.data();
+    string command((const char *)(data+1),data[0]);
+    act(command);
+  }
+
+  void tx(ZMQPublishSocket &socket)
+  {
+    while (!replies.empty()) {
+      string &reply = *replies.begin();
+      uint8_t size = (reply.size() < BodyMessage::CAPACITY) ? reply.size() : BodyMessage::CAPACITY;
+      ZMQMessage msg(size+1);
+      ZMQBodyMessage *data = (ZMQServoMessage*)msg.data();
+      uint8_t *contents = &data->contents;
+      contents[0] = size;
+      memcpy(contents+1,&reply[0],size);
+      msg.send(socket);
+      replies.pop_back();
+    }
+  }
+  BodyController()
+  {
+    speed=1;
+    time=0;
+    go=0;
+  }
+
+  thread *goUpdate;
+
+  void start()
+  { 
+    if (goUpdate != 0) goUpdate = new thead(&BodyController::update, this);
+    ZMQHub::start();
+  }
+
+  void join()
+  {
+    ZMQHub::join();
+    if (goUpdate != 0) { 
+      goUpdate->join(); 
+      delete goUpdate; 
+      goUpdate = 0; 
+    }    
+  }
+
+};
+
+void run()
+{
+  shared_ptr < ServoController > 
+    servoController(CreateZMQServoController(BODY_LISTEN,SERVOS_CONNECT));
+  
+  shared_ptr < Body > 
+    body (new Body());
+
+  shared_ptr < BodyController > 
+    bodyController (new BodyController());
+
+  body->init(servoController);
+  bodyController->init(body);
+
+  servoController.start();
+  bodyController.start();
+
+  bodyController.join();
+}
 
 int main()
 {
-  Body body;
-
-  
-
-    Quad legs;
-  //2   sleep(2);
-    legs.init(768); // initial torque
-
-    Crab1 l1s(legs.leg1());
-    Crab2 l2s(legs.leg2());
-    Crab3 l3s(legs.leg3());
-    Crab4 l4s(legs.leg4());
-    Dog1 d1s(legs.leg1());
-    Dog2 d2s(legs.leg2());
-    Dog3 d3s(legs.leg3());
-    Dog4 d4s(legs.leg4());
-    int cycle=8000;
-
-    l1s.init(0,cycle);
-    l2s.init(cycle/4,cycle);
-    l3s.init(3*cycle/4,cycle);
-    l4s.init(cycle/2,cycle);
-    d1s.init(0,cycle);
-    d2s.init(3*cycle/4,cycle);
-    d3s.init(cycle/4,cycle);
-    d4s.init(cycle/2,cycle);
-    legs.setSequences(&l1s,&l2s,&l3s,&l4s);
-
-	float k=0;
-	float f=0;
-	float h=0;
-	float x=8;
-	float y=8;
-	float z=13;
-	int step=5;
-	legs.setPosAll(k,f,h);
-
-    controller.start();
-	while(1)
-	{
-		cout <<"Press Enter key to continue!(press q and Enter to quit)"<<endl;
-		char key=getchar();
-		if( key == 'q')
-			break;
-		if (key=='w') {
-			wpos+=100;
-			if (wpos>4095) wpos=4095;
-			w.joint(wpos);
-			cout <<"Waist "<<wpos<<endl;
-		}
-		if (key=='W') {
-			wpos-=100;
-			if (wpos<0) wpos=0;
-			w.joint(wpos);
-		}
-		if (key=='u') {
-			neckud+=100;
-			if (neckud>4095) neckud=4095;
-			n2.joint(neckud);
-		}
-		if (key=='U') {
-			neckud-=100;
-			if (neckud<0) neckud=0;
-			n2.joint(neckud);
-		}
-		if (key=='l') {
-			necklr+=100;
-			if (necklr>4095) necklr=4095;
-			n1.joint(necklr);
-		}
-		if (key=='L') {
-			necklr-=100;
-			if (necklr<0) necklr=0;
-			n1.joint(necklr);
-		}
-		if (key=='A') angleMode=true;
-		if (key=='a') angleMode=false;
-		if (key=='c') legs.setSequences(&l1s,&l2s,&l3s,&l4s);
-		if (key=='d') legs.setSequences(&d1s,&d2s,&d3s,&d4s);
-		if (angleMode) {
-          if(key=='k')k-=step;
-          if(key=='K')k+=step;
-          if (k<=-45)k=-44;
-          if (k>=45)k=44;
-          if(key=='f')f-=step;
-          if(key=='F')f+=step;
-          if (f<=-45)f=-44;
-          if (f>=45)f=44;
-          if(key=='h')h-=step;
-          if(key=='H')h+=step;
-          if (h<=-90)h=-89;
-          if (h>=90)h=89;
-          if (key=='0') {
-            k=0;
-            f=0;
-            h=0;
-          }
-          if (key=='1') {
-              k=44;
-              f=-44;
-              h=0;
-          }
-          if (key=='2'){
-            k=10;
-            f=0;
-            h=0;
-          }
-          if (key=='3'){
-            k=-44;
-            f=44;
-            h=0;
-          }
-          legs.setPosAll(k,f,h);
-		} else {
-			if (key=='x') x+=2;
-			if (key=='X') x-=2;
-			if (key=='y') y+=2;
-			if (key=='Y') y-=2;
-			if (key=='z') z+=2;
-			if (key=='Z') z-=2;
-            legs.leg1().compute3D(x,y,z,k,f,h,false);
-            legs.leg1().setPos(k,f,h);
-            legs.leg2().compute3D(-x,y,z,k,f,h,false);
-            legs.leg2().setPos((int)k,(int)f,(int)h);
-            legs.leg3().compute3D(-x,-y,z,k,f,h,false);
-            legs.leg3().setPos((int)k,(int)f,(int)h);
-            legs.leg4().compute3D(x,-y,z,k,f,h,false);
-            legs.leg4().setPos((int)k,(int)f,(int)h);
-		}
-        if (key=='r'){
-          legs.report();
-        }
-        if (key=='p'){
-    	  clock_t t;
-    	  t = clock();
-    	  long long millis=(((long long)t)*1000)/CLOCKS_PER_SEC;
-    	  long long start=millis;
-          while ((millis-start)<20000) {
-            legs.programmed();
-            t = clock();
-            millis=(((long long)t)*1000)/CLOCKS_PER_SEC;
-          }
-        }
-        key=' ';
-		cout << "h:" <<h<<" f: "<<f<<" k:"<< k << endl;
-		cout << "x:" <<x<<" y: "<<y<<" z:"<< z << endl;
-	}
-	/* } catch (DXL_ComError dce){
-		dce.describe();
-		} */
-	return 0;
+  run();
+  cout << "done" << endl;
+  return 0;
 }
