@@ -44,7 +44,7 @@ void ZMQHub::rxLoop()
   vector < shared_ptr < ZMQSubscribeSocket > > sockets;
 
   vector < zmq_pollitem_t > items;
-  
+
   for (size_t i=0; i<subscribers.size(); ++i) {
     ZMQSubscribeSocket *p = new ZMQSubscribeSocket(context,subscribers[i].c_str());
     p->highWaterMark(highWaterMark);
@@ -102,6 +102,7 @@ void ZMQHub::report()
 
 void ZMQHub::start() 
 { 
+  cout << "start" << endl;
   if (running == false) {
     running = true;
     goTx = new std::thread(&ZMQHub::txLoop,this);

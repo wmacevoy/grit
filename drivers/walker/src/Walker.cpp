@@ -19,7 +19,7 @@ public:
   shared_ptr<ServoController> me;
   MyController() : me(CreateZMQServoController(ME,SERVER)) {}
   Servo* servo(int id) { return me->servo(id); }
-  void start() { me->start(); }
+  void start() { cout << "start mycontroller"; me->start(); }
 };
 MyController controller;
 
