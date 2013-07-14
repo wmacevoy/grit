@@ -95,7 +95,7 @@ class LegGeometry {
 	  cout << "Theta 1:"<< theta1 << endl;
 	  cout << "Theta 2:"<< theta2 << endl;	  
 	  cout << "Theta 3:"<< theta3 << endl;
-	  knee=theta1+kangle-ANGLE180;
+	  knee=theta1+(ANGLE90-kangle)-ANGLE180;
 	  femur=(theta2+theta3)-ANGLE90;
 	}
 	void compute3D(float x,float y,float z,float &knee,float &femur,float &hip,bool invert) {
