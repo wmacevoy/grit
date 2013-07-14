@@ -1,5 +1,6 @@
 #include <iostream>
 #include <unistd.h>
+#include <stdlib.h>
 #include "DynamixelDriver.hpp"
 
 using namespace std;

@@ -5,6 +5,7 @@
 #include <cmath>
 #include <ctime>
 #include "DynamixelDriver.hpp"
+#include "PointFileReader.hpp"
 
 using namespace std;
 
@@ -24,50 +25,10 @@ const float MINPOSITION=0;
 const int MAXLIMIT=4046;
 const int MINLIMIT=50;
 
-class point {
-	public:
-	float x,y,z;
-};
-class angles {
-	public:
-	float knee,femur,hip;
-};
-
-class Point {  // A point is space or set of angles
-	public:
-	union {
-		point p;
-		angles a;  
-	};
-	Point(float newX=0,float newY=0,float newZ=0) {
-		p.x=newX;
-		p.y=newY;
-		p.z=newZ;
-	}
-	Point interp(float t,const Point &b) {
-	  Point newp(t*(b.p.x-p.x)+p.x,t*(b.p.y-p.y)+p.y,t*(b.p.z-p.z)+p.z);
-	  return newp;
-	}
-	Point interp(int i,int max,const Point &b) {
-	  float t=(float)i/(float)max;
-	  return interp(t,b);
-	}
-	void mapAngle(float min,float max,float newMin,float newMax) {
-		a.knee=(a.knee-min)*(newMax-newMin)/(max-min)+newMin;
-		a.femur=(a.femur-min)*(newMax-newMin)/(max-min)+newMin;
-		a.hip=(a.hip-min)*(newMax-newMin)/(max-min)+newMin;		
-	}
-	void reportPoint() {
-	  cout << "Point:"<<p.x << "," << p.y <<","<< p.z<<endl;
-	}
-	void reportAngle() {
-	  cout << "Angle:"<<a.knee << "," << a.femur <<","<< a.hip <<endl;
-	}
-};
-
 class LegGeometry {
 	// Length of the members of the leg starting with hip
 	float l0,l1,l2,zoffset,koffset,ktibia,kangle;
+	float lcx,lcy;
 	// Multiplier for gear ration from full circle movement
     protected:
 	float g0,g1,g2;
@@ -81,17 +42,24 @@ class LegGeometry {
   	  coordinateMap[0][1]=myx;
   	  coordinateMap[1][1]=myy;
     }
+    void setPosition(float newlcx,float newlcy) {
+		lcx=newlcx;
+		lcy=newlcy;
+	}
 	LegGeometry() {
-	  koffset=2.25;
-	  ktibia=15.25;
-	  l0=2.375; //inches
+	  koffset=2.125;
+	  ktibia=16.00;
+	  l0=2.625; //inches
 	  l1=8.25;
 	  l2=sqrt(ktibia*ktibia+koffset*koffset);
-	  kangle=acos(koffset*koffset+ktibia*ktibia-l2*l2)/(2.0*koffset*ktibia)*ANGLE180/M_PI;
+//	  kangle=acos(koffset*koffset+ktibia*ktibia-l2*l2)/(2.0*koffset*ktibia)*ANGLE180/M_PI;
+	  kangle=atan(koffset/ktibia)*ANGLE180/M_PI;
 	  g0=1.0;
 	  g1=4.0;
 	  g2=4.0;
-	  zoffset=1.25;
+	  zoffset=1.335;
+	  lcx=5.707; // distance from center of chassis to hip axis
+	  lcy=5.707; // distance from center of chassis to hip axis
 	//  o0=500.0;
 	//  o1=-5700.0;
 	//  o2=-1400.0;
@@ -100,7 +68,7 @@ class LegGeometry {
 	  o2=180.0;
 	  setMap(); // The identity map
 	}
-/*	float robustACos(float cosvalue) {
+	float robustACos(float cosvalue) {
 		float retval=0.0;
 //		cout <<"CosValue:"<<cosvalue<<endl;
 		while (cosvalue > 1.0) {
@@ -114,33 +82,38 @@ class LegGeometry {
 		retval+=acos(cosvalue);
 //		cout <<"ACos:" << retval <<endl;
 		return retval;
-	} */
+	} 
 	// Do not worry about the hip rotation
 	void compute2D(float x,float z,float &knee,float &femur) {
 	  float d=sqrt(x*x+z*z); // distance from hip point in space
 	  cout << "2D x="<<x << " z="<<z << " d="<<d<<endl;
 	  cout << "l0="<<l0<<" l1="<<l1<<" l2="<<l2<<" kangle="<<kangle<<endl;
-	  float theta1=acos((l1*l1+l2*l2-d*d)/(2.0*l1*l2))*ANGLE180/M_PI-kangle;
-	  float theta2=acos((d*d+l1*l1-l2*l2)/(2.0*d*l1))*ANGLE180/M_PI;
-	  float theta3=acos((d*d+z*z-x*x)/(2.0*d*z))*ANGLE180/M_PI;
+	  float theta1=robustACos((l1*l1+l2*l2-d*d)/(2.0*l1*l2))*ANGLE180/M_PI;
+	  float theta2=robustACos((d*d+l1*l1-l2*l2)/(2.0*d*l1))*ANGLE180/M_PI;
+//	  float theta3=acos((d*d+z*z-x*x)/(2.0*d*z))*ANGLE180/M_PI;
+	  float theta3=fabs(atan(x/z))*ANGLE180/M_PI;
 	  cout << "Theta 1:"<< theta1 << endl;
 	  cout << "Theta 2:"<< theta2 << endl;	  
 	  cout << "Theta 3:"<< theta3 << endl;
-	  knee=(ANGLE90-theta1);
-	  femur=-(theta2+theta3-ANGLE90);
+	  knee=theta1+kangle-ANGLE180;
+	  femur=(theta2+theta3)-ANGLE90;
 	}
 	void compute3D(float x,float y,float z,float &knee,float &femur,float &hip,bool invert) {
 	  cout << "3D x="<<x << " y="<<y << " z="<<z<<endl;
 	  float nx=x*coordinateMap[0][0]+y*coordinateMap[0][1];
 	  float ny=x*coordinateMap[0][1]+y*coordinateMap[1][1];
-	  x=nx;
-	  y=ny;
+	  
+//	  z=-z;
+	  x=nx-lcx;
+	  y=ny-lcy;
+	  cout << "x=" << x << "  y=" << y << endl;
 	  float d=sqrt(x*x+y*y);
-	  hip=-(ANGLE90-acos(x/d)*ANGLE180/M_PI-ANGLE45);
-	  compute2D(d-l0,z+zoffset,knee,femur);
-	  if (invert) {
+	  hip=ANGLE180+(-acos(x/d)*ANGLE180/M_PI-ANGLE45);
+	  compute2D(d-l0,z-zoffset,knee,femur);
+/*	  if (invert) {
 	    hip=ANGLE180-hip;
-	  }
+	  } */
+	  cout << "knee=" << knee << " femur=" << femur << " hip=" << hip << endl;
 	}
 	void compute(Point &p,Point &joint,bool invert) {
 	  compute3D(p.p.x,p.p.y,p.p.z,joint.a.knee,joint.a.femur,joint.a.hip,invert);
@@ -183,7 +156,7 @@ public:
 	}
 };
 
-const int MAXPOS=20;
+const int MAXPOS=50;
 
 class LegSequence {
   int hAngle[MAXPOS];
@@ -246,24 +219,34 @@ class LegSequence {
       s-=time[i];
     }
   }
+  void add(map<float, Point> positions) {
+	int count=0;
+	map<float,Point>::iterator it=positions.begin();
+	for (it=positions.begin();it!=positions.end() && count < MAXPOS;it++) { 
+      Point angles;
+      lg.compute(it->second,angles,false);
+      add(angles.a.knee,angles.a.femur,angles.a.hip,it->first*1000.0);
+      count++;
+    }
+  }
   void rectangle(Point top_front,Point top_back,Point bottom_front,Point bottom_back,int time,bool invert) {
     Point angles;
     lg.compute(top_front,angles,invert);
     add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
-    top_front.reportPoint();
-    angles.reportAngle();
+    top_front.reportPoint(cout);
+    angles.reportAngle(cout);
     for (int i=0;i<MAXPOS-2;i++) {
 	  	Point m;
 	  	m=bottom_front.interp(i,MAXPOS-2,bottom_back);
 	  	lg.compute(m,angles,invert);
 	  	add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
-        m.reportPoint();
-        angles.reportAngle();
+        m.reportPoint(cout);
+        angles.reportAngle(cout);
 	}
     lg.compute(top_back,angles,invert);
     add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
-    top_back.reportPoint();
-    angles.reportAngle();
+    top_back.reportPoint(cout);
+    angles.reportAngle(cout);
   }
   void write() {
   }
@@ -402,9 +385,13 @@ public:
 		f3=new Center(l3);
 		f4=new Center(l4);
 		l1.setMap(); // The identity x<=x,  y<=y
+		l1.setPosition(-5.707,5.707);
 		l2.setMap(0.0,-1.0,1.0,0.0); // x<=-y, y<=x
-		l3.setMap(-1.0,0.0,0.0,-1.0); // x<=-x, y<=-y
+		l2.setPosition(5.707,5.707);
+		l3.setMap(-1.0,0.0,0.0,-1.0); // x<=x, y<=-y
+		l3.setPosition(5.707,-5.707);
 		l4.setMap(0.0,1.0,-1.0,0.0); // x<=y, y<=-x
+		l4.setPosition(-5.707,-5.707);
 		f1->init(0,false,false);
 		f2->init(0,false,false);
 		f3->init(0,false,false);
@@ -472,7 +459,27 @@ int main()
 	n2.joint(necklr);
     Quad legs;
   //2   sleep(2);
-    legs.init(768);
+    legs.init(255);
+    
+	vector<map<float,Point> > data;
+	data=PointFileReader::read("StraightGate.csv");
+    cout << "Leg 1" << endl;
+	PointFileReader::report(cout,data[0]);
+    cout << "Leg 2" << endl;
+	PointFileReader::report(cout,data[1]);
+    cout << "Leg 3" << endl;
+	PointFileReader::report(cout,data[2]);
+    cout << "Leg 4" << endl;
+	PointFileReader::report(cout,data[3]);
+    LegSequence s1(legs.leg1());
+    s1.add(data[0]);
+    LegSequence s2(legs.leg2());
+    s2.add(data[1]);
+    LegSequence s3(legs.leg3());
+    s3.add(data[2]);
+    LegSequence s4(legs.leg4());
+    s4.add(data[3]);
+    
     Crab1 l1s(legs.leg1());
     Crab2 l2s(legs.leg2());
     Crab3 l3s(legs.leg3());
@@ -541,6 +548,7 @@ int main()
 		if (key=='A') angleMode=true;
 		if (key=='a') angleMode=false;
 		if (key=='c') legs.setSequences(&l1s,&l2s,&l3s,&l4s);
+		if (key=='s') legs.setSequences(&s1,&s2,&s3,&s4);
 		if (key=='d') legs.setSequences(&d1s,&d2s,&d3s,&d4s);
 		if (angleMode) {
           if(key=='k')k-=step;
