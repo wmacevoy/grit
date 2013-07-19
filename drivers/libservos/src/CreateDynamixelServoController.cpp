@@ -16,7 +16,7 @@
 
 using namespace std;
 
-const int UPDATE_RATE = 5;
+const int UPDATE_RATE = 20;
 
 struct DynamixelServo : Servo
 {
