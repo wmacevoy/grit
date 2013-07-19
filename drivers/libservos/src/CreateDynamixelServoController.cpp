@@ -9,9 +9,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <math.h>
 
 #include "now.h"
 
+// http://support.robotis.com/en/product/dynamixel/ax_series/dxl_ax_actuator.htm
 #include "DXLIO.h"
 
 using namespace std;
@@ -24,12 +26,16 @@ struct DynamixelServo : Servo
   int id;
   int presentPosition;
   int goalPosition;
+  int goalSpeed;
+  int goalTorque;
 
   DynamixelServo(DXLIO &io_, int id_) 
     : io(io_),id(id_), presentPosition(0), goalPosition(0) 
   {
-    //    io.writeWord(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
-    io.writeWord(id,DXL_TORQUE_WORD,int(0.70*1023));
+    goalSpeed = 0;
+    goalTorque = 0;
+    goalPosition = 0;
+    //    io.writeWord(id,DXL_TORQUE_WORD,int(0.70*1023));
     update();
   }
 
@@ -39,9 +45,20 @@ struct DynamixelServo : Servo
     goalPosition = value*(2048/180.0)+2048;
   }
 
+  void speed(float value) {
+    goalSpeed = fabs(value)*(60.0/360.0)*(1023/114.0);
+  }
+
+  void torque(float value) {
+    goalTorque = fabs(value)*(1023);
+  }
+
+
   void tx()
   {
     io.writeWord(id,DXL_GOAL_POSITION_WORD,(goalPosition & 4095));
+    io.writeWord(id,DXL_MOVING_SPEED_WORD,(goalSpeed & 4095));
+    io.writeWord(id,DXL_TORQUE_WORD,(goalTorque & 4095));
   }
 
   void rx()
@@ -56,11 +73,13 @@ struct DynamixelServo : Servo
 
   void update()
   {
-    //    rx();
+    rx();
     tx();
   }
+
   ~DynamixelServo()
   {
+    io.writeWord(id,DXL_TORQUE_WORD,1);
   }
 };
 

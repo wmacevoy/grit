@@ -53,6 +53,16 @@ class FakeServo : public Servo
     update();
     goalAngle = value;
   }
+
+  void speed(float value)
+  {
+    rate = value;
+  }
+
+  void torque(float value)
+  {
+    // ignored
+  }
 };
 
 class FakeServoController : public ServoController

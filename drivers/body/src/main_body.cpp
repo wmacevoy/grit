@@ -29,6 +29,9 @@ using namespace std;
 
 #include <mutex>
 
+double sim_time;
+double sim_speed;
+
 class Lock
 {
  public:
@@ -211,6 +214,20 @@ public:
     hip->angle(p.a.hip);
   }
 
+  void setSpeeds(const Point &p)
+  {
+    knee->speed(p.a.knee);
+    femur->speed(p.a.femur);
+    hip->speed(p.a.hip);
+  }
+
+  void setTorques(const Point &p)
+  {
+    knee->torque(p.a.knee);
+    femur->torque(p.a.femur);
+    hip->torque(p.a.hip);
+  }
+
   void report() {
     cout << name << ":" << " knee=" << knee->angle() << " femur=" << femur->angle() << " hip=" << hip->angle() << endl;
   }
@@ -234,10 +251,24 @@ public:
       int i0=int(s);
       int i1=(i0+1) % angles.size();
       float ds = s-floor(s);
+      float dt=(T/angles.size());
+      float vknee=fabs(angles[i1].a.knee-angles[i0].a.knee)/dt;
+      if (vknee < 15.0) vknee = 15.0;
+      float vfemur=fabs(angles[i1].a.femur-angles[i0].a.femur)/dt;
+      if (vfemur < 15.0) vfemur = 15.0;
+      float vhip=fabs(angles[i1].a.hip-angles[i0].a.hip)/dt;
+      if (vhip < 15.0) vhip = 15.0;
       leg.setAngles(angles[i0].interp(ds,angles[i1]));
+      float scale = 1.1*sim_speed;
+      leg.setTorques(1.0);
+      leg.setSpeeds(Point(scale*vknee,scale*vfemur,scale*vhip));
     } else if (angles.size() == 1) {
       leg.setAngles(angles[0]);
+      leg.setTorques(1.0);
+      leg.setSpeeds(90.0);
     } else {
+      leg.setSpeeds(0);
+      leg.setTorques(0);
       leg.setAngles(Point(0,0,0));
     }
   }
@@ -377,8 +408,6 @@ public:
   mutex repliesMutex;
 
   shared_ptr < Body > body;
-  double time;
-  double speed;
 
   void answer(const string &reply)
   {
@@ -442,14 +471,14 @@ public:
     if (head == "time") {
       double value;
       iss >> value;
-      time = value;
+      sim_time = value;
       oss << "set time to " << value << ".";
       answer(oss.str());
     }
     if (head == "speed") {
       double value;
       iss >> value;
-      speed = value;
+      sim_speed = value;
       oss << "set speed to " << value << ".";
       answer(oss.str());
     }
@@ -461,9 +490,9 @@ public:
     while (running) {
       usleep(int(0.0100*1000000));
       double thisRealTime = now();
-      time += speed*(thisRealTime-lastRealTime);
+      sim_time += sim_speed*(thisRealTime-lastRealTime);
       lastRealTime = thisRealTime;
-      body->move(time);
+      body->move(sim_time);
     }
   }
 
@@ -497,8 +526,8 @@ public:
 
   BodyController()
   {
-    speed=1;
-    time=0;
+    sim_speed=1;
+    sim_time=0;
     goUpdate=0;
     publish = BODY_COMMAND_LISTEN;
     subscribers.push_back(COMMANDER_CONNECT);

@@ -14,3 +14,14 @@ void ZMQServo::angle(float value)
 { 
   goalAngle = value; 
 }
+
+void ZMQServo::speed(float value) 
+{ 
+  goalSpeed = value; 
+}
+
+void ZMQServo::torque(float value) 
+{ 
+  goalTorque = value; 
+}
+
