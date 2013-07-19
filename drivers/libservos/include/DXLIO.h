@@ -54,6 +54,7 @@ struct DXLIO
   DXLIO(int deviceIndex_=0, int baudNum_=34);
   DXLIO(const char *dev_, size_t baud_);
 
+  void reopen();
   void open();
   void close();
   bool write(ssize_t size, const unsigned char *data);

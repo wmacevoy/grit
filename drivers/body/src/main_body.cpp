@@ -1,3 +1,5 @@
+#include <csignal>
+#include <signal.h>
 #include <iostream>
 #include <termio.h>
 #include <stdio.h>
@@ -6,13 +8,34 @@
 #include <ctime>
 #include <memory>
 #include <thread>
-
+#include <mutex>
+#include <map>
+#include <list>
+#include <assert.h>
+#include <sstream>
+#include <algorithm> 
+#include <functional> 
+#include <cctype>
+#include <locale>
+#include <memory>
+#include <string.h>
 #include "config.h"
 #include "CreateZMQServoController.h"
-#include "BodyMessage.h"
 #include "ZMQHub.h"
+#include "CSVRead.h"
+#include "now.h"
 
 using namespace std;
+
+#include <mutex>
+
+class Lock
+{
+ public:
+  std::mutex &m;
+  inline Lock(std::mutex &m_) : m(m_) { m.lock(); }
+  inline ~Lock() { m.unlock(); }
+};
 
 typedef shared_ptr < Servo > SPServo;
 typedef shared_ptr < ServoController > SPServoController;
@@ -43,11 +66,11 @@ public:
     p.y=newY;
     p.z=newZ;
   }
-  Point interp(float t,const Point &b) {
+  Point interp(float t,const Point &b) const {
     Point newp(t*(b.p.x-p.x)+p.x,t*(b.p.y-p.y)+p.y,t*(b.p.z-p.z)+p.z);
     return newp;
   }
-  Point interp(int i,int max,const Point &b) {
+  Point interp(int i,int max,const Point &b) const {
     float t=(float)i/(float)max;
     return interp(t,b);
   }
@@ -74,6 +97,7 @@ protected:
   float o0,o1,o2;
   float coordinateMap[2][2];
   float origin[3];
+  bool inverted;
 public:
   
   void setMap(float mxx=1.0,float mxy=0.0,float myx=0.0,float myy=1.0) {
@@ -87,6 +111,10 @@ public:
     origin[0]=x;
     origin[1]=y;
     origin[2]=z;
+  }
+  void setInverted(bool inverted_)
+  {
+    inverted=inverted_;
   }
   
   LegGeometry() {
@@ -107,7 +135,7 @@ public:
     setMap(); // The identity map
   }
   
-  void compute3D(float x,float y,float z,float &knee,float &femur,float &hip,invert)
+  void compute3D(float x,float y,float z,float &knee,float &femur,float &hip)
   {
     float nx=(x-origin[0])*coordinateMap[0][0]+(y-origin[1])*coordinateMap[0][1];
     float ny=(x-origin[0])*coordinateMap[0][1]+(y-origin[1])*coordinateMap[1][1];
@@ -129,57 +157,46 @@ public:
     femur = (ANGLE180/M_PI)*theta1_rad;
     hip=(ANGLE180/M_PI)*(atan2(ny,nx)-M_PI/4);
     
-    if (invert) {
+    if (inverted) {
       hip = -hip;
     }
   }
-
-  void compute3D(float x,float y,float z,float &knee,float &femur,float &hip)
-  {
-    compute3D(x,y,z,knee,femur,hip,inverted);
-  }
 };
 
-class Leg: public LegGeometry {
-  SpServoController controller;
-  SpServo knee,femur,hip;
+class Leg : public LegGeometry {
+  SPServo knee,femur,hip;
   string name;
   float kneeAngle,femurAngle,hipAngle;
   bool inverted;
 
 public:
 
-  void init(SPServoController &controller, int kneeid,int femurid,int hipid,string newName, bool inverted) {
+  void init(SPServoController &controller, int kneeid,int femurid,int hipid,string newName) {
     name=newName;
     knee = SPServo(controller->servo(kneeid));
+    
     femur= SPServo(controller->servo(femurid));
     hip = SPServo(controller->servo(hipid));
-    inverted = false;
   }
 
-  void setEnd(Point &tip)
+  void setEnd(const Point &tip)
   {
     float kneeAngle,femurAngle,hipAngle;
-    compute3D(tip.x,tip.y,tip.z,kneeAngle,femurAngle,hipAngle);
-    knee.angle(kneeAngle);
-    femur.angle(femurAngle);
-    hip.angle(hipAngle);
+    compute3D(tip.p.x,tip.p.y,tip.p.z,kneeAngle,femurAngle,hipAngle);
+    knee->angle(kneeAngle);
+    femur->angle(femurAngle);
+    hip->angle(hipAngle);
   }
 
-  void setAngle(Point &angle)
+  void setAngles(const Point &p)
   {
-    knee.angle(angle.a.knee);
-    femur.angle(angle.a.femur);
-    hip.angle(angle.a.hip);
+    knee->angle(p.a.knee);
+    femur->angle(p.a.femur);
+    hip->angle(p.a.hip);
   }
 
-  void setTorque(int torque) {
-    knee.setTorque(torque);
-    femur.setTorque(torque);
-    hip.setTorque(torque);
-  }
   void report() {
-    cout << name << ":" << " knee=" << knee.angle() << " femur=" << hip.angle() << " hip=" << hip.angle() << endl;
+    cout << name << ":" << " knee=" << knee->angle() << " femur=" << femur->angle() << " hip=" << hip->angle() << endl;
   }
 };
 
@@ -194,33 +211,26 @@ public:
 
   void move(float t, Leg &leg)
   {
-    if (sequence.size() >= 2) {
+    if (angles.size() >= 2) {
       float s= (t-t0)/T;
       s=s-floor(s);
-      s=s*sequence.size();
+      s=s*angles.size();
       int i0=int(s);
-      int i1=(i0+1) % size();
+      int i1=(i0+1) % angles.size();
       float ds = s-floor(s);
-      leg.setAngles(s[i0].interp(ds,s[i1]));
-    } else if (sequence.size() == 1) {
-      leg.setAngles(s[0]);
+      leg.setAngles(angles[i0].interp(ds,angles[i1]));
+    } else if (angles.size() == 1) {
+      leg.setAngles(angles[0]);
     } else {
       leg.setAngles(Point(0,0,0));
     }
   }
 
   // re-sample t2tips uniformly in points periodic sample 
-  void setupFromTips(const map < float , Point > &t2tips, int points = 20) {
+  void setupFromTips(Leg &leg, const map < float , Point > &t2tips, int points = 20) {
     if (t2tips.size() == 0) {
       angles.clear();
       return;
-    }
-    if (t2tips.size() == 0) {
-      t0=t2tips.begin()->first;
-      t1=t0+1;
-      T=t1-t0;
-      angles.resize(points);
-      
     }
     t0=t2tips.begin()->first;
     if (t2tips.size() > 1) {
@@ -233,131 +243,136 @@ public:
 
     for (int i=0; i<points; ++i) {
       float s=t0+T*i/float(points);
-      pair < float , Point > *prev=0, *next=0;
+      const pair < const float , Point > *prev=0, *next=0;
       for (map < float , Point > :: const_iterator i = t2tips.begin();
 	   i != t2tips.end();
 	   ++i) {
 
 	prev = next;
 	next = &*i;
-	if (i->second > s) break;
+	if (i->first > s) break;
       }
       assert(prev != 0); // shouldn't happen
-      Point p=prev->second->interp((next->first-prev->first)/(T/points),next->second);
-      leg->compute3D(p.p.x,p.p.y,p.p.z,angles[i].a.knee,angles[i].a.femur,angles[i].a.hip);
+      Point p=prev->second.interp((next->first-prev->first)/(T/points),next->second);
+      leg.compute3D(p.p.x,p.p.y,p.p.z,angles[i].a.knee,angles[i].a.femur,angles[i].a.hip);
     }
   }
 
-  void setupFromTips(float t0_,float T_,vector < Point > tips, int points = 20)
+  void setupFromTips(Leg &leg, float t0_,float T_,vector < Point > tips, int points = 20)
   {
     map < float , Point > t2tips;
     for (size_t i = 0; i <= tips.size(); ++i) {
-      t2tips[t0+T*i/tips.size()]=tips[i % size()];
+      t2tips[t0+T*i/tips.size()]=tips[i % tips.size()];
     }
-    setupFromTips(t2tips);
+    setupFromTips(leg,t2tips);
   }
-};
-
-class Legs;
-
-class LegsMovers
-{
-public:
-  LegMover legMover1;
-  LegMover legMover2;
-  LegMover legMover3;
-  LegMover legMover4;
-
-  void move(double t, Legs &legs);
 };
 
 class Legs
 {
-  Leg leg1,leg2,leg3,leg4;
+public:
+  Leg legs[4];
 
   Legs()
   {
-    leg1.setMap(-1.0,0.0,0.0,1.0);// (x,y)=>(-x,y)
-    leg1.setOrigin(-5.75,5.75,1.50);
-    leg1.inverted = true;
+    legs[0].setMap(-1.0,0.0,0.0,1.0);// (x,y)=>(-x,y)
+    legs[0].setOrigin(-5.75,5.75,1.50);
+    legs[0].setInverted(true);
     
-    leg2.setMap(1.0,0.0,0.0,1.0);//  (x,y)=>(x,y)
-    leg2.setOrigin(5.75,5.75,1.50);
-    leg2.inverted = false;
+    legs[1].setMap(1.0,0.0,0.0,1.0);//  (x,y)=>(x,y)
+    legs[1].setOrigin(5.75,5.75,1.50);
+    legs[1].setInverted(false);
     
-    leg3.setMap(1.0,0.0,0.0,-1.0);// (x,y)=->(x,-y)
-    leg3.setOrigin(5.75,-5.75,1.50);
-    leg3.inverted = true;
+    legs[2].setMap(1.0,0.0,0.0,-1.0);// (x,y)=->(x,-y)
+    legs[2].setOrigin(5.75,-5.75,1.50);
+    legs[2].setInverted(true);
     
-    leg4.setMap(-1.0,0.0,0.0,-1.0);
-    leg4.setOrigin(-5.75,-5.75,1.50);
-    leg4.inverted = false;
+    legs[3].setMap(-1.0,0.0,0.0,-1.0);
+    legs[3].setOrigin(-5.75,-5.75,1.50);
+    legs[3].setInverted(false);
   }
 
   void init(SPServoController &controller)
   {
-    leg1.init(controller,
+    legs[0].init(controller,
 	      LEG1_SERVO_ID_KNEE,LEG1_SERVO_ID_FEMUR,LEG1_SERVO_ID_HIP,"leg1");
-    leg2.init(controller,
+    legs[1].init(controller,
 	      LEG2_SERVO_ID_KNEE,LEG2_SERVO_ID_FEMUR,LEG2_SERVO_ID_HIP,"leg2");
-    leg3.init(controller,
+    legs[2].init(controller,
 	      LEG3_SERVO_ID_KNEE,LEG3_SERVO_ID_FEMUR,LEG3_SERVO_ID_HIP,"leg3");
-    leg4.init(controller,
+    legs[3].init(controller,
 	      LEG4_SERVO_ID_KNEE,LEG4_SERVO_ID_FEMUR,LEG4_SERVO_ID_HIP,"leg4");
   }
 
   void report() {
-    leg1.report();
-    leg2.report();
-    leg3.report();
-    leg4.report();
+    for (int i=0; i<4; ++i) {
+      legs[i].report();
+    }
   }
 };
 
-class LegsMover::move(double t, Legs &legs)
+class LegsMover
 {
-  legMover1->move(t,legs->leg1);
-  legMover2->move(t,legs->leg2);
-  legMover3->move(t,legs->leg3);
-  legMover4->move(t,legs->leg4);
-}
+public:
+  LegMover legMovers[4];
+
+  void move(double t, Legs &legs)
+  {
+    for (int i=0; i<4; ++i ) {
+      legMovers[i].move(t,legs.legs[i]);
+    }
+  }
+
+  void setupFromTips(Legs &legs, const map < float , Point > *t2tips, int points = 20) {
+    for (int i=0; i<4; ++i) {
+      legMovers[i].setupFromTips(legs.legs[i],t2tips[i],points);
+    }
+  }
+
+};
+
 
 class Body {
+public:
   Legs legs;
   shared_ptr<LegsMover> legsMover;
-  SpServo waistServo;
+  SPServo waistServo;
   float waistAngle;
-  SpServo neckLeftRightServo;
-  float neckLeftRgihtAngle;
-  SpServo neckUpDownServo;
+  SPServo neckLeftRightServo;
+  float neckLeftRightAngle;
+  SPServo neckUpDownServo;
   float neckUpDownAngle;
   
-  void init(SpServoController controller)
+  void init(SPServoController controller)
   {
-    waistServo=SpServo(controller->servo(WAIST_SERVO_ID));
-    neckUpDown=SpServo(controller->servo(NECKUD_SERVO_ID));
-    neckLeftRight=SpServo(controller->servo(NECKLR_SERVO_ID));
+    legs.init(controller);
+    waistServo=SPServo(controller->servo(WAIST_SERVO_ID));
+    neckUpDownServo=SPServo(controller->servo(NECKUD_SERVO_ID));
+    neckLeftRightServo=SPServo(controller->servo(NECKLR_SERVO_ID));
   }
   
   void move(double s)
   {
-    legMover->move(s,legs);
-    waistServo.angle(waistServoAngle);
-    neckUpDownServo.angle(neckUpDownAngle);
-    neckLeftRightServo.angle(neckLeftRightAngle);
+    legsMover->move(s,legs);
+    waistServo->angle(waistAngle);
+    neckUpDownServo->angle(neckUpDownAngle);
+    neckLeftRightServo->angle(neckLeftRightAngle);
   }
 };
 
-class BodyController : ZMQHub
+class BodyController : public ZMQHub
 {
+public:
   list < string > replies;
-  shared_ptr < Body > body;
+  mutex repliesMutex;
 
+  shared_ptr < Body > body;
   double time;
   double speed;
 
   void answer(const string &reply)
   {
+    Lock lock(repliesMutex);
     replies.push_back(reply);
   }
 
@@ -365,6 +380,35 @@ class BodyController : ZMQHub
   {
     answer(oss.str());
   }
+
+  bool load(const string &file)
+  {
+    vector<vector<double>> data;
+    string headers = "Time (seconds),x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4";
+    if (!CSVRead(file,headers,data)) {
+      return false;
+    }
+
+    // add last row to finish cycle
+    data.push_back(data[0]);
+    int nr=data.size();
+    data[nr-1][0]=data[nr-2][0]+(data[nr-2][0]-data[nr-3][0]);
+
+    map < float , Point > t2tips[4];
+
+    for (size_t r=0; r<data.size(); ++r) {
+      for (int el=0; el<4; ++el) {
+	t2tips[el][data[r][0]]=Point(data[r][1+3*el],
+				     data[r][2+3*el],
+				     data[r][3+3*el]);
+      }
+    }
+
+    body->legsMover->setupFromTips(body->legs,t2tips);
+    return true;
+  }
+
+					    
 
   void act(string &command)
   {
@@ -377,20 +421,23 @@ class BodyController : ZMQHub
       string file;
       iss >> file;
       ostringstream oss;
-      answer(oss << "load file '" << file << "' :" 
-	     << (load(file) ? "ok" : "failed") << ".");
+      oss << "load file '" << file << "' :" 
+	  << (load(file) ? "ok" : "failed") << ".";
+      answer(oss.str());
     }
     if (head == "time") {
       double value;
       iss >> value;
-      t = value;
-      answer(oss << "set time to " << value << ".");
+      time = value;
+      oss << "set time to " << value << ".";
+      answer(oss.str());
     }
     if (head == "speed") {
       double value;
       iss >> value;
       speed = value;
-      answer(oss << "set speed to " << value << ".");      
+      oss << "set speed to " << value << ".";
+      answer(oss.str());
     }
   }
 
@@ -400,7 +447,7 @@ class BodyController : ZMQHub
     while (running) {
       double thisRealTime = now();
       time += speed*(thisRealTime-lastRealTime);
-      thisTime = lastTime;
+      lastRealTime = thisRealTime;
       body->move(time);
     }
   }
@@ -409,37 +456,41 @@ class BodyController : ZMQHub
   {
     ZMQMessage msg;
     msg.recv(socket);
-    ZMQServoMessage *data = (ZMQServoMessage *)msg.data();
+    char *data = (char *)msg.data();
     string command((const char *)(data+1),data[0]);
     act(command);
   }
 
   void tx(ZMQPublishSocket &socket)
   {
+    Lock lock(repliesMutex);
+
     while (!replies.empty()) {
       string &reply = *replies.begin();
-      uint8_t size = (reply.size() < BodyMessage::CAPACITY) ? reply.size() : BodyMessage::CAPACITY;
+      uint8_t size = (reply.size() < BODY_MESSAGE_MAXLEN) ? 
+	reply.size() : BODY_MESSAGE_MAXLEN;
+
       ZMQMessage msg(size+1);
-      ZMQBodyMessage *data = (ZMQServoMessage*)msg.data();
-      uint8_t *contents = &data->contents;
-      contents[0] = size;
-      memcpy(contents+1,&reply[0],size);
+      char *data = (char *)msg.data();
+      data[0]=size;
+      memcpy(data+1,&reply[0],size);
       msg.send(socket);
       replies.pop_back();
     }
   }
+
   BodyController()
   {
     speed=1;
     time=0;
-    go=0;
+    goUpdate=0;
   }
 
   thread *goUpdate;
 
   void start()
   { 
-    if (goUpdate != 0) goUpdate = new thead(&BodyController::update, this);
+    if (goUpdate != 0) goUpdate = new thread(&BodyController::update, this);
     ZMQHub::start();
   }
 
@@ -455,6 +506,13 @@ class BodyController : ZMQHub
 
 };
 
+ZMQHub *hub=0;
+
+void SigIntHandler(int arg) {
+  hub->stop();
+}
+
+
 void run()
 {
   shared_ptr < ServoController > 
@@ -467,12 +525,13 @@ void run()
     bodyController (new BodyController());
 
   body->init(servoController);
-  bodyController->init(body);
+  bodyController->body = body;
 
-  servoController.start();
-  bodyController.start();
-
-  bodyController.join();
+  servoController->start();
+  bodyController->start();
+  hub=&*bodyController;
+  signal(SIGINT, SigIntHandler);
+  bodyController->join();
 }
 
 int main()

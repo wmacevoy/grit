@@ -56,7 +56,7 @@ struct DynamixelServo : Servo
 
   void update()
   {
-    rx();
+    //    rx();
     tx();
   }
   ~DynamixelServo()

@@ -53,18 +53,20 @@ void DXLIO::open()
     cerr << "DXLIO::open() "
 	 << "dxl_initialize(" << deviceIndex << "," << baudNum << ")"
 	 << " failed." << endl;
+  } else {
+    okSince = now();
   }
 #else
-
   struct termios newtio;
   struct serial_struct serinfo;
 
   close();
-  fd = ::open(dev.c_str(),O_RDWR|O_NOCTTY);
+  fd = ::open(dev.c_str(),O_RDWR|O_NOCTTY|O_NONBLOCK);
   if (fd == -1) {
     cerr << "DXLIO::open(): cannot open device " << dev << endl;
   }
 
+#if 0
   memset(&newtio, 0, sizeof(newtio));
 
   newtio.c_cflag	= B38400|CS8|CLOCAL|CREAD;
@@ -92,13 +94,14 @@ void DXLIO::open()
     close();
     return;
   }
+#endif
 
   okSince = now();
 
   FD_ZERO(&fds);
   FD_SET(fd,&fds);
 
-  double dt = 0.01;
+  double dt = 1.0;
   timeout.tv_sec=dt;
   timeout.tv_nsec=1e9*(dt-timeout.tv_sec);
 #endif
@@ -116,6 +119,15 @@ void DXLIO::close()
 #endif
 }
 
+void DXLIO::reopen()
+{
+  if (now()-okSince > OK_TIMEOUT) {
+    cerr << "DXLIO::reopen() timeout" << endl;
+    close();
+    open();
+  }
+}
+
 bool DXLIO::write(ssize_t size, const unsigned char *data)
 {
 #if USE_DXL
@@ -124,8 +136,8 @@ bool DXLIO::write(ssize_t size, const unsigned char *data)
   ssize_t ans = ::write(fd,data,size);
   if (ans == size) {
     okSince = now();
-  } else if (now()-okSince > OK_TIMEOUT) {
-    open();
+  } else {
+    reopen();
   }
   if (ans != size) {
     cerr << "DXLIO::write() wrote " 
@@ -141,10 +153,17 @@ ssize_t DXLIO::read0(size_t size, unsigned char *data)
   return 0;
 #else
   ssize_t total = 0;
+  int wait = 0;
+  int waitlimit = 1000000*1;
   while (size > 0) {
-    if (pselect(fd+1,&fds,0,0,&timeout,0) != 1) break;
+    //    if (pselect(fd+1,&fds,0,0,&timeout,0) != 1) break;
     ssize_t ans = ::read(fd,data,size);
-    if (ans == -1) break;
+    if (ans <= 0) { 
+      if (wait > waitlimit) break;
+      usleep(1000);
+      wait += 1000;
+      ans = 0;
+    }
     data += ans;
     size -= ans;
     total += ans;
@@ -179,9 +198,7 @@ bool DXLIO::writeWord(int id, int address, int value)
 	 << id << "," 
 	 << address << "," 
 	 << value << ")" << "result=" << result << endl;
-    if (now()-okSince > OK_TIMEOUT) {
-      close(); open();
-    }
+    reopen();
   }
   return ok;
 #else
@@ -252,9 +269,7 @@ bool DXLIO::readWord(int id, int address, int *value)
 	 << id << "," 
 	 << address << ")=" 
 	 << ans << ", result=" << result << endl;
-    if (now()-okSince > OK_TIMEOUT) {
-      close(); open();
-    }
+    reopen();
   }
   return ok;
 #else

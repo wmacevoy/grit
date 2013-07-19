@@ -11,40 +11,41 @@
 #include "CreateFakeServoController.h"
 #include "CreateDynamixelServoController.h"
 #include "Servo.h"
+#include "ScaledServo.h"
 
 
 using namespace std;
 
-struct ServoMap { const char *device; int id; };
+struct ServoMap { const char *device; float scale; float offset; int id; };
 
 const ServoMap TEST_SERVOS[] =
   {
-    { "generic", 1  },
-    { 0, -1} // end
+    { "generic", 1.0, 0.0, 1  },
+    { 0, 1.0, 0.0, -1} // end
   };
 
 const ServoMap ROBOT_SERVOS[] =
   {
-    { "generic", LEG1_SERVO_ID_KNEE  },
-    { "generic", LEG1_SERVO_ID_FEMUR  },
-    { "generic", LEG1_SERVO_ID_HIP  },
+    { "generic", 4.0, 0.0, LEG1_SERVO_ID_KNEE  },
+    { "generic", 4.0, 0.0, LEG1_SERVO_ID_FEMUR  },
+    { "generic", 1.0, 0.0, LEG1_SERVO_ID_HIP  },
 
-    { "generic", LEG2_SERVO_ID_KNEE  },
-    { "generic", LEG2_SERVO_ID_FEMUR  },
-    { "generic", LEG2_SERVO_ID_HIP  },
+    { "generic", 4.0, 0.0, LEG2_SERVO_ID_KNEE  },
+    { "generic", 4.0, 0.0, LEG2_SERVO_ID_FEMUR  },
+    { "generic", 1.0, 0.0, LEG2_SERVO_ID_HIP  },
 
-    { "generic", LEG3_SERVO_ID_KNEE  },
-    { "generic", LEG3_SERVO_ID_FEMUR  },
-    { "generic", LEG3_SERVO_ID_HIP  },
+    { "generic", 4.0, 0.0, LEG3_SERVO_ID_KNEE  },
+    { "generic", 4.0, 0.0, LEG3_SERVO_ID_FEMUR  },
+    { "generic", 1.0, 0.0, LEG3_SERVO_ID_HIP  },
 
-    { "generic", LEG4_SERVO_ID_KNEE  },
-    { "generic", LEG4_SERVO_ID_FEMUR  },
-    { "generic", LEG4_SERVO_ID_HIP  },
+    { "generic", 4.0, 0.0, LEG4_SERVO_ID_KNEE  },
+    { "generic", 4.0, 0.0, LEG4_SERVO_ID_FEMUR  },
+    { "generic", 1.0, 0.0, LEG4_SERVO_ID_HIP  },
 
-    { "generic", WAIST_SERVO_ID  },
-    { "generic", NECKUD_SERVO_ID  },
-    { "generic", NECKLR_SERVO_ID  },
-    { 0, -1 } // end
+    { "generic", 1.0, 0.0, WAIST_SERVO_ID  },
+    { "generic", 1.0, 0.0, NECKUD_SERVO_ID  },
+    { "generic", 1.0, 0.0, NECKLR_SERVO_ID  },
+    { 0, 1.0, 0.0, -1 } // end
   };
 
 
@@ -76,33 +77,31 @@ struct Controllers
     baudNum = DYNAMIXEL_BAUD_NUM;
   }
 
-  ServoController* create(const std::string &deviceName)
+  shared_ptr<ServoController> create(const std::string &deviceName)
   {
     if (deviceName == "fake") {
-      return CreateFakeServoController();
+      return shared_ptr<ServoController>(CreateFakeServoController());
     }
     if (deviceName == "real") {
-      return CreateDynamixelServoController(deviceIndex,baudNum);
+      return shared_ptr<ServoController>(CreateDynamixelServoController(deviceIndex,baudNum));
     }
     cout << "unknown device " << deviceName << endl;
     assert(false);
   }
 
-  ServoController *lookup(const std::string &deviceName)
+  shared_ptr<ServoController> lookup(const std::string &deviceName)
   {
     string nonGenericDeviceName = (deviceName == "generic") ? genericName : deviceName;
     All::iterator i=all.find(nonGenericDeviceName);
-    if (i != all.end()) return &*(i->second);
-    ServoController *device = create(nonGenericDeviceName);
-    all[nonGenericDeviceName]=shared_ptr<ServoController>(device);
-    return device;
+    if (i != all.end()) return (i->second);
+    return all[nonGenericDeviceName]=create(nonGenericDeviceName);
   }
   
-  Servo* servo(const std::string &device, int id)
+  shared_ptr < Servo >  servo(const std::string &device, int id)
   {
-    Servo *ans = lookup(device)->servo(id);
+    shared_ptr < Servo > ans(lookup(device)->servo(id));
     if (verbose) {
-      cout << "servo " << device << ":" << id << " at " << (void*) ans << endl;
+      cout << "servo " << device << ":" << id << " at " << (void*) &*ans << endl;
     }
     return ans;
   }
@@ -121,11 +120,11 @@ struct Controllers
 class ZMQServoServer : public ZMQHub
 {
 public:
-  Servo *NO_SERVO;
-  typedef std::map<int,Servo*> Servos;
+  shared_ptr <Servo> NO_SERVO;
+  typedef std::map<int,shared_ptr <Servo> > Servos;
   Servos servos;
 
-  Servo* servo(ZMQServoMessage *message)
+  shared_ptr <Servo> servo(ZMQServoMessage *message)
   {
     Servos::iterator i = servos.find(message->servoId);
     if (i != servos.end()) return i->second;
@@ -175,6 +174,7 @@ public:
     }
     cout << endl;
   }
+
 };
 
 ZMQServoServer *pserver=0;
@@ -194,8 +194,8 @@ void run(int argc, char **argv) {
   const ServoMap *servoMap = ROBOT_SERVOS;
   controllers.genericName = "real";
 
-  server.NO_SERVO = controllers.servo("fake",999);
   server.rate = TX_RATE;
+  server.NO_SERVO = controllers.servo("fake",999);
 
   for (int i=0; SUBSCRIBERS[i] != 0; ++i) {
     server.subscribers.push_back(SUBSCRIBERS[i]);
@@ -290,7 +290,12 @@ void run(int argc, char **argv) {
 
   if (servoMap != 0) {
     for (const ServoMap *i=servoMap; i->device != 0; ++i) {
-      server.servos[i->id]=controllers.servo(i->device,i->id);
+      shared_ptr < Servo > servo(controllers.servo(i->device,i->id));
+      if (i->scale == 1.0 && i->offset == 0.0) {
+	server.servos[i->id]=servo;
+      } else {
+	server.servos[i->id]=shared_ptr < Servo > (new ScaledServo(servo,i->scale,i->offset));
+      }
     }
   }
 
