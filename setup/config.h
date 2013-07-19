@@ -1,7 +1,7 @@
 #pragma once
 
 #define ROBOT_IP        "192.168.2.113"
-#define CONTROL_IP      "192.168.2.125"
+#define CONTROL_IP      "192.168.2.113"
 
 #define ZMQ_TCP_LISTEN(IP,PORT) "tcp://*:" #PORT
 #define ZMQ_TCP_CONNECT(IP,PORT) "tcp://" IP ":" #PORT
