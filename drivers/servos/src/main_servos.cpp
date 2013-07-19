@@ -142,6 +142,8 @@ public:
     }
     switch(data->messageId) {
     case ZMQServoMessage::SET_ANGLE: servo(data)->angle(data->value); break;
+    case ZMQServoMessage::SET_SPEED: servo(data)->speed(data->value); break;
+    case ZMQServoMessage::SET_TORQUE: servo(data)->torque(data->value); break;
     }
   }
 

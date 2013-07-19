@@ -259,8 +259,11 @@ public:
       float vhip=fabs(angles[i1].a.hip-angles[i0].a.hip)/dt;
       if (vhip < 15.0) vhip = 15.0;
       leg.setAngles(angles[i0].interp(ds,angles[i1]));
-      float scale = 1.1*sim_speed;
-      leg.setTorques(1.0);
+      float scale = 1.0;
+      if (sim_speed > 0.1) {
+	scale *= sim_speed;
+      }
+      leg.setTorques(Point(1.0,1.0,1.0));
       leg.setSpeeds(Point(scale*vknee,scale*vfemur,scale*vhip));
     } else if (angles.size() == 1) {
       leg.setAngles(angles[0]);
