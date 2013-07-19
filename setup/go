@@ -1,0 +1,59 @@
+#!/bin/bash
+
+export MOJAVATON_DIR=$(realpath $(dirname $0)/..)
+
+running()
+  ps -eo pid | grep -q $1
+}
+
+setup()
+{
+  # add bin folders to PATH
+  for bin in $MOJAVATON_DIR/drivers/*/bin
+  do
+    PATH="$(realpath $bin):$PATH"
+  done
+
+  # add 3rd party and project library paths
+  for lib in ../libs/lib $(realpath $(dirname $0))/*/lib
+  do
+    export LD_LIBRARY_PATH="$(realpath $lib):$LD_LIBRARY_PATH"
+  done
+}
+
+stop_body()
+{
+  if [ -r $MOJAVATON_DIR/pids/body.pid ]
+  then
+      kill $(cat $MOJAVATON_DIR/pids/body.pid)
+      for t in $(seq 1 4)
+      do
+         if [ ps 
+      done
+    
+}
+start_body()
+{
+  stop_body()
+  if $MOJAVATON_DIR/drivers/body/bin/body > $MOJAVATON_DIR/logs/body-$TIMESTAMP.log
+  then
+      echo $? > $MOJAVATON_DIR/pids/body.pid
+  fi
+}
+
+start_servos()
+{
+  $MOJAVATON_DIR/drivers/body/bin/servos > $MOJAVATON_DIR/logs/servos-$TIMESTAMP.log
+  echo $? > $MOJAVATON_DIR/pids/servos.pid
+}
+
+start()
+{
+    start_body &
+    start_servos &
+    
+
+  
+  emacs -f server-start
+  emacsclient -e shell  
+}
