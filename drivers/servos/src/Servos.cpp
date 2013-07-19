@@ -26,25 +26,25 @@ const ServoMap TEST_SERVOS[] =
 
 const ServoMap ROBOT_SERVOS[] =
   {
-    { "generic", 4.0, 0.0, LEG1_SERVO_ID_KNEE  },
-    { "generic", 4.0, 0.0, LEG1_SERVO_ID_FEMUR  },
+    { "generic", -4.0, 0.0, LEG1_SERVO_ID_KNEE  },
+    { "generic", -4.0, 0.0, LEG1_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG1_SERVO_ID_HIP  },
 
-    { "generic", 4.0, 0.0, LEG2_SERVO_ID_KNEE  },
-    { "generic", 4.0, 0.0, LEG2_SERVO_ID_FEMUR  },
+    { "generic", -4.0, 0.0, LEG2_SERVO_ID_KNEE  },
+    { "generic", -4.0, 0.0, LEG2_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG2_SERVO_ID_HIP  },
 
-    { "generic", 4.0, 0.0, LEG3_SERVO_ID_KNEE  },
-    { "generic", 4.0, 0.0, LEG3_SERVO_ID_FEMUR  },
+    { "generic", -4.0, 0.0, LEG3_SERVO_ID_KNEE  },
+    { "generic", -4.0, 0.0, LEG3_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG3_SERVO_ID_HIP  },
 
-    { "generic", 4.0, 0.0, LEG4_SERVO_ID_KNEE  },
-    { "generic", 4.0, 0.0, LEG4_SERVO_ID_FEMUR  },
+    { "generic", -4.0, 0.0, LEG4_SERVO_ID_KNEE  },
+    { "generic", -4.0, 0.0, LEG4_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG4_SERVO_ID_HIP  },
 
-    { "generic", 1.0, 0.0, WAIST_SERVO_ID  },
-    { "generic", 1.0, 0.0, NECKUD_SERVO_ID  },
-    { "generic", 1.0, 0.0, NECKLR_SERVO_ID  },
+    { "fake", 1.0, 0.0, WAIST_SERVO_ID  },
+    { "fake", 1.0, 0.0, NECKUD_SERVO_ID  },
+    { "fake", 1.0, 0.0, NECKLR_SERVO_ID  },
     { 0, 1.0, 0.0, -1 } // end
   };
 
@@ -54,7 +54,7 @@ const int TX_RATE=20;
 static const char * SUBSCRIBERS [] = 
   {
     TEST_SERVO_CONNECT,
-    BODY_CONNECT,
+    BODY_SERVO_CONNECT,
     0 // end
   };
 

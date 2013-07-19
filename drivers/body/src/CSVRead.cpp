@@ -89,6 +89,7 @@ bool CSVRead(const std::string &file,
   }
 
   if (!match) return false;
+  
 
   column_map.resize(heading_vec.size());
   int min_index = -1;
@@ -101,7 +102,7 @@ bool CSVRead(const std::string &file,
   }
 
   for (;;) {
-    if (!getline(in,line,'\n')) return false;
+    if (!getline(in,line,'\n')) break;
     split(line,line_vec);
     if ((ssize_t)line_vec.size() <= min_index || line_vec[min_index] == "") break;
     table.push_back(vector<string>());

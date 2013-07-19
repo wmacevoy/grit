@@ -32,6 +32,9 @@ ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
     -include $(DEPFILES)
 endif
 
+p :
+	echo $(OBJECTS)
+	echo $(TARGET)
 #This is the rule for creating the dependency files
 tmp/%.cpp.d: src/%.cpp
 	$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst src/%.cpp,tmp/%.o,$<)' $< -MF $@

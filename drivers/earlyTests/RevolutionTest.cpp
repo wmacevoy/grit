@@ -34,19 +34,25 @@ class LegGeometry {
 	float g0,g1,g2;
 	// Angular offset for 0
 	float o0,o1,o2;
-    float coordinateMap[2][2];
+	float hipOffset;
+ //   float coordinateMap[2][2];
+    string name;
 	public:
-    void setMap(float mxx=1.0,float mxy=0.0,float myx=0.0,float myy=1.0) {
+ /*   void setMap(float mxx=1.0,float mxy=0.0,float myx=0.0,float myy=1.0) {
   	  coordinateMap[0][0]=mxx;
   	  coordinateMap[1][0]=mxy;
   	  coordinateMap[0][1]=myx;
   	  coordinateMap[1][1]=myy;
-    }
+    } */
     void setPosition(float newlcx,float newlcy) {
 		lcx=newlcx;
 		lcy=newlcy;
 	}
+	void setHipOffset(float newHipOffset) {
+	  hipOffset=newHipOffset;
+	}
 	LegGeometry() {
+	  hipOffset=0.0;
 	  koffset=2.125;
 	  ktibia=16.00;
 	  l0=2.625; //inches
@@ -66,7 +72,13 @@ class LegGeometry {
 	  o0=180.0; // degrees
 	  o1=180.0;
 	  o2=180.0;
-	  setMap(); // The identity map
+	//  setMap(); // The identity map
+	}
+	void setName(string newName) {
+	  name=newName;
+	}
+	void outputName(ostream &out) {
+		out << name << endl;
 	}
 	float robustACos(float cosvalue) {
 		float retval=0.0;
@@ -100,15 +112,23 @@ class LegGeometry {
 	}
 	void compute3D(float x,float y,float z,float &knee,float &femur,float &hip,bool invert) {
 	  cout << "3D x="<<x << " y="<<y << " z="<<z<<endl;
-	  float nx=x*coordinateMap[0][0]+y*coordinateMap[0][1];
-	  float ny=x*coordinateMap[0][1]+y*coordinateMap[1][1];
+//	  float nx=x*coordinateMap[0][0]+y*coordinateMap[0][1];
+//	  float ny=x*coordinateMap[0][1]+y*coordinateMap[1][1];
+	  float nx=x;
+	  float ny=y;
 	  
 //	  z=-z;
 	  x=nx-lcx;
 	  y=ny-lcy;
 	  cout << "x=" << x << "  y=" << y << endl;
 	  float d=sqrt(x*x+y*y);
-	  hip=ANGLE180+(-acos(x/d)*ANGLE180/M_PI-ANGLE45);
+	  cout << "x/d" << (x/d)  << "acos " << acos(x/d) << endl;
+	  if (y>0) 
+	    hip=ANGLE180+(-acos(x/d)*ANGLE180/M_PI-ANGLE45);
+	  else  
+	    hip=-(ANGLE180+(-acos(x/d)*ANGLE180/M_PI-ANGLE45))-ANGLE90;
+	  hip+=hipOffset;
+	  if (hip<-ANGLE180) hip+=ANGLE360;  	    
 	  compute2D(d-l0,z-zoffset,knee,femur);
 /*	  if (invert) {
 	    hip=ANGLE180-hip;
@@ -122,7 +142,6 @@ class LegGeometry {
 
 class Leg:public LegGeometry {
 	Servo knee,femur,hip;
-	string name;
 	int kneePos,femurPos,hipPos;
 public:
 	void init(int kneeid,int femurid,int hipid,string newName) {
@@ -149,6 +168,9 @@ public:
 		femur.setTorque(torque);
 		hip.setTorque(torque);
 	}
+	void outputName(ostream &out) {
+		out << name << endl;
+	}
 	void report() {
 		knee.report();
 		femur.report();
@@ -167,10 +189,10 @@ class LegSequence {
   int pos;
   long total,offset;
   bool reverse,interp;
-  LegGeometry lg;
+  LegGeometry *lg;
   public:
-  LegSequence(LegGeometry newLg) {
-	 lg=newLg;
+  LegSequence(LegGeometry *newLg) {
+	lg=newLg;
     init(0,false,false);
   }
   virtual void init(long newOffset,bool newReverse,bool newInterp) {
@@ -222,28 +244,30 @@ class LegSequence {
   void add(map<float, Point> positions) {
 	int count=0;
 	map<float,Point>::iterator it=positions.begin();
+	cout << "Compute ";
+	lg->outputName(cout);
 	for (it=positions.begin();it!=positions.end() && count < MAXPOS;it++) { 
       Point angles;
-      lg.compute(it->second,angles,false);
+      lg->compute(it->second,angles,false);
       add(angles.a.knee,angles.a.femur,angles.a.hip,it->first*1000.0);
       count++;
     }
   }
   void rectangle(Point top_front,Point top_back,Point bottom_front,Point bottom_back,int time,bool invert) {
     Point angles;
-    lg.compute(top_front,angles,invert);
+    lg->compute(top_front,angles,invert);
     add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
     top_front.reportPoint(cout);
     angles.reportAngle(cout);
     for (int i=0;i<MAXPOS-2;i++) {
 	  	Point m;
 	  	m=bottom_front.interp(i,MAXPOS-2,bottom_back);
-	  	lg.compute(m,angles,invert);
+	  	lg->compute(m,angles,invert);
 	  	add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
         m.reportPoint(cout);
         angles.reportAngle(cout);
 	}
-    lg.compute(top_back,angles,invert);
+    lg->compute(top_back,angles,invert);
     add(angles.a.knee,angles.a.femur,angles.a.hip,time/MAXPOS);
     top_back.reportPoint(cout);
     angles.reportAngle(cout);
@@ -256,7 +280,7 @@ class LegSequence {
 
 class Crab1:public LegSequence {
 public:
-    Crab1(LegGeometry lg):LegSequence(lg) {
+    Crab1(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
@@ -269,7 +293,7 @@ public:
 };
 class Crab2:public LegSequence {
 public:
-    Crab2(LegGeometry lg):LegSequence(lg) {
+    Crab2(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
@@ -282,7 +306,7 @@ public:
 };
 class Crab3:public LegSequence {
 public:
-    Crab3(LegGeometry lg):LegSequence(lg) {
+    Crab3(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
@@ -295,7 +319,7 @@ public:
 };
 class Crab4:public LegSequence {
 public:
-    Crab4(LegGeometry lg):LegSequence(lg) {
+    Crab4(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
@@ -309,7 +333,7 @@ public:
 
 class Dog1:public LegSequence {
 public:
-    Dog1(LegGeometry lg):LegSequence(lg) {
+    Dog1(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
@@ -322,7 +346,7 @@ public:
 };
 class Dog2:public LegSequence {
 public:
-    Dog2(LegGeometry lg):LegSequence(lg) {
+    Dog2(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
@@ -335,7 +359,7 @@ public:
 };
 class Dog3:public LegSequence {
 public:
-    Dog3(LegGeometry lg):LegSequence(lg) {
+    Dog3(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
@@ -348,7 +372,7 @@ public:
 };
 class Dog4:public LegSequence {
 public:
-    Dog4(LegGeometry lg):LegSequence(lg) {
+    Dog4(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int start,int total) {
 		LegSequence::init(start,false,true);
@@ -363,7 +387,7 @@ public:
 
 class Center:public LegSequence {
 public:
-    Center(LegGeometry lg):LegSequence(lg) {
+    Center(LegGeometry *lg):LegSequence(lg) {
 	}
 	void init(int offset,bool reverse,bool interp) {
 		LegSequence::init(offset,reverse,interp);
@@ -371,7 +395,8 @@ public:
 	}
 };
 
-
+const float HIPAXISX=5.707;
+const float HIPAXISY=5.707;
 class Quad {
 	Leg l1,l2,l3,l4;
 	LegSequence *l1s,*l2s,*l3s,*l4s;
@@ -380,28 +405,27 @@ class Quad {
 public:
 	Quad() {
 		legDistance=11.5;
-		f1=new Center(l1);
-		f2=new Center(l2);
-		f3=new Center(l3);
-		f4=new Center(l4);
-		l1.setMap(); // The identity x<=x,  y<=y
-		l1.setPosition(-5.707,5.707);
-		l2.setMap(0.0,-1.0,1.0,0.0); // x<=-y, y<=x
-		l2.setPosition(5.707,5.707);
-		l3.setMap(-1.0,0.0,0.0,-1.0); // x<=x, y<=-y
-		l3.setPosition(5.707,-5.707);
-		l4.setMap(0.0,1.0,-1.0,0.0); // x<=y, y<=-x
-		l4.setPosition(-5.707,-5.707);
+		f1=new Center(&l1);
+		f2=new Center(&l2);
+		f3=new Center(&l3);
+		f4=new Center(&l4);
+		l1.setPosition(-HIPAXISX,HIPAXISY);
+		l2.setPosition(HIPAXISX,HIPAXISY);
+		l2.setHipOffset(-ANGLE90);
+		l3.setPosition(HIPAXISX,-HIPAXISY);
+		l3.setHipOffset(-ANGLE180);
+		l4.setPosition(-HIPAXISX,-HIPAXISY);
+		l4.setHipOffset(ANGLE90);
 		f1->init(0,false,false);
 		f2->init(0,false,false);
 		f3->init(0,false,false);
 		f4->init(0,false,false);
 		setSequences(f1,f2,f3,f4);
 	}
-	Leg leg1() {return l1;}
-	Leg leg2() {return l2;}
-	Leg leg3() {return l3;}
-	Leg leg4() {return l4;}
+	Leg *leg1() {return &l1;}
+	Leg *leg2() {return &l2;}
+	Leg *leg3() {return &l3;}
+	Leg *leg4() {return &l4;}
 	void setSequences(LegSequence *newl1s,LegSequence *newl2s,LegSequence *newl3s,LegSequence *newl4s){
 		l1s=newl1s;
 		l2s=newl2s;
@@ -409,10 +433,10 @@ public:
 		l4s=newl4s;
 	}
 	void init(int torque) {
-	  l1.init(11,12,13,"l1");
-	  l2.init(21,22,23,"l2");
-	  l3.init(31,32,33,"l3");
-	  l4.init(41,42,43,"l4");
+	  l1.init(11,12,13,"Leg1");
+	  l2.init(21,22,23,"Leg2");
+	  l3.init(31,32,33,"Leg3");
+	  l4.init(41,42,43,"Leg4");
 	  l1.setTorque(torque);
 	  l2.setTorque(torque);
 	  l3.setTorque(torque);
@@ -459,7 +483,7 @@ int main()
 	n2.joint(necklr);
     Quad legs;
   //2   sleep(2);
-    legs.init(255);
+    legs.init(512);
     
 	vector<map<float,Point> > data;
 	data=PointFileReader::read("StraightGate.csv");
@@ -591,14 +615,14 @@ int main()
 			if (key=='Y') y-=2;
 			if (key=='z') z+=2;
 			if (key=='Z') z-=2;
-            legs.leg1().compute3D(x,y,z,k,f,h,false);
-            legs.leg1().setPos(k,f,h);
-            legs.leg2().compute3D(-x,y,z,k,f,h,false);
-            legs.leg2().setPos((int)k,(int)f,(int)h);
-            legs.leg3().compute3D(-x,-y,z,k,f,h,false);
-            legs.leg3().setPos((int)k,(int)f,(int)h);
-            legs.leg4().compute3D(x,-y,z,k,f,h,false);
-            legs.leg4().setPos((int)k,(int)f,(int)h);
+            legs.leg1()->compute3D(x,y,z,k,f,h,false);
+            legs.leg1()->setPos(k,f,h);
+            legs.leg2()->compute3D(-x,y,z,k,f,h,false);
+            legs.leg2()->setPos((int)k,(int)f,(int)h);
+            legs.leg3()->compute3D(-x,-y,z,k,f,h,false);
+            legs.leg3()->setPos((int)k,(int)f,(int)h);
+            legs.leg4()->compute3D(x,-y,z,k,f,h,false);
+            legs.leg4()->setPos((int)k,(int)f,(int)h);
 		}
         if (key=='r'){
           legs.report();

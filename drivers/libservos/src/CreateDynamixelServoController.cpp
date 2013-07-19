@@ -16,7 +16,7 @@
 
 using namespace std;
 
-const int UPDATE_RATE = 10;
+const int UPDATE_RATE = 5;
 
 struct DynamixelServo : Servo
 {
@@ -29,7 +29,7 @@ struct DynamixelServo : Servo
     : io(io_),id(id_), presentPosition(0), goalPosition(0) 
   {
     //    io.writeWord(id,DXL_CCW_ANGLE_LIMIT_WORD,4095);
-    //    io.writeWord(id,DXL_TORQUE_WORD,1023);
+    io.writeWord(id,DXL_TORQUE_WORD,int(0.70*1023));
     update();
   }
 

@@ -44,6 +44,13 @@ const float ANGLE360=360.0;
 const float ANGLE180=ANGLE360/2.0;
 const float ANGLE90=ANGLE180/2.0;
 const float ANGLE45=ANGLE90/2.0;
+const float HIPAXISX=5.707;
+const float HIPAXISY=5.707;
+
+const int LEG1=0;
+const int LEG2=1;
+const int LEG3=2;
+const int LEG4=3;
 
 class point {
 	public:
@@ -88,79 +95,88 @@ public:
 };
 
 class LegGeometry {
-  // Length of the members of the leg starting with hip
-  float l0,l1,l2,zoffset,koffset,ktibia,kangle;
-protected:
-  // Multiplier for gear ration from full circle movement
-  float g0,g1,g2;
-  // Angular offset for 0
-  float o0,o1,o2;
-  float coordinateMap[2][2];
-  float origin[3];
-  bool inverted;
-public:
-  
-  void setMap(float mxx=1.0,float mxy=0.0,float myx=0.0,float myy=1.0) {
-    coordinateMap[0][0]=mxx;
-    coordinateMap[1][0]=mxy;
-    coordinateMap[0][1]=myx;
-    coordinateMap[1][1]=myy;
-  }
-  void setOrigin(float x=0.0, float y=0.0,float z=0.0)
-  {
-    origin[0]=x;
-    origin[1]=y;
-    origin[2]=z;
-  }
-  void setInverted(bool inverted_)
-  {
-    inverted=inverted_;
-  }
-  
-  LegGeometry() {
-    koffset=2.25;
-    ktibia=15.25;
-    l0=2.375; //inches
-    l1=8.25;
-    l2=sqrt(ktibia*ktibia+koffset*koffset);
-    //    kangle=acos(koffset*koffset+ktibia*ktibia-l2*l2)/(2.0*koffset*ktibia)*ANGLE180/M_PI;
-    kangle = ANGLE180/M_PI*atan2(koffset,ktibia);
-    g0=1.0;
-    g1=4.0;
-    g2=4.0;
-
-    o0=180.0;
-    o1=180.0;
-    o2=180.0;
-    setMap(); // The identity map
-  }
-  
-  void compute3D(float x,float y,float z,float &knee,float &femur,float &hip)
-  {
-    float nx=(x-origin[0])*coordinateMap[0][0]+(y-origin[1])*coordinateMap[0][1];
-    float ny=(x-origin[0])*coordinateMap[0][1]+(y-origin[1])*coordinateMap[1][1];
-    float nz=(z-origin[2]);
-
-    float r=sqrt(nx*nx+ny*ny);
-    float d=-nz;
-
-    float ux=-2*(r-l0)*l1;
-    float uy=-2*d*l1;
-
-    float R=sqrt(ux*ux+uy*uy);
-    float phi_rad=atan2(uy,ux);
-
-    float theta1_rad = -phi_rad + acos((l2*l2-l1*l1-(r-l0)*(r-l0)-d*d)/R);
-    float theta2_rad = -theta1_rad+asin((d-l1*sin(theta1_rad))/l2);
-
-    knee = (ANGLE180/M_PI)*(-M_PI/2.0-theta2_rad)+kangle;
-    femur = (ANGLE180/M_PI)*theta1_rad;
-    hip=(ANGLE180/M_PI)*(atan2(ny,nx)-M_PI/4);
-    
-    if (inverted) {
-      hip = -hip;
-    }
-  }
+	// Length of the members of the leg starting with hip
+	float l0,l1,l2,zoffset,koffset,ktibia,kangle;
+	float lcx,lcy;
+    protected:
+	float hipOffset;
+    string name;
+	public:
+    void setPosition(float newlcx,float newlcy) {
+		lcx=newlcx;
+		lcy=newlcy;
+	}
+	void setHipOffset(float newHipOffset) {
+	  hipOffset=newHipOffset;
+	}
+	LegGeometry() {
+	  hipOffset=0.0;
+	  koffset=2.125;
+	  ktibia=16.00;
+	  l0=2.625; //inches
+	  l1=8.25;
+	  l2=sqrt(ktibia*ktibia+koffset*koffset);
+	  kangle=atan(koffset/ktibia)*ANGLE180/M_PI;
+	  zoffset=1.335;
+	  lcx=5.707; // distance from center of chassis to hip axis
+	  lcy=5.707; // distance from center of chassis to hip axis
+	}
+	void setName(string newName) {
+	  name=newName;
+	}
+	void outputName(ostream &out) {
+		out << name << endl;
+	}
+	float robustACos(float cosvalue) {
+		float retval=0.0;
+//		cout <<"CosValue:"<<cosvalue<<endl;
+		while (cosvalue > 1.0) {
+			cosvalue-=2.0;
+			retval+=M_PI/2.0;
+		}
+		while (cosvalue<-1.0) {
+			cosvalue+=2.0;
+			retval-=M_PI/2.0;
+		}
+		retval+=acos(cosvalue);
+//		cout <<"ACos:" << retval <<endl;
+		return retval;
+	} 
+	// Do not worry about the hip rotation
+	void compute2D(float x,float z,float &knee,float &femur) {
+	  float d=sqrt(x*x+z*z); // distance from hip point in space
+	  //	  cout << "2D x="<<x << " z="<<z << " d="<<d<<endl;
+	  //	  cout << "l0="<<l0<<" l1="<<l1<<" l2="<<l2<<" kangle="<<kangle<<endl;
+	  float theta1=robustACos((l1*l1+l2*l2-d*d)/(2.0*l1*l2))*ANGLE180/M_PI;
+	  float theta2=robustACos((d*d+l1*l1-l2*l2)/(2.0*d*l1))*ANGLE180/M_PI;
+	  float theta3=fabs(atan(x/z))*ANGLE180/M_PI;
+	  //	  cout << "Theta 1:"<< theta1 << endl;
+	  //	  cout << "Theta 2:"<< theta2 << endl;	  
+	  //	  cout << "Theta 3:"<< theta3 << endl;
+	  knee=theta1+(ANGLE90-kangle)-ANGLE180;
+	  femur=(theta2+theta3)-ANGLE90;
+	}
+	void compute3D(float x,float y,float z,float &knee,float &femur,float &hip) {
+	  cout << "3D x="<<x << " y="<<y << " z="<<z<<endl;
+	  float nx=x;
+	  float ny=y;
+	  
+	  x=nx-lcx;
+	  y=ny-lcy;
+	  //	  cout << "x=" << x << "  y=" << y << endl;
+	  float d=sqrt(x*x+y*y);
+	  if (y>0) 
+	    hip=ANGLE180+(-acos(x/d)*ANGLE180/M_PI-ANGLE45);
+	  else  
+	    hip=-(ANGLE180+(-acos(x/d)*ANGLE180/M_PI-ANGLE45))-ANGLE90;
+	  hip+=hipOffset;
+	  if (hip<-ANGLE180) hip+=ANGLE360;  	    
+	  compute2D(d-l0,z-zoffset,knee,femur);
+	  cout << "knee=" << knee << " femur=" << femur << " hip=" << hip << endl;
+	}
+	void compute(Point &p,Point &joint) {
+	  compute3D(p.p.x,p.p.y,p.p.z,joint.a.knee,joint.a.femur,joint.a.hip);
+	}
 };
 
 class Leg : public LegGeometry {
@@ -253,7 +269,7 @@ public:
 	if (i->first > s) break;
       }
       assert(prev != 0); // shouldn't happen
-      Point p=prev->second.interp((next->first-prev->first)/(T/points),next->second);
+      Point p=prev->second.interp((s-prev->first)/(next->first-prev->first),next->second);
       leg.compute3D(p.p.x,p.p.y,p.p.z,angles[i].a.knee,angles[i].a.femur,angles[i].a.hip);
     }
   }
@@ -275,32 +291,25 @@ public:
 
   Legs()
   {
-    legs[0].setMap(-1.0,0.0,0.0,1.0);// (x,y)=>(-x,y)
-    legs[0].setOrigin(-5.75,5.75,1.50);
-    legs[0].setInverted(true);
-    
-    legs[1].setMap(1.0,0.0,0.0,1.0);//  (x,y)=>(x,y)
-    legs[1].setOrigin(5.75,5.75,1.50);
-    legs[1].setInverted(false);
-    
-    legs[2].setMap(1.0,0.0,0.0,-1.0);// (x,y)=->(x,-y)
-    legs[2].setOrigin(5.75,-5.75,1.50);
-    legs[2].setInverted(true);
-    
-    legs[3].setMap(-1.0,0.0,0.0,-1.0);
-    legs[3].setOrigin(-5.75,-5.75,1.50);
-    legs[3].setInverted(false);
+
+    legs[LEG1].setPosition(-HIPAXISX,HIPAXISY);
+    legs[LEG2].setPosition(HIPAXISX,HIPAXISY);
+    legs[LEG2].setHipOffset(-ANGLE90);
+    legs[LEG3].setPosition(HIPAXISX,-HIPAXISY);
+    legs[LEG3].setHipOffset(-ANGLE180);
+    legs[LEG4].setPosition(-HIPAXISX,-HIPAXISY);
+    legs[LEG4].setHipOffset(ANGLE90);
   }
 
   void init(SPServoController &controller)
   {
-    legs[0].init(controller,
+    legs[LEG1].init(controller,
 	      LEG1_SERVO_ID_KNEE,LEG1_SERVO_ID_FEMUR,LEG1_SERVO_ID_HIP,"leg1");
-    legs[1].init(controller,
+    legs[LEG2].init(controller,
 	      LEG2_SERVO_ID_KNEE,LEG2_SERVO_ID_FEMUR,LEG2_SERVO_ID_HIP,"leg2");
-    legs[2].init(controller,
+    legs[LEG3].init(controller,
 	      LEG3_SERVO_ID_KNEE,LEG3_SERVO_ID_FEMUR,LEG3_SERVO_ID_HIP,"leg3");
-    legs[3].init(controller,
+    legs[LEG4].init(controller,
 	      LEG4_SERVO_ID_KNEE,LEG4_SERVO_ID_FEMUR,LEG4_SERVO_ID_HIP,"leg4");
   }
 
@@ -349,6 +358,7 @@ public:
     waistServo=SPServo(controller->servo(WAIST_SERVO_ID));
     neckUpDownServo=SPServo(controller->servo(NECKUD_SERVO_ID));
     neckLeftRightServo=SPServo(controller->servo(NECKLR_SERVO_ID));
+    legsMover = shared_ptr <LegsMover> ( new LegsMover () );
   }
   
   void move(double s)
@@ -384,10 +394,12 @@ public:
   bool load(const string &file)
   {
     vector<vector<double>> data;
-    string headers = "Time (seconds),x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4";
+    string headers = "T(s),x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4";
     if (!CSVRead(file,headers,data)) {
       return false;
     }
+
+    cout << "read '" << file << "' ok." << endl;
 
     // add last row to finish cycle
     data.push_back(data[0]);
@@ -404,7 +416,9 @@ public:
       }
     }
 
-    body->legsMover->setupFromTips(body->legs,t2tips);
+    cout << "setup" << endl;
+
+    body->legsMover->setupFromTips(body->legs,t2tips,1000);
     return true;
   }
 
@@ -445,6 +459,7 @@ public:
   {
     double lastRealTime=now();
     while (running) {
+      usleep(int(0.0100*1000000));
       double thisRealTime = now();
       time += speed*(thisRealTime-lastRealTime);
       lastRealTime = thisRealTime;
@@ -458,6 +473,7 @@ public:
     msg.recv(socket);
     char *data = (char *)msg.data();
     string command((const char *)(data+1),data[0]);
+    cout << "got: " << command << endl;
     act(command);
   }
 
@@ -484,14 +500,19 @@ public:
     speed=1;
     time=0;
     goUpdate=0;
+    publish = BODY_COMMAND_LISTEN;
+    subscribers.push_back(COMMANDER_CONNECT);
+    goUpdate = 0;
   }
 
   thread *goUpdate;
 
   void start()
   { 
-    if (goUpdate != 0) goUpdate = new thread(&BodyController::update, this);
-    ZMQHub::start();
+    if (!running) {
+      ZMQHub::start();
+      goUpdate = new thread(&BodyController::update, this);
+    }
   }
 
   void join()
@@ -516,7 +537,7 @@ void SigIntHandler(int arg) {
 void run()
 {
   shared_ptr < ServoController > 
-    servoController(CreateZMQServoController(BODY_LISTEN,SERVOS_CONNECT));
+    servoController(CreateZMQServoController(BODY_SERVO_LISTEN,SERVOS_CONNECT));
   
   shared_ptr < Body > 
     body (new Body());
@@ -536,6 +557,8 @@ void run()
 
 int main()
 {
+  char tmp[80];
+  cout << "cwd: " << getcwd(tmp,sizeof(tmp)) << endl;
   run();
   cout << "done" << endl;
   return 0;

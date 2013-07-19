@@ -11,7 +11,7 @@
 #include "now.h"
 
 #include "DXLIO.h"
-#define USE_DXL 0
+#define USE_DXL 1
 
 #if USE_DXL
 #include <dynamixel.h>

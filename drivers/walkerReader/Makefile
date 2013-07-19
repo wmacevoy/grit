@@ -1,6 +1,9 @@
 include ../../setup/config.mk
 include ../config.mk
 
+#MY_FLAGS=
+#MY_LIBS=
+
 MY_FLAGS=-I../libservos/include -I../libzmqpp/include -I../libnow/include
 MY_LIBS=-L../libservos/lib -lservos -L../libzmqpp/lib -lzmqpp -L../libnow/lib -lnow -lzmq
 

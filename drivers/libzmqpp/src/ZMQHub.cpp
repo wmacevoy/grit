@@ -102,7 +102,6 @@ void ZMQHub::report()
 
 void ZMQHub::start() 
 { 
-  cout << "start" << endl;
   if (running == false) {
     running = true;
     goTx = new std::thread(&ZMQHub::txLoop,this);
