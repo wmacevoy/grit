@@ -117,8 +117,4 @@ commander()
 
 setup
 
-while [ $# -gt 0 ]
-do
-  $1
-  shift
-done
+"$@"
