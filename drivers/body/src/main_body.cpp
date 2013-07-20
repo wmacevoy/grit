@@ -557,6 +557,12 @@ public:
     }    
   }
 
+  ~BodyController()
+  {
+    stop();
+    BodyController::join();
+  }
+
 };
 
 ZMQHub *hub=0;

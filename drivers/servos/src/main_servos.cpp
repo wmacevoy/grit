@@ -307,6 +307,7 @@ void run(int argc, char **argv) {
   server.start();
 
   signal(SIGINT, SigIntHandler);
+  signal(SIGTERM, SigIntHandler);
 
   server.join();
 }

@@ -27,7 +27,7 @@ using namespace std;
 ZMQHub::ZMQHub()
 {
   rate = 20;
-  highWaterMark = 100;
+  highWaterMark = 1;
   running = false;
   goTx = 0;
   goRx = 0;
@@ -123,6 +123,6 @@ void ZMQHub::stop()
 }
 
 ZMQHub::~ZMQHub() { 
-  stop();
-  join();
+  ZMQHub::stop();
+  ZMQHub::join();
 }

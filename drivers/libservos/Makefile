@@ -2,7 +2,7 @@ include ../../setup/config.mk
 include ../config.mk
 
 MY_FLAGS=-I../libzmqpp/include -I../libnow/include
-MY_LIBS=-L../libzmqpp/lib -lzmqpp -L../libnow/lib -lnow
+MY_LIBS=-L../libzmqpp/lib -lzmqpp -L../libnow/lib -lnow -lzmq
 
 CFLAGS += $(MY_FLAGS)
 CXXFLAGS += $(MY_FLAGS)
@@ -12,14 +12,14 @@ LDFLAGS += $(MY_LIBS)
 SUFFIXES += .d
 
 TARGET=$(shell basename `realpath .`)
-.PHONY: all
-all : lib/$(TARGET).a lib/$(TARGET).so
+all : lib/$(TARGET).so lib/$(TARGET).a
 
 #We don't need to clean up when we're making these targets
 NODEPS:=clean tags svn
 
-#Find all the C++ files in the src/ directory
-SOURCES:=$(shell find src/ -regex ".*/[a-zA-Z0-9][^/]*\.\(c\|cpp\)")
+#Find all the C++ files in the src/ directory (but not Test.. or Main...)
+SOURCES:=$(shell find src/ -regex ".*/[a-zA-Z0-9][^/]*\.\(c\|cpp\)" -a -! -regex ".*/test_[^/]*\.\(c\|cpp\)" -a -! -regex ".*/main_[^/]*\.\(c\|cpp\)" )
+
 OBJECTS=$(patsubst src/%,tmp/%.o,$(SOURCES))
 
 #These are the dependency files, which make will clean up after it creates them
@@ -55,8 +55,21 @@ lib/$(TARGET).a : $(OBJECTS)
 lib/$(TARGET).so : $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -shared  -o $@ $^ $(LDFLAGS)
 
-bin/$(TARGET) : $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
-
 clean : 
 	/bin/rm -rf tmp/* bin/* lib/*
+
+run : all
+	./run bin/walker
+
+bin/test_% : tmp/test_%.cpp.o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+bin/test_% : tmp/test_%.c.o $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+bin/% : tmp/main_%.cpp.o $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+
+bin/% : tmp/main_%.c.o $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
