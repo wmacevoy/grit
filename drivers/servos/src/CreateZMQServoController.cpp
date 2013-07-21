@@ -84,6 +84,12 @@ struct ZMQServoController : ServoController, ZMQHub
     assert(running == false); // no new servos after start()
     return servos[id] = new ZMQServo();
   }
+
+  ~ZMQServoController()
+  {
+    stop();
+    join();
+  }
 };
 
 ServoController* CreateZMQServoController(const std::string &me,const std::string &server)

@@ -17,11 +17,11 @@ fi
 # test with fake servo controller...
 if ! ../go exec bin/test_servos --zmq "tcp://*:6602" "tcp://127.0.0.1:6601" --servos 3,183
 then
-#  kill -INT $spid
+  kill $spid
   exit 1
 fi
 
-kill -INT $spid
+kill $spid
 
 if [ -f /dev/ttyUSB0 -a ! -f /dev/ttyUSB1 ] 
 then
