@@ -1,7 +1,23 @@
 #!/bin/bash
 
-export MOJAVATON_DIR=$(realpath $(dirname $0)/..)
-# timestamp=$(date +Y%Y-M%m-D%d-h%H-m%M-s%S)
+# find mojavaton base directory
+if [ -z "$MOJAVATON_DIR" -o ! -d $MOJAVATON_DIR/drivers ]
+then
+  for ups in . .. ../.. ../../.. ../../../..
+  do
+    if [ -d $(dirname $0)/$ups/drivers ]
+    then
+      export MOJAVATON_DIR=$(realpath $(dirname $0)/$ups)
+      break
+    fi
+  done
+fi
+
+if [ -z "$MOJAVATON_DIR" -o ! -d $MOJAVATON_DIR/drivers ]
+then
+  echo "could not determine base mojavaton directory"
+  exit 1
+fi
 
 running()
 {

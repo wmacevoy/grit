@@ -9,6 +9,9 @@ CXXFLAGS += $(MY_FLAGS)
 LDFLAGS += $(MY_LIBS)
 
 TARGET=$(shell basename `realpath .`)
-all : lib/lib$(TARGET).a lib/lib$(TARGET).so bin/test_now
+all : lib/lib$(TARGET).a lib/lib$(TARGET).so bin/test_now bin/test_csvread
+
+test : bin/test_now bin/test_csvread
+	./tests
 
 include ../rules.mk

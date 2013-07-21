@@ -10,5 +10,7 @@ LDFLAGS += $(MY_LIBS)
 
 TARGET=$(shell basename `realpath .`)
 all : lib/lib$(TARGET).a lib/lib$(TARGET).so bin/$(TARGET) bin/servos bin/wiggle bin/test_servos
+test : bin/servos bin/test_servos
+	./tests
 
 include ../rules.mk
