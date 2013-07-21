@@ -11,11 +11,16 @@
 
 using namespace std;
 
+double epoch;
+
 bool move(Servo *servo, float goal, float speed)
 {
-  double t0=now();
+  usleep(int(0.75*1000000));
+
+  double t0=now()-epoch;
   float at0=servo->angle();
-  
+
+  cout << "at " << at0 << " at t0=" << t0 << endl;
 
   // motions less than 1/2 second are too fast to test
   if (fabs((at0 - goal)/speed) < 0.500) {
@@ -29,10 +34,11 @@ bool move(Servo *servo, float goal, float speed)
 
   usleep(int(dt/2.0*1000000));
   
-  double t1=now();
+  double t1=now()-epoch;
   float at1=servo->angle();
   float speed1=(at1-at0)/(t1-t0);
 
+  cout << "at " << at1 << " after dt=" << t1-t0 << endl;
   cout << "computed speed at dt/2 of " << speed1 << endl;
   cout << "desired speed of " << speed << endl;
 
@@ -43,10 +49,12 @@ bool move(Servo *servo, float goal, float speed)
 
   usleep(int(dt/2.0*1000000));
   float at2=servo->angle();
+
+  cout << "computed location at dt of " << at2 << endl;
+  cout << "desired location of " << goal << endl;
+
   // if time to goal is more than 0.25 seconds off, then wrong
   if (fabs((at2-goal)/speed) > 0.25) {
-    cout << "computed location at dt of " << at2 << endl;
-    cout << "desired location of " << goal << endl;
     return false;
   }
 
@@ -55,6 +63,8 @@ bool move(Servo *servo, float goal, float speed)
 
 int main(int argc, char *argv[])
 {
+  epoch=now();
+
   ServoController *controller=0;
   vector<int> servo_ids;
   vector<Servo*> servos;
@@ -164,7 +174,11 @@ int main(int argc, char *argv[])
 
   for (size_t i=0; i != servos.size(); ++i) {
     servos[i]->torque(torque);
+    servos[i]->angle(0);
+    servos[i]->speed(maxSpeed);
   }
+
+  sleep(1);
 
 
   for (size_t i=0; i != servos.size(); ++i) {

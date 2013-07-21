@@ -18,7 +18,7 @@
 
 using namespace std;
 
-const int UPDATE_RATE = 20;
+const int UPDATE_RATE = 50;
 
 struct DynamixelServo : Servo
 {
@@ -46,7 +46,7 @@ struct DynamixelServo : Servo
   }
 
   void speed(float value) {
-    goalSpeed = fabs(value)*(60.0/360.0)*(1023/114.0);
+    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07);
   }
 
   void torque(float value) {
