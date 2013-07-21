@@ -53,9 +53,8 @@ void DXLIO::open()
     cerr << "DXLIO::open() "
 	 << "dxl_initialize(" << deviceIndex << "," << baudNum << ")"
 	 << " failed." << endl;
-  } else {
-    okSince = now();
   }
+  okSince = now();
 #else
   struct termios newtio;
   struct serial_struct serinfo;

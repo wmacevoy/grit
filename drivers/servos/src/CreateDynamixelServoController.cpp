@@ -20,7 +20,7 @@
 
 using namespace std;
 
-const int UPDATE_RATE = 50;
+const int UPDATE_RATE = 4;
 
 struct DynamixelServo : Servo
 {
@@ -35,9 +35,9 @@ struct DynamixelServo : Servo
     : io(io_),id(id_), presentPosition(0), goalPosition(0) 
   {
     goalSpeed = 0;
-    goalTorque = 0;
+    goalTorque = .70;
     goalPosition = 0;
-    //    io.writeWord(id,DXL_TORQUE_WORD,int(0.70*1023));
+    io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
     update();
   }
 
@@ -49,11 +49,13 @@ struct DynamixelServo : Servo
 
   void speed(float value) {
     // speed for MX-110t (not MX-28t)
+    cout << "servo = " << id << " speed = " << value << endl;
     goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07);
   }
 
   void torque(float value) {
-    goalTorque = fabs(value)*(1023);
+    cout << "servo = " << id << " torque = " << value  << endl;
+    //    goalTorque = fabs(value)*(1023);
   }
 
   void tx()

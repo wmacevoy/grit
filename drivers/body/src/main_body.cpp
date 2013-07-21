@@ -426,7 +426,7 @@ public:
   bool load(const string &file)
   {
     vector<vector<double>> data;
-    string headers = "T(s),x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4";
+    string headers = "Time (seconds),x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4";
     if (!CSVRead(file,headers,data)) {
       return false;
     }
