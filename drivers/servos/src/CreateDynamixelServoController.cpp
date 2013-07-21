@@ -13,6 +13,8 @@
 
 #include "now.h"
 
+// http://support.robotis.com/en -- MX-106t (legs)  MX-28t (neck & fingers)
+//
 // http://support.robotis.com/en/product/dynamixel/ax_series/dxl_ax_actuator.htm
 #include "DXLIO.h"
 
@@ -46,13 +48,13 @@ struct DynamixelServo : Servo
   }
 
   void speed(float value) {
+    // speed for MX-110t (not MX-28t)
     goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07);
   }
 
   void torque(float value) {
     goalTorque = fabs(value)*(1023);
   }
-
 
   void tx()
   {
