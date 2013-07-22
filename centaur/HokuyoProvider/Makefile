@@ -1,5 +1,5 @@
 CFLAGS=-O2 -fPIC -std=c++0x
-CINCLUDES= -I../../libs/hokuyo/include -I../../libs/zmq/include -I../libcentaur/include -I../../libs/bson/include -Iinclude  
+CINCLUDES= -I../../libs/hokuyo/include -I../../libs/zmq/include -I../libcentaur/include -I../../libs/bson/include -Iinclude -Isrc
 CLIBS= -lcentaur -lbson -lpthread -lboost_thread -lhokuyo -lzmq -lSDL -L../../libs/hokuyo/lib -L../../libs/zmq/lib -L../../libs/bson/lib -L../libcentaur/lib 
 CC=g++ 
 

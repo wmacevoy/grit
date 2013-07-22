@@ -1,17 +1,15 @@
 #pragma once
-#include <UrgDevice.h>
-#include <findUrgPorts.h>
+#include <HokuyoProviderRequest.hpp>
 #include <CentaurSockets.h>
+#include <UrgDevice.h>
 #include <thread>
 
-#define HOKUYO_PORTNUMBER	"31777"
 
 class HokuyoProvider {
 
 private:
 
 	CentaurSocketRep		m_replySocket;
-	qrk::UrgDevice			m_lidarDevice;
 	std::thread				m_workerThread;  
 	static volatile bool	s_shutdown;
 	static volatile bool	s_isDone;
@@ -26,6 +24,7 @@ public:
 	
 protected:
 
+	static bool connectToLidar(qrk::UrgDevice &lidarDevice, std::string &error);
 	static void runFunction(HokuyoProvider *pProvider);
 		
 };

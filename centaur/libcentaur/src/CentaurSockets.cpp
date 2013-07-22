@@ -58,7 +58,7 @@ bool CentaurSocket::open(const char * addr)
 	void * ctx = ZeroMQContext::getContext();
 	if (!ctx)
 	{
-		fprintf(stderr, "%s: no ctx available.", addr);
+		fprintf(stderr, "%s: no ctx available.\n", addr);
 		return false;
 	}
 
@@ -75,7 +75,7 @@ bool CentaurSocket::open(const char * addr)
 		fprintf(stderr, "%s connecting to %s...\n", m_name, addr);
 		if (zmq_connect(m_socket, addr))
 		{
-			fprintf(stderr, "%s: zmq_connect: %d '%s'", addr, errno, zmq_strerror(errno));
+			fprintf(stderr, "%s: zmq_connect: %d '%s'\n", addr, errno, zmq_strerror(errno));
 			close();
 			return false;
 		}
@@ -108,7 +108,7 @@ bool CentaurSocket::bind(const char * addr)
 	fprintf(stderr, "%s binding to %s...\n", m_name, addr);
 	if (zmq_bind(m_socket, addr))
 	{
-		fprintf(stderr, "%s: zmq_bind: %d '%s'", addr, errno, zmq_strerror(errno));
+		fprintf(stderr, "%s: zmq_bind: %d '%s'\n", addr, errno, zmq_strerror(errno));
 		close();
 		return false;
 	}

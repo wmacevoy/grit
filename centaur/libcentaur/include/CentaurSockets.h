@@ -82,9 +82,15 @@ public:
 	{
 		return send(data.getData(), data.getSize(), block);
 	}
-
-	template <unsigned int staticCount, class Alloc>
-	int recv(CM_Array<char, staticCount, Alloc> &data, bool block = false)
+	
+	template <class T>
+	int recv(T * pData, int nData, bool block = false)
+	{
+		return zmq_recv(m_socket, pData, sizeof(T) * nData, block ? 0 : ZMQ_NOBLOCK);
+	}
+		
+	template <class T, unsigned int staticCount, class Alloc>
+	int recv(CM_Array<T, staticCount, Alloc> &data, bool block = false)
 	{
 		int flags = block ? 0 : ZMQ_NOBLOCK;
 
@@ -96,7 +102,7 @@ public:
 		while (rcvmore)
 		{
 			data.setCount(data.getCount() + ZEROMQ_MSG_BLOCK_SIZE);
-			char * pData = data.getData() + (data.getCount() - ZEROMQ_MSG_BLOCK_SIZE);
+			T * pData = data.getData() + (data.getCount() - ZEROMQ_MSG_BLOCK_SIZE);
 
 		    int rc = zmq_recv(m_socket, pData, ZEROMQ_MSG_BLOCK_SIZE, flags);
 

@@ -1,9 +1,11 @@
-#include "../include/HokuyoProvider.h"
-#include <chrono>
+#include "HokuyoProvider.h"
 #include <iostream>
 #include <string>
 #include <CentaurTypes.h>
 #include <bson.h>
+#include <findUrgPorts.h>
+#include <chrono>
+
 
 volatile bool HokuyoProvider::s_shutdown = false;
 volatile bool HokuyoProvider::s_isDone =false;
@@ -18,14 +20,6 @@ HokuyoProvider::~HokuyoProvider()
 
 bool HokuyoProvider::start()
 {
-	std::vector<std::string> ports;
-	qrk::findUrgPorts(ports);
-	if(ports.size() <= 0)
-		return false;
-
-	if(!m_lidarDevice.connect(ports[0].c_str()))
-		return false;
-
 	std::string tmp("tcp://*:");
 	tmp += HOKUYO_PORTNUMBER;
 	if(!m_replySocket.open(tmp.c_str()))
@@ -35,34 +29,58 @@ bool HokuyoProvider::start()
 	return true;
 }
 
+bool HokuyoProvider::connectToLidar(qrk::UrgDevice &lidarDevice, std::string &error) {
+	std::vector<std::string> ports;
+	qrk::findUrgPorts(ports);
+	if(ports.size() <= 0){
+		error = "Unable to find any ports that the lidar device is on";
+		return false;			
+	}
+
+	if(!lidarDevice.connect(ports[0].c_str())) {
+		error = "Unable to connect to lidar device on port ";
+		error += ports[0];
+		return false;		
+	}
+	
+	return true;
+}
+
+
 void HokuyoProvider::runFunction(HokuyoProvider *pProvider)
 {
 	while(!HokuyoProvider::s_shutdown){
-		CM_Array<char, 1> dataFromRequest;
-		int recvCnt = pProvider->m_replySocket.recv(dataFromRequest, true);
-		if(recvCnt > 0){
-			std::vector<long> data;
-			int n = pProvider->m_lidarDevice.capture(data);
+		unsigned int nScans = 0;
+		int recvCnt = pProvider->m_replySocket.recv(&nScans, 1);
+		if(recvCnt > 0 && nScans > 0){
+			std::cout << "Received a request for data\n";
+			qrk::UrgDevice lidarDevice;
+			HokuyoData replyData;
 			
-			bson::BSONObjBuilder objBuilder;
-			bson::BSONArrayBuilder arrayBuilder;
-			if(n > 0){
-				for(int i = 0; i < data.size(); i++){
-					int val = data[i];
-					arrayBuilder.append(val);
+			if(connectToLidar(lidarDevice, replyData.m_error)) {
+				for(unsigned int i = 0; i < nScans; i++){
+					std::vector<long> data;
+					int n = lidarDevice.capture(data);
+					
+					if(n <= 0) {
+						char buffer[64];
+						sprintf(buffer, "Failed to get data from scan %i\n", i);
+						replyData.m_error = buffer;
+						break;
+					} else {
+						replyData.m_dataArrayArray.push_back(data);
+					}		
 				}
-				objBuilder.append("data", arrayBuilder.arr());
-				objBuilder.append("error", "");
-			} else {
-				objBuilder.append("data", arrayBuilder.arr());
-				objBuilder.append("error", "Unable to read data from the lidar device.");
 			}
 			
-			std::string response = objBuilder.obj().jsonString();
-			pProvider->m_replySocket.send(response.data(), (int)response.size());
+			replyData.printToStdOut();
+			
+			bson::bo response = replyData.toBSON();
+			
+			pProvider->m_replySocket.send(response.objdata(), response.objsize());
 		}
-		std::chrono::milliseconds dura( 100 );
-		std::this_thread::sleep_for( dura );	
+		std::chrono::milliseconds dura( 250 );
+		std::this_thread::sleep_for( dura );
 	}
 	std::cout << "THREAD: Shutting Down\n";
 	s_isDone = true;
