@@ -237,26 +237,31 @@ public:
 class LegMover
 {
 public:
-  typedef vector < Point > Angles;
+  typedef map < float , Point > Angles;
   Angles angles;
+  Angles::iterator at;
 
   float t0,T;
+  float maxHipSpeed;
+
   LegMover() {}
 
   void move(float t, Leg &leg)
   {
     if (angles.size() >= 2) {
       float s= (t-t0)/T;
-      s=s-floor(s);
-      s=s*angles.size();
-      int i0=int(s);
-      int i1=(i0+1) % angles.size();
-      float ds = s-floor(s);
-      float dt=(T/angles.size());
-      float vknee=fabs(angles[i1].a.knee-angles[i0].a.knee)/dt;
-      float vfemur=fabs(angles[i1].a.femur-angles[i0].a.femur)/dt;
-      float vhip=fabs(angles[i1].a.hip-angles[i0].a.hip)/dt;
-      leg.setAngles(angles[i0].interp(ds,angles[i1]));
+      s=t0+s-floor(s);
+      while (s < at->first && at != angles.begin()) --at;
+      float oldTime = at->first;
+      const Point &oldAngle = at->second;
+      ++at;
+      float newTime = at->first;
+      const Point &newAngle = at->second; 
+      float dt=newTime-oldTime;
+      float vknee=fabs(newAngle.a.knee-oldAngle.a.knee)/dt;
+      float vfemur=fabs(newAngle.a.femur-oldAngle.a.femur)/dt;
+      float vhip=fabs(newAngle.a.hip-oldAngle.a.hip)/dt;
+      leg.setAngles(newAngle);
       float scale = 1.1;
       if (sim_speed > 0.1) {
 	scale *= sim_speed;
@@ -266,9 +271,10 @@ public:
       vfemur *= scale;
       vhip *= scale;
 
-      if (vknee < 15.0) vknee = 15.0;
-      if (vfemur < 15.0) vfemur = 15.0;
-      if (vhip < 15.0) vhip = 15.0;
+      //      if (vknee < 15.0) vknee = 15.0;
+      //      if (vfemur < 15.0) vfemur = 15.0;
+      //      if (vhip < 15.0) vhip = 15.0;
+      if (vhip > maxHipSpeed) vhip = maxHipSpeed;
 
       leg.setTorques(Point(1.0,1.0,1.0));
       leg.setSpeeds(Point(vknee,vfemur,vhip));
@@ -287,6 +293,7 @@ public:
   void setupFromTips(Leg &leg, const map < float , Point > &t2tips, int points = 20) {
     if (t2tips.size() == 0) {
       angles.clear();
+      at=angles.begin();
       return;
     }
     t0=t2tips.begin()->first;
@@ -296,32 +303,17 @@ public:
       T=1.0;
     }
 
-    angles.resize(points);
-
-    for (int i=0; i<points; ++i) {
-      float s=t0+T*i/float(points);
-      const pair < const float , Point > *prev=0, *next=0;
-      for (map < float , Point > :: const_iterator i = t2tips.begin();
-	   i != t2tips.end();
-	   ++i) {
-
-	prev = next;
-	next = &*i;
-	if (i->first > s) break;
-      }
-      assert(prev != 0); // shouldn't happen
-      Point p=prev->second.interp((s-prev->first)/(next->first-prev->first),next->second);
-      leg.compute3D(p.p.x,p.p.y,p.p.z,angles[i].a.knee,angles[i].a.femur,angles[i].a.hip);
+    angles.clear();
+    
+    for (map < float , Point > :: const_iterator i = t2tips.begin();
+	 i != t2tips.end();
+	 ++i) {
+      const Point &p=i->second;
+      Point a;
+      leg.compute3D(p.p.x,p.p.y,p.p.z,a.a.knee,a.a.femur,a.a.hip);
+      angles[i->first]=a;
     }
-  }
-
-  void setupFromTips(Leg &leg, float t0_,float T_,vector < Point > tips, int points = 20)
-  {
-    map < float , Point > t2tips;
-    for (size_t i = 0; i <= tips.size(); ++i) {
-      t2tips[t0+T*i/tips.size()]=tips[i % tips.size()];
-    }
-    setupFromTips(leg,t2tips);
+    at=angles.begin();
   }
 
   void report(ostream &out, Leg &leg)
@@ -383,10 +375,12 @@ class LegsMover
 {
 public:
   LegMover legMovers[4];
+  double maxHipSpeed;
 
   void move(double t, Legs &legs)
   {
     for (int i=0; i<4; ++i ) {
+      legMovers[i].maxHipSpeed = maxHipSpeed;
       legMovers[i].move(t,legs.legs[i]);
     }
   }
@@ -402,6 +396,11 @@ public:
     for (int i=0; i<4; ++i) {
       legMovers[i].report(out,legs.legs[i]);
     }
+  }
+
+  LegsMover()
+  {
+    maxHipSpeed = 120; // deg/sec
   }
 
 };
@@ -527,6 +526,13 @@ public:
       iss >> value;
       sim_speed = value;
       oss << "set speed to " << value << ".";
+      answer(oss.str());
+    }
+    if (head == "hip") {
+      double value;
+      iss >> value;
+      body->legsMover->maxHipSpeed = value;
+      oss << "set max hip speed to " << value << ".";
       answer(oss.str());
     }
   }

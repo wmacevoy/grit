@@ -37,7 +37,7 @@ stop_app()
 {
   app=$1
 
-  term_tries=4
+  term_tries=1
   kill_tries=2
 
   for try in $(seq 1 $((term_tries+$kill_tries)))
