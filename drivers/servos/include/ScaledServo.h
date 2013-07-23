@@ -16,6 +16,6 @@ class ScaledServo : public Servo
   void init(std::shared_ptr < Servo > unscaledServo_, float slope_, float home_);
   inline float angle() const { return (unscaledServo->angle()-offset)/slope; }
   inline void angle(float value) { unscaledServo->angle(slope*value+offset); }
-  inline void speed(float value) { unscaledServo->angle(slope*value); }
-  inline void torque(float value) { unscaledServo->angle(value/slope); }
+  inline void speed(float value) { unscaledServo->speed(slope*value); }
+  inline void torque(float value) { unscaledServo->torque(value/slope); }
 };

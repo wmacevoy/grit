@@ -1,6 +1,7 @@
 #include <csignal>
 #include <signal.h>
 #include <iostream>
+#include <fstream>
 #include <termio.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -183,12 +184,11 @@ class LegGeometry {
 };
 
 class Leg : public LegGeometry {
+public:
   SPServo knee,femur,hip;
   string name;
   float kneeAngle,femurAngle,hipAngle;
   bool inverted;
-
-public:
 
   void init(SPServoController &controller, int kneeid,int femurid,int hipid,string newName) {
     name=newName;
@@ -216,6 +216,7 @@ public:
 
   void setSpeeds(const Point &p)
   {
+    cout << name << " speeds knee=" << p.a.knee << " femur=" << p.a.femur << " hip=" << p.a.hip << endl;
     knee->speed(p.a.knee);
     femur->speed(p.a.femur);
     hip->speed(p.a.hip);
@@ -253,18 +254,24 @@ public:
       float ds = s-floor(s);
       float dt=(T/angles.size());
       float vknee=fabs(angles[i1].a.knee-angles[i0].a.knee)/dt;
-      if (vknee < 15.0) vknee = 15.0;
       float vfemur=fabs(angles[i1].a.femur-angles[i0].a.femur)/dt;
-      if (vfemur < 15.0) vfemur = 15.0;
       float vhip=fabs(angles[i1].a.hip-angles[i0].a.hip)/dt;
-      if (vhip < 15.0) vhip = 15.0;
       leg.setAngles(angles[i0].interp(ds,angles[i1]));
-      float scale = 1.0;
+      float scale = 1.1;
       if (sim_speed > 0.1) {
 	scale *= sim_speed;
       }
+
+      vknee *= scale;
+      vfemur *= scale;
+      vhip *= scale;
+
+      if (vknee < 15.0) vknee = 15.0;
+      if (vfemur < 15.0) vfemur = 15.0;
+      if (vhip < 15.0) vhip = 15.0;
+
       leg.setTorques(Point(1.0,1.0,1.0));
-      leg.setSpeeds(Point(scale*vknee,scale*vfemur,scale*vhip));
+      leg.setSpeeds(Point(vknee,vfemur,vhip));
     } else if (angles.size() == 1) {
       leg.setAngles(angles[0]);
       leg.setTorques(1.0);
@@ -316,6 +323,29 @@ public:
     }
     setupFromTips(leg,t2tips);
   }
+
+  void report(ostream &out, Leg &leg)
+  {
+    string name = leg.name;
+    out << name << "t" 
+	 << "," << name << "knee" << "," << name << "femur"<< "," << name << "hip"
+	 << "," << name << "vknee" << "," << name << "vfemur"<< "," << name << "vhip"  << endl;
+
+    for (size_t i=0; i<angles.size(); ++i) {
+      double t = t0+double(i)/angles.size()*T;
+      size_t i1=(i+1) % angles.size();
+      double dt = T/angles.size();
+      out << t 
+	   << "," << angles[i].a.knee 
+	   << "," << angles[i].a.femur 
+	   << ","<< angles[i].a.hip
+	   << "," << (angles[i1].a.knee-angles[i].a.knee)/dt
+	   << "," << (angles[i1].a.femur-angles[i].a.femur)/dt
+	   << ","<< (angles[i1].a.hip-angles[i].a.hip)/dt << endl;
+    }
+    out << endl;
+
+  }
 };
 
 class Legs
@@ -347,11 +377,6 @@ public:
 	      LEG4_SERVO_ID_KNEE,LEG4_SERVO_ID_FEMUR,LEG4_SERVO_ID_HIP,"leg4");
   }
 
-  void report() {
-    for (int i=0; i<4; ++i) {
-      legs[i].report();
-    }
-  }
 };
 
 class LegsMover
@@ -372,6 +397,13 @@ public:
     }
   }
 
+  void report(ostream &out, Legs &legs)
+  {
+    for (int i=0; i<4; ++i) {
+      legMovers[i].report(out,legs.legs[i]);
+    }
+  }
+
 };
 
 
@@ -385,7 +417,8 @@ public:
   float neckLeftRightAngle;
   SPServo neckUpDownServo;
   float neckUpDownAngle;
-  
+
+
   void init(SPServoController controller)
   {
     legs.init(controller);
@@ -401,6 +434,11 @@ public:
     waistServo->angle(waistAngle);
     neckUpDownServo->angle(neckUpDownAngle);
     neckLeftRightServo->angle(neckLeftRightAngle);
+  }
+
+  void report(std::ostream &out)
+  {
+    legsMover->report(out,legs);
   }
 };
 
@@ -454,8 +492,6 @@ public:
     return true;
   }
 
-					    
-
   void act(string &command)
   {
     istringstream iss(command);
@@ -463,6 +499,14 @@ public:
 
     string head;
     iss >> head;
+    if (head == "report") {
+      string file;
+      iss >> file;
+      ofstream fout(file.c_str());
+      body->report(fout);
+      oss << "report sent to file " << file;
+      answer(oss.str());
+    }
     if (head == "load") {
       string file;
       iss >> file;
