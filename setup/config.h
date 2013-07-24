@@ -56,3 +56,5 @@
 
 #define BODY_MESSAGE_MAXLEN 80
 
+// support curved servo paths...
+#define SERVO_CURVE 1
