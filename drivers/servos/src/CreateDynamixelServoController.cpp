@@ -116,6 +116,9 @@ struct DynamixelServoController : ServoController
       usleep(int((1.0/UPDATE_RATE)*1000000));
 #if USE_BROADCAST
       {
+#if SERVO_CURVE == 1
+	double t=now();
+#endif
 	io.reopen(); // reopen if failing recently...
 
 	int N = servos.size();
@@ -131,6 +134,16 @@ struct DynamixelServoController : ServoController
 	  int id = k->first;
 	  DynamixelServo *servo = &*k->second;
 	  
+#if SERVO_CURVE == 1
+	  if (servo->curveMode) {
+	    double dt = t-servo->t0;
+	    double dt2 = dt*dt;
+	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
+	    // the 1.1 keeps the goal angle ahead of the servo...
+	    servo->angle(c[0]+1.1*c[1]*dt+c[2]*dt2/2.0);
+	    servo->speed(c[1]+c[2]*dt);
+	  }
+#endif
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
 	  int torque = servo->goalTorque;

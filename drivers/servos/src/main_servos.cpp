@@ -144,6 +144,12 @@ public:
     case ZMQServoMessage::SET_ANGLE: servo(data)->angle(data->value); break;
     case ZMQServoMessage::SET_SPEED: servo(data)->speed(data->value); break;
     case ZMQServoMessage::SET_TORQUE: servo(data)->torque(data->value); break;
+#if SERVO_CURVE == 1
+    case ZMQServoMessage::SET_CURVE: 
+      ZMQServoCurveMessage *curveData = (ZMQServoCurveMessage*) data;
+      servo(data)->curve(curveData->t0,curveData->c0,curveData->c1);
+      break;
+#endif
     }
   }
 

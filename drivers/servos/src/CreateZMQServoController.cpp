@@ -39,6 +39,60 @@ struct ZMQServoController : ServoController, ZMQHub
 
   void tx(ZMQPublishSocket &socket) {
     for (Servos::iterator i = servos.begin(); i!=servos.end(); ++i) {
+#if SERVO_CURVE == 1
+      if (i->second->curveMode) {
+	{
+	  ZMQMessage msg(sizeof(ZMQServoCurveMessage));
+	  ZMQServoCurveMessage *data = (ZMQServoCurveMessage*)msg.data();
+	
+	  data->messageId = ZMQServoMessage::SET_CURVE;
+	  data->servoId = i->first;
+	  data->t0 = i->second->t0;
+	  data->c0 = i->second->c0;
+	  data->c1 = i->second->c1;
+	  msg.send(socket);
+	}
+	{
+	  ZMQMessage msg(sizeof(ZMQServoMessage));
+	  ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+	  
+	  data->messageId = ZMQServoMessage::SET_TORQUE;
+	  data->servoId = i->first;
+	  data->value = i->second->goalTorque;
+	  msg.send(socket);
+	}
+      } else {
+	{
+	  ZMQMessage msg(sizeof(ZMQServoMessage));
+	  ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+	  
+	  data->messageId = ZMQServoMessage::SET_ANGLE;
+	  data->servoId = i->first;
+	  data->value = i->second->goalAngle;
+	  msg.send(socket);
+	}
+	
+	{
+	  ZMQMessage msg(sizeof(ZMQServoMessage));
+	  ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+	  
+	  data->messageId = ZMQServoMessage::SET_SPEED;
+	  data->servoId = i->first;
+	  data->value = i->second->goalSpeed;
+	  msg.send(socket);
+	}
+	
+	{
+	  ZMQMessage msg(sizeof(ZMQServoMessage));
+	  ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+	  
+	  data->messageId = ZMQServoMessage::SET_TORQUE;
+	  data->servoId = i->first;
+	  data->value = i->second->goalTorque;
+	  msg.send(socket);
+	}
+      }
+#else
       {
 	ZMQMessage msg(sizeof(ZMQServoMessage));
 	ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
@@ -68,6 +122,7 @@ struct ZMQServoController : ServoController, ZMQHub
 	data->value = i->second->goalTorque;
 	msg.send(socket);
       }
+#endif
     }
   }
 

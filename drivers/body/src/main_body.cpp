@@ -246,17 +246,86 @@ public:
 
   LegMover() {}
 
+  void fit0(double t[3],float p[3],float c[3])
+  {
+    if (fabs(t[0]-t[1]) > 0.0001) {
+      if (fabs(t[1]-t[2]) > 0.0001) {
+	c[0]=p[1];
+	c[2]=2.0*((p[0]-p[1])/(t[0]-t[1])-(p[2]-p[1])/(t[2]-t[1]))/(t[2]-t[0]);
+	c[1]=(p[0]-p[1])/(t[0]-t[1])-c[2]*(t[0]-t[1])/2.0;
+      } else {
+	c[0]=p[1];
+	c[2]=0;
+	c[1]=(p[0]-p[1])/(t[0]-t[1])-c[2]*(t[0]-t[1])/2.0;
+      }
+    } else {
+      c[0]=p[1];
+      c[1]=0.0;
+      c[2]=0.0;
+    }
+  }
+
+  void fit(double ts[3],float p[3],float c0[3], float c1[3])
+  {
+    fit0(ts,p,c0);
+    ts[0]=-ts[0];
+    ts[1]=-ts[1];
+    ts[2]=-ts[2];
+    fit0(ts,p,c1);
+    c1[1]=-c1[1];
+    ts[0]=-ts[0];
+    ts[1]=-ts[1];
+    ts[2]=-ts[2];
+  }
+
   void move(float t, Leg &leg)
   {
     if (angles.size() >= 2) {
       float s= (t-t0)/T;
-      s=t0+s-floor(s);
+      s=s-floor(s);
+      s=t0+T*s;
       while (s < at->first && at != angles.begin()) --at;
       float oldTime = at->first;
       const Point &oldAngle = at->second;
-      ++at;
+      if (++at == angles.end()) at=angles.begin();
       float newTime = at->first;
+      if (newTime < oldTime) newTime += T;
       const Point &newAngle = at->second; 
+      if (++at == angles.end()) at=angles.begin();
+      float newTime2 = at->first;
+      if (newTime2 < oldTime) newTime2 += T;
+      const Point &newAngle2 = at->second;
+
+#if SERVO_CURVE == 1
+      double realTimeNow  = now();
+      double ts[3];
+      ts[0] = (oldTime-s)/sim_speed + realTimeNow;
+      ts[1] = (newTime-s)/sim_speed + realTimeNow;
+      ts[2] = (newTime2-s)/sim_speed + realTimeNow;
+	
+      float curves0[3][3],curves1[3][3];
+      float p[3];
+
+      p[0]=oldAngle.a.knee;
+      p[1]=newAngle.a.knee;
+      p[2]=newAngle2.a.knee;
+      fit(ts,p,curves0[0],curves1[0]);
+
+      p[0]=oldAngle.a.femur;
+      p[1]=newAngle.a.femur;
+      p[2]=newAngle2.a.femur;
+      fit(ts,p,curves0[1],curves1[1]);
+
+      p[0]=oldAngle.a.hip;
+      p[1]=newAngle.a.hip;
+      p[2]=newAngle2.a.hip;
+      fit(ts,p,curves0[2],curves1[2]);
+      
+      leg.knee->curve(newTime,curves0[0],curves1[0]);
+      leg.femur->curve(newTime,curves0[1],curves1[2]);
+      leg.hip->curve(newTime,curves0[1],curves1[2]);
+#else
+
       float dt=newTime-oldTime;
       float vknee=fabs(newAngle.a.knee-oldAngle.a.knee)/dt;
       float vfemur=fabs(newAngle.a.femur-oldAngle.a.femur)/dt;
@@ -278,6 +347,7 @@ public:
 
       leg.setTorques(Point(1.0,1.0,1.0));
       leg.setSpeeds(Point(vknee,vfemur,vhip));
+#endif
     } else if (angles.size() == 1) {
       leg.setAngles(angles[0]);
       leg.setTorques(1.0);
