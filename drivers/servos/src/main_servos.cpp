@@ -138,7 +138,12 @@ public:
     msg.recv(socket);
     ZMQServoMessage *data = (ZMQServoMessage *)msg.data();
     if (verbose) {
-      cout << "rx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+      if (data->messageId != ZMQServoMessage::SET_CURVE) {
+	cout << "rx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+      } else {
+	ZMQServoCurveMessage *curveData = (ZMQServoCurveMessage *) data;
+	cout << "rx msg id=" << curveData->messageId << " servo=" << curveData->servoId << " t0=" << curveData->t0 << " c0=[" << curveData->c0[0] << "," << curveData->c0[1] << "," << curveData->c0[2] << "]" << " c1=[" << curveData->c1[0] << "," << curveData->c1[1] << "," << curveData->c1[2] << "]"  << endl;
+      }
     }
     switch(data->messageId) {
     case ZMQServoMessage::SET_ANGLE: servo(data)->angle(data->value); break;

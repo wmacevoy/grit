@@ -1,3 +1,4 @@
+#include "config.h"
 #include "ZMQServo.h"
 
 ZMQServo::ZMQServo() 

@@ -20,10 +20,13 @@
 #include <locale>
 #include <memory>
 #include <string.h>
+
 #include "config.h"
+
 #include "CreateZMQServoController.h"
 #include "ZMQHub.h"
 #include "CSVRead.h"
+#include "Lock.h"
 #include "now.h"
 
 using namespace std;
@@ -32,14 +35,7 @@ using namespace std;
 
 double sim_time;
 double sim_speed;
-
-class Lock
-{
- public:
-  std::mutex &m;
-  inline Lock(std::mutex &m_) : m(m_) { m.lock(); }
-  inline ~Lock() { m.unlock(); }
-};
+double sim_torque;
 
 typedef shared_ptr < Servo > SPServo;
 typedef shared_ptr < ServoController > SPServoController;
@@ -216,7 +212,6 @@ public:
 
   void setSpeeds(const Point &p)
   {
-    cout << name << " speeds knee=" << p.a.knee << " femur=" << p.a.femur << " hip=" << p.a.hip << endl;
     knee->speed(p.a.knee);
     femur->speed(p.a.femur);
     hip->speed(p.a.hip);
@@ -239,6 +234,7 @@ class LegMover
 public:
   typedef map < float , Point > Angles;
   Angles angles;
+  std::mutex anglesMutex;
   Angles::iterator at;
 
   float t0,T;
@@ -280,11 +276,18 @@ public:
 
   void move(float t, Leg &leg)
   {
+    Lock lock(anglesMutex);
+
     if (angles.size() >= 2) {
       float s= (t-t0)/T;
       s=s-floor(s);
       s=t0+T*s;
-      while (s < at->first && at != angles.begin()) --at;
+
+      while (at != angles.end() && s > at->first) ++at;
+      if (at == angles.end()) at=angles.begin();
+      else if (at != angles.begin()) {
+	--at;
+      }
       float oldTime = at->first;
       const Point &oldAngle = at->second;
       if (++at == angles.end()) at=angles.begin();
@@ -322,8 +325,9 @@ public:
       fit(ts,p,curves0[2],curves1[2]);
       
       leg.knee->curve(newTime,curves0[0],curves1[0]);
-      leg.femur->curve(newTime,curves0[1],curves1[2]);
-      leg.hip->curve(newTime,curves0[1],curves1[2]);
+      leg.femur->curve(newTime,curves0[1],curves1[1]);
+      leg.hip->curve(newTime,curves0[2],curves1[2]);
+      leg.setTorques(Point(1.0,1.0,1.0));
 #else
 
       float dt=newTime-oldTime;
@@ -345,22 +349,23 @@ public:
       //      if (vhip < 15.0) vhip = 15.0;
       if (vhip > maxHipSpeed) vhip = maxHipSpeed;
 
-      leg.setTorques(Point(1.0,1.0,1.0));
+      leg.setTorques(Point(sim_torque,sim_torque,sim_torque));
       leg.setSpeeds(Point(vknee,vfemur,vhip));
 #endif
     } else if (angles.size() == 1) {
       leg.setAngles(angles[0]);
-      leg.setTorques(1.0);
+      leg.setTorques(Point(sim_torque,sim_torque,sim_torque));
       leg.setSpeeds(90.0);
     } else {
       leg.setSpeeds(0);
-      leg.setTorques(0);
+      leg.setTorques(Point(sim_torque,sim_torque,sim_torque));
       leg.setAngles(Point(0,0,0));
     }
   }
 
   // re-sample t2tips uniformly in points periodic sample 
   void setupFromTips(Leg &leg, const map < float , Point > &t2tips, int points = 20) {
+    Lock lock(anglesMutex);
     if (t2tips.size() == 0) {
       angles.clear();
       at=angles.begin();
@@ -598,6 +603,13 @@ public:
       oss << "set speed to " << value << ".";
       answer(oss.str());
     }
+    if (head == "torque") {
+      double value;
+      iss >> value;
+      sim_torque = value;
+      oss << "set torque to " << value << ".";
+      answer(oss.str());
+    }
     if (head == "hip") {
       double value;
       iss >> value;
@@ -650,6 +662,7 @@ public:
   BodyController()
   {
     sim_speed=1;
+    sim_torque = 0.25;
     sim_time=0;
     goUpdate=0;
     publish = BODY_COMMAND_LISTEN;

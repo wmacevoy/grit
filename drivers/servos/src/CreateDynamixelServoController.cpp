@@ -1,4 +1,3 @@
-#include "ServoController.h"
 #include <sstream>
 #include <iostream>
 #include <assert.h>
@@ -10,6 +9,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <math.h>
+
+#include "config.h"
+#include "ServoController.h"
+
 #define USE_BROADCAST 1
 
 #if USE_BROADCAST == 1
@@ -38,6 +41,12 @@ struct DynamixelServo : Servo
   int goalSpeed;
   int goalTorque;
 
+#if SERVO_CURVE == 1
+  bool curveMode;
+  double t0;
+  float c0[3],c1[3];
+#endif
+
   DynamixelServo(DXLIO &io_, int id_) 
     : io(io_),id(id_), presentPosition(0), goalPosition(0) 
   {
@@ -45,13 +54,38 @@ struct DynamixelServo : Servo
     goalTorque = .70;
     goalPosition = 0;
     io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
+#if SERVO_CURVE == 1
+    curveMode = false;
+#endif
+#if USE_BROADCAST != 1
     update();
+#endif
   }
+
+#if SERVO_CURVE == 1
+  void curve(double t0_, float c0_[3],float c1_[3])
+  {
+    curveMode = true;
+    t0=t0_;
+    c0[0]=c0_[0];
+    c0[1]=c0_[1];
+    c0[2]=c0_[2];
+    c1[0]=c1_[0];
+    c1[1]=c1_[1];
+    c1[2]=c1_[2];
+  }
+#endif
 
   float angle() const { return (180.0/2048)*(presentPosition-2048); }
 
-  void angle(float value) {
+  void angle0(float value) {
     goalPosition = value*(2048/180.0)+2048;
+  }
+  void angle(float value) {
+#if SERVO_CURVE == 1
+    curveMode = false;
+#endif
+    angle0(value);
   }
 
   void speed(float value) {
@@ -140,7 +174,7 @@ struct DynamixelServoController : ServoController
 	    double dt2 = dt*dt;
 	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
 	    // the 1.1 keeps the goal angle ahead of the servo...
-	    servo->angle(c[0]+1.1*c[1]*dt+c[2]*dt2/2.0);
+	    servo->angle0(c[0]+1.1*c[1]*dt+c[2]*dt2/2.0);
 	    servo->speed(c[1]+c[2]*dt);
 	  }
 #endif

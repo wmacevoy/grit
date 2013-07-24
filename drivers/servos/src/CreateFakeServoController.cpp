@@ -1,3 +1,5 @@
+#include "config.h"
+
 #include "CreateFakeServoController.h"
 #include "now.h"
 
@@ -17,7 +19,6 @@ class FakeServo : public Servo
   double t0;
   float c0[3],c1[3];
 #endif
-
   FakeServo()
   {
     currentAngle = 0;

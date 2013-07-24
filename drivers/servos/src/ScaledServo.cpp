@@ -1,7 +1,8 @@
+#include "config.h"
 #include "ScaledServo.h"
 
 #if SERVO_CURVE == 1
-void ScaledServo::curve(double t0_, float c0_[3],float c1_[3])
+void ScaledServo::curve(double t0, float c0[3],float c1[3])
 {
   float s0[3];
   float s1[3];

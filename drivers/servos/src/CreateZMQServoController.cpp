@@ -5,6 +5,9 @@
 #include <thread>
 #include <assert.h>
 #include <string.h>
+
+#include "config.h"
+
 #include "zmq.h"
 
 #include "CreateZMQServoController.h"
@@ -48,8 +51,12 @@ struct ZMQServoController : ServoController, ZMQHub
 	  data->messageId = ZMQServoMessage::SET_CURVE;
 	  data->servoId = i->first;
 	  data->t0 = i->second->t0;
-	  data->c0 = i->second->c0;
-	  data->c1 = i->second->c1;
+	  data->c0[0] = i->second->c0[0];
+	  data->c0[1] = i->second->c0[1];
+	  data->c0[2] = i->second->c0[2];
+	  data->c1[0] = i->second->c1[0];
+	  data->c1[1] = i->second->c1[1];
+	  data->c1[2] = i->second->c1[2];
 	  msg.send(socket);
 	}
 	{

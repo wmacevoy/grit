@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "config.h"
+
 #include "now.h"
 #include "CreateZMQServoController.h"
 #include "CreateDynamixelServoController.h"
