@@ -26,20 +26,20 @@ const ServoMap TEST_SERVOS[] =
 
 const ServoMap ROBOT_SERVOS[] =
   {
-    { "generic", -4.0, 0.0, LEG1_SERVO_ID_KNEE  },
-    { "generic", -4.0, 0.0, LEG1_SERVO_ID_FEMUR  },
+    { "generic", -4.0, -20.0, LEG1_SERVO_ID_KNEE  },
+    { "generic", -4.0, 16.0, LEG1_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG1_SERVO_ID_HIP  },
 
-    { "generic", -4.0, 0.0, LEG2_SERVO_ID_KNEE  },
-    { "generic", -4.0, 0.0, LEG2_SERVO_ID_FEMUR  },
+    { "generic", -4.0, 11.0, LEG2_SERVO_ID_KNEE  },
+    { "generic", -4.0, 16.0, LEG2_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG2_SERVO_ID_HIP  },
 
-    { "generic", -4.0, 0.0, LEG3_SERVO_ID_KNEE  },
-    { "generic", -4.0, 0.0, LEG3_SERVO_ID_FEMUR  },
+    { "generic", -4.0, 12.0, LEG3_SERVO_ID_KNEE  },
+    { "generic", -4.0, -4.0, LEG3_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG3_SERVO_ID_HIP  },
 
-    { "generic", -4.0, 0.0, LEG4_SERVO_ID_KNEE  },
-    { "generic", -4.0, 0.0, LEG4_SERVO_ID_FEMUR  },
+    { "generic", -4.0, 11.0, LEG4_SERVO_ID_KNEE  },
+    { "generic", -4.0, -5.0, LEG4_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG4_SERVO_ID_HIP  },
 
     { "fake", 1.0, 0.0, WAIST_SERVO_ID  },
@@ -49,7 +49,7 @@ const ServoMap ROBOT_SERVOS[] =
   };
 
 
-const int TX_RATE=20;
+const int TX_RATE=5;
 
 static const char * SUBSCRIBERS [] = 
   {

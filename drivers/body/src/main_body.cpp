@@ -244,15 +244,19 @@ public:
 
   void fit0(double t[3],float p[3],float c[3])
   {
-    if (fabs(t[0]-t[1]) > 0.0001) {
-      if (fabs(t[1]-t[2]) > 0.0001) {
+    if (fabs(t[0]-t[1]) > 0.001) {
+      if (fabs(t[1]-t[2]) > 0.001) {
 	c[0]=p[1];
 	c[2]=2.0*((p[0]-p[1])/(t[0]-t[1])-(p[2]-p[1])/(t[2]-t[1]))/(t[2]-t[0]);
 	c[1]=(p[0]-p[1])/(t[0]-t[1])-c[2]*(t[0]-t[1])/2.0;
+	if (fabs((t[2]-t[0])*c[2]) > fabs(c[1])) {
+	  c[2]=0;
+	  c[1]=(p[0]-p[1])/(t[0]-t[1]);
+	}
       } else {
 	c[0]=p[1];
 	c[2]=0;
-	c[1]=(p[0]-p[1])/(t[0]-t[1])-c[2]*(t[0]-t[1])/2.0;
+	c[1]=(p[0]-p[1])/(t[0]-t[1]);
       }
     } else {
       c[0]=p[1];
@@ -285,9 +289,7 @@ public:
 
       while (at != angles.end() && s > at->first) ++at;
       if (at == angles.end()) at=angles.begin();
-      else if (at != angles.begin()) {
-	--at;
-      }
+      while (at != angles.begin() && s < at->first) --at;
       float oldTime = at->first;
       const Point &oldAngle = at->second;
       if (++at == angles.end()) at=angles.begin();
@@ -299,12 +301,20 @@ public:
       if (newTime2 < oldTime) newTime2 += T;
       const Point &newAngle2 = at->second;
 
+      //      cout << "body move s=" << s << "oldt=" << oldTime << " newTime=" << newTime << " newTime2=" << newTime2 << endl;
+
 #if SERVO_CURVE == 1
       double realTimeNow  = now();
       double ts[3];
-      ts[0] = (oldTime-s)/sim_speed + realTimeNow;
-      ts[1] = (newTime-s)/sim_speed + realTimeNow;
-      ts[2] = (newTime2-s)/sim_speed + realTimeNow;
+
+
+      double lambda = (fabs(sim_speed) > 0.1) ? 1/sim_speed : 10.0;
+      ts[0] = lambda*(oldTime-s) + realTimeNow;
+      ts[1] = lambda*(newTime-s) + realTimeNow;
+      ts[2] = lambda*(newTime2-s) + realTimeNow;
+
+      //      cout << "body move s=" << s << "ts=[" << ts[0] << "," << ts[1] << "," << ts[2] << "]" << endl;
+      //      cout << "body move dt=" << ts[1]-realTimeNow << endl;
 	
       float curves0[3][3],curves1[3][3];
       float p[3];
@@ -324,9 +334,9 @@ public:
       p[2]=newAngle2.a.hip;
       fit(ts,p,curves0[2],curves1[2]);
       
-      leg.knee->curve(newTime,curves0[0],curves1[0]);
-      leg.femur->curve(newTime,curves0[1],curves1[1]);
-      leg.hip->curve(newTime,curves0[2],curves1[2]);
+      leg.knee->curve(ts[1],curves0[0],curves1[0]);
+      leg.femur->curve(ts[1],curves0[1],curves1[1]);
+      leg.hip->curve(ts[1],curves0[2],curves1[2]);
       leg.setTorques(Point(1.0,1.0,1.0));
 #else
 
@@ -554,7 +564,14 @@ public:
 
     for (size_t r=0; r<data.size(); ++r) {
       for (int el=0; el<4; ++el) {
-	t2tips[el][data[r][0]]=Point(data[r][1+3*el],
+	double t;
+	int k=0;
+	// shift duplicate times slightly...
+	while (r-k > 0 && fabs(data[r][0]-data[r-k][0]) <= 0.0001) {
+	  ++k;
+	}
+	t = data[r][0]+k*0.00001;
+	t2tips[el][t]=Point(data[r][1+3*el],
 				     data[r][2+3*el],
 				     data[r][3+3*el]);
       }

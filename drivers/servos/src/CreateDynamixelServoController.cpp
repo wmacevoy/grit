@@ -37,6 +37,8 @@ struct DynamixelServo : Servo
   DXLIO &io;
   int id;
   int presentPosition;
+  int presentSpeed;
+  int presentTorque;
   int goalPosition;
   int goalSpeed;
   int goalTorque;
@@ -48,10 +50,12 @@ struct DynamixelServo : Servo
 #endif
 
   DynamixelServo(DXLIO &io_, int id_) 
-    : io(io_),id(id_), presentPosition(0), goalPosition(0) 
+    : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
   {
     goalSpeed = 0;
+    presentSpeed = 0;
     goalTorque = .70;
+    presentTorque = 0;
     goalPosition = 0;
     io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
 #if SERVO_CURVE == 1
@@ -73,13 +77,18 @@ struct DynamixelServo : Servo
     c1[0]=c1_[0];
     c1[1]=c1_[1];
     c1[2]=c1_[2];
+
+    //    cout << "dynamixel curve" << " servo=" << id << " t0=" << t0 << " c0=[" << c0[0] << "," << c0[1] << "," << c0[2] << "]" << " c1=[" << c1[0] << "," << c1[1] << "," << c1[2] << "]"  << endl;
   }
 #endif
 
-  float angle() const { return (180.0/2048)*(presentPosition-2048); }
+  float angle() const { 
+    return (180.0/2048)*(presentPosition-2048); 
+  }
 
   void angle0(float value) {
     goalPosition = value*(2048/180.0)+2048;
+    //    cout << "dynamixel servo=" << id << " goal position=" << goalPosition << endl;
   }
   void angle(float value) {
 #if SERVO_CURVE == 1
@@ -95,10 +104,18 @@ struct DynamixelServo : Servo
     if (goalSpeed > 480) goalSpeed = 480;
   }
 
+  float speed() const {
+    return presentSpeed/((60.0/360.0)*(1023/117.07));
+  }
+
   void torque(float value) {
     //    cout << "id=" << id << " set torque = " << value << endl;
     goalTorque = fabs(value)*(1023);
     if (goalTorque > 1023) goalTorque = 1023;
+  }
+
+  float torque() const {
+    return presentTorque/1023.0;
   }
 
   void tx()
@@ -114,14 +131,24 @@ struct DynamixelServo : Servo
     if (io.readWord(id,DXL_PRESENT_POSITION_WORD,&inp)) {
       presentPosition = inp;
     } else {
-      cout << "comm error" << endl;
+      cout << "comm rx position error" << endl;
+    }
+    if (io.readWord(id,DXL_PRESENT_SPEED_WORD,&inp)) {
+      presentSpeed = inp;
+    } else {
+      cout << "comm rx speed error" << endl;
+    }
+    if (io.readWord(id,DXL_PRESENT_LOAD_WORD,&inp)) {
+      presentTorque = inp;
+    } else {
+      cout << "comm rx load error" << endl;
     }
   }
 
   void update()
   {
-    rx();
     tx();
+    rx();
   }
 
   ~DynamixelServo()
@@ -171,11 +198,20 @@ struct DynamixelServoController : ServoController
 #if SERVO_CURVE == 1
 	  if (servo->curveMode) {
 	    double dt = t-servo->t0;
+	    if (fabs(dt) > 1.0) {
+	      dt = 0.0;
+	    }
 	    double dt2 = dt*dt;
 	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
-	    // the 1.1 keeps the goal angle ahead of the servo...
-	    servo->angle0(c[0]+1.1*c[1]*dt+c[2]*dt2/2.0);
-	    servo->speed(c[1]+c[2]*dt);
+	    servo->angle0(c[0]+c[1]*dt+c[2]*dt2/2.0);
+	    double s=1.2*(c[1]+c[2]*dt);
+	    if (fabs(s) < 5) {
+	      if (s < 0) s=-5;
+	      else s=5;
+	    }
+	    servo->speed(s);
+	    servo->presentPosition = servo->goalPosition;
+	    //	    cout << "servo " << servo->id << " is in curve mode dt=" << dt << endl;
 	  }
 #endif
 	  int position = servo->goalPosition & 4095;
@@ -197,6 +233,20 @@ struct DynamixelServoController : ServoController
 	if (result == COMM_RXSUCCESS) {
 	  io.okSince = now();
 	}
+
+#if 0
+	for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
+	  i->second->rx();
+	}
+	
+	ostringstream oss;
+	oss << "dynamixel," << t;
+	for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
+	  DynamixelServo *servo=&*i->second;
+	  oss << "," << servo->id << "," << servo->presentPosition << "," << servo->goalPosition << "," << servo->presentSpeed << "," << servo->goalSpeed << "," << servo->presentTorque << "," << servo->goalTorque;
+	}
+	cout << oss.str() << endl;
+#endif
       }
 #else
       for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
