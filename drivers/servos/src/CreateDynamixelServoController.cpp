@@ -200,11 +200,12 @@ struct DynamixelServoController : ServoController
 	    double dt = t-servo->t0;
 	    if (fabs(dt) > 1.0) {
 	      dt = 0.0;
+	      servo->torque(0);
 	    }
 	    double dt2 = dt*dt;
 	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
 	    servo->angle0(c[0]+c[1]*dt+c[2]*dt2/2.0);
-	    double s=1.2*(c[1]+c[2]*dt);
+	    double s=c[1]+c[2]*dt;
 	    if (fabs(s) < 5) {
 	      if (s < 0) s=-5;
 	      else s=5;
