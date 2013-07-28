@@ -236,11 +236,14 @@ public:
   Angles angles;
   std::mutex anglesMutex;
   Angles::iterator at;
+  bool loop;
 
   float t0,T;
   float maxHipSpeed;
 
-  LegMover() {}
+  LegMover() { loop=true;}
+  
+  void setLoop(bool doLoop) { loop=doLoop; }
 
   void fit0(double t[3],float p[3],float c[3])
   {
@@ -284,6 +287,7 @@ public:
 
     if (angles.size() >= 2) {
       float s= (t-t0)/T;
+      if (!loop && s>=1.0) s=1.0;
       s=s-floor(s);
       s=t0+T*s;
 
@@ -469,6 +473,9 @@ public:
       legMovers[i].move(t,legs.legs[i]);
     }
   }
+  void setLoop(bool doLoop) {
+    for (int i=0; i<4; ++i ) legMovers[i].setLoop(doLoop);
+  }
 
   void setupFromTips(Legs &legs, const map < float , Point > *t2tips, int points = 20) {
     for (int i=0; i<4; ++i) {
@@ -606,6 +613,13 @@ public:
     body->legsMover->setupFromTips(body->legs,t2tips,1000);
     return true;
   }
+  
+  void noLoop() {
+	body->legsMover->setLoop(false);
+  }
+  void loop() {
+	body->legsMover->setLoop(true);
+  }
 
   void act(string &command)
   {
@@ -622,6 +636,12 @@ public:
       oss << "report sent to file " << file;
       answer(oss.str());
     }
+    if (head == "loop") {
+	  loop();
+	}
+	if (head == "once") {
+	  noLoop();
+	}
     if (head == "home") {
 	  load("home.csv");
       ostringstream oss;
