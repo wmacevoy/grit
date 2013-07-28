@@ -21,6 +21,8 @@ class ZMQServo : public Servo
   ZMQServo();
   float angle() const;
   void angle(float value);
+  float speed() const;
   void speed(float value);
+  float torque() const;
   void torque(float value);
 };

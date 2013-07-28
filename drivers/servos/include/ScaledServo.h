@@ -20,6 +20,8 @@ class ScaledServo : public Servo
 
   inline float angle() const { return (unscaledServo->angle()-offset)/slope; }
   inline void angle(float value) { unscaledServo->angle(slope*value+offset); }
+//  inline float speed() const { return unscaledServo->speed(); }
   inline void speed(float value) { unscaledServo->speed(slope*value); }
+//  inline float torque() const { return unscaledServo->torque(); }
   inline void torque(float value) { unscaledServo->torque(value/slope); }
 };

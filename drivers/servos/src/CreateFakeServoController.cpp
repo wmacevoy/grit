@@ -33,6 +33,9 @@ class FakeServo : public Servo
 #endif
 
   }
+  
+  float speed() const { return 0.0; }
+  float torque() const { return 0.0; }
 
   void update() const
   {

@@ -44,8 +44,18 @@ void ZMQServo::speed(float value)
   goalSpeed = value; 
 }
 
+float ZMQServo::speed() const 
+{ 
+  return goalSpeed; 
+}
+
 void ZMQServo::torque(float value) 
 { 
   goalTorque = value; 
+}
+
+float ZMQServo::torque() const 
+{ 
+  return goalTorque; 
 }
 

@@ -191,6 +191,7 @@ struct DynamixelServoController : ServoController
 	dxl_set_txpacket_parameter(1, L);   // L bytes sent to each Dynamixel 
 	dxl_set_txpacket_length((L+1)*N+4); // bytes in packet exc. Header
 	int i = 0;
+	cout << "t," << t << ",";
 	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
 	  int id = k->first;
 	  DynamixelServo *servo = &*k->second;
@@ -218,6 +219,7 @@ struct DynamixelServoController : ServoController
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
 	  int torque = servo->goalTorque;
+	  cout << "id,"<<servo->id << "," << position << "," << speed << ",";
 
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
@@ -228,6 +230,7 @@ struct DynamixelServoController : ServoController
 	  dxl_set_txpacket_parameter(i*(L+1)+8,dxl_get_highbyte(torque));
 	  ++i;
 	}
+	cout << endl;
 	dxl_txrx_packet();
 	int result = dxl_get_result(); 
 

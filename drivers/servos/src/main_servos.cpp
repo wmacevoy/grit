@@ -42,9 +42,9 @@ const ServoMap ROBOT_SERVOS[] =
     { "generic", -4.0, -5.0, LEG4_SERVO_ID_FEMUR  },
     { "generic", 1.0, 0.0, LEG4_SERVO_ID_HIP  },
 
-    { "fake", 1.0, 0.0, WAIST_SERVO_ID  },
-    { "fake", 1.0, 0.0, NECKUD_SERVO_ID  },
-    { "fake", 1.0, 0.0, NECKLR_SERVO_ID  },
+    { "generic", 3.0, 0.0, WAIST_SERVO_ID  },
+    { "generic", 1.0, 0.0, NECKUD_SERVO_ID  },
+    { "generic", -1.0, 0.0, NECKLR_SERVO_ID  },
     { 0, 1.0, 0.0, -1 } // end
   };
 
@@ -183,7 +183,7 @@ public:
     for (Servos::iterator i = servos.begin();
 	 i != servos.end();
 	 ++i) {
-      cout << " angle[" << i->first << "]=" << i->second->angle();
+      cout << " angle[" << i->first << "]=" << i->second->angle() /*<< " speed " << i->second->speed()  */<< ",";
     }
     cout << endl;
   }

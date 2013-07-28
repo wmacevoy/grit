@@ -505,10 +505,22 @@ public:
 
   void init(SPServoController controller)
   {
+	waistAngle=-38;
+	neckLeftRightAngle=0;
+	neckUpDownAngle=0;
     legs.init(controller);
     waistServo=SPServo(controller->servo(WAIST_SERVO_ID));
+    waistServo->speed(15);
+    waistServo->angle(waistAngle);
+    waistServo->torque(700);
     neckUpDownServo=SPServo(controller->servo(NECKUD_SERVO_ID));
+    neckUpDownServo->speed(45);
+    neckUpDownServo->angle(neckUpDownAngle);
+    neckUpDownServo->torque(700);
     neckLeftRightServo=SPServo(controller->servo(NECKLR_SERVO_ID));
+    neckLeftRightServo->speed(45);
+    neckLeftRightServo->angle(neckLeftRightAngle);
+    neckLeftRightServo->torque(700);
     legsMover = shared_ptr <LegsMover> ( new LegsMover () );
   }
   
@@ -544,7 +556,19 @@ public:
   {
     answer(oss.str());
   }
-
+  
+  void setPitch(float angle) {
+	  body->neckUpDownAngle=angle;
+  }
+  
+  void setYaw(float angle) {
+	  body->neckLeftRightAngle=angle;
+  }
+  
+  void setWaist(float angle) {
+	  body->waistAngle=angle;
+  }
+  
   bool load(const string &file)
   {
     vector<vector<double>> data;
@@ -596,6 +620,42 @@ public:
       ofstream fout(file.c_str());
       body->report(fout);
       oss << "report sent to file " << file;
+      answer(oss.str());
+    }
+    if (head == "home") {
+	  load("home.csv");
+      ostringstream oss;
+      oss << "played Home script"; 
+      answer(oss.str());
+    }
+    if (head == "walk") {
+	  load("Gait1_3.csv");
+      ostringstream oss;
+      oss << "played Gait1_3 script"; 
+      answer(oss.str());
+    }
+    if (head == "headPitch") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setPitch(angle);
+      oss << "headPitch " << angle << " :ok."; 
+      answer(oss.str());
+    }
+    if (head == "headYaw") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setYaw(angle);
+      oss << "headYaw " << angle << " :ok."; 
+      answer(oss.str());
+    }
+    if (head == "waist") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setWaist(angle);
+      oss << "waist " << angle << " :ok."; 
       answer(oss.str());
     }
     if (head == "load") {
