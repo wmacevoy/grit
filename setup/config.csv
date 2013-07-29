@@ -1,0 +1,9 @@
+servos.verbose,false
+servos.type,real
+servos.deviceindex,1
+servos.baudnum,34
+servos.rate,5
+servos.publish,tcp://*:5500
+servos.subscribe,tcp://192.168.2.100:5501;tcp://192.168.2.100:5503
+servos.map,../../setup/servomap.csv
+

@@ -12,6 +12,7 @@
 #include "CreateDynamixelServoController.h"
 #include "Servo.h"
 #include "ScaledServo.h"
+#include "CSVRead.h"
 
 
 using namespace std;
@@ -201,6 +202,7 @@ void run(int argc, char **argv) {
   // basic objects
   Controllers controllers;
   ZMQServoServer server;
+  string configure = "../../setup/configure.csv";
 
   // default configuration
   verbose = false;
@@ -232,6 +234,7 @@ void run(int argc, char **argv) {
       cout << "\t --publish [name] (zmq publish as this name)" << endl;
       cout << "\t --subscribers [names,...] (zmq subscribers)" << endl;
       cout << "\t --servos [ids,...] (servo ids)" << endl;
+      cout << "\t --configure [file] read csv configure file" << endl;
       return;
     }
     if (strcmp(argv[argi],"--verbose") == 0) {
@@ -286,6 +289,7 @@ void run(int argc, char **argv) {
       }
       continue;
     }
+
     if (strcmp(argv[argi],"--servos") == 0) {
       ++argi;
       string arg=argv[argi];
@@ -298,7 +302,70 @@ void run(int argc, char **argv) {
       servoMap = 0;
       continue;
     }
+
+    if (strcmp(argv[argi],"--configure") == 0) {
+      ++argi;
+      configure = argv[argi];
+      continue;
+    }
     cout << "unkown arg '" << argv[argi] << "' ignored."  << endl;
+  }
+
+  if (configure != "") {
+    vector < vector < string > > values;
+    CSVRead(configure,"name,value",values);
+    map<string,string> cfg;
+    for (size_t i=0; values.size(); ++i) {
+      cfg[values[i][0]]=values[i][1];
+    }
+    if (cfg.find("servos.verbose") != cfg.end()) {
+      verbose=cfg["servos.verbose"] == "true";
+    }
+    if (cfg.find("servos.type") != cfg.end()) {
+      controllers.genericName = cfg["servos.type"];
+    }
+    if (cfg.find("servos.deviceindex") != cfg.end()) {
+      controllers.deviceIndex = atoi(cfg["servos.deviceindex"].c_str());
+    }
+    if (cfg.find("servos.baudnum") != cfg.end()) {
+      controllers.baudNum = atoi(cfg["servos.baudnum"].c_str());
+    }
+    if (cfg.find("servos.rate") != cfg.end()) {
+      server.rate = atof(cfg["servos.rate"].c_str());
+    }
+    if (cfg.find("servos.publish") != cfg.end()) {
+      server.publish = cfg["servos.publish"];
+    }
+    if (cfg.find("servos.subscribers") != cfg.end()) {
+      string arg=cfg["servos.subscribers"];
+      server.subscribers.clear();
+      while (arg.length() > 0) {
+	size_t comma = arg.find(';');
+	string subscriber = arg.substr(0,(comma != string::npos) ? comma : arg.length());
+	server.subscribers.push_back(subscriber);
+	arg=arg.substr((comma != string::npos) ? comma+1 : arg.length());
+      }
+    }
+
+    if (cfg.find("servos.map") != cfg.end()) {
+      vector < vector < string > > csvServoMap;
+      if (CSVRead(cfg["servos.map"],"device,id,scale,offset",csvServoMap)) {
+	for (size_t i=0; i<csvServoMap.size(); ++i) {
+	  string device=csvServoMap[i][0];
+	  int id=atoi(csvServoMap[i][1].c_str());
+	  double scale = atof(csvServoMap[i][2].c_str());
+	  double offset = atof(csvServoMap[i][3].c_str());
+	  
+	  shared_ptr < Servo > servo(controllers.servo(device,id));
+	  if (scale == 1.0 && offset == 0.0) {
+	    server.servos[id]=servo;
+	  } else {
+	    server.servos[id]=shared_ptr < Servo > (new ScaledServo(servo,scale,offset));
+	  }
+	  servoMap = 0;
+	}
+      }
+    }
   }
 
   if (servoMap != 0) {
