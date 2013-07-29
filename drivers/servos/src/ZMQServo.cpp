@@ -6,17 +6,19 @@ ZMQServo::ZMQServo()
 {
 #if SERVO_CURVE == 1
   curveMode = false;
-  t0 = 0.0;
+  t[0] = 0.0;
+  t[1] = 0.0;
   c0[0]=c0[1]=c0[2] = 0.0;
   c1[0]=c1[1]=c1[2] = 0.0;
 #endif
 }
 
 #if SERVO_CURVE == 1
-void ZMQServo::curve(double t0_, float c0_[3],float c1_[3])
+void ZMQServo::curve(double t_[2], float c0_[3],float c1_[3])
 {
   curveMode = true;
-  t0=t0_;
+  t[0]=t_[0];
+  t[1]=t_[1];
   c0[0]=c0_[0];
   c0[1]=c0_[1];
   c0[2]=c0_[2];

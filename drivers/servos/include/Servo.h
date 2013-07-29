@@ -8,7 +8,7 @@ class Servo
 {
 public:
 #if SERVO_CURVE == 1
-  virtual void curve(double t0, float c0[3],float c1[3])=0;
+  virtual void curve(double t[2], float c0[3],float c1[3])=0;
 #endif
 
   virtual float angle() const=0; // degrees

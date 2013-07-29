@@ -50,7 +50,8 @@ struct ZMQServoController : ServoController, ZMQHub
 	
 	  data->messageId = ZMQServoMessage::SET_CURVE;
 	  data->servoId = i->first;
-	  data->t0 = i->second->t0;
+	  data->t[0] = i->second->t[0];
+	  data->t[1] = i->second->t[1];
 	  data->c0[0] = i->second->c0[0];
 	  data->c0[1] = i->second->c0[1];
 	  data->c0[2] = i->second->c0[2];

@@ -17,50 +17,6 @@
 
 using namespace std;
 
-struct ServoMap { const char *device; float scale; float offset; int id; };
-
-const ServoMap TEST_SERVOS[] =
-  {
-    { "generic", 1.0, 0.0, 1  },
-    { 0, 1.0, 0.0, -1} // end
-  };
-
-const ServoMap ROBOT_SERVOS[] =
-  {
-    { "generic", -4.0, -20.0, LEG1_SERVO_ID_KNEE  },
-    { "generic", -4.0, 16.0, LEG1_SERVO_ID_FEMUR  },
-    { "generic", 1.0, 0.0, LEG1_SERVO_ID_HIP  },
-
-    { "generic", -4.0, 11.0, LEG2_SERVO_ID_KNEE  },
-    { "generic", -4.0, 16.0, LEG2_SERVO_ID_FEMUR  },
-    { "generic", 1.0, 0.0, LEG2_SERVO_ID_HIP  },
-
-    { "generic", -4.0, 12.0, LEG3_SERVO_ID_KNEE  },
-    { "generic", -4.0, -4.0, LEG3_SERVO_ID_FEMUR  },
-    { "generic", 1.0, 0.0, LEG3_SERVO_ID_HIP  },
-
-    { "generic", -4.0, 11.0, LEG4_SERVO_ID_KNEE  },
-    { "generic", -4.0, -5.0, LEG4_SERVO_ID_FEMUR  },
-    { "generic", 1.0, 0.0, LEG4_SERVO_ID_HIP  },
-
-    { "generic", 3.0, 0.0, WAIST_SERVO_ID  },
-    { "generic", 1.0, 0.0, NECKUD_SERVO_ID  },
-    { "generic", -1.0, 0.0, NECKLR_SERVO_ID  },
-    { 0, 1.0, 0.0, -1 } // end
-  };
-
-
-const int TX_RATE=5;
-
-static const char * SUBSCRIBERS [] = 
-  {
-    TEST_SERVO_CONNECT,
-    BODY_SERVO_CONNECT,
-    0 // end
-  };
-
-const char *PUBLISH = SERVOS_LISTEN ;
-
 bool verbose;
 
 // manage all servo controllers (real or fake)
@@ -143,7 +99,7 @@ public:
 	cout << "rx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
       } else {
 	ZMQServoCurveMessage *curveData = (ZMQServoCurveMessage *) data;
-	cout << "rx msg id=" << curveData->messageId << " servo=" << curveData->servoId << " t0=" << curveData->t0 << " c0=[" << curveData->c0[0] << "," << curveData->c0[1] << "," << curveData->c0[2] << "]" << " c1=[" << curveData->c1[0] << "," << curveData->c1[1] << "," << curveData->c1[2] << "]"  << endl;
+	cout << "rx msg id=" << curveData->messageId << " servo=" << curveData->servoId << " t=[" << curveData->t[0] << "," << curveData->t[1] << "] c0=[" << curveData->c0[0] << "," << curveData->c0[1] << "," << curveData->c0[2] << "]" << " c1=[" << curveData->c1[0] << "," << curveData->c1[1] << "," << curveData->c1[2] << "]"  << endl;
       }
     }
     switch(data->messageId) {
@@ -153,7 +109,7 @@ public:
 #if SERVO_CURVE == 1
     case ZMQServoMessage::SET_CURVE: 
       ZMQServoCurveMessage *curveData = (ZMQServoCurveMessage*) data;
-      servo(data)->curve(curveData->t0,curveData->c0,curveData->c1);
+      servo(data)->curve(curveData->t,curveData->c0,curveData->c1);
       break;
 #endif
     }
@@ -197,27 +153,84 @@ void SigIntHandler(int arg) {
   pserver->stop();
 }
 
-void run(int argc, char **argv) {
+void configure(const string &config_csv,
+	       Controllers &controllers,  ZMQServoServer &server) {
 
-  // basic objects
-  Controllers controllers;
-  ZMQServoServer server;
-  string configure = "../../setup/configure.csv";
+  vector < vector < string > > values;
+  if (!CSVRead(config_csv,"name,value",values)) {
+    cout << "Could not read configuration file '" << config_csv << "'." << endl;
+    exit(1);
+  }
+  map<string,string> cfg;
+  for (size_t i=0; i != values.size(); ++i) {
+    cfg[values[i][0]]=values[i][1];
+  }
+  if (cfg.find("servos.verbose") != cfg.end()) {
+    verbose=cfg["servos.verbose"] == "true";
+  }
+  if (cfg.find("servos.type") != cfg.end()) {
+    controllers.genericName = cfg["servos.type"];
+  }
+  if (cfg.find("servos.deviceindex") != cfg.end()) {
+    controllers.deviceIndex = atoi(cfg["servos.deviceindex"].c_str());
+  }
+  if (cfg.find("servos.baudnum") != cfg.end()) {
+    controllers.baudNum = atoi(cfg["servos.baudnum"].c_str());
+  }
+  if (cfg.find("servos.rate") != cfg.end()) {
+    server.rate = atof(cfg["servos.rate"].c_str());
+  }
+  if (cfg.find("servos.publish") != cfg.end()) {
+    server.publish = cfg["servos.publish"];
+  }
+  if (cfg.find("servos.subscribers") != cfg.end()) {
+    string arg=cfg["servos.subscribers"];
+    server.subscribers.clear();
+    while (arg.length() > 0) {
+      size_t comma = arg.find(';');
+      string subscriber = arg.substr(0,(comma != string::npos) ? comma : arg.length());
+      server.subscribers.push_back(subscriber);
+      arg=arg.substr((comma != string::npos) ? comma+1 : arg.length());
+    }
+  }
+  
+  if (cfg.find("servos.map") != cfg.end()) {
+    vector < vector < string > > csvServoMap;
+    if (CSVRead(cfg["servos.map"],"device,id,scale,offset",csvServoMap)) {
+      for (size_t i=0; i<csvServoMap.size(); ++i) {
+	string device=csvServoMap[i][0];
+	int id=atoi(csvServoMap[i][1].c_str());
+	double scale = atof(csvServoMap[i][2].c_str());
+	double offset = atof(csvServoMap[i][3].c_str());
+	
+	shared_ptr < Servo > servo(controllers.servo(device,id));
+	if (scale == 1.0 && offset == 0.0) {
+	  if (verbose) {
+	    cout << "servo device=" << device << " id=" << id << endl;
+	  }
+	  server.servos[id]=servo;
+	} else {
+	  if (verbose) {
+	    cout << "servo device=" << device << " id=" << id 
+		 << " scale=" << scale << " offset=" << offset << endl;
+	  }
+	  server.servos[id]=shared_ptr < Servo > (new ScaledServo(servo,scale,offset));
+	}
+      }
+    } else {
+      cout << "Could not read servo map in '" 
+	   << cfg["servos.map"] << "'." << endl;
+      exit(1);
+    }
+  }
+}
 
-  // default configuration
+void args(int argc, char **argv, Controllers &controllers,  ZMQServoServer &server) {
   verbose = false;
-  const ServoMap *servoMap = ROBOT_SERVOS;
   controllers.genericName = "real";
 
-  server.rate = TX_RATE;
+  server.rate = 1;
   server.NO_SERVO = controllers.servo("fake",999);
-
-  for (int i=0; SUBSCRIBERS[i] != 0; ++i) {
-    server.subscribers.push_back(SUBSCRIBERS[i]);
-  }
-  server.publish = PUBLISH;
-
-  // parse arguments for run-time configuration
 
   for (int argi=1; argi<argc; ++argi) {
     if (strcmp(argv[argi],"--help") == 0) {
@@ -247,14 +260,6 @@ void run(int argc, char **argv) {
     }
     if (strcmp(argv[argi],"--real") == 0) {
       controllers.genericName = "real";
-      continue;
-    }
-    if (strcmp(argv[argi],"--test") == 0) {
-      servoMap = TEST_SERVOS;
-      continue;
-    }
-    if (strcmp(argv[argi],"--robot") == 0) {
-      servoMap = ROBOT_SERVOS;
       continue;
     }
     if (strcmp(argv[argi],"--deviceIndex") == 0) {
@@ -299,87 +304,33 @@ void run(int argc, char **argv) {
 	server.servos[id]=controllers.servo("generic",id);
 	arg=arg.substr((comma != string::npos) ? comma+1 : arg.length());
       }
-      servoMap = 0;
       continue;
     }
 
     if (strcmp(argv[argi],"--configure") == 0) {
       ++argi;
-      configure = argv[argi];
+      configure(argv[argi],controllers,server);
       continue;
     }
     cout << "unkown arg '" << argv[argi] << "' ignored."  << endl;
   }
 
-  if (configure != "") {
-    vector < vector < string > > values;
-    CSVRead(configure,"name,value",values);
-    map<string,string> cfg;
-    for (size_t i=0; values.size(); ++i) {
-      cfg[values[i][0]]=values[i][1];
-    }
-    if (cfg.find("servos.verbose") != cfg.end()) {
-      verbose=cfg["servos.verbose"] == "true";
-    }
-    if (cfg.find("servos.type") != cfg.end()) {
-      controllers.genericName = cfg["servos.type"];
-    }
-    if (cfg.find("servos.deviceindex") != cfg.end()) {
-      controllers.deviceIndex = atoi(cfg["servos.deviceindex"].c_str());
-    }
-    if (cfg.find("servos.baudnum") != cfg.end()) {
-      controllers.baudNum = atoi(cfg["servos.baudnum"].c_str());
-    }
-    if (cfg.find("servos.rate") != cfg.end()) {
-      server.rate = atof(cfg["servos.rate"].c_str());
-    }
-    if (cfg.find("servos.publish") != cfg.end()) {
-      server.publish = cfg["servos.publish"];
-    }
-    if (cfg.find("servos.subscribers") != cfg.end()) {
-      string arg=cfg["servos.subscribers"];
-      server.subscribers.clear();
-      while (arg.length() > 0) {
-	size_t comma = arg.find(';');
-	string subscriber = arg.substr(0,(comma != string::npos) ? comma : arg.length());
-	server.subscribers.push_back(subscriber);
-	arg=arg.substr((comma != string::npos) ? comma+1 : arg.length());
-      }
-    }
-
-    if (cfg.find("servos.map") != cfg.end()) {
-      vector < vector < string > > csvServoMap;
-      if (CSVRead(cfg["servos.map"],"device,id,scale,offset",csvServoMap)) {
-	for (size_t i=0; i<csvServoMap.size(); ++i) {
-	  string device=csvServoMap[i][0];
-	  int id=atoi(csvServoMap[i][1].c_str());
-	  double scale = atof(csvServoMap[i][2].c_str());
-	  double offset = atof(csvServoMap[i][3].c_str());
-	  
-	  shared_ptr < Servo > servo(controllers.servo(device,id));
-	  if (scale == 1.0 && offset == 0.0) {
-	    server.servos[id]=servo;
-	  } else {
-	    server.servos[id]=shared_ptr < Servo > (new ScaledServo(servo,scale,offset));
-	  }
-	  servoMap = 0;
-	}
-      }
-    }
+  if (argc == 1) {
+    configure("../../setup/config.csv",controllers,server);
   }
+}
 
-  if (servoMap != 0) {
-    for (const ServoMap *i=servoMap; i->device != 0; ++i) {
-      shared_ptr < Servo > servo(controllers.servo(i->device,i->id));
-      if (i->scale == 1.0 && i->offset == 0.0) {
-	server.servos[i->id]=servo;
-      } else {
-	server.servos[i->id]=shared_ptr < Servo > (new ScaledServo(servo,i->scale,i->offset));
-      }
-    }
-  }
+void run(int argc, char **argv) {
 
+  // basic objects
+  Controllers controllers;
+  ZMQServoServer server;
+
+  // parse arguments for run-time configuration
   pserver = &server;
+
+  args(argc,argv,controllers,server);
+
 
   controllers.start();
   server.start();

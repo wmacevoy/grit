@@ -28,9 +28,7 @@
 
 using namespace std;
 
-const int UPDATE_RATE = 20;
-
-
+const float UPDATE_RATE = 40.0;
 
 struct DynamixelServo : Servo
 {
@@ -45,7 +43,7 @@ struct DynamixelServo : Servo
 
 #if SERVO_CURVE == 1
   bool curveMode;
-  double t0;
+  double t[2];
   float c0[3],c1[3];
 #endif
 
@@ -67,10 +65,11 @@ struct DynamixelServo : Servo
   }
 
 #if SERVO_CURVE == 1
-  void curve(double t0_, float c0_[3],float c1_[3])
+  void curve(double t_[2], float c0_[3],float c1_[3])
   {
     curveMode = true;
-    t0=t0_;
+    t[0]=t_[0];
+    t[1]=t_[1];
     c0[0]=c0_[0];
     c0[1]=c0_[1];
     c0[2]=c0_[2];
@@ -191,17 +190,19 @@ struct DynamixelServoController : ServoController
 	dxl_set_txpacket_parameter(1, L);   // L bytes sent to each Dynamixel 
 	dxl_set_txpacket_length((L+1)*N+4); // bytes in packet exc. Header
 	int i = 0;
-	cout << "t," << t << ",";
+	//	cout << "t," << t << ",";
 	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
 	  int id = k->first;
 	  DynamixelServo *servo = &*k->second;
 	  
 #if SERVO_CURVE == 1
 	  if (servo->curveMode) {
-	    double dt = t-servo->t0;
-	    if (fabs(dt) > 1.0) {
-	      dt = 0.0;
-	      servo->torque(0);
+	    double dt;
+	    if (t < servo->t[1]) {
+	      dt = t-servo->t[0];
+	    } else {
+	      dt = servo->t[1]-servo->t[0];
+	      cout << "servo " << id << " stale" << endl;
 	    }
 	    double dt2 = dt*dt;
 	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
@@ -219,7 +220,7 @@ struct DynamixelServoController : ServoController
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
 	  int torque = servo->goalTorque;
-	  cout << "id,"<<servo->id << "," << position << "," << speed << ",";
+	  //	  cout << "id,"<<servo->id << "," << position << "," << speed << ",";
 
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
@@ -230,27 +231,13 @@ struct DynamixelServoController : ServoController
 	  dxl_set_txpacket_parameter(i*(L+1)+8,dxl_get_highbyte(torque));
 	  ++i;
 	}
-	cout << endl;
+	//	cout << endl;
 	dxl_txrx_packet();
 	int result = dxl_get_result(); 
 
 	if (result == COMM_RXSUCCESS) {
 	  io.okSince = now();
 	}
-
-#if 0
-	for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
-	  i->second->rx();
-	}
-	
-	ostringstream oss;
-	oss << "dynamixel," << t;
-	for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
-	  DynamixelServo *servo=&*i->second;
-	  oss << "," << servo->id << "," << servo->presentPosition << "," << servo->goalPosition << "," << servo->presentSpeed << "," << servo->goalSpeed << "," << servo->presentTorque << "," << servo->goalTorque;
-	}
-	cout << oss.str() << endl;
-#endif
       }
 #else
       for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {

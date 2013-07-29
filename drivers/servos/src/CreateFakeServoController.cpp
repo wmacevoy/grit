@@ -16,7 +16,7 @@ class FakeServo : public Servo
 
 #if SERVO_CURVE == 1
   bool curveMode;
-  double t0;
+  double ct[2];
   float c0[3],c1[3];
 #endif
   FakeServo()
@@ -44,7 +44,7 @@ class FakeServo : public Servo
 
 #if SERVO_MODE == 1
     if (curveMode) {
-      float dt=(t-t0);
+      float dt=(t < ct[1]) ? (t-ct[0]) : (ct[1]-ct[0]);
       float dt2=dt*dt;
       float *c = dt <= 0 ? c0 : c1;
       goalAngle = c[0]+c[1]*dt+c[2]*dt2/2.0;
@@ -68,10 +68,11 @@ class FakeServo : public Servo
   }
 
 #if SERVO_CURVE == 1
-  void curve(double t0_, float c0_[3],float c1_[3])
+  void curve(double t_[2], float c0_[3],float c1_[3])
   {
     curveMode = true;
-    t0=t0_;
+    ct[0]=t_[0];
+    ct[1]=t_[1];
     c0[0]=c0_[0];
     c0[1]=c0_[1];
     c0[2]=c0_[2];

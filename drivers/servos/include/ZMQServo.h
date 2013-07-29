@@ -12,10 +12,10 @@ class ZMQServo : public Servo
 
 #if SERVO_CURVE == 1
   bool curveMode;
-  double t0;
+  double t[2];
   float c0[3];
   float c1[3];
-  virtual void curve(double t0, float c0[3],float c1[3]);
+  virtual void curve(double t[2], float c0[3],float c1[3]);
 #endif
 
   ZMQServo();

@@ -15,7 +15,7 @@ class ScaledServo : public Servo
   float slope,offset;
   void init(std::shared_ptr < Servo > unscaledServo_, float slope_, float home_);
 #if SERVO_CURVE == 1
-  virtual void curve(double t0, float c0[3],float c1[3]);
+  virtual void curve(double t[2], float c0[3],float c1[3]);
 #endif
 
   inline float angle() const { return (unscaledServo->angle()-offset)/slope; }

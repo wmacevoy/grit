@@ -2,7 +2,7 @@
 #include "ScaledServo.h"
 
 #if SERVO_CURVE == 1
-void ScaledServo::curve(double t0, float c0[3],float c1[3])
+void ScaledServo::curve(double t[2], float c0[3],float c1[3])
 {
   float s0[3];
   float s1[3];
@@ -14,7 +14,7 @@ void ScaledServo::curve(double t0, float c0[3],float c1[3])
   s1[1]=slope*c1[1];
   s1[2]=slope*c1[2];
   
-  unscaledServo->curve(t0,s0,s1);
+  unscaledServo->curve(t,s0,s1);
 }
 #endif
 

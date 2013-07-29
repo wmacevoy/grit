@@ -23,7 +23,7 @@ class ZMQServoCurveMessage
  public:
   int messageId;
   int servoId;
-  double t0;
+  double t[2];
   float c0[3];
   float c1[3];
 };
