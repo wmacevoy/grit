@@ -116,6 +116,27 @@ setup()
   done
 }
 
+update()
+{
+  for dir in setup libs drivers centar
+  do
+      svn update $MOJAVATON_DIR/$dir
+  done
+
+  for dir in libs drivers
+  do
+      make -C $MOJAVATON_DIR/$dir all
+  done
+}
+
+commit()
+{
+  for dir in setup libs drivers centar
+  do
+      svn commit -m "$@ - in $dir" $MOJAVATON_DIR/$dir
+  done
+}
+
 start()
 {
     start_apps body servos

@@ -926,29 +926,47 @@ struct App
       cfg[values[i][0]]=values[i][1];
     }
 
-    if (cfg.find("body.servos.publish") != cfg.end()) {
-      bodyServosPublish = cfg["body.servos.publish"];
+    { 
+      map<string,string>::iterator property=
+	cfg.find("body.servos.publish");
+      if (property != cfg.end()) {
+	bodyServosPublish = property->second;
+      }
     }
 
-    if (cfg.find("body.servos.subscribers") != cfg.end()) {
-      subscribers(bodyServosSubscribers,
-		  cfg["body.servos.subscribers"],';');
+    {
+      map<string,string>::iterator property=
+	cfg.find("body.servos.subscribers");
+      if (property != cfg.end()) {
+	subscribers(bodyServosSubscribers,property->second,';');
+      }
+    }
+    
+    {
+      map<string,string>::iterator property=
+	cfg.find("body.commander.publish");
+      if (property != cfg.end()) {
+	bodyController->publish = property->second;
+      }
     }
 
-    if (cfg.find("body.commander.publish") != cfg.end()) {
-      bodyController->publish = cfg["body.servos.publish"];
+    {
+      map<string,string>::iterator property=
+	cfg.find("body.commander.subscribers");
+      if (property != cfg.end()) {
+	subscribers(bodyController->subscribers,property->second);
+      }
     }
 
-    if (cfg.find("body.commander.subscribers") != cfg.end()) {
-      subscribers(bodyController->subscribers,
-		  cfg["body.servos.subscribers"],';');
-    }
-
-    if (cfg.find("servos.map") != cfg.end()) {
-      vector < vector < string > > csvServoMap;
-      if (CSVRead(cfg["servos.map"],"name,id",csvServoMap)) {
-	for (size_t i=0; i<csvServoMap.size(); ++i) {
-	  servoMap[csvServoMap[i][0]]=atoi(csvServoMap[i][1].c_str());
+    {
+      map<string,string>::iterator property=
+	cfg.find("servos.map");
+      if (property != cfg.end()) {
+	vector < vector < string > > csvServoMap;
+	if (CSVRead(property->second,"name,id",csvServoMap)) {
+	  for (size_t i=0; i<csvServoMap.size(); ++i) {
+	    servoMap[csvServoMap[i][0]]=atoi(csvServoMap[i][1].c_str());
+	  }
 	}
       }
     }
