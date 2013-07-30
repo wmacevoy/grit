@@ -1,7 +1,7 @@
 include ../../setup/config.mk
 include ../config.mk
 
-MY_FLAGS=-I../zmqpp/include -I../utilities/include
+MY_FLAGS=-I../body/include -I../zmqpp/include -I../utilities/include
 MY_LIBS=-L../zmqpp/lib -lzmqpp -L../utilities/lib -lutilities -lzmq
 
 CFLAGS += $(MY_FLAGS)

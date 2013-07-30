@@ -26,6 +26,7 @@
 #include "CreateZMQServoController.h"
 #include "ZMQHub.h"
 #include "CSVRead.h"
+#include "BodyMessage.h"
 #include "Lock.h"
 #include "now.h"
 
@@ -188,12 +189,35 @@ public:
   float kneeAngle,femurAngle,hipAngle;
   bool inverted;
 
-  void init(SPServoController &controller, int kneeid,int femurid,int hipid,string newName) {
+  void init(SPServoController &controller, const map<string,int> &servoMap,string newName) {
     name=newName;
-    knee = SPServo(controller->servo(kneeid));
-    
-    femur= SPServo(controller->servo(femurid));
-    hip = SPServo(controller->servo(hipid));
+
+    {
+      string part=name;
+      part.append("_KNEE");
+      map<string,int>::const_iterator i=servoMap.find(part);
+      assert(i != servoMap.end());
+      int id=i->second;
+      knee = SPServo(controller->servo(id));
+    }
+
+    {
+      string part=name;
+      part.append("_FEMUR");
+      map<string,int>::const_iterator i=servoMap.find(part);
+      assert(i != servoMap.end());
+      int id=i->second;
+      femur = SPServo(controller->servo(id));
+    }
+
+    {
+      string part=name;
+      part.append("_HIP");
+      map<string,int>::const_iterator i=servoMap.find(part);
+      assert(i != servoMap.end());
+      int id=i->second;
+      hip = SPServo(controller->servo(id));
+    }
   }
 
   void setEnd(const Point &tip)
@@ -507,16 +531,12 @@ public:
     legs[LEG4].setHipOffset(ANGLE90);
   }
 
-  void init(SPServoController &controller)
+  void init(SPServoController &controller, const map<string,int> &servoMap)
   {
-    legs[LEG1].init(controller,
-	      LEG1_SERVO_ID_KNEE,LEG1_SERVO_ID_FEMUR,LEG1_SERVO_ID_HIP,"leg1");
-    legs[LEG2].init(controller,
-	      LEG2_SERVO_ID_KNEE,LEG2_SERVO_ID_FEMUR,LEG2_SERVO_ID_HIP,"leg2");
-    legs[LEG3].init(controller,
-	      LEG3_SERVO_ID_KNEE,LEG3_SERVO_ID_FEMUR,LEG3_SERVO_ID_HIP,"leg3");
-    legs[LEG4].init(controller,
-	      LEG4_SERVO_ID_KNEE,LEG4_SERVO_ID_FEMUR,LEG4_SERVO_ID_HIP,"leg4");
+      legs[LEG1].init(controller,servoMap,"LEG1");
+      legs[LEG2].init(controller,servoMap,"LEG2");
+      legs[LEG3].init(controller,servoMap,"LEG3");
+      legs[LEG4].init(controller,servoMap,"LEG4");
   }
 
 };
@@ -569,23 +589,41 @@ public:
   float neckUpDownAngle;
 
 
-  void init(SPServoController controller)
+  void init(SPServoController controller, const map<string,int> &servoMap)
   {
     neckLeftRightAngle=0;
     neckUpDownAngle=0;
-    legs.init(controller);
-    waistServo=SPServo(controller->servo(WAIST_SERVO_ID));
-    waistServo->angle(0);
-    waistServo->speed(15);
-    waistServo->torque(0.700);
-    neckUpDownServo=SPServo(controller->servo(NECKUD_SERVO_ID));
-    neckUpDownServo->speed(45);
-    neckUpDownServo->angle(neckUpDownAngle);
-    neckUpDownServo->torque(0.700);
-    neckLeftRightServo=SPServo(controller->servo(NECKLR_SERVO_ID));
-    neckLeftRightServo->speed(45);
-    neckLeftRightServo->angle(neckLeftRightAngle);
-    neckLeftRightServo->torque(0.700);
+    legs.init(controller,servoMap);
+
+    {
+      map<string,int>::const_iterator i=servoMap.find("WAIST");
+      assert(i != servoMap.end());
+      waistServo=SPServo(controller->servo(i->second));
+      waistServo->angle(0);
+      waistServo->speed(15);
+      waistServo->torque(0.700);
+    }
+
+    
+    {
+      map<string,int>::const_iterator i=servoMap.find("NECKUD");
+      assert(i != servoMap.end());
+      neckUpDownServo=SPServo(controller->servo(i->second));
+      neckUpDownServo->speed(45);
+      neckUpDownServo->angle(neckUpDownAngle);
+      neckUpDownServo->torque(0.700);
+    }
+
+
+    {
+      map<string,int>::const_iterator i=servoMap.find("NECKLR");
+      assert(i != servoMap.end());
+      neckLeftRightServo=SPServo(controller->servo(i->second));
+      neckLeftRightServo->speed(45);
+      neckLeftRightServo->angle(neckLeftRightAngle);
+      neckLeftRightServo->torque(0.700);
+    }
+
     legsMover = shared_ptr <LegsMover> ( new LegsMover () );
     waistMover = shared_ptr <ServoMover > ( new ServoMover() );
   }
@@ -817,9 +855,6 @@ public:
     sim_speed=1;
     sim_torque = 0.70;
     sim_time=0;
-    goUpdate=0;
-    publish = BODY_COMMAND_LISTEN;
-    subscribers.push_back(COMMANDER_CONNECT);
     goUpdate = 0;
   }
 
@@ -857,32 +892,126 @@ void SigIntHandler(int arg) {
   hub->stop();
 }
 
-void run()
+struct App
 {
-  shared_ptr < ServoController > 
-    servoController(CreateZMQServoController(BODY_SERVO_LISTEN,SERVOS_CONNECT));
-  
-  shared_ptr < Body > 
-    body (new Body());
+  shared_ptr < ServoController > servoController;
+  shared_ptr < Body > body;
+  shared_ptr < BodyController > bodyController;
+  vector<string> bodyServosSubscribers;
+  string bodyServosPublish;
+  map < string , int > servoMap;
 
-  shared_ptr < BodyController > 
-    bodyController (new BodyController());
+  void subscribers(vector<string> &subscribers, string arg, char sep=',')
+  {
+    subscribers.clear();
+    while (arg.length() > 0) {
+      size_t comma = arg.find(sep);
+      string subscriber = arg.substr(0,(comma != string::npos) ? comma : arg.length());
+      subscribers.push_back(subscriber);
+      arg=arg.substr((comma != string::npos) ? comma+1 : arg.length());
+    }
+  }
 
-  body->init(servoController);
-  bodyController->body = body;
+  void configure(const string &config_csv)
+  {
+    vector < vector < string > > values;
+    if (!CSVRead(config_csv,"name,value",values)) {
+      cout << "Could not read configuration file '" 
+	   << config_csv << "'." << endl;
+      exit(1);
+    }
 
-  servoController->start();
-  bodyController->start();
-  hub=&*bodyController;
-  signal(SIGINT, SigIntHandler);
-  bodyController->join();
-}
+    map<string,string> cfg;
+    for (size_t i=0; i != values.size(); ++i) {
+      cfg[values[i][0]]=values[i][1];
+    }
 
-int main()
+    if (cfg.find("body.servos.publish") != cfg.end()) {
+      bodyServosPublish = cfg["body.servos.publish"];
+    }
+
+    if (cfg.find("body.servos.subscribers") != cfg.end()) {
+      subscribers(bodyServosSubscribers,
+		  cfg["body.servos.subscribers"],';');
+    }
+
+    if (cfg.find("body.commander.publish") != cfg.end()) {
+      bodyController->publish = cfg["body.servos.publish"];
+    }
+
+    if (cfg.find("body.commander.subscribers") != cfg.end()) {
+      subscribers(bodyController->subscribers,
+		  cfg["body.servos.subscribers"],';');
+    }
+
+    if (cfg.find("servos.map") != cfg.end()) {
+      vector < vector < string > > csvServoMap;
+      if (CSVRead(cfg["servos.map"],"name,id",csvServoMap)) {
+	for (size_t i=0; i<csvServoMap.size(); ++i) {
+	  servoMap[csvServoMap[i][0]]=atoi(csvServoMap[i][1].c_str());
+	}
+      }
+    }
+  }
+
+  void args(int argc, char *argv[])
+  {
+    for (int argi=1; argi<argc; ++argi) {
+      if (strcmp(argv[argi],"--configure") == 0) {
+	configure(argv[++argi]);
+	continue;
+      }
+      
+      if (strcmp(argv[argi],"--servo.publish") == 0) {
+	bodyServosPublish = argv[++argi];
+	continue;
+      }
+      
+      if (strcmp(argv[argi],"--servo.subscribers") == 0) {
+	subscribers(bodyServosSubscribers,argv[++argi]);
+	continue;
+      }
+      
+      if (strcmp(argv[argi],"--body.publish") == 0) {
+	bodyController->publish = argv[++argi];
+	continue;
+      }
+      
+      if (strcmp(argv[argi],"--body.subscribers") == 0) {
+	subscribers(bodyController->subscribers,argv[++argi]);
+	continue;
+      }
+      cout << "unkown arg '" << argv[argi] << "' ignored."  << endl;
+    }
+    
+    if (argc == 1) {
+      configure(CONFIG_CSV);
+    }
+    
+    assert(bodyServosSubscribers.size() == 1);
+    servoController = shared_ptr<ServoController>(CreateZMQServoController(bodyServosPublish,bodyServosSubscribers[0]));
+  }
+
+  void run(int argc, char *argv[])
+  {
+    body = shared_ptr <Body> (new Body());
+    bodyController = shared_ptr <BodyController> (new BodyController());
+    args(argc,argv);
+    body->init(servoController,servoMap);
+    bodyController->body = body;
+
+    servoController->start();
+    bodyController->start();
+    hub=&*bodyController;
+    signal(SIGINT, SigIntHandler);
+    bodyController->join();
+  }
+};
+
+int main(int argc, char *argv[])
 {
-  char tmp[80];
-  cout << "cwd: " << getcwd(tmp,sizeof(tmp)) << endl;
-  run();
+  App app;
+  app.run(argc,argv);
   cout << "done" << endl;
   return 0;
 }

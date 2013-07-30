@@ -10,13 +10,11 @@ class ZMQServo : public Servo
   float goalSpeed;
   float goalTorque;
 
-#if SERVO_CURVE == 1
   bool curveMode;
   double t[2];
   float c0[3];
   float c1[3];
   virtual void curve(double t[2], float c0[3],float c1[3]);
-#endif
 
   ZMQServo();
   float angle() const;

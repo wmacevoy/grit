@@ -14,11 +14,9 @@ class FakeServo : public Servo
  float maxAngle;
  float rate;
 
-#if SERVO_CURVE == 1
   bool curveMode;
   double ct[2];
   float c0[3],c1[3];
-#endif
   FakeServo()
   {
     currentAngle = 0;
@@ -28,9 +26,7 @@ class FakeServo : public Servo
     rate = 90.0;
     t = now();
 
-#if SERVO_CURVE == 1
     curveMode = false;
-#endif
 
   }
   
@@ -67,7 +63,6 @@ class FakeServo : public Servo
     }
   }
 
-#if SERVO_CURVE == 1
   void curve(double t_[2], float c0_[3],float c1_[3])
   {
     curveMode = true;
@@ -80,18 +75,16 @@ class FakeServo : public Servo
     c1[1]=c1_[1];
     c1[2]=c1_[2];
   }
-#endif
+
   float angle() const
   {
-#if CURVE_DATA == 1
-    curveMode = false;
-#endif
     update();
     return currentAngle;
   }
 
   void angle(float value)
   {
+    curveMode = false;
     update();
     goalAngle = value;
   }

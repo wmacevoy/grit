@@ -30,8 +30,8 @@ struct Controllers
 
   Controllers() { 
     genericName="real";
-    deviceIndex = DYNAMIXEL_DEVICE_INDEX;
-    baudNum = DYNAMIXEL_BAUD_NUM;
+    deviceIndex = 0;
+    baudNum = 34;
   }
 
   shared_ptr<ServoController> create(const std::string &deviceName)
@@ -106,12 +106,10 @@ public:
     case ZMQServoMessage::SET_ANGLE: servo(data)->angle(data->value); break;
     case ZMQServoMessage::SET_SPEED: servo(data)->speed(data->value); break;
     case ZMQServoMessage::SET_TORQUE: servo(data)->torque(data->value); break;
-#if SERVO_CURVE == 1
     case ZMQServoMessage::SET_CURVE: 
       ZMQServoCurveMessage *curveData = (ZMQServoCurveMessage*) data;
       servo(data)->curve(curveData->t,curveData->c0,curveData->c1);
       break;
-#endif
     }
   }
 
@@ -239,11 +237,9 @@ void args(int argc, char **argv, Controllers &controllers,  ZMQServoServer &serv
       cout << "\t --verbose (guess)" << endl;
       cout << "\t --fake (use fake generic servos)" << endl;
       cout << "\t --real (use real generic servos)" << endl;
-      cout << "\t --robot (use robot servo map)" << endl;
-      cout << "\t --test (use test servo map)" << endl;
       cout << "\t --deviceIndex [num] (use dynamixel deviceNum)" << endl;
       cout << "\t --baudNum [num] (use dynamixel baudNum)" << endl;
-      cout << "\t --rate [num] (use give tx rate)" << endl;
+      cout << "\t --rate [num] (use given tx rate)" << endl;
       cout << "\t --publish [name] (zmq publish as this name)" << endl;
       cout << "\t --subscribers [names,...] (zmq subscribers)" << endl;
       cout << "\t --servos [ids,...] (servo ids)" << endl;
@@ -316,7 +312,7 @@ void args(int argc, char **argv, Controllers &controllers,  ZMQServoServer &serv
   }
 
   if (argc == 1) {
-    configure("../../setup/config.csv",controllers,server);
+    configure(CONFIG_CSV,controllers,server);
   }
 }
 
@@ -344,4 +340,5 @@ void run(int argc, char **argv) {
 int main(int argc,char **argv) {
   run(argc,argv);
   cout << "done" << endl;
+  return 0;
 }

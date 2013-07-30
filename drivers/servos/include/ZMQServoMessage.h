@@ -6,9 +6,7 @@ public:
   enum { SET_ANGLE, GET_ANGLE,
 	 SET_SPEED,
 	 SET_TORQUE,
-#if SERVO_CURVE == 1
 	 SET_CURVE,
-#endif
 	 DO_NOTHING
   };
 

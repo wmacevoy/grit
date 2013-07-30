@@ -1,5 +1,7 @@
 #pragma once
 
+#define BODY_MESSAGE_MAXLEN 80
+
 class Leg : public LegGeometry
 {
   std::shared_ptr < Servo > knee;

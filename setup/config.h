@@ -1,60 +1,7 @@
 #pragma once
 
-#define ROBOT_IP        "192.168.2.113"
-#define CONTROL_IP      "192.168.2.113"
-
-#define ZMQ_TCP_LISTEN(IP,PORT) "tcp://*:" #PORT
-#define ZMQ_TCP_CONNECT(IP,PORT) "tcp://" IP ":" #PORT
-
-#define SERVOS_PORT         5500
-#define SERVOS_IP           ROBOT_IP
-#define SERVOS_LISTEN       ZMQ_TCP_LISTEN(SERVOS_IP,5500)
-#define SERVOS_CONNECT      ZMQ_TCP_CONNECT(SERVOS_IP,5500)
-
-#define TEST_SERVO_PORT     5501
-#define TEST_SERVO_IP       ROBOT_IP
-#define TEST_SERVO_LISTEN   ZMQ_TCP_LISTEN(TEST_SERVO_IP,5501)
-#define TEST_SERVO_CONNECT  ZMQ_TCP_CONNECT(TEST_SERVO_IP,5501)
-
-#define BODY_COMMAND_PORT           5502
-#define BODY_COMMAND_IP             ROBOT_IP
-#define BODY_COMMAND_LISTEN         ZMQ_TCP_LISTEN(BODY_COMMAND_IP,5502)
-#define BODY_COMMAND_CONNECT        ZMQ_TCP_CONNECT(BODY_COMMAND_IP,5502)
-
-#define BODY_SERVO_PORT        5503
-#define BODY_SERVO_IP          ROBOT_IP
-#define BODY_SERVO_LISTEN      ZMQ_TCP_LISTEN(BODY_SERVO_IP,5503)
-#define BODY_SERVO_CONNECT     ZMQ_TCP_CONNECT(BODY_SERVO_IP,5503)
-
-#define COMMANDER_PORT      5504
-#define COMMANDER_IP        CONTROL_IP
-#define COMMANDER_LISTEN    ZMQ_TCP_LISTEN(COMMANDER_IP,5504)
-#define COMMANDER_CONNECT   ZMQ_TCP_CONNECT(COMMANDER_IP,5504)
-
-#define DYNAMIXEL_DEVICE_INDEX   1
-#define DYNAMIXEL_BAUD_NUM      34
-
-#define LEG1_SERVO_ID_KNEE  11
-#define LEG1_SERVO_ID_FEMUR 12
-#define LEG1_SERVO_ID_HIP   13
-
-#define LEG2_SERVO_ID_KNEE  21
-#define LEG2_SERVO_ID_FEMUR 22
-#define LEG2_SERVO_ID_HIP   23
-
-#define LEG3_SERVO_ID_KNEE  31
-#define LEG3_SERVO_ID_FEMUR 32
-#define LEG3_SERVO_ID_HIP   33
-
-#define LEG4_SERVO_ID_KNEE  41
-#define LEG4_SERVO_ID_FEMUR 42
-#define LEG4_SERVO_ID_HIP   43
-
-#define WAIST_SERVO_ID      91
-#define NECKUD_SERVO_ID     93
-#define NECKLR_SERVO_ID     94
-
-#define BODY_MESSAGE_MAXLEN 80
+// moved gobal configuration to csv file...
+#define CONFIG_CSV "../../setup/config.csv"
 
 // support curved servo paths...
-#define SERVO_CURVE 1
+#define SERVO_CURVE %###!!

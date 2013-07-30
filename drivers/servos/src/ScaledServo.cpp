@@ -1,7 +1,6 @@
 #include "config.h"
 #include "ScaledServo.h"
 
-#if SERVO_CURVE == 1
 void ScaledServo::curve(double t[2], float c0[3],float c1[3])
 {
   float s0[3];
@@ -16,7 +15,6 @@ void ScaledServo::curve(double t[2], float c0[3],float c1[3])
   
   unscaledServo->curve(t,s0,s1);
 }
-#endif
 
 void ScaledServo::init(std::shared_ptr < Servo > unscaledServo_, float slope_, float offset_)
 {

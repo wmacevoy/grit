@@ -41,11 +41,9 @@ struct DynamixelServo : Servo
   int goalSpeed;
   int goalTorque;
 
-#if SERVO_CURVE == 1
   bool curveMode;
   double t[2];
   float c0[3],c1[3];
-#endif
 
   DynamixelServo(DXLIO &io_, int id_) 
     : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
@@ -56,15 +54,12 @@ struct DynamixelServo : Servo
     presentTorque = 0;
     goalPosition = 0;
     io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
-#if SERVO_CURVE == 1
     curveMode = false;
-#endif
 #if USE_BROADCAST != 1
     update();
 #endif
   }
 
-#if SERVO_CURVE == 1
   void curve(double t_[2], float c0_[3],float c1_[3])
   {
     curveMode = true;
@@ -79,7 +74,6 @@ struct DynamixelServo : Servo
 
     //    cout << "dynamixel curve" << " servo=" << id << " t0=" << t0 << " c0=[" << c0[0] << "," << c0[1] << "," << c0[2] << "]" << " c1=[" << c1[0] << "," << c1[1] << "," << c1[2] << "]"  << endl;
   }
-#endif
 
   float angle() const { 
     return (180.0/2048)*(presentPosition-2048); 
@@ -90,9 +84,7 @@ struct DynamixelServo : Servo
     //    cout << "dynamixel servo=" << id << " goal position=" << goalPosition << endl;
   }
   void angle(float value) {
-#if SERVO_CURVE == 1
     curveMode = false;
-#endif
     angle0(value);
   }
 
@@ -176,9 +168,7 @@ struct DynamixelServoController : ServoController
       usleep(int((1.0/UPDATE_RATE)*1000000));
 #if USE_BROADCAST
       {
-#if SERVO_CURVE == 1
 	double t=now();
-#endif
 	io.reopen(); // reopen if failing recently...
 
 	int N = servos.size();
@@ -195,7 +185,6 @@ struct DynamixelServoController : ServoController
 	  int id = k->first;
 	  DynamixelServo *servo = &*k->second;
 	  
-#if SERVO_CURVE == 1
 	  if (servo->curveMode) {
 	    double dt;
 	    if (t < servo->t[1]) {
@@ -216,7 +205,6 @@ struct DynamixelServoController : ServoController
 	    servo->presentPosition = servo->goalPosition;
 	    //	    cout << "servo " << servo->id << " is in curve mode dt=" << dt << endl;
 	  }
-#endif
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
 	  int torque = servo->goalTorque;
