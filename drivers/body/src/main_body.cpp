@@ -410,14 +410,15 @@ public:
       while (at != angles.begin() && s < at->first) --at;
       float oldTime = at->first;
       const Point &oldAngle = at->second;
-      if (++at == angles.end()) at=angles.begin();
-      float newTime = at->first;
+      Angles::iterator after(at);
+      if (++after == angles.end()) after=angles.begin();
+      float newTime = after->first;
       if (newTime < oldTime) newTime += T;
-      const Point &newAngle = at->second; 
-      if (++at == angles.end()) at=angles.begin();
-      float newTime2 = at->first;
+      const Point &newAngle = after->second; 
+      if (++after == angles.end()) at=angles.begin();
+      float newTime2 = after->first;
       if (newTime2 < oldTime) newTime2 += T;
-      const Point &newAngle2 = at->second;
+      const Point &newAngle2 = after->second;
 
       //      cout << "body move s=" << s << "oldt=" << oldTime << " newTime=" << newTime << " newTime2=" << newTime2 << endl;
 
@@ -703,12 +704,9 @@ public:
 				     data[r][2+3*el],
 				     data[r][3+3*el]);
 	t2waist[t]=data[r][13];
-	cout << "waist angle is " << t2waist[t] << " at t=" << t << endl;
       }
       sim_time = 0; // reset to sync with t=0 in gait.
     }
-
-    cout << "setup" << endl;
 
     body->legsMover->setupFromTips(body->legs,t2tips);
     body->waistMover->setup(t2waist);
@@ -812,13 +810,30 @@ public:
 
   void update()
   {
+    double rho=0.01;
     double lastRealTime=now();
+    double delta_bar=0;
+    double delta2_bar=0;
+    double max_delta=0;
     while (running) {
       usleep(int((1.0/MOVE_RATE)*1000000));
       double thisRealTime = now();
       sim_time += sim_speed*(thisRealTime-lastRealTime);
+      if (floor(thisRealTime) != floor(lastRealTime)) {
+	cout << "delta=" << delta_bar << " sigma=" << sqrt(delta2_bar - delta_bar*delta_bar) << " max=" << max_delta << endl;
+	max_delta=0;
+      }
+      thisRealTime = now();
       lastRealTime = thisRealTime;
-      body->move(sim_time,thisRealTime);
+      body->move(sim_time,thisRealTime+1.0/MOVE_RATE);
+      double delta = now()-thisRealTime;
+      delta_bar = (1-rho)*delta_bar + rho*delta;
+      delta2_bar = (1-rho)*delta2_bar + rho*delta*delta;
+      if (delta > max_delta) max_delta=delta;
+
+      if (delta > delta_bar + 3*sqrt(delta2_bar - delta_bar*delta_bar)) {
+	cout << "slow at sim_time = " << sim_time << " real_time=" << thisRealTime << endl;
+      }
     }
   }
 
