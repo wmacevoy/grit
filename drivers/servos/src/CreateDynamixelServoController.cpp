@@ -1,5 +1,6 @@
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 #include <assert.h>
 #include <map>
 #include <thread>
@@ -50,10 +51,10 @@ struct DynamixelServo : Servo
   {
     goalSpeed = 0;
     presentSpeed = 0;
-    goalTorque = .70;
+    goalTorque = 1;
     presentTorque = 0;
-    goalPosition = 0;
-    io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
+    goalPosition = 2048;
+    //    io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
     curveMode = false;
 #if USE_BROADCAST != 1
     update();
@@ -164,11 +165,14 @@ struct DynamixelServoController : ServoController
   }
 
   void update() {
+    double t1 = now() + 1.0/UPDATE_RATE;
     while (running) {
-      usleep(int((1.0/UPDATE_RATE)*1000000));
+      int us = (t1-now())*1000000;
+      if (us > 0) usleep(us);
+      double t = now();
+      t1=t+1.0/UPDATE_RATE;
 #if USE_BROADCAST
       {
-	double t=now();
 	io.reopen(); // reopen if failing recently...
 
 	int N = servos.size();
@@ -180,35 +184,46 @@ struct DynamixelServoController : ServoController
 	dxl_set_txpacket_parameter(1, L);   // L bytes sent to each Dynamixel 
 	dxl_set_txpacket_length((L+1)*N+4); // bytes in packet exc. Header
 	int i = 0;
-	//	cout << "t," << t << ",";
+	std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
+	std::cout.precision(5);
+	cout << endl;
+	cout << "t," << setprecision(15) << t << ",";
 	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
 	  int id = k->first;
 	  DynamixelServo *servo = &*k->second;
 	  
 	  if (servo->curveMode) {
+	    double t0=servo->t[0];
+	    if (t < t0) {
+	      if (t1 > t0+0.0001) {
+		t1 = t0+0.0001;
+	      }
+	    }
+
 	    double dt;
 	    if (t < servo->t[1]) {
 	      dt = t-servo->t[0];
 	    } else {
 	      dt = servo->t[1]-servo->t[0];
-	      cout << "servo " << id << " stale" << endl;
+	      cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
 	    }
 	    double dt2 = dt*dt;
 	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
-	    servo->angle0(c[0]+c[1]*dt+c[2]*dt2/2.0);
-	    double s=c[1]+c[2]*dt;
-	    if (fabs(s) < 5) {
-	      if (s < 0) s=-5;
-	      else s=5;
+	    float angle = c[0]+c[1]*dt+c[2]*dt2/2.0;
+	    float speed = c[1]+c[2]*dt;
+	    servo->angle0(angle);
+	    if (fabs(speed) < 5) {
+	      if (speed < 0) speed=-5;
+	      else speed=5;
 	    }
-	    servo->speed(s);
+	    servo->speed(speed);
 	    servo->presentPosition = servo->goalPosition;
 	    //	    cout << "servo " << servo->id << " is in curve mode dt=" << dt << endl;
 	  }
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
 	  int torque = servo->goalTorque;
-	  //	  cout << "id,"<<servo->id << "," << position << "," << speed << ",";
+	  cout << "id,"<<servo->id << "," << position << "," << speed << ",";
 
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));

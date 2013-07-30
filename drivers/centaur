@@ -76,16 +76,17 @@ start_app()
   app=$1
   if running $app
   then
-      echo $app already running
+      pid=$(cat $MOJAVATON_DIR/pids/$app.pid)
+      echo $app already running as pid $pid
       return 0
   fi
   
   mkdir -p $MOJAVATON_DIR/pids
   mkdir -p $MOJAVATON_DIR/logs
   cd $MOJAVATON_DIR/drivers/$app
-  $MOJAVATON_DIR/drivers/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
+  nice -19 $MOJAVATON_DIR/drivers/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
   cpid=$!
-  echo app stared as pid $cpid
+  echo $app started as pid $cpid
   echo $cpid > $MOJAVATON_DIR/pids/$app.pid
 }
 
@@ -131,7 +132,7 @@ update()
 
 commit()
 {
-  for dir in setup libs drivers centar
+  for dir in setup libs drivers centaur
   do
       svn commit -m "$@ - in $dir" $MOJAVATON_DIR/$dir
   done
@@ -149,7 +150,9 @@ stop()
 
 commander()
 {
-    start && exec $MOJAVATON_DIR/drivers/commander/bin/commander
+    start
+    cd $MOJAVATON_DIR/drivers/commander
+    bin/commander
 }
 
 setup

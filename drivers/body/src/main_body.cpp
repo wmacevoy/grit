@@ -262,7 +262,8 @@ void fit0(double t[3],float p[3],float c[3])
       c[0]=p[1];
       c[2]=2.0*((p[0]-p[1])/(t[0]-t[1])-(p[2]-p[1])/(t[2]-t[1]))/(t[2]-t[0]);
       c[1]=(p[0]-p[1])/(t[0]-t[1])-c[2]*(t[0]-t[1])/2.0;
-      if (fabs((t[2]-t[0])*c[2]) > fabs(c[1])) {
+      // linear fallback
+      if (fabs((t[2]-t[0])*c[2]) > 0.0*fabs(c[1])) {
 	c[2]=0;
 	c[1]=(p[0]-p[1])/(t[0]-t[1]);
       }
@@ -825,7 +826,7 @@ public:
       }
       thisRealTime = now();
       lastRealTime = thisRealTime;
-      body->move(sim_time,thisRealTime+1.0/MOVE_RATE);
+      body->move(sim_time,thisRealTime);
       double delta = now()-thisRealTime;
       delta_bar = (1-rho)*delta_bar + rho*delta;
       delta2_bar = (1-rho)*delta2_bar + rho*delta*delta;

@@ -2,7 +2,7 @@
 
 #include "now.h"
 
-static double epoch  = 1.37477e+09;
+static double epoch  = 1.37477e+09+441000;
 
 double now()
 {

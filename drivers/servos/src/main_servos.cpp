@@ -194,12 +194,13 @@ void configure(const string &config_csv,
   
   if (cfg.find("servos.map") != cfg.end()) {
     vector < vector < string > > csvServoMap;
-    if (CSVRead(cfg["servos.map"],"device,id,scale,offset",csvServoMap)) {
+    if (CSVRead(cfg["servos.map"],"device,id,scale,offset,torque",csvServoMap)) {
       for (size_t i=0; i<csvServoMap.size(); ++i) {
 	string device=csvServoMap[i][0];
 	int id=atoi(csvServoMap[i][1].c_str());
 	double scale = atof(csvServoMap[i][2].c_str());
 	double offset = atof(csvServoMap[i][3].c_str());
+	double torque = atof(csvServoMap[i][3].c_str());
 	
 	shared_ptr < Servo > servo(controllers.servo(device,id));
 	if (scale == 1.0 && offset == 0.0) {
@@ -214,6 +215,7 @@ void configure(const string &config_csv,
 	  }
 	  server.servos[id]=shared_ptr < Servo > (new ScaledServo(servo,scale,offset));
 	}
+	server.servos[id]->torque(torque);
       }
     } else {
       cout << "Could not read servo map in '" 
