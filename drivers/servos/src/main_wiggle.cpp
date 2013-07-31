@@ -4,7 +4,6 @@
 #include <math.h>
 #include <string.h>
 
-#include "config.h"
 #include "CreateFakeServoController.h"
 #include "CreateZMQServoController.h"
 #include "CreateDynamixelServoController.h"

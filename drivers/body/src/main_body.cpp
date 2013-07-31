@@ -33,15 +33,14 @@
 using namespace std;
 
 
-double sim_time;
-double sim_speed;
-double sim_torque;
-
 typedef shared_ptr < Servo > SPServo;
 typedef shared_ptr < ServoController > SPServoController;
 
 Configure cfg;
 SPServoController servoController;
+
+double sim_time;
+double sim_speed;
 
 const float MOVE_RATE=50.0;
 
@@ -194,45 +193,12 @@ class Leg : public LegGeometry {
 public:
   SPServo knee,femur,hip;
   string name;
-  float kneeAngle,femurAngle,hipAngle;
-  bool inverted;
-
 
   void init(string newName) {
     name=newName;
     knee = servo(name + "_KNEE");
     femur = servo(name + "_FEMUR");
     hip = servo(name + "_HIP");
-  }
-
-  void setEnd(const Point &tip)
-  {
-    float kneeAngle,femurAngle,hipAngle;
-    compute3D(tip.p.x,tip.p.y,tip.p.z,kneeAngle,femurAngle,hipAngle);
-    knee->angle(kneeAngle);
-    femur->angle(femurAngle);
-    hip->angle(hipAngle);
-  }
-
-  void setAngles(const Point &p)
-  {
-    knee->angle(p.a.knee);
-    femur->angle(p.a.femur);
-    hip->angle(p.a.hip);
-  }
-
-  void setSpeeds(const Point &p)
-  {
-    knee->speed(p.a.knee);
-    femur->speed(p.a.femur);
-    hip->speed(p.a.hip);
-  }
-
-  void setTorques(const Point &p)
-  {
-    knee->torque(p.a.knee);
-    femur->torque(p.a.femur);
-    hip->torque(p.a.hip);
   }
 
   void report() {
@@ -285,15 +251,13 @@ public:
   std::mutex anglesMutex;
   Angles::iterator at;
   bool loop;
+  float torque;
 
   float t0,T;
 
-  ServoMover()
-  {
-    loop = true;
+  void setLoop(bool doLoop) { 
+    loop = doLoop;
   }
-
-  void setLoop(bool doLoop) { loop=doLoop; }
 
   void move(float simTime,float realTime, Servo &servo)
   {
@@ -336,15 +300,15 @@ public:
       p[2]=newAngle2;
       fit(ts,p,c0,c1);
       servo.curve(ts+1,c0,c1);
-      servo.torque(sim_torque);
+      servo.torque(torque);
     } else if (angles.size() == 1) {
       servo.angle(angles.begin()->second);
       servo.speed(15);
-      servo.torque(sim_torque);
+      servo.torque(torque);
     } else {
       servo.angle(0);
       servo.speed(15);
-      servo.torque(sim_torque);
+      servo.torque(torque);
     }
   }
 
@@ -365,139 +329,84 @@ public:
       }
     }
   }
+
+  void setup(float angle)
+  {
+    map < float , float > angles;
+    angles[0]=angle;
+    angles[0.5]=angle;
+    angles[1]=angle;
+    setup(angles);
+  }
+
+  void wave(double t0,double T,double amin, double amax,int n=5) 
+  {
+    map < float , float > angles;
+    for (int i=0; i<=n; ++i) {
+      double t=t0+T*double(i)/double(n);
+      angles[t]=(amin+amax)/2+(amax-amin)/2*sin(2*M_PI*(t-t0)/T);
+    }
+    setup(angles);
+  }
+
+
+  ServoMover()
+  {
+    loop = true;
+    torque = 10;
+    setup(0);
+  }
 };
 
 class LegMover
 {
 public:
-  typedef map < float , Point > Angles;
-  Angles angles;
-  std::mutex anglesMutex;
-  Angles::iterator at;
-  bool loop;
-
-  float t0,T;
-
-  LegMover() { loop=true;}
+  ServoMover kneeMover;
+  ServoMover femurMover;
+  ServoMover hipMover;
   
-  void setLoop(bool doLoop) { loop=doLoop; }
-  void move(float simTime, float realTime, Leg &leg)
-  {
-    Lock lock(anglesMutex);
-
-    if (angles.size() >= 2) {
-      float s= (simTime-t0)/T;
-      if (!loop && s>=1.0) s=1.0;
-      s=s-floor(s);
-      s=t0+T*s;
-
-      while (at != angles.end() && s > at->first) ++at;
-      if (at == angles.end()) at=angles.begin();
-      while (at != angles.begin() && s < at->first) --at;
-      float oldTime = at->first;
-      const Point &oldAngle = at->second;
-      Angles::iterator after(at);
-      if (++after == angles.end()) after=angles.begin();
-      float newTime = after->first;
-      if (newTime < oldTime) newTime += T;
-      const Point &newAngle = after->second; 
-      if (++after == angles.end()) at=angles.begin();
-      float newTime2 = after->first;
-      if (newTime2 < oldTime) newTime2 += T;
-      const Point &newAngle2 = after->second;
-
-      //      cout << "body move s=" << s << "oldt=" << oldTime << " newTime=" << newTime << " newTime2=" << newTime2 << endl;
-
-      double realTimeNow  = realTime;
-      double ts[3];
-
-
-      double lambda = (fabs(sim_speed) > 0.1) ? 1/sim_speed : 10.0;
-      ts[0] = lambda*(oldTime-s) + realTimeNow;
-      ts[1] = lambda*(newTime-s) + realTimeNow;
-      ts[2] = lambda*(newTime2-s) + realTimeNow;
-
-      float curves0[3][3],curves1[3][3];
-      float p[3];
-
-      p[0]=oldAngle.a.knee;
-      p[1]=newAngle.a.knee;
-      p[2]=newAngle2.a.knee;
-      fit(ts,p,curves0[0],curves1[0]);
-
-      p[0]=oldAngle.a.femur;
-      p[1]=newAngle.a.femur;
-      p[2]=newAngle2.a.femur;
-      fit(ts,p,curves0[1],curves1[1]);
-
-      p[0]=oldAngle.a.hip;
-      p[1]=newAngle.a.hip;
-      p[2]=newAngle2.a.hip;
-      fit(ts,p,curves0[2],curves1[2]);
-      
-      leg.knee->curve(ts+1,curves0[0],curves1[0]);
-      leg.femur->curve(ts+1,curves0[1],curves1[1]);
-      leg.hip->curve(ts+1,curves0[2],curves1[2]);
-      leg.setTorques(Point(1.0,1.0,1.0));
-    } else if (angles.size() == 1) {
-      leg.setAngles(angles[0]);
-      leg.setTorques(Point(sim_torque,sim_torque,sim_torque));
-      leg.setSpeeds(90.0);
-    } else {
-      leg.setSpeeds(0);
-      leg.setTorques(Point(sim_torque,sim_torque,sim_torque));
-      leg.setAngles(Point(0,0,0));
-    }
+  void setLoop(bool doLoop) { 
+    kneeMover.setLoop(doLoop);
+    femurMover.setLoop(doLoop);
+    hipMover.setLoop(doLoop);
   }
 
-  void setupFromTips(Leg &leg, const map < float , Point > &t2tips) {
-    Lock lock(anglesMutex);
-    if (t2tips.size() == 0) {
-      angles.clear();
-      at=angles.begin();
-      return;
-    }
-    t0=t2tips.begin()->first;
-    if (t2tips.size() > 1) {
-      T=t2tips.rbegin()->first-t0;
-    } else {
-      T=1.0;
-    }
+  void move(float simTime, float realTime, Leg &leg)  {
+    kneeMover.move(simTime,realTime,*leg.knee);
+    femurMover.move(simTime,realTime,*leg.femur);
+    hipMover.move(simTime,realTime,*leg.hip);
+  }
 
-    angles.clear();
-    
+  void setup(Leg &leg, const map < float , Point > &t2tips) {
+    map < float , float > t2knee,t2femur,t2hip;
     for (map < float , Point > :: const_iterator i = t2tips.begin();
 	 i != t2tips.end();
 	 ++i) {
-      const Point &p=i->second;
-      Point a;
-      leg.compute3D(p.p.x,p.p.y,p.p.z,a.a.knee,a.a.femur,a.a.hip);
-      angles[i->first]=a;
+      float t=i->first;
+      Point p=i->second;
+      float knee;
+      float femur;
+      float hip;
+      leg.compute3D(p.p.x,p.p.y,p.p.z,knee,femur,hip);
+      t2knee[t]=knee;
+      t2femur[t]=femur;
+      t2hip[t]=hip;
     }
-    at=angles.begin();
+    kneeMover.setup(t2knee);
+    femurMover.setup(t2femur);
+    hipMover.setup(t2hip);
   }
 
-  void report(ostream &out, Leg &leg)
+  void setup(Leg &leg, Point p)
   {
-    string name = leg.name;
-    out << name << "t" 
-	 << "," << name << "knee" << "," << name << "femur"<< "," << name << "hip"
-	 << "," << name << "vknee" << "," << name << "vfemur"<< "," << name << "vhip"  << endl;
+    float knee;
+    float femur;
+    float hip;
+    leg.compute3D(p.p.x,p.p.y,p.p.z,knee,femur,hip);
 
-    for (size_t i=0; i<angles.size(); ++i) {
-      double t = t0+double(i)/angles.size()*T;
-      size_t i1=(i+1) % angles.size();
-      double dt = T/angles.size();
-      out << t 
-	   << "," << angles[i].a.knee 
-	   << "," << angles[i].a.femur 
-	   << ","<< angles[i].a.hip
-	   << "," << (angles[i1].a.knee-angles[i].a.knee)/dt
-	   << "," << (angles[i1].a.femur-angles[i].a.femur)/dt
-	   << ","<< (angles[i1].a.hip-angles[i].a.hip)/dt << endl;
-    }
-    out << endl;
-
+    kneeMover.setup(knee);
+    femurMover.setup(femur);
+    hipMover.setup(hip);
   }
 };
 
@@ -525,7 +434,6 @@ public:
       legs[LEG3].init("LEG3");
       legs[LEG4].init("LEG4");
   }
-
 };
 
 class LegsMover
@@ -543,26 +451,17 @@ public:
     for (int i=0; i<4; ++i ) legMovers[i].setLoop(doLoop);
   }
 
-  void setupFromTips(Legs &legs, const map < float , Point > *t2tips) 
+  void setup(Legs &legs, const map < float , Point > *t2tips) 
   {
     for (int i=0; i<4; ++i) {
-      legMovers[i].setupFromTips(legs.legs[i],t2tips[i]);
+      legMovers[i].setup(legs.legs[i],t2tips[i]);
     }
   }
 
   void report(ostream &out, Legs &legs)
   {
-    for (int i=0; i<4; ++i) {
-      legMovers[i].report(out,legs.legs[i]);
-    }
   }
-
-  LegsMover()
-  {
-  }
-
 };
-
 
 class Body {
 public:
@@ -571,35 +470,35 @@ public:
   SPServo waistServo;
   shared_ptr<ServoMover> waistMover;
   SPServo neckLeftRightServo;
-  float neckLeftRightAngle;
+  shared_ptr<ServoMover> neckLeftRightMover;
   SPServo neckUpDownServo;
-  float neckUpDownAngle;
+  shared_ptr<ServoMover> neckUpDownMover;
 
 
   void init()
   {
-    neckLeftRightAngle=0;
-    neckUpDownAngle=0;
     legs.init();
     waistServo = servo("WAIST");
     neckUpDownServo=servo("NECKUD");
     neckLeftRightServo=servo("NECKLR");
+    
     legsMover = shared_ptr <LegsMover> ( new LegsMover () );
     waistMover = shared_ptr <ServoMover > ( new ServoMover() );
+    neckUpDownMover = shared_ptr <ServoMover > ( new ServoMover() );
+    neckLeftRightMover = shared_ptr <ServoMover > ( new ServoMover() );
   }
   
   void move(double simTime,double realTime)
   {
     legsMover->move(simTime,realTime,legs);
     waistMover->move(simTime,realTime,*waistServo);
-    neckLeftRightServo->angle(5*cos(6.28*simTime/10.0));
-    neckUpDownServo->angle(neckUpDownAngle);
-    neckLeftRightServo->angle(neckLeftRightAngle);
+    neckLeftRightMover->move(simTime,realTime,*neckLeftRightServo);
+    neckUpDownMover->move(simTime,realTime,*neckUpDownServo);
   }
 
   void report(std::ostream &out)
   {
-    legsMover->report(out,legs);
+    //    legsMover->report(out,legs);
   }
 };
 
@@ -623,18 +522,15 @@ public:
   }
   
   void setPitch(float angle) {
-	  body->neckUpDownAngle=angle;
+    body->neckUpDownMover->setup(angle);
   }
   
   void setYaw(float angle) {
-	  body->neckLeftRightAngle=angle;
+    body->neckLeftRightMover->setup(angle);
   }
-  
+
   void setWaist(float angle) {
-    map < float , float > waist;
-    waist[0]=angle;
-    waist[1]=angle;
-    body->waistMover->setup(waist);
+    body->waistMover->setup(angle);
   }
   
   bool load(const string &file)
@@ -667,7 +563,7 @@ public:
       sim_time = 0; // reset to sync with t=0 in gait.
     }
 
-    body->legsMover->setupFromTips(body->legs,t2tips);
+    body->legsMover->setup(body->legs,t2tips);
     body->waistMover->setup(t2waist);
     return true;
   }
@@ -677,6 +573,18 @@ public:
   }
   void loop() {
 	body->legsMover->setLoop(true);
+  }
+
+  void yes()
+  {
+    body->neckUpDownMover->wave(0,2,-15,15);
+    body->neckLeftRightMover->setup(0);
+  }
+
+  void no()
+  {
+    body->neckUpDownMover->setup(0);
+    body->neckLeftRightMover->wave(0,2,-15,15);
   }
 
   void act(string &command)
@@ -693,6 +601,12 @@ public:
       body->report(fout);
       oss << "report sent to file " << file;
       answer(oss.str());
+    }
+    if (head == "yes") {
+      yes();
+    }
+    if (head == "no") {
+      no();
     }
     if (head == "loop") {
 	  loop();
@@ -758,13 +672,6 @@ public:
       oss << "set speed to " << value << ".";
       answer(oss.str());
     }
-    if (head == "torque") {
-      double value;
-      iss >> value;
-      sim_torque = value;
-      oss << "set torque to " << value << ".";
-      answer(oss.str());
-    }
   }
 
   void update()
@@ -827,7 +734,7 @@ public:
   BodyController()
   {
     sim_speed=1;
-    sim_torque = 0.70;
+
     sim_time=0;
     goUpdate = 0;
   }

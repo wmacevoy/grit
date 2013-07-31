@@ -50,9 +50,6 @@ SPServo servo(string device, int id)
   if (controller.get() == 0) throw out_of_range(device);
   
   SPServo ans = SPServo(controller->servo(id));
-  if (verbose) {
-    cout << "servo " << device << ":" << id << " at " << (void*) &*ans << endl;
-  }
   return ans;
 }
 
@@ -63,22 +60,22 @@ SPServo servo(string name)
   double scale = atof(cfg.servo(name,"scale").c_str());
   double offset = atof(cfg.servo(name,"offset").c_str());
   double torque = atof(cfg.servo(name,"torque").c_str());
+  double speed = atof(cfg.servo(name,"speed").c_str());
 
   SPServo ans;
 
   if (scale == 1.0 && offset == 0.0) {
-    if (verbose) {
-      cout << "servo device=" << device << " id=" << id << endl;
-    }
     ans = servo(device,id);
   } else {
-    if (verbose) {
-      cout << "servo device=" << device << " id=" << id 
-	   << " scale=" << scale << " offset=" << offset << endl;
-    }
     ans = SPServo(new ScaledServo(servo(device,id),scale,offset));
   }
   ans->torque(torque);
+  ans->speed(speed);
+  if (verbose) {
+    cout << "servo device=" << device << " id=" << id 
+	 << " scale=" << scale << " offset=" << offset 
+	 << " speed=" << speed << " torque=" << torque << endl;
+  }
   return ans;
 }
 

@@ -133,7 +133,7 @@ void Configure::servos(const std::string &file)
   servoRowMap.clear();
   servoColumnMap.clear();
   servoTable.clear();
-  string header = "name,id,device,scale,offset,torque";
+  string header = "name,id,device,scale,offset,torque,speed";
   vector<string> cols;
   split(header,cols);
   for (size_t i=0; i<cols.size(); ++i) {

@@ -11,7 +11,6 @@
 #include <fcntl.h>
 #include <math.h>
 
-#include "config.h"
 #include "ServoController.h"
 
 #define USE_BROADCAST 1
@@ -49,11 +48,11 @@ struct DynamixelServo : Servo
   DynamixelServo(DXLIO &io_, int id_) 
     : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
   {
-    goalSpeed = 0;
     presentSpeed = 0;
-    goalTorque = 1;
     presentTorque = 0;
-    goalPosition = 2048;
+    angle(0.0);
+    speed(30.0);
+    torque(0.10);
     //    io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
     curveMode = false;
 #if USE_BROADCAST != 1
@@ -171,6 +170,7 @@ struct DynamixelServoController : ServoController
       if (us > 0) usleep(us);
       double t = now();
       t1=t+1.0/UPDATE_RATE;
+      bool output =(floor(t) != floor(t1));
 #if USE_BROADCAST
       {
 	io.reopen(); // reopen if failing recently...
@@ -186,8 +186,10 @@ struct DynamixelServoController : ServoController
 	int i = 0;
 	std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
 	std::cout.precision(5);
-	cout << endl;
-	cout << "t," << setprecision(15) << t << ",";
+	if (output) {
+	  cout << endl;
+	  cout << "t," << setprecision(15) << t << ",";
+	}
 	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
 	  int id = k->first;
 	  DynamixelServo *servo = &*k->second;
@@ -223,7 +225,9 @@ struct DynamixelServoController : ServoController
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
 	  int torque = servo->goalTorque;
-	  cout << "id,"<<servo->id << "," << position << "," << speed << ",";
+	  if (output) {
+	    cout << "id,"<<servo->id << "," << position << "," << speed << ",";
+	  }
 
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));

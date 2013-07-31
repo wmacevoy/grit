@@ -1,4 +1,3 @@
-#include "config.h"
 #include "ServoController.h"
 
 ServoController::~ServoController() {}

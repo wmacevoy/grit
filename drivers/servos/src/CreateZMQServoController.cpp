@@ -6,8 +6,6 @@
 #include <assert.h>
 #include <string.h>
 
-#include "config.h"
-
 #include "zmq.h"
 
 #include "CreateZMQServoController.h"

@@ -1,5 +1,3 @@
-#include "config.h"
-
 #include "CreateFakeServoController.h"
 #include "now.h"
 

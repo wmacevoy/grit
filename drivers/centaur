@@ -19,18 +19,24 @@ then
   exit 1
 fi
 
+pid()
+{
+    app=$1
+    if [ -f $MOJAVATON_DIR/pids/$app.pid ]
+    then
+	pid=$(cat $MOJAVATON_DIR/pids/$app.pid)
+	if ps -eo pid | egrep -q '\<'$pid'\>'
+	then
+	    echo $pid
+	    return
+	fi
+    fi
+    echo -1
+}
+
 running()
 {
-  app=$1
-  if [ -f $MOJAVATON_DIR/pids/$app.pid ]
-  then
-    pid=$(cat $MOJAVATON_DIR/pids/$app.pid)
-    if ps -eo pid | egrep -q '\<'$pid'\>'
-    then
-      return 0
-    fi
-  fi
-  return 1
+  test $(pid $app) -ne -1
 }
 
 stop_app()
@@ -71,23 +77,47 @@ stop_apps()
 }
 
 
+prioritize()
+{
+    for app in "$@"
+    do
+	app_pid=$(pid $app)
+	if [ $app_pid -ne -1 ]
+	then
+	    priority=0
+	    app_pid=$(pid $app)
+	    case $app in
+		body) priority=-10;;
+		servos) priority=-15;;
+	    esac
+	    if renice -n $priority -p $(pid $app)
+	    then
+		echo set priority of $app to $priority
+	    else
+		echo failed to set priority of $app to $priority		
+	    fi
+	fi
+    done
+}
+
 start_app()
 {
   app=$1
-  if running $app
+  app_pid=$(pid $app)
+  if [ $app_pid -ne -1 ]
   then
-      pid=$(cat $MOJAVATON_DIR/pids/$app.pid)
-      echo $app already running as pid $pid
+      echo $app already running as pid $app_pid
       return 0
   fi
   
   mkdir -p $MOJAVATON_DIR/pids
   mkdir -p $MOJAVATON_DIR/logs
   cd $MOJAVATON_DIR/drivers/$app
-  nice -19 $MOJAVATON_DIR/drivers/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
-  cpid=$!
-  echo $app started as pid $cpid
-  echo $cpid > $MOJAVATON_DIR/pids/$app.pid
+  $MOJAVATON_DIR/drivers/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
+  app_pid=$!
+  echo $app_pid > $MOJAVATON_DIR/pids/$app.pid
+  echo $app started as pid $app_pid
+  prioritize $app
 }
 
 start_apps()

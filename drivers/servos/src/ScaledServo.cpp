@@ -1,4 +1,3 @@
-#include "config.h"
 #include "ScaledServo.h"
 
 void ScaledServo::curve(double t[2], float c0[3],float c1[3])
