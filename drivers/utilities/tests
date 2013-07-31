@@ -1,3 +1,0 @@
-#!/bin/bash
-../go bin/test_now
-../go bin/test_csvread

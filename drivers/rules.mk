@@ -1,3 +1,16 @@
+include ../../setup/config.mk
+include ../config.mk
+
+TARGET=$(shell basename `realpath .`)
+
+CFLAGS += $(patsubst %,-I ../%/include,$(DEPS))
+CXXFLAGS += $(patsubst %,-I ../%/include,$(DEPS))
+LDFLAGS += $(patsubst %,-L ../%/lib,$(DEPS)) $(patsubst %,-l%,$(DEPS))
+
+CFLAGS += $(MY_FLAGS)
+CXXFLAGS += $(MY_FLAGS)
+LDFLAGS += $(MY_LIBS)
+
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
@@ -14,6 +27,9 @@ OBJECTS=$(patsubst src/%,tmp/%.o,$(SOURCES))
 MAIN_OBJECTS=$(patsubst src/%,tmp/%.o,$(MAIN_SOURCES))
 TEST_OBJECTS=$(patsubst src/%,tmp/%.o,$(TEST_SOURCES))
 ALL_OBJECTS=$(OBJECTS) $(MAIN_OBJECTS) $(TEST_OBJECTS)
+
+PROGS=$(patsubst src/main_%.cpp,bin/%,$(MAIN_SOURCES))
+TESTS=$(patsubst src/test_%.cpp,bin/test_%,$(TEST_SOURCES))
 
 #These are the dependency files, which make will clean up after it creates them
 DEPFILES:=$(patsubst src/%,tmp/%.d,$(ALL_SOURCES))
@@ -48,9 +64,6 @@ lib/lib$(TARGET).a : $(OBJECTS)
 lib/lib$(TARGET).so : $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -shared  -o $@ $^ $(LDFLAGS)
 
-clean : 
-	/bin/rm -rf tmp/* bin/* lib/*
-
 bin/test_% : tmp/test_%.cpp.o lib/lib$(TARGET).so lib/lib$(TARGET).a
 	$(CXX) $(CXXFLAGS) -o $@ $< -Llib -l$(TARGET) $(LDFLAGS)
 
@@ -62,3 +75,36 @@ bin/% : tmp/main_%.cpp.o lib/lib$(TARGET).so lib/lib$(TARGET).a
 
 bin/% : tmp/main_%.c.o lib/lib$(TARGET).so lib/lib$(TARGET).a
 	$(CC) $(CFLAGS) -o $@ $< -Llib -l$(TARGET) $(LDFLAGS)
+
+.PHONY: all
+.PHONY: deps
+.PHONY: depsall
+.PHONY: clean
+.PHONY: depsclean
+.PHONY: libs
+.PHONY: progs
+.PHONY: tests
+.PHONY: run
+
+all : libs progs
+
+depsall : deps all
+
+clean : 
+	/bin/rm -rf tmp/* bin/* lib/*
+
+depsclean : clean
+	for d in $(DEPS); do $(MAKE) -C ../$$d clean; done
+
+libs : lib/lib$(TARGET).a lib/lib$(TARGET).so 
+
+progs : $(PROGS)
+
+tests : $(TESTS)
+	for t in $(TESTS); do ../centaur $$t; done
+
+deps : 
+	for d in $(DEPS); do $(MAKE) -C ../$$d libs; done
+
+run : bin/$(TARGET)
+	../centaur bin/$(TARGET)

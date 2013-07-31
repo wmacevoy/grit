@@ -1,9 +1,5 @@
 #pragma once
 
-#ifndef SERVO_CURVE
-#error config.h not yet included
-#endif
-
 class Servo
 {
 public:

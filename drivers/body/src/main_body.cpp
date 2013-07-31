@@ -20,8 +20,7 @@
 #include <locale>
 #include <memory>
 #include <string.h>
-
-#include "config.h"
+#include <mutex>
 
 #include "CreateZMQServoController.h"
 #include "ZMQHub.h"
@@ -29,10 +28,10 @@
 #include "BodyMessage.h"
 #include "Lock.h"
 #include "now.h"
+#include "Configure.h"
 
 using namespace std;
 
-#include <mutex>
 
 double sim_time;
 double sim_speed;
@@ -40,6 +39,9 @@ double sim_torque;
 
 typedef shared_ptr < Servo > SPServo;
 typedef shared_ptr < ServoController > SPServoController;
+
+Configure cfg;
+SPServoController servoController;
 
 const float MOVE_RATE=50.0;
 
@@ -54,6 +56,12 @@ const int LEG1=0;
 const int LEG2=1;
 const int LEG3=2;
 const int LEG4=3;
+
+SPServo servo(string name)
+{
+  int id = atoi(cfg.servo(name,"id").c_str());
+  return SPServo(servoController->servo(id));
+}
 
 class point {
 	public:
@@ -189,35 +197,12 @@ public:
   float kneeAngle,femurAngle,hipAngle;
   bool inverted;
 
-  void init(SPServoController &controller, const map<string,int> &servoMap,string newName) {
+
+  void init(string newName) {
     name=newName;
-
-    {
-      string part=name;
-      part.append("_KNEE");
-      map<string,int>::const_iterator i=servoMap.find(part);
-      assert(i != servoMap.end());
-      int id=i->second;
-      knee = SPServo(controller->servo(id));
-    }
-
-    {
-      string part=name;
-      part.append("_FEMUR");
-      map<string,int>::const_iterator i=servoMap.find(part);
-      assert(i != servoMap.end());
-      int id=i->second;
-      femur = SPServo(controller->servo(id));
-    }
-
-    {
-      string part=name;
-      part.append("_HIP");
-      map<string,int>::const_iterator i=servoMap.find(part);
-      assert(i != servoMap.end());
-      int id=i->second;
-      hip = SPServo(controller->servo(id));
-    }
+    knee = servo(name + "_KNEE");
+    femur = servo(name + "_FEMUR");
+    hip = servo(name + "_HIP");
   }
 
   void setEnd(const Point &tip)
@@ -533,12 +518,12 @@ public:
     legs[LEG4].setHipOffset(ANGLE90);
   }
 
-  void init(SPServoController &controller, const map<string,int> &servoMap)
+  void init()
   {
-      legs[LEG1].init(controller,servoMap,"LEG1");
-      legs[LEG2].init(controller,servoMap,"LEG2");
-      legs[LEG3].init(controller,servoMap,"LEG3");
-      legs[LEG4].init(controller,servoMap,"LEG4");
+      legs[LEG1].init("LEG1");
+      legs[LEG2].init("LEG2");
+      legs[LEG3].init("LEG3");
+      legs[LEG4].init("LEG4");
   }
 
 };
@@ -591,41 +576,14 @@ public:
   float neckUpDownAngle;
 
 
-  void init(SPServoController controller, const map<string,int> &servoMap)
+  void init()
   {
     neckLeftRightAngle=0;
     neckUpDownAngle=0;
-    legs.init(controller,servoMap);
-
-    {
-      map<string,int>::const_iterator i=servoMap.find("WAIST");
-      assert(i != servoMap.end());
-      waistServo=SPServo(controller->servo(i->second));
-      waistServo->angle(0);
-      waistServo->speed(15);
-      waistServo->torque(0.700);
-    }
-
-    
-    {
-      map<string,int>::const_iterator i=servoMap.find("NECKUD");
-      assert(i != servoMap.end());
-      neckUpDownServo=SPServo(controller->servo(i->second));
-      neckUpDownServo->speed(45);
-      neckUpDownServo->angle(neckUpDownAngle);
-      neckUpDownServo->torque(0.700);
-    }
-
-
-    {
-      map<string,int>::const_iterator i=servoMap.find("NECKLR");
-      assert(i != servoMap.end());
-      neckLeftRightServo=SPServo(controller->servo(i->second));
-      neckLeftRightServo->speed(45);
-      neckLeftRightServo->angle(neckLeftRightAngle);
-      neckLeftRightServo->torque(0.700);
-    }
-
+    legs.init();
+    waistServo = servo("WAIST");
+    neckUpDownServo=servo("NECKUD");
+    neckLeftRightServo=servo("NECKLR");
     legsMover = shared_ptr <LegsMover> ( new LegsMover () );
     waistMover = shared_ptr <ServoMover > ( new ServoMover() );
   }
@@ -902,150 +860,43 @@ public:
 
 };
 
-ZMQHub *hub=0;
+shared_ptr < Body > body;
+shared_ptr < BodyController > bodyController;
 
 void SigIntHandler(int arg) {
-  hub->stop();
+  bodyController->stop();
 }
 
-struct App
+
+void run()
 {
-  shared_ptr < ServoController > servoController;
-  shared_ptr < Body > body;
-  shared_ptr < BodyController > bodyController;
-  vector<string> bodyServosSubscribers;
-  string bodyServosPublish;
-  map < string , int > servoMap;
+  body = shared_ptr <Body> (new Body());
+  bodyController = shared_ptr <BodyController> (new BodyController());
+  bodyController->publish = cfg.str("body.commander.publish");
+  bodyController->subscribers = cfg.list("body.commander.subscribers");
+  servoController = shared_ptr<ServoController>(CreateZMQServoController(cfg.str("body.servos.publish"),cfg.str("body.servos.subscribers")));
 
-  void subscribers(vector<string> &subscribers, string arg, char sep=',')
-  {
-    subscribers.clear();
-    while (arg.length() > 0) {
-      size_t comma = arg.find(sep);
-      string subscriber = arg.substr(0,(comma != string::npos) ? comma : arg.length());
-      subscribers.push_back(subscriber);
-      arg=arg.substr((comma != string::npos) ? comma+1 : arg.length());
-    }
-  }
+  body->init();
+  bodyController->body=body;
 
-  void configure(const string &config_csv)
-  {
-    vector < vector < string > > values;
-    if (!CSVRead(config_csv,"name,value",values)) {
-      cout << "Could not read configuration file '" 
-	   << config_csv << "'." << endl;
-      exit(1);
-    }
-
-    map<string,string> cfg;
-    for (size_t i=0; i != values.size(); ++i) {
-      cfg[values[i][0]]=values[i][1];
-    }
-
-    { 
-      map<string,string>::iterator property=
-	cfg.find("body.servos.publish");
-      if (property != cfg.end()) {
-	bodyServosPublish = property->second;
-      }
-    }
-
-    {
-      map<string,string>::iterator property=
-	cfg.find("body.servos.subscribers");
-      if (property != cfg.end()) {
-	subscribers(bodyServosSubscribers,property->second,';');
-      }
-    }
-    
-    {
-      map<string,string>::iterator property=
-	cfg.find("body.commander.publish");
-      if (property != cfg.end()) {
-	bodyController->publish = property->second;
-      }
-    }
-
-    {
-      map<string,string>::iterator property=
-	cfg.find("body.commander.subscribers");
-      if (property != cfg.end()) {
-	subscribers(bodyController->subscribers,property->second);
-      }
-    }
-
-    {
-      map<string,string>::iterator property=
-	cfg.find("servos.map");
-      if (property != cfg.end()) {
-	vector < vector < string > > csvServoMap;
-	if (CSVRead(property->second,"name,id",csvServoMap)) {
-	  for (size_t i=0; i<csvServoMap.size(); ++i) {
-	    servoMap[csvServoMap[i][0]]=atoi(csvServoMap[i][1].c_str());
-	  }
-	}
-      }
-    }
-  }
-
-  void args(int argc, char *argv[])
-  {
-    for (int argi=1; argi<argc; ++argi) {
-      if (strcmp(argv[argi],"--configure") == 0) {
-	configure(argv[++argi]);
-	continue;
-      }
-      
-      if (strcmp(argv[argi],"--servo.publish") == 0) {
-	bodyServosPublish = argv[++argi];
-	continue;
-      }
-      
-      if (strcmp(argv[argi],"--servo.subscribers") == 0) {
-	subscribers(bodyServosSubscribers,argv[++argi]);
-	continue;
-      }
-      
-      if (strcmp(argv[argi],"--body.publish") == 0) {
-	bodyController->publish = argv[++argi];
-	continue;
-      }
-      
-      if (strcmp(argv[argi],"--body.subscribers") == 0) {
-	subscribers(bodyController->subscribers,argv[++argi]);
-	continue;
-      }
-      cout << "unkown arg '" << argv[argi] << "' ignored."  << endl;
-    }
-    
-    if (argc == 1) {
-      configure(CONFIG_CSV);
-    }
-    
-    assert(bodyServosSubscribers.size() == 1);
-    servoController = shared_ptr<ServoController>(CreateZMQServoController(bodyServosPublish,bodyServosSubscribers[0]));
-  }
-
-  void run(int argc, char *argv[])
-  {
-    body = shared_ptr <Body> (new Body());
-    bodyController = shared_ptr <BodyController> (new BodyController());
-    args(argc,argv);
-    body->init(servoController,servoMap);
-    bodyController->body = body;
-
-    servoController->start();
-    bodyController->start();
-    hub=&*bodyController;
-    signal(SIGINT, SigIntHandler);
-    bodyController->join();
-  }
-};
+  servoController->start();
+  bodyController->start();
+  signal(SIGINT, SigIntHandler);
+  bodyController->join();
+  bodyController.reset();
+  servoController.reset();
+  body.reset();
+}
 
 int main(int argc, char *argv[])
 {
-  App app;
-  app.run(argc,argv);
+  cfg.path("../../setup");
+  cfg.args("body.",argv);
+  if (argc == 1) cfg.load("config.csv");
+  if (cfg.flag("body.verbose",false)) cfg.show();
+  cfg.servos();
+
+  run();
   cout << "done" << endl;
   return 0;
 }

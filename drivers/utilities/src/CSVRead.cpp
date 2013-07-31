@@ -11,37 +11,9 @@
 #include <set>
 
 #include "CSVRead.h"
+#include "CSVSplit.h"
 
 using namespace std;
-
-// http://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
-// trim from start
-static inline std::string &ltrim(std::string &s) {
-        s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
-        return s;
-}
-
-// trim from end
-static inline std::string &rtrim(std::string &s) {
-        s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-        return s;
-}
-
-// trim from both ends
-static inline std::string &trim(std::string &s) {
-        return ltrim(rtrim(s));
-}
-
-static void split(const string &together, vector<string> &parts, char sep=',')
-{
-  istringstream  lineStream(together);
-  string cell;
-
-  parts.clear();
-  while(!!getline(lineStream,cell,sep)) {
-    parts.push_back(trim(cell));
-  }
-}
 
 bool CSVRead(const std::string &file, 
 	     const std::string &heading_str, 
@@ -61,7 +33,7 @@ bool CSVRead(const std::string &file,
 
   vector<int> column_map;
 
-  split(heading_str,heading_vec);
+  CSVSplit(heading_str,heading_vec);
 
   for (size_t i=0; i<heading_vec.size(); ++i) {
     heading_map[heading_vec[i]]=i;
@@ -72,7 +44,7 @@ bool CSVRead(const std::string &file,
 
   for (;;) {
     if (!getline(in,line,'\n')) return false;
-    split(line,line_vec);
+    CSVSplit(line,line_vec);
     line_set.clear();
     for (size_t i=0; i<line_vec.size(); ++i) {
       line_set.insert(line_vec[i]);
@@ -103,7 +75,7 @@ bool CSVRead(const std::string &file,
 
   for (;;) {
     if (!getline(in,line,'\n')) break;
-    split(line,line_vec);
+    CSVSplit(line,line_vec);
     if ((ssize_t)line_vec.size() <= min_index || line_vec[min_index] == "") break;
     table.push_back(vector<string>());
     vector<string> &row=*table.rbegin();
