@@ -23,7 +23,13 @@ bool CSVRead(const std::string &file,
 
   ifstream in(file);
 
-  if (!in) return false;
+  if (!in) { 
+	  char buffer[1024];
+	  cout << "Could not open file " << endl;
+	  cout << "[" << file << "]"<< endl; 
+      cout << "Current path is "<< getcwd(buffer,1024) << endl; 
+      return false; 
+  }
 
   vector<string> heading_vec;
   vector<string> line_vec;
@@ -60,7 +66,10 @@ bool CSVRead(const std::string &file,
     if (match) break;
   }
 
-  if (!match) return false;
+  if (!match) {
+	  cout << "No matching header "<<heading_str<<endl;
+	  return false;
+  }
   
 
   column_map.resize(heading_vec.size());
@@ -84,6 +93,9 @@ bool CSVRead(const std::string &file,
     for (size_t i=0; i<heading_vec.size(); ++i) {
       row[i]=line_vec[column_map[i]];
     }
+  }
+  if (table.size()==0) {
+	  cout << "No data in table below heading " << endl;
   }
   return table.size() > 0;
 }
