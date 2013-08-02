@@ -1,14 +1,14 @@
 #pragma once
 
-#define BODY_MESSAGE_MAXLEN 80
+#include "LegGeometry.h"
+#include "Servo.h"
+#include <memory>
+#include <string>
 
-class Leg : public LegGeometry
-{
-  std::shared_ptr < Servo > knee;
-  std::shared_ptr < Servo > femur;
-  std::shared_ptr < Servo > hip;
-
-  void init(std::shared_ptr < ServoController > &controller, int kneeid,int femurid,int hipid,string newName);
-
-  void setEnd(const Point &tip)  
-}
+class Leg : public LegGeometry {
+public:
+  std::shared_ptr < Servo >  knee,femur,hip;
+  std::string name;
+  void init(std::string newName);
+  void report();
+};

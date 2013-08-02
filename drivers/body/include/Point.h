@@ -1,12 +1,10 @@
 #pragma once
 
-class Point : public float[3]
+class Point
 {
-  Point(float x,float y, float z);
-  void shift(float s, const Point &p);
-}
+ public:
+  float x,y,z;
+  Point();
+  Point(float x_,float y_, float z_);
+};
 
-Point operator*(double a,const Point &p)
-{
-  return Point(c*p[0],c*p[1],c*p[2]);
-}
