@@ -20,7 +20,7 @@ bool CSVRead(const std::string &file,
 	     std::vector < std::vector < std::string > > &table)
 {
   table.clear();
-
+  cout << "Reading " << file << endl;
   ifstream in(file);
 
   if (!in) { 
@@ -28,8 +28,10 @@ bool CSVRead(const std::string &file,
 	  cout << "Could not open file " << endl;
 	  cout << "[" << file << "]"<< endl; 
       cout << "Current path is "<< getcwd(buffer,1024) << endl; 
+      cout.flush();
       return false; 
   }
+  cout << "File exists " << endl;
 
   vector<string> heading_vec;
   vector<string> line_vec;
@@ -49,7 +51,11 @@ bool CSVRead(const std::string &file,
   bool match = false;
 
   for (;;) {
-    if (!getline(in,line,'\n')) return false;
+    if (!getline(in,line))  {
+	    cout << "Empty line no header found"<< endl;
+		return false; 
+	}
+	cout << "The line is ["<<line<<"]" << endl;
     CSVSplit(line,line_vec);
     line_set.clear();
     for (size_t i=0; i<line_vec.size(); ++i) {
@@ -58,7 +64,7 @@ bool CSVRead(const std::string &file,
     
     match = true;
     for (size_t i=0; i != heading_vec.size(); ++i) {
-      if (line_set.find(heading_vec[i]) == line_set.end()) {
+      if (line_set.find(heading_vec[i].c_str()) == line_set.end()) {
 	match = false; 
 	break;
       }
@@ -68,7 +74,11 @@ bool CSVRead(const std::string &file,
 
   if (!match) {
 	  cout << "No matching header "<<heading_str<<endl;
+      cout.flush();
 	  return false;
+  } else {
+	cout << "Match" << endl;
+      cout.flush();
   }
   
 
@@ -96,6 +106,7 @@ bool CSVRead(const std::string &file,
   }
   if (table.size()==0) {
 	  cout << "No data in table below heading " << endl;
+      cout.flush();
   }
   return table.size() > 0;
 }
@@ -113,10 +124,13 @@ bool CSVRead(const std::string &file,
       table[i].resize(srow.size());
       std::vector < double > & row = table[i];
       for (size_t j=0; j<srow.size(); ++j) {
+		  cout << srow[j] << ";";
 	row[j] = atof(srow[j].c_str());
       }
+      cout << endl;
     }
     return true;
-  }
+  } 
+  cout << "Converting table values to double failed " << endl;
   return false;
 }

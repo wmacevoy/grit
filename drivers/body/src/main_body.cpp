@@ -537,8 +537,9 @@ public:
   {
     vector<vector<double>> data;
     //                             0  1  2  3  4  5  6  7  8  9 10 11 12 13
-    string headers = "Time (seconds),x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,waist";
+    string headers=    "Time (seconds),x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,waist";
     if (!CSVRead(file,headers,data)) {
+	  cout << "CSVRead failed " << endl;
       return false;
     }
 
@@ -586,6 +587,15 @@ public:
     body->neckUpDownMover->setup(0);
     body->neckLeftRightMover->wave(0,2,-15,15);
   }
+  
+  void straight() {
+	setPitch(0);
+	setYaw(0);
+  }
+  void sad() {
+	setPitch(45);
+	setWaist(10);
+  }
 
   void act(string &command)
   {
@@ -608,6 +618,12 @@ public:
     if (head == "no") {
       no();
     }
+    if (head=="straight") {
+	  straight();
+	}
+	if (head=="sad") {
+		sad();
+	}
     if (head == "loop") {
 	  loop();
 	}
