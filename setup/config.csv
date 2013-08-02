@@ -11,5 +11,6 @@ body.servos.publish,tcp://*:5503
 body.servos.subscribers,tcp://127.0.0.1:5500
 body.commander.publish,tcp://*:5502
 body.commander.subscribers,tcp://127.0.0.1:5504
+body.verbose,true
 commander.publish,tcp://*:5504
 commander.subscribers,tcp://127.0.0.1:5502
