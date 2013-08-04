@@ -5,6 +5,7 @@
 #include <bson.h>
 #include <findUrgPorts.h>
 #include <chrono>
+#include <now.h>
 
 
 volatile bool HokuyoProvider::s_shutdown = false;
@@ -72,9 +73,7 @@ void HokuyoProvider::runFunction(HokuyoProvider *pProvider)
 					}		
 				}
 			}
-			
-			replyData.printToStdOut();
-			
+			replyData.m_timestamp = now();
 			bson::bo response = replyData.toBSON();
 			
 			pProvider->m_replySocket.send(response.objdata(), response.objsize());

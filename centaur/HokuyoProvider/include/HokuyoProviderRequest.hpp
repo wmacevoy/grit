@@ -10,11 +10,13 @@
 #define HOKUYO_PORTNUMBER	"31777"
 #define	RESPONSE_ERROR		"error"
 #define RESPONSE_DATA		"data"
+#define RESPONSE_TIMESTAMP	"timestamp"
 
 
 struct HokuyoData {
 	
 	std::string						m_error;
+	double							m_timestamp;
 	std::vector<std::vector<long>>	m_dataArrayArray;
 	
 	void printToStdOut(){
@@ -53,15 +55,17 @@ struct HokuyoData {
 			objBuilder.append(RESPONSE_DATA, arrayBuilder.arr());
 			objBuilder.append(RESPONSE_ERROR, m_error);
 		}
-		
+		objBuilder.append(RESPONSE_TIMESTAMP, m_timestamp);
 		return objBuilder.obj();
 	}
 	
 	void fromBSON(const char * input){
 		bson::bo responseObj(input);
+		m_timestamp = responseObj.getField(RESPONSE_TIMESTAMP).Double();
 		m_error = responseObj.getField(RESPONSE_ERROR).String();
 		if(!m_error.empty())
 			return;
+		
 		std::vector<bson::BSONElement> bDataArrayArray = responseObj.getField(RESPONSE_DATA).Array();
 		for(int i = 0; i < bDataArrayArray.size(); i++){
 			std::vector<bson::BSONElement> bDataObj = bDataArrayArray[i].Array();
@@ -83,7 +87,7 @@ public:
 		HokuyoData retVal;
 	
 		CentaurSocketReq request;
-		std::string tmp("tcp://127.0.0.1:");
+		std::string tmp("tcp://192.168.2.100:");
 		tmp += HOKUYO_PORTNUMBER;
 		if(!request.open(tmp.c_str())){
 			retVal.m_error = "Unable to connect to zmq port ";
