@@ -212,7 +212,7 @@ struct DynamixelServoController : ServoController
 	    double dt2 = dt*dt;
 	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
 	    float angle = c[0]+c[1]*dt+c[2]*dt2/2.0;
-	    float speed = c[1]+c[2]*dt;
+	    float speed = 1.1*(c[1]+c[2]*dt);
 	    servo->angle0(angle);
 	    if (fabs(speed) < 5) {
 	      if (speed < 0) speed=-5;

@@ -14,6 +14,10 @@ static void fit0(double t[3],float p[3],float c[3])
 	c[2]=0;
 	c[1]=(p[0]-p[1])/(t[0]-t[1]);
       }
+      if (fabs(c[1]*(t[1]-t[0])) > 270) {
+	c[1]=0;
+	c[2]=0;
+      }
     } else {
       c[0]=p[1];
       c[2]=0;

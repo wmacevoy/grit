@@ -2,19 +2,14 @@
 
 using namespace std;
 
-void LegMover::setLoop(bool doLoop) { 
-  kneeMover.setLoop(doLoop);
-  femurMover.setLoop(doLoop);
-  hipMover.setLoop(doLoop);
-}
-
 void LegMover::move(Leg &leg)  {
   kneeMover.move(*leg.knee);
   femurMover.move(*leg.femur);
   hipMover.move(*leg.hip);
 }
 
-void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips) {
+void LegMover::setup(float T, Leg &leg, const std::map < float , Point > &t2tips,
+		     double simTime0, double simTime1) {
   std::map < float , float > t2knee,t2femur,t2hip;
   for (map < float , Point > :: const_iterator i = t2tips.begin();
        i != t2tips.end();
@@ -29,9 +24,9 @@ void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips) {
     t2femur[t]=femur;
     t2hip[t]=hip;
   }
-  kneeMover.setup(t2knee);
-  femurMover.setup(t2femur);
-  hipMover.setup(t2hip);
+  kneeMover.setup(T,t2knee,simTime0,simTime1);
+  femurMover.setup(T,t2femur,simTime0,simTime1);
+  hipMover.setup(T,t2hip,simTime0,simTime1);
 }
 
 void LegMover::setup(Leg &leg, Point p)

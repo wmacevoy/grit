@@ -77,10 +77,15 @@ public:
 
     cout << "read '" << file << "' ok." << endl;
 
-    // add last row to finish cycle
-    data.push_back(data[0]);
+    //    // add last row to finish cycle
+    //data.push_back(data[0]);
+    //int nr=data.size();
+    //data[nr-1][0]=data[nr-2][0]+(data[nr-2][0]-data[nr-3][0]);
+
     int nr=data.size();
-    data[nr-1][0]=data[nr-2][0]+(data[nr-2][0]-data[nr-3][0]);
+
+    // assume regular spacing of samples
+    double T = data[nr-1][0]-data[0][0] + (data[1][0]-data[0][0]);
 
     map < float , Point > t2tips[4];
     map < float , float > t2waist;
@@ -93,21 +98,13 @@ public:
 				     data[r][3+3*el]);
 	t2waist[t]=data[r][13];
       }
-      simTime = 0; // reset to sync with t=0 in gait.
     }
 
-    mover->legs.setup(body->legs,t2tips);
-    mover->waist.setup(t2waist);
+    mover->legs.setup(T,body->legs,t2tips,simTime,simTime+T);
+    mover->waist.setup(T,t2waist,simTime,simTime+T);
     return true;
   }
   
-  void noLoop() {
-    //    mover->setLoop(false);
-  }
-  void loop() {
-    //    mover->setLoop(true);
-  }
-
   void yes()
   {
     mover->neck.upDown.wave(0,2,-15,15);
@@ -154,12 +151,6 @@ public:
     if (head=="sad") {
       sad();
     }
-    if (head == "loop") {
-      loop();
-    }
-    if (head == "once") {
-      noLoop();
-    }
     if (head == "home") {
       load("home.csv");
       ostringstream oss;
@@ -170,6 +161,18 @@ public:
 	  load("Gait1_3.csv");
       ostringstream oss;
       oss << "played Gait1_3 script"; 
+      answer(oss.str());
+    }
+    if (head== "backup") {
+	  load("Gait3_0.csv");
+      ostringstream oss;
+      oss << "played Gait3_0m script"; 
+      answer(oss.str());
+	}
+    if (head == "lwalk") {
+	  load("Gait2_3.csv");
+      ostringstream oss;
+      oss << "played Gait2_3 script"; 
       answer(oss.str());
     }
     if (head == "headPitch") {
@@ -183,7 +186,7 @@ public:
     if (head == "headYaw") {
       float angle;
       iss >> angle;
-      ostringstream oss;
+    ostringstream oss;
       setYaw(angle);
       oss << "headYaw " << angle << " :ok."; 
       answer(oss.str());
@@ -355,3 +358,4 @@ int main(int argc, char *argv[])
   cout << "done" << endl;
   return 0;
 }
+
