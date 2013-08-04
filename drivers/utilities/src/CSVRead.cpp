@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <unistd.h>
 
 #include "CSVRead.h"
 #include "CSVSplit.h"
