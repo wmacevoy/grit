@@ -1,21 +1,21 @@
 CFLAGS=-O2 -Wall -Iinclude -fPIC
-CC=g++ 
+CC=gcc
 # Add .d to Make's recognized suffixes.
 SUFFIXES += .d
 
-TARGET=lib/libcppunit2
+TARGET=lib/libbz2
 
 .PHONY: all
-all : $(TARGET).a
+all : $(TARGET).a $(TARGET).so
 
 #We don't need to clean up when we're making these targets
 NODEPS:=clean tags svn
 #Find all the C files in the src/ directory
-SOURCES:=$(shell find src/ -name "*.cpp")
-OBJECTS:=$(patsubst src/%,tmp/%,$(patsubst %.cpp,%.o,$(SOURCES)))
+SOURCES:=$(shell find src/ -name "*.c")
+OBJECTS:=$(patsubst src/%,tmp/%,$(patsubst %.c,%.o,$(SOURCES)))
 
 #These are the dependency files, which make will clean up after it creates them
-DEPFILES:=$(patsubst src/%,tmp/%,$(patsubst %.cpp,%.d,$(SOURCES)))
+DEPFILES:=$(patsubst src/%,tmp/%,$(patsubst %.c,%.d,$(SOURCES)))
 
 #Don't create dependencies when we're cleaning, for instance
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
@@ -25,21 +25,20 @@ ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 endif
 
 #This is the rule for creating the dependency files
-tmp/%.d: src/%.cpp
+tmp/%.d: src/%.c
 	mkdir -p `dirname $@`
-	$(CC) $(CFLAGS) -MM -MT  '$(patsubst src/%.cpp,tmp/%.o,$<)' $< -MF $@
+	$(CC) $(CFLAGS) -MM -MT  '$(patsubst src/%.c,tmp/%.o,$<)' $< -MF $@
 
 #This rule does the compilation
-tmp/%.o: src/%.cpp tmp/%.d
+tmp/%.o: src/%.c tmp/%.d
 	$(CC) $(CFLAGS) -o $@ -c $<
 
 $(TARGET).a : $(OBJECTS)
 	ar crv $@ $^
 
-#$(TARGET).so : $(OBJECTS)
-#	$(CC) -shared -o $@ $^
+$(TARGET).so : $(OBJECTS)
+	$(CC) -shared -o $@ $^
 
 .PHONY: clean
 clean : 
 	/bin/rm -rf tmp/* lib/*
-
