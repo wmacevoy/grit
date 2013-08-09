@@ -4,8 +4,8 @@
 
 #include <CentaurSockets.h>
 
-#define ZEROMQ_DATA_FACTOR		4 // 1KB
-//#define ZEROMQ_DATA_FACTOR		4096 // 1MB
+//#define ZEROMQ_DATA_FACTOR		4 // 1KB
+#define ZEROMQ_DATA_FACTOR		4096 // 1MB
 
 class CentaurMessageTestCase : public CPPUNIT_NS::TestFixture
 {

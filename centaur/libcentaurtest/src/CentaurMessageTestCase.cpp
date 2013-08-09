@@ -1,7 +1,7 @@
 #include "CentaurMessageTestCase.h"
 
-#include <bson/bson.h>
-#include <bzip2/bzlib.h>
+#include <bson.h>
+#include <bzlib.h>
 
 #include <string.h>
 
