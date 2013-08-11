@@ -10,11 +10,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <iterator>     // std::back_inserter
-#include <vector>       // std::vector
-#include <algorithm>    // std::copy
 #include <assert.h>
 #include <signal.h>
+//#include <iterator>     // std::back_inserter
+//#include <vector>       // std::vector
+//#include <algorithm>    // std::copy
 
 #include <zmq.h>
 #include "libfreenect.h"
@@ -23,9 +23,10 @@
 
 #include <math.h>
 
-#include "opencv2/objdetect/objdetect.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/core/utility.hpp"
+//#include "opencv2/objdetect/objdetect.hpp"
+//#include "opencv2/highgui/highgui.hpp"
+//#include "opencv2/imgproc/imgproc.hpp"
+//#include "opencv2/core/utility.hpp"
 
 //#include "opencv2/highgui/highgui_c.h"
 
@@ -44,15 +45,15 @@ uint8_t *depth_mid;
 uint8_t *rgb_back, *rgb_mid;
 
 //openCV Mat
-cv::Mat frame;
-std::string cascade_name = "detection.xml"; //Will eventually rewrite so it takes an input filename
-cv::CascadeClassifier cascade;
+//cv::Mat frame;
+//std::string cascade_name = "detection.xml"; //Will eventually rewrite so it takes an input filename
+//cv::CascadeClassifier cascade;
 
 freenect_context *f_ctx;
 freenect_device *f_dev;
 int freenect_led;
 
-//freenect_video_format requested_format = FREENECT_VIDEO_RGB;
+//Types = FREENECT_VIDEO_RGB or FREENECT_VIDEO_IR_8BIT;
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
 
 pthread_mutex_t buf_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -62,29 +63,22 @@ const int sz_img = 640*480*3;
 
 uint16_t t_gamma[2048];
 
-typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
+/*class Point
 {
- WORD bfType;
- DWORD bfSize;
- WORD bfReserved1;
- WORD bfReserved2;
- DWORD bfOffBits;
-} BITMAPFILEHEADER;
+	int x, y;
+};
 
-typedef struct tagBITMAPINFOHEADER
+class Object
 {
- DWORD biSize;
- LONG biWidth;
- LONG biHeight;
- WORD biPlanes;
- WORD biBitCount;
- DWORD biCompression;
- DWORD biSizeImage;
- LONG biXPelsPerMeter;
- LONG biYPelsPerMeter;
- DWORD biClrUsed;
- DWORD biClrImportant;
-} BITMAPINFOHEADER;
+	bool Drill;
+	bool GateValve;
+	bool Ladder;
+	bool EV;
+	bool Cuttingtool1;
+	bool Cuttingtool2;
+	bool Cuttingtool3;
+	Point p;
+};*/
 
 void publish_img(uint8_t *image, void *zmq_pub)
 {
@@ -187,7 +181,7 @@ void *freenect_threadfunc(void *arg)
 	return NULL;
 }
 
-void detectAndDisplay( cv::Mat frame )
+/*void detectAndDisplay( cv::Mat frame )
 {
    std::vector<cv::Rect> objects;
    cv::Mat frame_gray;
@@ -206,9 +200,7 @@ void detectAndDisplay( cv::Mat frame )
 	cv::Point center( objects[i].x + objects[i].width/2, objects[i].y + objects[i].height/2 );
 	cv::ellipse( frame, center, cv::Size( objects[i].width/2, objects[i].height/2), 0, 0, 360, cv::Scalar( 255, 0, 0 ), 2, 8, 0 );
     }
-   //-- Show what you got
-   imshow( "DETECTED", frame );
-}
+}*/
 
 void SignalHandler(int sig)
 {
@@ -222,32 +214,21 @@ int main(int argc, char** argv)
 	int rcc = 0;
 	int rcd = 0;
 
-	std::string winame = "poop";
-	std::vector<char> data;
-	char* index = 0;
-	BITMAPFILEHEADER bf;
-	BITMAPINFOHEADER bi;
-
-	memset( &bf, 0, sizeof( bf ) );
-	memset( &bi, 0, sizeof( bi ) );
-
-
-	bf.bfType	 = 'MB';
-	bf.bfSize	 = sizeof(bf)+sizeof(bi)+sz_img;
-	bf.bfOffBits	 = sizeof(bf)+sizeof(bi);
-	bi.biSize	 = sizeof(bi);
-	bi.biWidth	 = 640;
-	bi.biHeight	 = 480;
-	bi.biPlanes	 = 1;
-	bi.biBitCount	 = 24;
-	bi.biSizeImage	 = sz_img;
-
 	//tcp://*:9998 tcp://*:9999
 	void *context_color = zmq_ctx_new ();	
 	void *context_depth = zmq_ctx_new ();
 
 	void *pub_color = zmq_socket(context_color, ZMQ_PUB);
 	void *pub_depth = zmq_socket(context_depth, ZMQ_PUB);
+
+	/*if( argc > 1)
+	{
+		cascade_name = argv[1];
+	}
+ 	else
+	{
+		printf("Default cascade name is detection.xml, otherwise it needs to be specified\nas the first term line parameter.\n");
+	}*/
 
 	rcc = zmq_setsockopt(pub_color, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	rcd = zmq_setsockopt(pub_depth, ZMQ_SNDHWM, &hwm, sizeof(hwm));
@@ -261,7 +242,7 @@ int main(int argc, char** argv)
 	rgb_mid = (uint8_t*)malloc(sz_img);
 
 	//Initialize
-	if( !cascade.load( cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+	//if( !cascade.load( cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
 
 	for (int i = 0; i < 2048; ++i) {
 		float v = i/2048.0;
@@ -320,30 +301,7 @@ int main(int argc, char** argv)
 
 		//Send image data via zmq
 		publish_img(rgb_mid, pub_color);
-		publish_img(depth_mid, pub_depth);
-	
-		////////////////////////////////////////Convert rgb_mid to bmp to vector so opencv can use it 
-		
-		index = (char*)&bf;
-		for(int i = 0; i < sizeof(bf); ++i)
-		{
-			data.push_back(*index++);
-		}
-		index = (char*)&bi;
-		for(int i = 0; i < sizeof(bi); ++i)
-		{
-			data.push_back(*index++);
-		}
-		for(int i = sz_img - 1; i >= 0; --i)
-		{
-			data.push_back(rgb_mid[i]);
-		}
-
-		frame = cv::imdecode(cv::Mat(data), 1);
-		detectAndDisplay(frame);
-
-		//imwrite("./img.bmp", frame);	Image is properly formed and working!
-		data.clear();		
+		publish_img(depth_mid, pub_depth);	
 
 		pthread_cond_signal(&frame_cond);
 		pthread_mutex_unlock(&buf_mutex);
