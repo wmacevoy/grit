@@ -189,7 +189,7 @@ void *freenect_threadfunc(void *arg)
    cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
    equalizeHist( frame_gray, frame_gray );
 
-   //-- Detect faces
+   //-- Detect objects
    cascade.detectMultiScale( frame_gray, objects, 1.1, 2, 0, cv::Size(80, 80) );
 
    for( size_t i = 0; i < objects.size(); i++ )
@@ -204,6 +204,7 @@ void *freenect_threadfunc(void *arg)
 
 void SignalHandler(int sig)
 {
+	printf("\nQuitting...\n");
 	die = 1;
 }
 
@@ -263,7 +264,7 @@ int main(int argc, char** argv)
 	int user_device_number = 0;
 	if (argc > 1) {
 		user_device_number = atoi(argv[1]);
-		printf("%s", argv[1]);
+		printf("Device number:  %s\n", argv[1]);
 	}
 
 	if (nr_devices < 1) {
@@ -295,6 +296,8 @@ int main(int argc, char** argv)
 	//Sleep for 1 second to allow thread to initialize
 	sleep(1);
 
+
+	printf("Publishing on tcp://*:9998 and tcp://*:9999\n");
 	while(!die)
 	{
 		pthread_mutex_lock(&buf_mutex);
@@ -310,7 +313,6 @@ int main(int argc, char** argv)
 	}
 
 	//Cleanup
-	printf("Quitting...\n");
 	pthread_join(freenect_thread, NULL);
 
 	printf("freeing memory for images...\n");
@@ -320,15 +322,14 @@ int main(int argc, char** argv)
 	free(rgb_back);
 	free(rgb_mid);
 
-	printf("memory for images is free\n");
+	printf("--done\n");
+	printf("closing and destroying zmq\n");
 
 	zmq_close(pub_color);
 	zmq_close(pub_depth);
 
 	zmq_ctx_destroy(context_color);
 	zmq_ctx_destroy(context_depth);
-
-	printf("zmq is closed and destroyed\n");
 
 	printf("-- done!\n");
 

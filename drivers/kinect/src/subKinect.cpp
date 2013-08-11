@@ -167,6 +167,7 @@ void keyPressed(unsigned char key, int x, int y)
 		}
 	}
 	else if(key == 't'){
+		printf("t\n");
 		if(view_state == 0){
 			view_state = 1;
 		}
@@ -305,7 +306,7 @@ void bye()
 int main(int argc, char** argv)
 {
 	int quit = 0;
-	int hwm = 100;
+	int hwm = 1;
 	int rcc = 0;
 	int rcd = 0;
 	char ip1[40];
@@ -332,7 +333,7 @@ int main(int argc, char** argv)
 	strcat(ip1, "9998\0");
 	strcat(ip2, "9999\0");
 
-	printf("%s, %s\n", ip1, ip2);
+	printf("Listening on: %s, %s\n", ip1, ip2);
 
 	context_color = zmq_ctx_new ();
 	context_depth = zmq_ctx_new ();
