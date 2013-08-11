@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <sstream>
 #include <string.h>
 #include <stdint.h>
 #include <unistd.h>
@@ -42,6 +43,8 @@ void* context_depth;
 
 uint8_t* img_color;
 uint8_t* img_depth;
+
+int mx, my;
 
 GLuint gl_depth_tex;
 GLuint gl_rgb_tex;
@@ -111,8 +114,28 @@ void subscribe_depth(void *zmq_sub)
 }
 ///////////////////////////////////////////////////////SUBSCRIBE END
 
+std::string convstr(const float t)
+{
+	std::stringstream ftoa;;
+	ftoa << t;
+	return ftoa.str();
+}
 
 ///////////////////////////////////////////////////////OpenGL START
+void RenderString(float x, float y)
+{
+
+	if( x >= 0 && x <= 640 && y >= 100 && y <= 110){
+	std::string pos;
+	pos = convstr(x);
+	pos += " : " + convstr(y);
+	glColor3f(0.1, 0.2, 0.3); 
+	glRasterPos2f(x, y);
+
+	glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
+	}
+}
+
 void DrawGLScene()
 {
 	switch(view_state)
@@ -130,6 +153,36 @@ void DrawGLScene()
 		glTexCoord2f(1, 1); glVertex3f(640,480,0);
 		glTexCoord2f(0, 1); glVertex3f(0,480,0);
 		glEnd();
+
+		//Left triangle
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.1, 0.2, 0.3);
+		glVertex3f(0, 100, 0);
+		glVertex3f(20, 105, 0);
+		glVertex3f(0, 110, 0);
+		glEnd();
+
+		//Right triangle
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.1, 0.2, 0.3);
+		glVertex3f(640, 100, 0);
+		glVertex3f(620, 105, 0);
+		glVertex3f(640, 110, 0);
+		glEnd();
+
+		//Top line
+		glBegin(GL_LINES);
+		glVertex3f(0, 100, 0);
+		glVertex3f(640, 100, 0);
+		glEnd();
+
+		//Bottom line
+		glBegin(GL_LINES);
+		glVertex3f(0, 110, 0);
+		glVertex3f(640, 110, 0);
+		glEnd();
+
+		RenderString(mx, my);
 		break;
 
 	case 1:
@@ -145,6 +198,36 @@ void DrawGLScene()
 		glTexCoord2f(1, 1); glVertex3f(640,480,0);
 		glTexCoord2f(0, 1); glVertex3f(0,480,0);
 		glEnd();
+
+		//Left triangle
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.1, 0.2, 0.3);
+		glVertex3f(0, 100, 0);
+		glVertex3f(20, 105, 0);
+		glVertex3f(0, 110, 0);
+		glEnd();
+		
+		//Right triangle
+		glBegin(GL_TRIANGLES);
+		glColor3f(0.1, 0.2, 0.3);
+		glVertex3f(640, 100, 0);
+		glVertex3f(620, 105, 0);
+		glVertex3f(640, 110, 0);
+		glEnd();
+
+		//Top line
+		glBegin(GL_LINES);
+		glVertex3f(0, 100, 0);
+		glVertex3f(640, 100, 0);
+		glEnd();
+
+		//Bottom line
+		glBegin(GL_LINES);
+		glVertex3f(0, 110, 0);
+		glVertex3f(640, 110, 0);
+		glEnd();
+
+		RenderString(mx, my);
 		break;
 	default:
 		//Handle unknown state here.  Although it should never be unknown
@@ -179,6 +262,12 @@ void keyPressed(unsigned char key, int x, int y)
 		glutDestroyWindow(window);
 		glutLeaveMainLoop();		
 	}
+}
+
+void MousePos(int x, int y)
+{
+	mx = x;
+	my = y;
 }
 
 void ReSizeGLScene(int Width, int Height)
@@ -231,6 +320,7 @@ void* gl_threadfunc(void* arg)
 	glutIdleFunc(&DrawGLScene);
 	glutReshapeFunc(&ReSizeGLScene);
 	glutKeyboardFunc(&keyPressed);
+	glutPassiveMotionFunc(&MousePos);
 
 	InitGL(640, 480);
 
@@ -363,6 +453,8 @@ int main(int argc, char** argv)
 	saveImaged = 0;
 
 	view_state = 1;
+
+	mx = my = 0;
 
 	assert(atexit(bye) == 0);
 

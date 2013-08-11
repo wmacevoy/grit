@@ -82,7 +82,7 @@ class Object
 
 void publish_img(uint8_t *image, void *zmq_pub)
 {
-	int rc = zmq_send(zmq_pub, rgb_mid, sz_img, ZMQ_DONTWAIT);
+	int rc = zmq_send(zmq_pub, image, sz_img, ZMQ_DONTWAIT);
 }
 
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
