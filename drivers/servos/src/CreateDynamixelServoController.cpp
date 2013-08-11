@@ -28,7 +28,7 @@
 
 using namespace std;
 
-const float UPDATE_RATE = 40.0;
+const float UPDATE_RATE = 10.0;
 
 struct DynamixelServo : Servo
 {
@@ -177,6 +177,7 @@ struct DynamixelServoController : ServoController
 
 	int N = servos.size();
 	int L = 6; // total data payload for position + speed + torque
+//	int L = 4; // total data payload for position + speed + torque
 
 	dxl_set_txpacket_id(BROADCAST_ID);
 	dxl_set_txpacket_instruction(INST_SYNC_WRITE);

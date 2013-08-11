@@ -169,6 +169,18 @@ public:
       oss << "played Gait3_0m script"; 
       answer(oss.str());
 	}
+    if (head == "r") {
+	  load("R15.csv");
+      ostringstream oss;
+      oss << "played Gait2_3 script"; 
+      answer(oss.str());
+    }	
+    if (head == "f") {
+	  load("Gait2_3.csv");
+      ostringstream oss;
+      oss << "played Gait2_3 script"; 
+      answer(oss.str());
+    }
     if (head == "lwalk") {
 	  load("Gait2_3.csv");
       ostringstream oss;

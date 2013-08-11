@@ -26,7 +26,7 @@ using namespace std;
 
 ZMQHub::ZMQHub()
 {
-  rate = 20;
+  rate = 10;
   highWaterMark = 1;
   running = false;
   goTx = 0;
