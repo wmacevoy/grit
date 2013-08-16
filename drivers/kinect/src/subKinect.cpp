@@ -125,11 +125,11 @@ std::string convstr(const float t)
 void RenderString(float x, float y)
 {
 
-	if( x >= 0 && x <= 640 && y >= 100 && y <= 110){
+	if( x >= 0 && x <= 640 && y >= 240 && y <= 250){
 	std::string pos;
 	pos = convstr(x);
 	pos += " : " + convstr(y);
-	glColor3f(0.1, 0.2, 0.3); 
+	glColor3f(0.1, 0.1, 0.1); 
 	glRasterPos2f(x, y);
 
 	glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
@@ -156,30 +156,30 @@ void DrawGLScene()
 
 		//Left triangle
 		glBegin(GL_TRIANGLES);
-		glColor3f(0.1, 0.2, 0.3);
-		glVertex3f(0, 100, 0);
-		glVertex3f(20, 105, 0);
-		glVertex3f(0, 110, 0);
+		glColor3f(0.1, 0.1, 0.1);
+		glVertex3f(0, 240, 0);
+		glVertex3f(20, 245, 0);
+		glVertex3f(0, 250, 0);
 		glEnd();
-
+		
 		//Right triangle
 		glBegin(GL_TRIANGLES);
-		glColor3f(0.1, 0.2, 0.3);
-		glVertex3f(640, 100, 0);
-		glVertex3f(620, 105, 0);
-		glVertex3f(640, 110, 0);
+		glColor3f(0.1, 0.1, 0.1);
+		glVertex3f(640, 240, 0);
+		glVertex3f(620, 245, 0);
+		glVertex3f(640, 250, 0);
 		glEnd();
 
 		//Top line
 		glBegin(GL_LINES);
-		glVertex3f(0, 100, 0);
-		glVertex3f(640, 100, 0);
+		glVertex3f(0, 240, 0);
+		glVertex3f(640, 240, 0);
 		glEnd();
 
 		//Bottom line
 		glBegin(GL_LINES);
-		glVertex3f(0, 110, 0);
-		glVertex3f(640, 110, 0);
+		glVertex3f(0, 250, 0);
+		glVertex3f(640, 250, 0);
 		glEnd();
 
 		RenderString(mx, my);
@@ -201,30 +201,30 @@ void DrawGLScene()
 
 		//Left triangle
 		glBegin(GL_TRIANGLES);
-		glColor3f(0.1, 0.2, 0.3);
-		glVertex3f(0, 100, 0);
-		glVertex3f(20, 105, 0);
-		glVertex3f(0, 110, 0);
+		glColor3f(0.1, 0.1, 0.1);
+		glVertex3f(0, 240, 0);
+		glVertex3f(20, 245, 0);
+		glVertex3f(0, 250, 0);
 		glEnd();
 		
 		//Right triangle
 		glBegin(GL_TRIANGLES);
-		glColor3f(0.1, 0.2, 0.3);
-		glVertex3f(640, 100, 0);
-		glVertex3f(620, 105, 0);
-		glVertex3f(640, 110, 0);
+		glColor3f(0.1, 0.1, 0.1);
+		glVertex3f(640, 240, 0);
+		glVertex3f(620, 245, 0);
+		glVertex3f(640, 250, 0);
 		glEnd();
 
 		//Top line
 		glBegin(GL_LINES);
-		glVertex3f(0, 100, 0);
-		glVertex3f(640, 100, 0);
+		glVertex3f(0, 240, 0);
+		glVertex3f(640, 240, 0);
 		glEnd();
 
 		//Bottom line
 		glBegin(GL_LINES);
-		glVertex3f(0, 110, 0);
-		glVertex3f(640, 110, 0);
+		glVertex3f(0, 250, 0);
+		glVertex3f(640, 250, 0);
 		glEnd();
 
 		RenderString(mx, my);

@@ -167,6 +167,8 @@ void *freenect_threadfunc(void *arg)
 		usleep(sleep_time);
 	}
 
+	if(!die) die = 1;
+
 	printf("shutting down streams...\n");
 
 	freenect_set_led(f_dev, LED_BLINK_GREEN);
