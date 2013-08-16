@@ -55,10 +55,12 @@ public:
   
   void setPitch(float angle) {
     mover->neck.upDown.setup(angle);
+    mover->neck.upDown.torque=0.5;
   }
   
   void setYaw(float angle) {
     mover->neck.leftRight.setup(angle);
+    mover->neck.leftRight.torque=0.5;
   }
 
   void setWaist(float angle) {
