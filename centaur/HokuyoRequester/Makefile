@@ -1,6 +1,6 @@
 CFLAGS=-g -O2 -fPIC -std=c++0x
-CINCLUDES=-I../../libs/zmq/include -I../libcentaur/include -I../../libs/bson/include -I../HokuyoProvider/include
-CLIBS= -lbson -lcentaur  -lpthread -lzmq -lboost_thread -L../../libs/zmq/lib -L../../libs/bson/lib -L../libcentaur/lib 
+CINCLUDES=-I../../libs/zmq/include -I../libcentaur/include -I../../libs/bson/src -I../HokuyoProvider/include
+CLIBS= -lbson -lcentaur  -lpthread -lzmq -lboost_thread -lrt -L../../libs/zmq/lib -L../../libs/bson/lib -L../libcentaur/lib 
 CC=g++ 
 
 TARGET=bin/HokuyoRequester
