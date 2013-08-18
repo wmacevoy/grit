@@ -130,7 +130,6 @@ public:
       if (verbose) {
 	cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
       }
-
       msg.send(socket);
     }
   }

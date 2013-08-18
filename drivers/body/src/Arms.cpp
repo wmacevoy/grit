@@ -12,6 +12,8 @@ void LeftArm::init()
   middle=servo("LEFTARM_MIDDLE");  
   ring=servo("LEFTARM_RING");
   thumb=servo("LEFTARM_THUMB");
+  leftRight->angle(45.0);
+//  upDown->angle(45.0);
 }
 
 void RightArm::init()

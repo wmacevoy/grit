@@ -53,6 +53,51 @@ public:
     answer(oss.str());
   }
   
+  void setLIO(float angle) {
+	mover->left.leftRight.setup(angle);
+	mover->left.leftRight.torque=0.75;
+  }
+  void setLUD(float angle) {
+	mover->left.upDown.setup(angle);
+	mover->left.upDown.torque=0.75;
+  }
+  void setLBicep(float angle) {
+	mover->left.bicep.setup(angle);
+	mover->left.bicep.torque=0.75;
+  }
+  void setLElbow(float angle) {
+	mover->right.elbow.setup(angle);
+	mover->right.elbow.torque=0.75;
+  }
+  void setRIO(float angle) {
+	mover->right.leftRight.setup(angle);
+	mover->right.leftRight.torque=0.75;
+  }
+  void setRUD(float angle) {
+	mover->right.upDown.setup(angle);
+	mover->right.upDown.torque=0.75;
+  }
+  void setRBicep(float angle) {
+	mover->right.bicep.setup(angle);
+	mover->right.bicep.torque=0.75;
+  }
+  void setRElbow(float angle) {
+	mover->right.elbow.setup(angle);
+	mover->right.elbow.torque=0.75;
+  }
+  void goHome() {
+	load("home.csv");
+    setWaist(0);
+    setLIO(-45);
+    setLUD(-45);
+    setLElbow(-15);
+    setLBicep(-20);
+    setRIO(45);
+    setRUD(40);
+    setRElbow(-5);
+    setRBicep(0);    
+  }
+  
   void setPitch(float angle) {
     mover->neck.upDown.setup(angle);
     mover->neck.upDown.torque=0.5;
@@ -154,9 +199,9 @@ public:
       sad();
     }
     if (head == "home") {
-      load("home.csv");
+	  goHome();
       ostringstream oss;
-      oss << "played Home script"; 
+      oss << "played Home script and more"; 
       answer(oss.str());
     }
     if (head == "walk") {
@@ -189,6 +234,70 @@ public:
       oss << "played Gait2_3 script"; 
       answer(oss.str());
     }
+    if (head == "LeftArmInOut") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setLIO(angle);
+      oss << "LeftArmInOut " << angle << " :ok."; 
+      answer(oss.str());
+    }    
+    if (head == "LeftArmUpDown") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setLUD(angle);
+      oss << "LeftArmUpDown " << angle << " :ok."; 
+      answer(oss.str());
+    }
+    if (head == "LeftArmElbow") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setLElbow(angle);
+      oss << "LeftArmElbow " << angle << " :ok."; 
+      answer(oss.str());
+    }
+    if (head == "LeftArmBicep") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setLBicep(angle);
+      oss << "LeftArmBicep " << angle << " :ok."; 
+      answer(oss.str());
+    }    
+    if (head == "RightArmInOut") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setRIO(angle);
+      oss << "RightArmInOut " << angle << " :ok."; 
+      answer(oss.str());
+    }    
+    if (head == "RightArmUpDown") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setRUD(angle);
+      oss << "RightArmUpDown " << angle << " :ok."; 
+      answer(oss.str());
+    }
+    if (head == "RightArmElbow") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setRElbow(angle);
+      oss << "RightArmElbow " << angle << " :ok."; 
+      answer(oss.str());
+    }
+    if (head == "RightArmBicep") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setRBicep(angle);
+      oss << "RightArmBicep " << angle << " :ok."; 
+      answer(oss.str());
+    }    
     if (head == "headPitch") {
       float angle;
       iss >> angle;

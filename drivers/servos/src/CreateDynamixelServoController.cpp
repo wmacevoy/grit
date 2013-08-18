@@ -162,22 +162,18 @@ struct DynamixelServoController : ServoController
     return &*(servos[id] = 
 	      std::shared_ptr <DynamixelServo> (new DynamixelServo(io,id)));
   }
-
-  void update() {
-    double t1 = now() + 1.0/UPDATE_RATE;
-    while (running) {
-      int us = (t1-now())*1000000;
-      if (us > 0) usleep(us);
-      double t = now();
-      t1=t+1.0/UPDATE_RATE;
-      bool output =(floor(t) != floor(t1));
-#if USE_BROADCAST
-      {
+  int countServosInRange(int lower,int upper) {
+	int retval=0;
+	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
+	 if (k->first>=lower && k->first<=upper) retval++;
+	}
+	return retval;
+  }
+  void broadcastSpeedPosition(bool output,double t,double t1,int lower,int upper) {
 	io.reopen(); // reopen if failing recently...
 
-	int N = servos.size();
-	int L = 6; // total data payload for position + speed + torque
-//	int L = 4; // total data payload for position + speed + torque
+	int N = countServosInRange(lower,upper);
+	int L = 4; // total data payload for position + speed
 
 	dxl_set_txpacket_id(BROADCAST_ID);
 	dxl_set_txpacket_instruction(INST_SYNC_WRITE);
@@ -193,59 +189,113 @@ struct DynamixelServoController : ServoController
 	}
 	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
 	  int id = k->first;
-	  DynamixelServo *servo = &*k->second;
-	  
-	  if (servo->curveMode) {
-	    double t0=servo->t[0];
-	    if (t < t0) {
-	      if (t1 > t0+0.0001) {
-		t1 = t0+0.0001;
-	      }
-	    }
+	  if (id>=lower && id<=upper)  {
+		  DynamixelServo *servo = &*k->second;
+		  
+		  if (servo->curveMode) {
+			double t0=servo->t[0];
+			if (t < t0) {
+			  if (t1 > t0+0.0001) {
+			t1 = t0+0.0001;
+			  }
+			}
 
-	    double dt;
-	    if (t < servo->t[1]) {
-	      dt = t-servo->t[0];
-	    } else {
-	      dt = servo->t[1]-servo->t[0];
-	      cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
-	    }
-	    double dt2 = dt*dt;
-	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
-	    float angle = c[0]+c[1]*dt+c[2]*dt2/2.0;
-	    float speed = 1.1*(c[1]+c[2]*dt);
-	    servo->angle0(angle);
-	    if (fabs(speed) < 5) {
-	      if (speed < 0) speed=-5;
-	      else speed=5;
-	    }
-	    servo->speed(speed);
-	    servo->presentPosition = servo->goalPosition;
-	    //	    cout << "servo " << servo->id << " is in curve mode dt=" << dt << endl;
-	  }
-	  int position = servo->goalPosition & 4095;
-	  int speed = servo->goalSpeed;
-	  int torque = servo->goalTorque;
-	  if (output) {
-	    cout << "id,"<<servo->id << "," << position << "," << speed << ",";
-	  }
+			double dt;
+			if (t < servo->t[1]) {
+			  dt = t-servo->t[0];
+			} else {
+			  dt = servo->t[1]-servo->t[0];
+			  cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
+			}
+			double dt2 = dt*dt;
+			float *c = (dt <= 0) ? servo->c0 : servo->c1;
+			float angle = c[0]+c[1]*dt+c[2]*dt2/2.0;
+			float speed = 1.1*(c[1]+c[2]*dt);
+			servo->angle0(angle);
+			if (fabs(speed) < 5) {
+			  if (speed < 0) speed=-5;
+			  else speed=5;
+			}
+			servo->speed(speed);
+			servo->presentPosition = servo->goalPosition;
+		  }
+		  int position = servo->goalPosition & 4095;
+		  int speed = servo->goalSpeed;
+	//	  int position = 2048;
+	//	  int speed = 50;
+		  if (output) {
+			cout << "id,"<<servo->id << "," << position << "," << speed << ",";
+		  }
+	      cout << "ID " << id << " sent a position of " << position <<  "  speed " << speed << endl;
 
-	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
-	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
-	  dxl_set_txpacket_parameter(i*(L+1)+4,dxl_get_highbyte(position));
-	  dxl_set_txpacket_parameter(i*(L+1)+5,dxl_get_lowbyte(speed));
-	  dxl_set_txpacket_parameter(i*(L+1)+6,dxl_get_highbyte(speed));
-	  dxl_set_txpacket_parameter(i*(L+1)+7,dxl_get_lowbyte(torque));
-	  dxl_set_txpacket_parameter(i*(L+1)+8,dxl_get_highbyte(torque));
-	  ++i;
+		  dxl_set_txpacket_parameter(i*(L+1)+2,id);
+		  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
+		  dxl_set_txpacket_parameter(i*(L+1)+4,dxl_get_highbyte(position));
+		  dxl_set_txpacket_parameter(i*(L+1)+5,dxl_get_lowbyte(speed));
+	    dxl_set_txpacket_parameter(i*(L+1)+6,dxl_get_highbyte(speed));
+	    ++i;
+      }
 	}
-	//	cout << endl;
+	cout << "Packet " << endl;
 	dxl_txrx_packet();
 	int result = dxl_get_result(); 
 
 	if (result == COMM_RXSUCCESS) {
 	  io.okSince = now();
 	}
+  }
+  void broadcastTorque(bool output,double t,double t1,int lower,int upper) {
+	io.reopen(); // reopen if failing recently...
+
+	int N = countServosInRange(lower,upper);
+	int L = 2; // total data payload for torque
+
+	dxl_set_txpacket_id(BROADCAST_ID);
+	dxl_set_txpacket_instruction(INST_SYNC_WRITE);
+	dxl_set_txpacket_parameter(0, DXL_GOAL_TORQUE_WORD);
+	dxl_set_txpacket_parameter(1, L);   // L bytes sent to each Dynamixel 
+	dxl_set_txpacket_length((L+1)*N+4); // bytes in packet exc. Header
+	int i = 0;
+	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
+	  int id = k->first;
+	  if (id>=lower && id<=upper) {
+	    DynamixelServo *servo = &*k->second;
+//	    int torque = 768; // servo->goalTorque;  
+	    int torque = servo->goalTorque;  
+	    dxl_set_txpacket_parameter(i*(L+1)+2,id);
+	    dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(torque));
+	    dxl_set_txpacket_parameter(i*(L+1)+4,dxl_get_highbyte(torque));
+	    cout << "ID " << id << " sent a torque of " << torque << endl;
+	    ++i;
+      }
+	}
+	cout << "Packet " << endl;
+	dxl_txrx_packet();
+	int result = dxl_get_result(); 
+
+	if (result == COMM_RXSUCCESS) {
+	  io.okSince = now();
+	}
+  }
+  // Packets are really limited to about 20 servos for three registers.  
+  void update() {
+    double t1 = now() + 1.0/UPDATE_RATE;
+    while (running) {
+      int us = (t1-now())*1000000;
+      if (us > 0) usleep(us);
+      double t = now();
+      t1=t+1.0/UPDATE_RATE;
+      bool output =(floor(t) != floor(t1));
+#if USE_BROADCAST
+      {
+		broadcastTorque(output,t,t1,0,49); // legs
+		broadcastTorque(output,t,t1,90,99); // head/waist
+		broadcastTorque(output,t,t1,50,59); // Left arms
+		broadcastTorque(output,t,t1,60,69); // arms
+	    broadcastSpeedPosition(output,t,t1,0,49);
+	    broadcastSpeedPosition(output,t,t1,90,99);
+	    broadcastSpeedPosition(output,t,t1,50,59);
+	    broadcastSpeedPosition(output,t,t1,60,69);
       }
 #else
       for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
