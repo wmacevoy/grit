@@ -87,7 +87,7 @@ public:
 		HokuyoData retVal;
 	
 		CentaurSocketReq request;
-		std::string tmp("tcp://192.168.2.100:");
+		std::string tmp("tcp://192.168.2.100:"); //tcp://192.168.2.100:
 		tmp += HOKUYO_PORTNUMBER;
 		if(!request.open(tmp.c_str())){
 			retVal.m_error = "Unable to connect to zmq port ";
