@@ -41,6 +41,8 @@ bool HokuyoProvider::connectToLidar(qrk::UrgDevice &lidarDevice, std::string &er
 	if(!lidarDevice.connect(ports[0].c_str())) {
 		error = "Unable to connect to lidar device on port ";
 		error += ports[0];
+		error += " : ";
+		error += lidarDevice.what();
 		return false;		
 	}
 	
