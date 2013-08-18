@@ -19,9 +19,11 @@ class Arm
 };
 
 class LeftArm:public Arm {
+  public:
   void init();
 };
 
 class RightArm:public Arm {
+  public:
   void init();
 };

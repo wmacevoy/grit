@@ -14,7 +14,7 @@ void LeftArm::init()
   thumb=servo("LEFTARM_THUMB");
 }
 
-void LeftArm::init()
+void RightArm::init()
 {
   leftRight=servo("RIGHTARM_SHOULDER_IO");
   upDown=servo("RIGHTARM_SHOULDER_UD");
