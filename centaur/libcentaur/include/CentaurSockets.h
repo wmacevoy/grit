@@ -57,7 +57,7 @@ public:
 	{
 		const T * pDataEnd = pData + nData;
 
-		int flags = block ? 0 : ZMQ_NOBLOCK;
+		int flags = block ? 0 : ZMQ_DONTWAIT;
 
 		nData = 0;
 
