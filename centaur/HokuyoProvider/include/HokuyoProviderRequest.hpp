@@ -17,7 +17,7 @@ struct HokuyoData {
 	
 	std::string						m_error;
 	double							m_timestamp;
-	std::vector<std::vector<long>>	m_dataArrayArray;
+	std::vector<std::vector<long> >	m_dataArrayArray;
 	
 	void printToStdOut(){
 		if(m_error.empty()) {
