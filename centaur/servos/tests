@@ -1,0 +1,35 @@
+# test with fake servos...
+if [ -c /dev/ttyUSB0 -a ! -c /dev/ttyUSB1 ] 
+then
+  if ! ../go exec bin/test_servos --dynamixel 0 34  --servos 1
+  then
+    exit 1
+  fi
+fi
+
+if ! ../go exec bin/test_servos --servos 3,183
+then
+  exit 1
+fi
+
+
+# create fake servo server...
+../go exec bin/servos --rate 100 --fake --publish "tcp://*:6601" --subscribers "tcp://127.0.0.1:6602" --servos 3,183 &
+spid=$!
+echo spid=$spid
+sleep 1
+if ! ps -eo pid | egrep -q '\<'$spid'\>'
+then
+  exit 1
+fi
+
+# test with fake servo controller...
+if ! ../go exec bin/test_servos --zmq "tcp://*:6602" "tcp://127.0.0.1:6601" --servos 3,183
+then
+  kill $spid
+  exit 1
+fi
+
+kill $spid
+
+echo "all tests pass"
