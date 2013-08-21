@@ -128,14 +128,21 @@ std::string convstr(const float t)
 ///////////////////////////////////////////////////////OpenGL START
 void RenderString(float x, float y)
 {
-
+	//Kinect horizontal fov is 57 degrees, so 28.5 degrees left and 28.5 degrees right
+	//lidar does 1081 points in 270 degrees, so 4 pts per degree, with 114 pts left and 114 pts right
+	//540 is lidar center left side = 426 right side = 654
 	if( x >= 0 && x <= 640 && y >= 240 && y <= 250)
 	{
 		HokuyoData data = HokuyoProviderRequest::GetData(nScans);
+		
 		std::string pos;
+		
 		if(data.m_error.empty())
 		{
-			pos = convstr(data.m_dataArrayArray[0][540]);
+			if(x == 0) x = 1;	//Just in case x is the 0th pixel
+			int degree = x / 11.23f;
+			int index = 426 + (degree * 4);
+			pos = convstr(data.m_dataArrayArray[0][index]);
 		}
 		else
 		{
