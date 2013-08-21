@@ -264,10 +264,6 @@ int main(int argc, char** argv)
 	printf ("Number of devices found: %d\n", nr_devices);
 
 	int user_device_number = 0;
-	if (argc > 1) {
-		user_device_number = atoi(argv[1]);
-		printf("Device number:  %s\n", argv[1]);
-	}
 
 	if (nr_devices < 1) {
 		freenect_shutdown(f_ctx);
