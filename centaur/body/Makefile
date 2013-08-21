@@ -1,8 +1,8 @@
 DEPS=servos
-DRIVER_DEPS=utilities zmqpp
+DRIVER_DEPS=centaur utilities zmqpp
 
 MY_FLAGS=
-MY_LIBS=-lzmq -ldxl
+MY_LIBS=
 
 all : libs progs
 

@@ -112,8 +112,8 @@ start_app()
   
   mkdir -p $MOJAVATON_DIR/pids
   mkdir -p $MOJAVATON_DIR/logs
-  cd $MOJAVATON_DIR/drivers/$app
-  $MOJAVATON_DIR/drivers/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
+  cd $MOJAVATON_DIR/centaur/$app
+  $MOJAVATON_DIR/centaur/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
   app_pid=$!
   echo $app_pid > $MOJAVATON_DIR/pids/$app.pid
   echo $app started as pid $app_pid
@@ -135,7 +135,7 @@ start_apps()
 setup()
 {
   # add bin folders to PATH
-  for bin in $MOJAVATON_DIR/drivers/*/bin
+  for bin in $MOJAVATON_DIR/centaur/*/bin
   do
     PATH="$bin:$PATH"
   done
@@ -184,7 +184,7 @@ stop()
 commander()
 {
     start
-    cd $MOJAVATON_DIR/drivers/commander
+    cd $MOJAVATON_DIR/control/commander
     bin/commander
 }
 
