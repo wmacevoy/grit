@@ -1,4 +1,4 @@
 % :
 	$(MAKE) -C commander $@
 	$(MAKE) -C HokuyoRequester $@
-	$(MAKE) -C KinectRequestor $@
+	$(MAKE) -C KinectRequester $@
