@@ -160,6 +160,14 @@ update()
   done
 }
 
+build()
+{
+  for dir in libs drivers centaur
+  do
+      make -C $MOJAVATON_DIR/$dir "$@"
+  done
+}
+
 commit()
 {
   for dir in setup libs drivers centaur

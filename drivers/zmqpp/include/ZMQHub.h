@@ -29,6 +29,7 @@ class ZMQHub
   virtual void join();
   virtual void stop();
   virtual void rxLoop();
+  virtual void txWait();
   virtual void txLoop();
   virtual void reportLoop();
 

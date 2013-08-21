@@ -71,16 +71,20 @@ void ZMQHub::rxLoop()
   }
 }
 
+void ZMQHub::txWait()
+{
+  usleep(int((1.0/rate)*1000000));
+}
+
 void ZMQHub::txLoop() 
 {
   ZMQContext context;
   ZMQPublishSocket socket(context, publish);
   socket.highWaterMark(highWaterMark);
-
   while (running) {
-    usleep(int((1.0/rate)*1000000));
-    ++txCount;
+    txWait();
     tx(socket);
+    ++txCount;
   }
 }
 
