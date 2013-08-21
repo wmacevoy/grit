@@ -1,16 +1,9 @@
-CFLAGS=-g -O2 -fPIC -std=c++0x
-CINCLUDES=-I../../libs/zmq/include -I../libcentaur/include -I../../libs/bson/src -I../HokuyoProvider/include
-CLIBS= -lbson -lcentaur  -lpthread -lzmq -lboost_thread -lrt -L../../libs/zmq/lib -L../../libs/bson/lib -L../libcentaur/lib 
-CC=g++ 
+all : libs progs
 
-TARGET=bin/HokuyoRequester
+DEPS=
+DRIVER_DEPS=centaur
 
-.PHONY: all
-all : $(TARGET)
+MY_FLAGS=
+MY_LIBS=
 
-$(TARGET) : 
-	$(CC) $(CFLAGS) $(CINCLUDES) src/main.cpp $(CLIBS) -o bin/HokuyoRequester
-	
-.PHONY: clean
-clean : 
-	/bin/rm -rf tmp/* lib/* bin/*
+include ../rules.mk

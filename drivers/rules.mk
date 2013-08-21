@@ -101,10 +101,10 @@ libs : lib/lib$(TARGET).a lib/lib$(TARGET).so
 progs : $(PROGS)
 
 tests : $(TESTS)
-	for t in $(TESTS); do ../centaur $$t; done
+	for t in $(TESTS); do ../context $$t; done
 
 deps : 
 	for d in $(DEPS); do $(MAKE) -C ../$$d libs; done
 
 run : bin/$(TARGET)
-	../centaur bin/$(TARGET)
+	../context bin/$(TARGET)

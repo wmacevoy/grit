@@ -1,8 +1,5 @@
-include setup/config.mk
-all :
-	$(MAKE) -C libs all
-	$(MAKE) -C drivers all
-
-clean :
-	$(MAKE) -C libs clean
-	$(MAKE) -C drivers clean
+% : 
+	$(MAKE) -C libs "$@"
+	$(MAKE) -C drivers "$@"
+	$(MAKE) -C centaur "$@"
+	$(MAKE) -C control "$@"

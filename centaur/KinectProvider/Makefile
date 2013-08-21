@@ -4,7 +4,7 @@ DEPS=
 DRIVER_DEPS=centaur
 
 MY_FLAGS=
-MY_LIBS=-lglut -lGLU -lGL -lXmu -lX11
+MY_LIBS=
 
 include ../rules.mk
 
