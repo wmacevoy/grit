@@ -149,7 +149,7 @@ setup()
 
 update()
 {
-  for dir in setup libs drivers centar
+  for dir in setup libs drivers centaur
   do
       svn update $MOJAVATON_DIR/$dir
   done
