@@ -56,7 +56,7 @@ void HokuyoProvider::runFunction(HokuyoProvider *pProvider)
 		unsigned int nScans = 0;
 		int recvCnt = pProvider->m_replySocket.recv(&nScans, 1);
 		if(recvCnt > 0 && nScans > 0){
-			std::cout << "Received a request for data\n";
+			//std::cout << "Received a request for data\n";
 			qrk::UrgDevice lidarDevice;
 			HokuyoData replyData;
 			
