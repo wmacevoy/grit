@@ -120,8 +120,8 @@ void subscribe_depth(void *zmq_sub)
 
 std::string convstr(const float t)
 {
-	std::stringstream ftoa;;
-	ftoa << t;
+	std::stringstream ftoa;
+	ftoa << setprecision(3) << setw(4) << t;
 	return ftoa.str();
 }
 
@@ -134,22 +134,31 @@ void RenderString(float x, float y)
 	if( x >= 0 && x <= 640 && y >= 240 && y <= 250)
 	{
 		HokuyoData data = HokuyoProviderRequest::GetData(nScans);
+		int tmpX = x;
 		
 		std::string pos;
 		
 		if(data.m_error.empty())
 		{
-			if(x == 0) x = 1;	//Just in case x is the 0th pixel
-			int degree = x / 11.23f;
-			int index = 426 + (degree * 4);
-			pos = convstr(data.m_dataArrayArray[0][index]);
+			int index = 425 + ((x * 229) / 625);
+			pos = convstr(data.m_dataArrayArray[0][index] * 0.00328084f);
+			printf("index: %d  ---  pixel: %f\n", index, x);
 		}
 		else
 		{
 			pos = data.m_error;
 		}
+
+		if(x > 550) tmpX = x - 55;		
+
+		glColor3f(1.0, 1.0, 1.0); 
+		glRasterPos2f(tmpX + 1, y + 1);
+		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
+		glColor3f(1.0, 1.0, 1.0); 
+		glRasterPos2f(tmpX - 1, y - 1);
+		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
 		glColor3f(0.1, 0.1, 0.1); 
-		glRasterPos2f(x, y);
+		glRasterPos2f(tmpX, y);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
 	}
 }
