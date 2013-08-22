@@ -11,6 +11,8 @@
 
 #define CENTAURSOCKET_RECV_NOT_ENOUGH_SPACE		-2
 
+#define REQUEST_TIMEOUT     1500    //  msecs, (> 1000!)
+
 class ZeroMQContext;
 
 class ZeroMQContext {

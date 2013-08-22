@@ -68,7 +68,7 @@ bool CentaurSocket::open(const char * addr)
 		fprintf(stderr, "%s: zmq_socket: %d '%s'", addr, errno, zmq_strerror(errno));
 		close();
 		return false;
-	}
+	}	
 
 	if (m_connect)
 	{
