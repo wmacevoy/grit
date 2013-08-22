@@ -21,7 +21,7 @@ int main( int argc, const char* argv[] )
 {	
 	int nScans = 0;
 	while(!wantsToQuit(nScans) && nScans > 0){
-		std::cout << "You are going to request more data\n";
+		//std::cout << "You are going to request more data\n";
 		HokuyoData data = HokuyoProviderRequest::GetData(nScans);
 		data.printToStdOut();
 	}
