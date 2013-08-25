@@ -96,13 +96,13 @@ public:
 			return retVal;		
 		}
 		
-		if(!request.send(&nScans, sizeof(nScans), false)){
+		if(!request.send(&nScans, sizeof(nScans))){
 			retVal.m_error = "Unable to send request\n";
 			return retVal;
 		}
 		
 		CM_Array<char, 2048> response;
-		if(!request.recv(response, false)){
+		if(!request.recv(response)){
 			retVal.m_error = "Unable to receive data\n";
 			return retVal;
 		}

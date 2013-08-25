@@ -55,7 +55,7 @@ public:
 	bool bind(const char * addr);
 
 	template <class T>
-	int send(const T * pData, int nData, bool block = true)
+	int send(const T * pData, int nData, bool block = false)
 	{
 		const T * pDataEnd = pData + nData;
 
@@ -80,9 +80,9 @@ public:
 	}
 	
 	template <class T, unsigned int staticCount, class Alloc>
-	int send(CM_Array<T, staticCount, Alloc> &data, bool block = true)
+	int send(CM_Array<T, staticCount, Alloc> &data, bool block = false)
 	{
-		return send(data.getData(), data.getSize(), block);
+		return send(data.getData(), data.getSize(), block ? 0 : ZMQ_DONTWAIT);
 	}
 	
 	template <class T>
