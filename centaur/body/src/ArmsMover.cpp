@@ -12,3 +12,16 @@ void ArmMover::move(Arm &arm)
   ring.move(*arm.ring);
   thumb.move(*arm.thumb);
 }
+
+void ArmMover::torque(float t)
+{
+  upDown.torque=t;
+  leftRight.torque=t;
+  bicep.torque=t;
+  elbow.torque=t;
+  forearm.torque=t;
+  trigger.torque=t;
+  middle.torque=t;
+  ring.torque=t;
+  thumb.torque=t;
+}

@@ -16,6 +16,8 @@ class Arm
   std::shared_ptr < Servo > ring; 
   std::shared_ptr < Servo > thumb; 
   virtual void init()=0;
+  void goLimp();
+  void report(std::ostream &out) const;
 };
 
 class LeftArm:public Arm {

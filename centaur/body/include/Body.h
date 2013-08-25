@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <iostream>
 
 #include "Legs.h"
 #include "Neck.h"
@@ -15,4 +16,5 @@ class Body
   LeftArm left;
   RightArm right;
   void init();
+  void report(std::ostream &out) const;
 };

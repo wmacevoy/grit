@@ -1,4 +1,5 @@
 #include <sstream>
+#include <strstream>
 #include <iostream>
 #include <iomanip>
 #include <assert.h>
@@ -40,6 +41,7 @@ struct DynamixelServo : Servo
   int goalPosition;
   int goalSpeed;
   int goalTorque;
+  bool readNextPosition;
 
   bool curveMode;
   double t[2];
@@ -55,6 +57,7 @@ struct DynamixelServo : Servo
     torque(0.10);
     //    io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
     curveMode = false;
+    readNextPosition=true;
 #if USE_BROADCAST != 1
     update();
 #endif
@@ -135,6 +138,13 @@ struct DynamixelServo : Servo
       cout << "comm rx load error" << endl;
     }
   }
+  void readPosition() {
+	  readNextPosition=true;
+  }
+  void getPosition() {
+	  if (readNextPosition) rx();
+	  cout << "from Servo:"<< id << ",P," << presentPosition << ",S," << presentSpeed <<",T," << presentTorque << endl; 
+  }
 
   void update()
   {
@@ -162,6 +172,7 @@ struct DynamixelServoController : ServoController
     return &*(servos[id] = 
 	      std::shared_ptr <DynamixelServo> (new DynamixelServo(io,id)));
   }
+
   int countServosInRange(int lower,int upper) {
 	int retval=0;
 	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
@@ -169,7 +180,7 @@ struct DynamixelServoController : ServoController
 	}
 	return retval;
   }
-  void broadcastSpeedPosition(bool output,double t,double t1,int lower,int upper) {
+  void broadcastSpeedPosition(bool output,double t,double t1,int lower,int upper,int broadcastCount) {
 	io.reopen(); // reopen if failing recently...
 
 	int N = countServosInRange(lower,upper);
@@ -217,7 +228,7 @@ struct DynamixelServoController : ServoController
 			  else speed=5;
 			}
 			servo->speed(speed);
-			servo->presentPosition = servo->goalPosition;
+			//			servo->presentPosition = servo->goalPosition;
 		  }
 		  int position = servo->goalPosition & 4095;
 		  int speed = servo->goalSpeed;
@@ -243,6 +254,16 @@ struct DynamixelServoController : ServoController
 	if (result == COMM_RXSUCCESS) {
 	  io.okSince = now();
 	}
+	if (broadcastCount==0)  {
+	  for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
+	    int id = k->first;
+	    if (id>=lower && id<=upper)  {
+		  DynamixelServo *servo = &*k->second;
+		  servo->readPosition();
+		  servo->getPosition();
+        }
+      }
+    }
   }
   void broadcastTorque(bool output,double t,double t1,int lower,int upper) {
 	io.reopen(); // reopen if failing recently...
@@ -277,8 +298,41 @@ struct DynamixelServoController : ServoController
 	  io.okSince = now();
 	}
   }
+
+  void broadcastTorqueEnable(bool output,double t,double t1,int lower,int upper) {
+	io.reopen(); // reopen if failing recently...
+
+	int N = countServosInRange(lower,upper);
+	int L = 1; // total data payload for torque
+
+	dxl_set_txpacket_id(BROADCAST_ID);
+	dxl_set_txpacket_instruction(INST_SYNC_WRITE);
+	dxl_set_txpacket_parameter(0, DXL_TORQUE_ENABLE_BYTE);
+	dxl_set_txpacket_parameter(1, L);   // L bytes sent to each Dynamixel 
+	dxl_set_txpacket_length((L+1)*N+4); // bytes in packet exc. Header
+	int i = 0;
+	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
+	  int id = k->first;
+	  if (id>=lower && id<=upper) {
+	    DynamixelServo *servo = &*k->second;
+	    int torque = servo->goalTorque;  
+	    dxl_set_txpacket_parameter(i*(L+1)+2,id);
+	    dxl_set_txpacket_parameter(i*(L+1)+3,(torque != 0));
+	    cout << "Enable servo " << id << " is " << (torque != 0) << endl;
+	    ++i;
+	  }
+	}
+	cout << "Packet " << endl;
+	dxl_txrx_packet();
+	int result = dxl_get_result(); 
+
+	if (result == COMM_RXSUCCESS) {
+	  io.okSince = now();
+	}
+  }
   // Packets are really limited to about 20 servos for three registers.  
   void update() {
+	static int broadcastCount=0; // count down to read position.
     double t1 = now() + 1.0/UPDATE_RATE;
     while (running) {
       int us = (t1-now())*1000000;
@@ -288,15 +342,27 @@ struct DynamixelServoController : ServoController
       bool output =(floor(t) != floor(t1));
 #if USE_BROADCAST
       {
+
+
 		broadcastTorque(output,t,t1,0,49); // legs
 		broadcastTorque(output,t,t1,90,99); // head/waist
 		broadcastTorque(output,t,t1,50,59); // Left arms
 		broadcastTorque(output,t,t1,60,69); // arms
-	    broadcastSpeedPosition(output,t,t1,0,49);
-	    broadcastSpeedPosition(output,t,t1,90,99);
-	    broadcastSpeedPosition(output,t,t1,50,59);
-	    broadcastSpeedPosition(output,t,t1,60,69);
-      }
+
+		broadcastTorqueEnable(output,t,t1,0,49); // legs
+		broadcastTorqueEnable(output,t,t1,90,99); // head/waist
+		broadcastTorqueEnable(output,t,t1,50,59); // Left arms
+		broadcastTorqueEnable(output,t,t1,60,69); // arms
+
+	    broadcastSpeedPosition(output,t,t1,0,49,broadcastCount);
+	    broadcastSpeedPosition(output,t,t1,90,99,broadcastCount);
+	    broadcastSpeedPosition(output,t,t1,50,59,broadcastCount);
+	    broadcastSpeedPosition(output,t,t1,60,69,broadcastCount);
+        broadcastCount--;
+	    if (broadcastCount<0)  {
+	      broadcastCount=100;  // every 100th time actually check servos
+	    }
+	  }
 #else
       for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
 	i->second->update();

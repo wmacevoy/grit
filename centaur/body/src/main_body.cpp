@@ -174,16 +174,21 @@ public:
 
     string head;
     iss >> head;
-#if 0
-    if (head == "report") {
-      string file;
-      iss >> file;
-      ofstream fout(file.c_str());
-      body->report(fout);
-      oss << "report sent to file " << file;
-      answer(oss.str());
+    if (head == "RightArmLimp") {
+      mover->right.torque(0);
+      oss << "my right arm is numb!";
+      answer(oss);
     }
-#endif
+    if (head == "RightArmMove") {
+      mover->right.torque(0.75);
+      oss << "my right arm is not numb.";
+      answer(oss);
+    }
+    if (head == "report") {
+      ostringstream oss;
+      body->report(oss);
+      answer(oss);
+    }
     if (head == "yes") {
       yes();
     }

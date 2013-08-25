@@ -23,5 +23,8 @@ SPServo servo(std::string name)
   if (verbose) {
     cout << "servo " << name << " is " << id << endl;
   }
-  return SPServo(servoController->servo(id));
+  SPServo ans = SPServo(servoController->servo(id));
+  ans->id(id);
+  ans->name(name);
+  return ans;
 }

@@ -1,6 +1,45 @@
 #include "Arms.h"
 #include "BodyGlobals.h"
 
+void Arm::goLimp()
+{ 
+  float t = 0.0;
+  leftRight->torque(t);
+  upDown->torque(t);
+  bicep->torque(t);
+  elbow->torque(t);
+  forearm->torque(t);
+  trigger->torque(t);
+  middle->torque(t);
+  ring->torque(t);
+  thumb->torque(t);
+  leftRight->torque(t);
+}
+
+void Arm::report(std::ostream &out) const
+{
+  out << ",";
+  leftRight->report(out);
+  out << ",";
+  upDown->report(out);
+  out << ",";
+  bicep->report(out);
+  out << ",";
+  elbow->report(out);
+  out << ",";
+  forearm->report(out);
+  out << ",";
+  trigger->report(out);
+  out << ",";
+  middle->report(out);
+  out << ",";
+  ring->report(out);
+  out << ",";
+  thumb->report(out);
+  out << ",";
+  leftRight->report(out);	
+}
+
 void LeftArm::init()
 {
   leftRight=servo("LEFTARM_SHOULDER_IO");
