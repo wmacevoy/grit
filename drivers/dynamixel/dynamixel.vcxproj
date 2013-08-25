@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{99EDF996-25AA-4A0B-8DAD-888EDC17DF36}</ProjectGuid>
+    <RootNamespace>dynamixel</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\basic.cpp" />
+    <ClCompile Include="src\CreateDynamixelServoController.cpp" />
+    <ClCompile Include="src\CreateFakeServoController.cpp" />
+    <ClCompile Include="src\CreateZMQServoController.cpp" />
+    <ClCompile Include="src\DynamixelDriver.cpp" />
+    <ClCompile Include="src\FakeServo.cpp" />
+    <ClCompile Include="src\FakeServoController.cpp" />
+    <ClCompile Include="src\now.cpp" />
+    <ClCompile Include="src\RevolutionTest.cpp" />
+    <ClCompile Include="src\Servo.cpp" />
+    <ClCompile Include="src\ServoController.cpp" />
+    <ClCompile Include="src\TestDrive1.cpp" />
+    <ClCompile Include="src\TestZMQServoController.cpp" />
+    <ClCompile Include="src\ZMQServo.cpp" />
+    <ClCompile Include="src\ZMQServoServer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\CreateDynamixelServoController.h" />
+    <ClInclude Include="include\CreateFakeServoController.h" />
+    <ClInclude Include="include\CreateZMQServoController.h" />
+    <ClInclude Include="include\DynamixelDriver.h" />
+    <ClInclude Include="include\DynamixelServo.h" />
+    <ClInclude Include="include\FakeServo.h" />
+    <ClInclude Include="include\FakeServoController.h" />
+    <ClInclude Include="include\now.h" />
+    <ClInclude Include="include\Servo.h" />
+    <ClInclude Include="include\ServoController.h" />
+    <ClInclude Include="include\ZMQServo.h" />
+    <ClInclude Include="include\ZMQServoMessage.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

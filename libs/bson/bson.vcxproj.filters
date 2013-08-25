@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{c21d8ecb-ab59-4a19-ae04-0d813a83f1ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\lib">
+      <UniqueIdentifier>{a0efd958-9f37-4b7f-8b3e-c634c3b7eb62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\util">
+      <UniqueIdentifier>{3856c86a-91f1-4d24-848f-877213635e03}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\bson.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bson_db.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bsonassert.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bsonelement.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bson-inl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bsonmisc.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bsonobj.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bsonobjbuilder.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bsonobjiterator.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\bsontypes.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\inline_decls.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\oid.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ordering.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stringdata.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\atomic_int.h">
+      <Filter>src\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\base64.h">
+      <Filter>src\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\md5.h">
+      <Filter>src\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\md5.hpp">
+      <Filter>src\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lib\nonce.h">
+      <Filter>src\lib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\builder.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\embedded_builder.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\hex.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\json.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\misc.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\optime.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="src\util\time_support.h">
+      <Filter>src\util</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\bsonobj.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\oid.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\base64.cpp">
+      <Filter>src\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\md5.c">
+      <Filter>src\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lib\nonce.cpp">
+      <Filter>src\lib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\util\json.cpp">
+      <Filter>src\util</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

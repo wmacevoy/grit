@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AE5DD6E7-9651-4825-B30C-61E9C645C7C1}</ProjectGuid>
+    <RootNamespace>hokuyo</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="include\findUrgPorts.h" />
+    <ClInclude Include="include\UrgDevice.h" />
+    <ClInclude Include="src\common\RingBuffer.h" />
+    <ClInclude Include="src\common\split.h" />
+    <ClInclude Include="src\connection\Connection.h" />
+    <ClInclude Include="src\connection\ConnectionUtils.h" />
+    <ClInclude Include="src\connection\FindComPorts.h" />
+    <ClInclude Include="src\connection\IsUsbCom.h" />
+    <ClInclude Include="src\connection\isUsingComDriver.h" />
+    <ClInclude Include="src\connection\sdl\SdlNetInit.h" />
+    <ClInclude Include="src\connection\sdl\SocketSet.h" />
+    <ClInclude Include="src\connection\sdl\TcpipServer.h" />
+    <ClInclude Include="src\connection\SerialDevice.h" />
+    <ClInclude Include="src\connection\TcpipSocket.h" />
+    <ClInclude Include="src\coordinate\Coordinate.h" />
+    <ClInclude Include="src\geometry\Angle.h" />
+    <ClInclude Include="src\geometry\Point.h" />
+    <ClInclude Include="src\geometry\Position.h" />
+    <ClInclude Include="src\monitor\DeviceIpManager.h" />
+    <ClInclude Include="src\monitor\DeviceServer.h" />
+    <ClInclude Include="src\monitor\LogNameHolder.h" />
+    <ClInclude Include="src\monitor\mConnection.h" />
+    <ClInclude Include="src\monitor\MonitorDataHandler.h" />
+    <ClInclude Include="src\monitor\MonitorEventScheduler.h" />
+    <ClInclude Include="src\monitor\MonitorModeManager.h" />
+    <ClInclude Include="src\monitor\mUrgDevice.h" />
+    <ClInclude Include="src\monitor\UrgServer.h" />
+    <ClInclude Include="src\system\ConditionVariable.h" />
+    <ClInclude Include="src\system\delay.h" />
+    <ClInclude Include="src\system\DetectOS.h" />
+    <ClInclude Include="src\system\Lock.h" />
+    <ClInclude Include="src\system\LockGuard.h" />
+    <ClInclude Include="src\system\log_printf.h" />
+    <ClInclude Include="src\system\MathUtils.h" />
+    <ClInclude Include="src\system\MonitorModeManager.h" />
+    <ClInclude Include="src\system\SdlInit.h" />
+    <ClInclude Include="src\system\Semaphore.h" />
+    <ClInclude Include="src\system\system_delay.h" />
+    <ClInclude Include="src\system\system_ticks.h" />
+    <ClInclude Include="src\system\Thread.h" />
+    <ClInclude Include="src\system\ticks.h" />
+    <ClInclude Include="src\urg\CaptureSettings.h" />
+    <ClInclude Include="src\urg\findUrgPorts.h" />
+    <ClInclude Include="src\urg\RangeCaptureMode.h" />
+    <ClInclude Include="src\urg\RangeSensor.h" />
+    <ClInclude Include="src\urg\RangeSensorParameter.h" />
+    <ClInclude Include="src\urg\ScipHandler.h" />
+    <ClInclude Include="src\urg\UrgCtrl.h" />
+    <ClInclude Include="src\urg\UrgDevice.h" />
+    <ClInclude Include="src\urg\UrgUsbCom.h" />
+    <ClInclude Include="src\urg\UrgUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\common\split.cpp" />
+    <ClCompile Include="src\connection\ConnectionUtils.cpp" />
+    <ClCompile Include="src\connection\FindComPorts.cpp" />
+    <ClCompile Include="src\connection\sdl\SdlNetInit.cpp" />
+    <ClCompile Include="src\connection\sdl\SocketSet.cpp" />
+    <ClCompile Include="src\connection\sdl\TcpipServer.cpp" />
+    <ClCompile Include="src\connection\sdl\TcpipSocket.cpp" />
+    <ClCompile Include="src\connection\SerialDevice.cpp" />
+    <ClCompile Include="src\connection\SerialDevice_lin.cpp" />
+    <ClCompile Include="src\coordinate\Coordinate.cpp" />
+    <ClCompile Include="src\geometry\Angle.cpp" />
+    <ClCompile Include="src\monitor\DeviceIpManager.cpp" />
+    <ClCompile Include="src\monitor\LogNameHolder.cpp" />
+    <ClCompile Include="src\monitor\mConnection.cpp" />
+    <ClCompile Include="src\monitor\MonitorDataHandler.cpp" />
+    <ClCompile Include="src\monitor\MonitorEventScheduler.cpp" />
+    <ClCompile Include="src\monitor\MonitorModeManager.cpp" />
+    <ClCompile Include="src\monitor\mUrgDevice.cpp" />
+    <ClCompile Include="src\monitor\UrgServer.cpp" />
+    <ClCompile Include="src\system\delay.cpp" />
+    <ClCompile Include="src\system\Lock.cpp" />
+    <ClCompile Include="src\system\LockGuard.cpp" />
+    <ClCompile Include="src\system\log_printf.cpp" />
+    <ClCompile Include="src\system\MathUtils.cpp" />
+    <ClCompile Include="src\system\MonitorModeManager.cpp" />
+    <ClCompile Include="src\system\SdlInit.cpp" />
+    <ClCompile Include="src\system\Semaphore.cpp" />
+    <ClCompile Include="src\system\system_delay.cpp" />
+    <ClCompile Include="src\system\system_ticks.cpp" />
+    <ClCompile Include="src\system\Thread.cpp" />
+    <ClCompile Include="src\system\ticks.cpp" />
+    <ClCompile Include="src\urg\findUrgPorts.cpp" />
+    <ClCompile Include="src\urg\ScipHandler.cpp" />
+    <ClCompile Include="src\urg\UrgCtrl.cpp" />
+    <ClCompile Include="src\urg\UrgDevice.cpp" />
+    <ClCompile Include="src\urg\UrgUsbCom.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

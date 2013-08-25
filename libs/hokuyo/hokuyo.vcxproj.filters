@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{4d33f300-4413-47a4-8391-a0f52f7dfe7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\connection">
+      <UniqueIdentifier>{eb8ffdae-22c5-40b1-85aa-e67d3ed25f77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\coordinate">
+      <UniqueIdentifier>{53d440f5-3488-4bf7-ad65-5d11e78c9b49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\geometry">
+      <UniqueIdentifier>{403234a3-9233-406a-b911-277fa7e9c6eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\monitor">
+      <UniqueIdentifier>{9e002780-91c6-4c89-af45-db5e9ca09f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\system">
+      <UniqueIdentifier>{8568c5d7-9ed7-43e4-bd00-32dffa5e0d03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\urg">
+      <UniqueIdentifier>{ba0dbcde-cfd7-48fc-9366-37c22e8f50ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\connection\sdl">
+      <UniqueIdentifier>{d9cd2cf3-66a1-4e40-affa-c2b7798238be}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\findUrgPorts.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\UrgDevice.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\RingBuffer.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\common\split.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\Connection.h">
+      <Filter>src\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\ConnectionUtils.h">
+      <Filter>src\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\FindComPorts.h">
+      <Filter>src\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\IsUsbCom.h">
+      <Filter>src\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\isUsingComDriver.h">
+      <Filter>src\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\SerialDevice.h">
+      <Filter>src\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\TcpipSocket.h">
+      <Filter>src\connection</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\sdl\SdlNetInit.h">
+      <Filter>src\connection\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\sdl\SocketSet.h">
+      <Filter>src\connection\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\connection\sdl\TcpipServer.h">
+      <Filter>src\connection\sdl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\coordinate\Coordinate.h">
+      <Filter>src\coordinate</Filter>
+    </ClInclude>
+    <ClInclude Include="src\geometry\Angle.h">
+      <Filter>src\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\geometry\Point.h">
+      <Filter>src\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\geometry\Position.h">
+      <Filter>src\geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\DeviceIpManager.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\DeviceServer.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\LogNameHolder.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\mConnection.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\MonitorDataHandler.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\MonitorEventScheduler.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\MonitorModeManager.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\mUrgDevice.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\monitor\UrgServer.h">
+      <Filter>src\monitor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\CaptureSettings.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\findUrgPorts.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\RangeCaptureMode.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\RangeSensor.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\RangeSensorParameter.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\ScipHandler.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\UrgCtrl.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\UrgDevice.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\UrgUsbCom.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\urg\UrgUtils.h">
+      <Filter>src\urg</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\ConditionVariable.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\delay.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\DetectOS.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\Lock.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\LockGuard.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\log_printf.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\MathUtils.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\MonitorModeManager.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\SdlInit.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\Semaphore.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\system_delay.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\system_ticks.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\Thread.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+    <ClInclude Include="src\system\ticks.h">
+      <Filter>src\system</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\common\split.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="src\connection\ConnectionUtils.cpp">
+      <Filter>src\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\connection\FindComPorts.cpp">
+      <Filter>src\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\connection\SerialDevice.cpp">
+      <Filter>src\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\connection\SerialDevice_lin.cpp">
+      <Filter>src\connection</Filter>
+    </ClCompile>
+    <ClCompile Include="src\connection\sdl\SdlNetInit.cpp">
+      <Filter>src\connection\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\connection\sdl\SocketSet.cpp">
+      <Filter>src\connection\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\connection\sdl\TcpipServer.cpp">
+      <Filter>src\connection\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\connection\sdl\TcpipSocket.cpp">
+      <Filter>src\connection\sdl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\coordinate\Coordinate.cpp">
+      <Filter>src\coordinate</Filter>
+    </ClCompile>
+    <ClCompile Include="src\geometry\Angle.cpp">
+      <Filter>src\geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor\DeviceIpManager.cpp">
+      <Filter>src\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor\LogNameHolder.cpp">
+      <Filter>src\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor\mConnection.cpp">
+      <Filter>src\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor\MonitorDataHandler.cpp">
+      <Filter>src\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor\MonitorEventScheduler.cpp">
+      <Filter>src\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor\MonitorModeManager.cpp">
+      <Filter>src\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor\mUrgDevice.cpp">
+      <Filter>src\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\monitor\UrgServer.cpp">
+      <Filter>src\monitor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\urg\findUrgPorts.cpp">
+      <Filter>src\urg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\urg\ScipHandler.cpp">
+      <Filter>src\urg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\urg\UrgCtrl.cpp">
+      <Filter>src\urg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\urg\UrgDevice.cpp">
+      <Filter>src\urg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\urg\UrgUsbCom.cpp">
+      <Filter>src\urg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\delay.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\Lock.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\LockGuard.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\log_printf.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\MathUtils.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\MonitorModeManager.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\SdlInit.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\Semaphore.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\system_delay.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\system_ticks.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\Thread.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+    <ClCompile Include="src\system\ticks.cpp">
+      <Filter>src\system</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
