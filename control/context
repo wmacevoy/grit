@@ -19,123 +19,10 @@ then
   exit 1
 fi
 
-pid()
-{
-    app=$1
-    if [ -f $MOJAVATON_DIR/pids/$app.pid ]
-    then
-	pid=$(cat $MOJAVATON_DIR/pids/$app.pid)
-	if ps -eo pid | egrep -q '\<'$pid'\>'
-	then
-	    echo $pid
-	    return
-	fi
-    fi
-    echo -1
-}
-
-running()
-{
-  test $(pid $app) -ne -1
-}
-
-stop_app()
-{
-  app=$1
-
-  term_tries=1
-  kill_tries=2
-
-  for try in $(seq 1 $((term_tries+$kill_tries)))
-  do
-      if ! running $app
-      then
-	  echo $app stoppped
-	  /bin/rm -rf $MOJAVATON_DIR/pids/$app.pid
-	  return 0
-      fi
-
-      if [ $try -le $term_tries ]
-      then
-	  echo sending term to $app...
-	  kill $(cat $MOJAVATON_DIR/pids/$app.pid)
-      else
-	  echo sending kill to $app...
-	  kill -9 $(cat $MOJAVATON_DIR/pids/$app.pid)
-      fi
-      sleep 1
-  done
-  return 1
-}
-
-stop_apps()
-{
-    for app in "$@"
-    do
-	stop_app $app
-    done
-}
-
-
-prioritize()
-{
-    for app in "$@"
-    do
-	app_pid=$(pid $app)
-	if [ $app_pid -ne -1 ]
-	then
-	    priority=0
-	    app_pid=$(pid $app)
-	    case $app in
-		body) priority=-10;;
-		servos) priority=-15;;
-	    esac
-	    if renice -n $priority -p $(pid $app)
-	    then
-		echo set priority of $app to $priority
-	    else
-		echo failed to set priority of $app to $priority		
-	    fi
-	fi
-    done
-}
-
-start_app()
-{
-  app=$1
-  app_pid=$(pid $app)
-  if [ $app_pid -ne -1 ]
-  then
-      echo $app already running as pid $app_pid
-      return 0
-  fi
-  
-  mkdir -p $MOJAVATON_DIR/pids
-  mkdir -p $MOJAVATON_DIR/logs
-  cd $MOJAVATON_DIR/drivers/$app
-  $MOJAVATON_DIR/drivers/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
-  app_pid=$!
-  echo $app_pid > $MOJAVATON_DIR/pids/$app.pid
-  echo $app started as pid $app_pid
-  prioritize $app
-}
-
-start_apps()
-{
-    for app in "$@"
-    do
-	if ! start_app $app
-	then
-	    return 1
-	fi
-    done
-    return 0
-}
-
 setup()
 {
   # add bin folders to PATH
-  for bin in $MOJAVATON_DIR/drivers/*/bin
+  for bin in $MOJAVATON_DIR/drivers/*/bin $MOJAVATON_DIR/control/*/bin
   do
     PATH="$bin:$PATH"
   done
@@ -171,20 +58,9 @@ commit()
   done
 }
 
-start()
-{
-    start_apps body servos
-}
-
-stop()
-{
-    stop_apps servos body
-}
-
 commander()
 {
-    start
-    cd $MOJAVATON_DIR/drivers/commander
+    cd $MOJAVATON_DIR/control/commander
     bin/commander
 }
 
