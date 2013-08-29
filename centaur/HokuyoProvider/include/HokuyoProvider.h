@@ -1,7 +1,7 @@
 #pragma once
 #include <HokuyoProviderRequest.hpp>
 #include <CentaurSockets.h>
-#include <UrgDevice.h>
+#include <Urg_Driver.h>
 #include <thread>
 
 
@@ -24,7 +24,7 @@ public:
 	
 protected:
 
-	static bool connectToLidar(qrk::UrgDevice &lidarDevice, std::string &error);
+	static bool connectToLidar(qrk::Lidar &lidarDevice, std::string &error);
 	static void runFunction(HokuyoProvider *pProvider);
 		
 };

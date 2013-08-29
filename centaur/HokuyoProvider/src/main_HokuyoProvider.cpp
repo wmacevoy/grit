@@ -1,11 +1,9 @@
-#include "HokuyoProvider.h"
+#include "../include/HokuyoProvider.h"
 #include <iostream>
 #include <string>
 #include <CentaurTypes.h>
 #include <bson.h>
-#include <findUrgPorts.h>
 #include <chrono>
-#include <now.h>
 
 
 volatile bool HokuyoProvider::s_shutdown = false;
@@ -30,9 +28,8 @@ bool HokuyoProvider::start()
 	return true;
 }
 
-bool HokuyoProvider::connectToLidar(qrk::UrgDevice &lidarDevice, std::string &error) {
-	std::vector<std::string> ports;
-	qrk::findUrgPorts(ports);
+bool HokuyoProvider::connectToLidar(qrk::Llidar &lidarDevice, std::string &error) {
+	std::vector<std::string> ports = qrk::Urg_driver::find_ports();
 	if(ports.size() <= 0){
 		error = "Unable to find any ports that the lidar device is on";
 		return false;			

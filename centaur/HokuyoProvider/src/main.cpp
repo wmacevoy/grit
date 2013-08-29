@@ -1,4 +1,4 @@
-#include <HokuyoProvider.h>
+#include "../include/HokuyoProvider.h"
 #include <stdlib.h>     /* exit */
 #include <signal.h>     /* signal */
 #include <chrono>
@@ -9,7 +9,6 @@ void quitproc(int);
 int main( int argc, const char* argv[] )
 {
 	signal(SIGINT, quitproc);
-	signal(SIGQUIT, quitproc);
 	HokuyoProvider provider;
 	if(!provider.start())
 		std::cout << "Unable to start Hokuyo Provider\n";

@@ -43,6 +43,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../include;../../libs/hokuyo/include/cpp;../../libs/bson/src;../../drivers/centaur/include;../../libs/boost</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -54,6 +55,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../include;../../libs/hokuyo/include/cpp;../../libs/bson/src;../../drivers/centaur/include;../../libs/boost</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -67,6 +69,17 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\main_HokuyoProvider.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\drivers\centaur\centaur.vcxproj">
+      <Project>{e8e2956e-777d-468b-9c85-05be54233583}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\bson\bson.vcxproj">
+      <Project>{b80a56cb-c564-40bc-b535-75f1ae6917e1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\hokuyo\hokuyo.vcxproj">
+      <Project>{b28fb8a5-8316-49c6-94af-d77d75030ba9}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
