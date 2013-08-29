@@ -39,6 +39,7 @@
 #define BZ_LCCWIN32 1
 #undef  BZ_UNIX
 #define BZ_UNIX 0
+#pragma warning(disable:4996)
 #endif
 
 
