@@ -15,10 +15,14 @@
  *    limitations under the License.
  */
 
+#if defined(_WIN32)
+#define _CRT_RAND_S
+#include <stdlib.h>
+#endif
+
 #include "nonce.h"
 #include <boost/static_assert.hpp>
 #include <boost/thread/mutex.hpp>
-
 #include <fstream>
 
 namespace Nonce {
@@ -40,7 +44,7 @@ namespace Nonce {
         _devrandom = new std::ifstream("/dev/urandom", std::ios::binary|std::ios::in);
         assert(_devrandom->is_open() && "can't open dev/urandom");
       #elif defined(_WIN32)
-        srand(time(NULL));
+        srand((unsigned int)time(NULL));
       #else
         srandomdev();
       #endif
