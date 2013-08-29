@@ -24,7 +24,7 @@ public:
 	
 protected:
 
-	static bool connectToLidar(qrk::Lidar &lidarDevice, std::string &error);
+	static bool connectToLidar(qrk::Urg_driver &lidarDevice, std::string &error);
 	static void runFunction(HokuyoProvider *pProvider);
 		
 };

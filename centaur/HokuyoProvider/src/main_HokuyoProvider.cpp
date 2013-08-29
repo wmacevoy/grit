@@ -28,14 +28,14 @@ bool HokuyoProvider::start()
 	return true;
 }
 
-bool HokuyoProvider::connectToLidar(qrk::Llidar &lidarDevice, std::string &error) {
+bool HokuyoProvider::connectToLidar(qrk::Urg_driver &lidarDevice, std::string &error) {
 	std::vector<std::string> ports = qrk::Urg_driver::find_ports();
 	if(ports.size() <= 0){
 		error = "Unable to find any ports that the lidar device is on";
 		return false;			
 	}
 
-	if(!lidarDevice.connect(ports[0].c_str())) {
+	if(!lidarDevice.open(ports[0].c_str())) {
 		error = "Unable to connect to lidar device on port ";
 		error += ports[0];
 		error += " : ";
@@ -54,25 +54,25 @@ void HokuyoProvider::runFunction(HokuyoProvider *pProvider)
 		int recvCnt = pProvider->m_replySocket.recv(&nScans, 1);
 		if(recvCnt > 0 && nScans > 0){
 			//std::cout << "Received a request for data\n";
-			qrk::UrgDevice lidarDevice;
+			qrk::Urg_driver lidarDevice;
 			HokuyoData replyData;
 			
 			if(connectToLidar(lidarDevice, replyData.m_error)) {
-				for(unsigned int i = 0; i < nScans; i++){
-					std::vector<long> data;
-					int n = lidarDevice.capture(data);
-					
-					if(n <= 0) {
+				lidarDevice.start_measurement(qrk::Urg_driver::Distance, nScans, 0);
+				for (int i = 0; i < nScans; i++) {
+					vector<long> data;
+					long time_stamp = 0;
+
+					if (!lidarDevice.get_distance(data, &time_stamp)) {
 						char buffer[64];
 						sprintf(buffer, "Failed to get data from scan %i\n", i);
 						replyData.m_error = buffer;
-						break;
 					} else {
 						replyData.m_dataArrayArray.push_back(data);
-					}		
+					}
 				}
+				
 			}
-			replyData.m_timestamp = now();
 			bson::bo response = replyData.toBSON();
 			
 			pProvider->m_replySocket.send(response.objdata(), response.objsize());
