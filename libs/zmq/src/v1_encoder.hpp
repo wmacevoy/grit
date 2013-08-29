@@ -29,7 +29,7 @@
 namespace zmq
 {
 
-    class i_msg_source;
+    struct i_msg_source;
 
     //  Encoder for 0MQ framing protocol. Converts messages into data stream.
 

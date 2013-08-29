@@ -40,7 +40,7 @@
 namespace zmq
 {
 
-    class i_msg_source;
+    struct i_msg_source;
 
     //  Helper base class for encoders. It implements the state machine that
     //  fills the outgoing buffer. Derived classes should implement individual

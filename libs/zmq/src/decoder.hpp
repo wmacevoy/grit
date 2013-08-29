@@ -35,7 +35,7 @@
 namespace zmq
 {
 
-    class i_msg_sink;
+    struct i_msg_sink;
 
     //  Helper base class for decoders that know the amount of data to read
     //  in advance at any moment. Knowing the amount in advance is a property

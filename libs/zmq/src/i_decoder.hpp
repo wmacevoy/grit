@@ -1,4 +1,4 @@
-/*
+/*`
     Copyright (c) 2007-2012 iMatix Corporation
     Copyright (c) 2007-2012 Other contributors as noted in the AUTHORS file
 
@@ -26,7 +26,7 @@
 namespace zmq
 {
 
-    class i_msg_sink;
+    struct i_msg_sink;
 
     //  Interface to be implemented by message decoder.
 

@@ -95,7 +95,7 @@ int zmq::xpub_t::xsetsockopt (int option_, const void *optval_,
         errno = EINVAL;
         return -1;
     }
-    verbose = *static_cast <const int*> (optval_);
+    verbose = !!(*static_cast <const int*> (optval_));
     return 0;
 }
 
