@@ -16,7 +16,6 @@
 struct HokuyoData {
 	
 	std::string						m_error;
-	double							m_timestamp;
 	std::vector<std::vector<long> >	m_dataArrayArray;
 	
 	void printToStdOut(){
@@ -55,13 +54,11 @@ struct HokuyoData {
 			objBuilder.append(RESPONSE_DATA, arrayBuilder.arr());
 			objBuilder.append(RESPONSE_ERROR, m_error);
 		}
-		objBuilder.append(RESPONSE_TIMESTAMP, m_timestamp);
 		return objBuilder.obj();
 	}
 	
 	void fromBSON(const char * input){
 		bson::bo responseObj(input);
-		m_timestamp = responseObj.getField(RESPONSE_TIMESTAMP).Double();
 		m_error = responseObj.getField(RESPONSE_ERROR).String();
 		if(!m_error.empty())
 			return;

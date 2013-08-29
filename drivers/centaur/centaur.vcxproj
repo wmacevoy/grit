@@ -11,12 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\CentaurMessageTestCase.cpp" />
     <ClCompile Include="src\CentaurSockets.cpp" />
     <ClCompile Include="src\CentaurThread.cpp" />
-    <ClCompile Include="src\CentaurTypesTestCase.cpp" />
-    <ClCompile Include="src\ExampleTestCase.cpp" />
-    <ClCompile Include="src\test_messages.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\BodyMessage.h" />
@@ -28,9 +24,14 @@
     <ClInclude Include="include\HokuyoProviderRequest.hpp" />
     <ClInclude Include="include\LegPressure.hpp" />
     <ClInclude Include="include\Orientation.hpp" />
-    <ClInclude Include="src\CentaurMessageTestCase.h" />
-    <ClInclude Include="src\CentaurTypesTestCase.h" />
-    <ClInclude Include="src\ExampleTestCase.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\libs\boost\boost.vcxproj">
+      <Project>{3db23571-eb21-4873-89ff-e444ed4b9ddb}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\zmq\zmq.vcxproj">
+      <Project>{43fce321-b1aa-4dd6-b983-98fdb32e217b}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E8E2956E-777D-468B-9C85-05BE54233583}</ProjectGuid>
@@ -38,13 +39,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -65,6 +66,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../libs/boost;../../libs/zmq/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -76,6 +78,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../../libs/boost;../../libs/zmq/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

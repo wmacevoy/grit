@@ -9,9 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="tests">
-      <UniqueIdentifier>{6a7764c6-71ce-4b46-88a5-10e1cee3b01d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CentaurSockets.cpp">
@@ -20,29 +17,8 @@
     <ClCompile Include="src\CentaurThread.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\CentaurMessageTestCase.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CentaurTypesTestCase.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ExampleTestCase.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
-    <ClCompile Include="src\test_messages.cpp">
-      <Filter>tests</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CentaurMessageTestCase.h">
-      <Filter>tests</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CentaurTypesTestCase.h">
-      <Filter>tests</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ExampleTestCase.h">
-      <Filter>tests</Filter>
-    </ClInclude>
     <ClInclude Include="include\BodyMessage.h">
       <Filter>include</Filter>
     </ClInclude>
