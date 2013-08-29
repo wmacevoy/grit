@@ -37,7 +37,7 @@
 pthread_t freenect_thread;
 volatile int die = 0;
 
-const int sleep_time = 100;
+const int sleep_time = 200;
 
 // back: owned by libfreenect (implicit for depth)
 // mid: owned by callbacks, "latest frame ready"
