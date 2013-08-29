@@ -142,7 +142,7 @@ void RenderString(float x, float y)
 		{
 			int index = 425 + ((x * 229) / 625);
 			pos = convstr(data.m_dataArrayArray[0][index] * 0.00328084f);
-			printf("index: %d  ---  pixel: %f\n", index, x);
+			//printf("index: %d  ---  pixel: %f\n", index, x);
 		}
 		else
 		{
