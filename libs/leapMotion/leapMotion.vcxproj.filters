@@ -5,10 +5,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="lib">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Leap.h">
@@ -22,10 +18,5 @@
     <None Include="include\Leap.i">
       <Filter>include</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="lib\win\Leap.lib">
-      <Filter>lib</Filter>
-    </Library>
   </ItemGroup>
 </Project>

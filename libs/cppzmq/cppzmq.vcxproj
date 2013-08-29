@@ -16,7 +16,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -63,6 +63,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\zmq.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\zmq\zmq.vcxproj">
+      <Project>{43fce321-b1aa-4dd6-b983-98fdb32e217b}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
