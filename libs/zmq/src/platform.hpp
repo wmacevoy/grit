@@ -176,9 +176,6 @@
 /* Have Cygwin */
 /* #undef ZMQ_HAVE_CYGWIN */
 
-/* Have eventfd extension. */
-#define ZMQ_HAVE_EVENTFD 1
-
 /* Have FreeBSD OS */
 /* #undef ZMQ_HAVE_FREEBSD */
 
@@ -187,9 +184,6 @@
 
 /* Have ifaddrs.h header. */
 #define ZMQ_HAVE_IFADDRS 1
-
-/* Have Linux OS */
-#define ZMQ_HAVE_LINUX 1
 
 /* Have MinGW32 */
 /* #undef ZMQ_HAVE_MINGW32 */
@@ -209,9 +203,6 @@
 /* Have QNX Neutrino OS */
 /* #undef ZMQ_HAVE_QNXNTO */
 
-/* Whether SOCK_CLOEXEC is defined and functioning. */
-#define ZMQ_HAVE_SOCK_CLOEXEC 1
-
 /* Have Solaris OS */
 /* #undef ZMQ_HAVE_SOLARIS */
 
@@ -220,6 +211,18 @@
 
 /* Whether TCP_KEEPALIVE is supported. */
 /* #undef ZMQ_HAVE_TCP_KEEPALIVE */
+
+
+
+
+/* Have Windows OS or linux */
+#ifdef _WIN32
+#define ZMQ_HAVE_WINDOWS 1
+#else
+#define ZMQ_HAVE_LINUX 1
+
+/* Have uio.h header. */
+#define ZMQ_HAVE_UIO 1
 
 /* Whether TCP_KEEPCNT is supported. */
 #define ZMQ_HAVE_TCP_KEEPCNT 1
@@ -230,11 +233,13 @@
 /* Whether TCP_KEEPINTVL is supported. */
 #define ZMQ_HAVE_TCP_KEEPINTVL 1
 
-/* Have uio.h header. */
-#define ZMQ_HAVE_UIO 1
+/* Have eventfd extension. */
+#define ZMQ_HAVE_EVENTFD 1
 
-/* Have Windows OS */
-/* #undef ZMQ_HAVE_WINDOWS */
+/* Whether SOCK_CLOEXEC is defined and functioning. */
+#define ZMQ_HAVE_SOCK_CLOEXEC 1
+
+#endif
 
 /* Define for Solaris 2.5.1 so the uint32_t typedef from <sys/synch.h>,
    <pthread.h>, or <semaphore.h> is not used. If the typedef were allowed, the
