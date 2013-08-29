@@ -202,9 +202,6 @@
     <ClCompile Include="src\connection\SerialDevice.cpp">
       <Filter>src\connection</Filter>
     </ClCompile>
-    <ClCompile Include="src\connection\SerialDevice_lin.cpp">
-      <Filter>src\connection</Filter>
-    </ClCompile>
     <ClCompile Include="src\connection\sdl\SdlNetInit.cpp">
       <Filter>src\connection\sdl</Filter>
     </ClCompile>

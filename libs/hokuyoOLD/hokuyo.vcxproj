@@ -38,11 +38,14 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(SolutionDir)libs\SDL2-2.0.0\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../SDL;../SDL_net;../SDL/SDL;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -54,6 +57,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>../SDL;../SDL_net;../SDL/SDL;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -123,7 +127,6 @@
     <ClCompile Include="src\connection\sdl\TcpipServer.cpp" />
     <ClCompile Include="src\connection\sdl\TcpipSocket.cpp" />
     <ClCompile Include="src\connection\SerialDevice.cpp" />
-    <ClCompile Include="src\connection\SerialDevice_lin.cpp" />
     <ClCompile Include="src\coordinate\Coordinate.cpp" />
     <ClCompile Include="src\geometry\Angle.cpp" />
     <ClCompile Include="src\monitor\DeviceIpManager.cpp" />

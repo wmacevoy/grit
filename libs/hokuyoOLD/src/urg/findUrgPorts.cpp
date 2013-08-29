@@ -11,7 +11,7 @@
 #include "../connection/FindComPorts.h"
 #include "../system/DetectOS.h"
 #if defined(WINDOWS_OS)
-#include "isUsingComDriver.h"
+#include "../connection/isUsingComDriver.h"
 #endif
 
 using namespace std;
