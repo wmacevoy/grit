@@ -87,6 +87,15 @@ void publish_img(uint8_t *image, void *zmq_pub)
 
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 {
+	static int count = 20;
+	if(count > 0)
+	{
+		--count;
+		return;
+	}
+	else
+		count = 10;
+
 	int i;
 	uint16_t *depth = (uint16_t*)v_depth;
 
@@ -139,6 +148,14 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 
 void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 {
+	static int count = 20;
+	if(count > 0)
+	{
+		--count;
+		return;
+	}
+	else
+		count = 10;
 	pthread_mutex_lock(&buf_mutex);
 
 	// swap buffers
