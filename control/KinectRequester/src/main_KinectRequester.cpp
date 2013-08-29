@@ -53,6 +53,8 @@ int mx, my;
 GLuint gl_depth_tex;
 GLuint gl_rgb_tex;
 
+HokuyoData data;
+
 typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
 {
  WORD bfType;
@@ -133,7 +135,7 @@ void RenderString(float x, float y)
 	//540 is lidar center left side = 426 right side = 654
 	if( x >= 0 && x <= 640 && y >= 240 && y <= 250)
 	{
-		HokuyoData data = HokuyoProviderRequest::GetData(nScans);
+		//HokuyoData data = HokuyoProviderRequest::GetData(nScans);
 		int tmpX = x;
 		
 		std::string pos;
@@ -152,10 +154,10 @@ void RenderString(float x, float y)
 		if(x > 550) tmpX = x - 55;		
 
 		glColor3f(1.0, 1.0, 1.0); 
-		glRasterPos2f(tmpX + 1, y + 1);
+		glRasterPos2f(tmpX + 2, y + 1);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
 		glColor3f(1.0, 1.0, 1.0); 
-		glRasterPos2f(tmpX - 1, y - 1);
+		glRasterPos2f(tmpX - 2, y - 1);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
 		glColor3f(0.1, 0.1, 0.1); 
 		glRasterPos2f(tmpX, y);
@@ -168,7 +170,8 @@ void DrawGLScene()
 	switch(view_state)
 	{
 	case 0:
-		subscribe_depth(sub_depth);	
+		subscribe_depth(sub_depth);
+		data = HokuyoProviderRequest::GetData(nScans);	
 
 		glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
@@ -214,6 +217,7 @@ void DrawGLScene()
 
 	case 1:
 		subscribe_color(sub_color);
+		data = HokuyoProviderRequest::GetData(nScans);
 
 		glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
