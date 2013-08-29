@@ -55,7 +55,7 @@ public:
 	bool bind(const char * addr);
 
 	template <class T>
-	int send(const T * pData, int nData, bool block = false)
+	int send(const T * pData, int nData, bool block = true)
 	{
 		const T * pDataEnd = pData + nData;
 
@@ -80,19 +80,19 @@ public:
 	}
 	
 	template <class T, unsigned int staticCount, class Alloc>
-	int send(CM_Array<T, staticCount, Alloc> &data, bool block = false)
+	int send(CM_Array<T, staticCount, Alloc> &data, bool block = true)
 	{
-		return send(data.getData(), data.getSize(), block ? 0 : ZMQ_DONTWAIT);
+		return send(data.getData(), data.getSize(), block);
 	}
 	
 	template <class T>
-	int recv(T * pData, int nData, bool block = false)
+	int recv(T * pData, int nData, bool block = true)
 	{
 		return zmq_recv(m_socket, pData, sizeof(T) * nData, block ? 0 : ZMQ_NOBLOCK);
 	}
 		
 	template <class T, unsigned int staticCount, class Alloc>
-	int recv(CM_Array<T, staticCount, Alloc> &data, bool block = false)
+	int recv(CM_Array<T, staticCount, Alloc> &data, bool block = true)
 	{
 		int flags = block ? 0 : ZMQ_NOBLOCK;
 
