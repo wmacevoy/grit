@@ -13,7 +13,7 @@ CentaurThread::~CentaurThread()
 
 bool CentaurThread::start()
 {
-	m_pThread.reset(new boost::thread(run, this));
+	m_pThread.reset(new std::thread(run, this));
 	return !!m_pThread;
 }
 

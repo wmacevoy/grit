@@ -41,7 +41,7 @@ struct HokuyoData {
 		bson::BSONObjBuilder objBuilder;
 		bson::BSONArrayBuilder arrayBuilder;
 		if(m_error.empty()){
-			for(int i = 0; i < m_dataArrayArray.size(); i++){
+			for(unsigned int i = 0; i < m_dataArrayArray.size(); i++){
 				vector<long> &data = m_dataArrayArray[i];
 				bson::BSONArrayBuilder dataBuilder;
 				for(int j = 0; j < data.size(); j++)
