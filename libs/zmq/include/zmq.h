@@ -43,6 +43,7 @@ extern "C" {
 #   else
 //#       define ZMQ_EXPORT __declspec(dllimport)
 #       define ZMQ_EXPORT 
+#		pragma comment(lib, "Ws2_32.lib")
 #   endif
 #else
 #   if defined __SUNPRO_C  || defined __SUNPRO_CC

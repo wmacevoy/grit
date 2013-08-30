@@ -45,6 +45,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -58,6 +59,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -81,8 +83,6 @@
     <ClCompile Include="src\urg_sensor.c" />
     <ClCompile Include="src\urg_serial.c" />
     <ClCompile Include="src\urg_serial_utils.c" />
-    <ClCompile Include="src\urg_serial_utils_windows.c" />
-    <ClCompile Include="src\urg_serial_windows.c" />
     <ClCompile Include="src\urg_tcpclient.c" />
     <ClCompile Include="src\urg_utils.c" />
   </ItemGroup>

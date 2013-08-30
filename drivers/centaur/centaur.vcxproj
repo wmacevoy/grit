@@ -26,9 +26,6 @@
     <ClInclude Include="include\Orientation.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\libs\boost\boost.vcxproj">
-      <Project>{3db23571-eb21-4873-89ff-e444ed4b9ddb}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\libs\zmq\zmq.vcxproj">
       <Project>{43fce321-b1aa-4dd6-b983-98fdb32e217b}</Project>
     </ProjectReference>
@@ -67,6 +64,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>../../libs/boost;../../libs/zmq/include;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -79,6 +77,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <AdditionalIncludeDirectories>../../libs/boost;../../libs/zmq/include;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

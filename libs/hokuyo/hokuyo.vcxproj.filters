@@ -52,12 +52,6 @@
     <ClCompile Include="src\urg_serial_utils.c">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\urg_serial_utils_windows.c">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\urg_serial_windows.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\urg_tcpclient.c">
       <Filter>src</Filter>
     </ClCompile>

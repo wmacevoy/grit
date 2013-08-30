@@ -84,7 +84,7 @@ int zmq::router_t::xsetsockopt (int option_, const void *optval_,
         errno = EINVAL;
         return -1;
     }
-    mandatory = *static_cast <const int*> (optval_);
+    mandatory = !!(*static_cast <const int*> (optval_));
     return 0;
 }
 

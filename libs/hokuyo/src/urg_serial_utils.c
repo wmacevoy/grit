@@ -13,6 +13,7 @@
 
 #if defined(URG_WINDOWS_OS)
 #include "urg_serial_utils_windows.c"
+#pragma comment(lib, "Setupapi.lib")
 #else
 #include "urg_serial_utils_linux.c"
 #endif
