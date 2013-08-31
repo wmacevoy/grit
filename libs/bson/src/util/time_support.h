@@ -25,6 +25,11 @@
 #include <boost/thread.hpp>
 #endif;
 
+#include <boost/version.hpp>
+#if BOOST_VERSION < 105000
+#define TIME_UTC_ TIME_UTC
+#endif
+
 namespace bson {
 
     inline void time_t_to_Struct(time_t t, struct tm * buf , bool local = false)

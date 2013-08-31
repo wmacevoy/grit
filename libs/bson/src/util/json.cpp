@@ -19,6 +19,10 @@
 #define BOOST_SPIRIT_THREADSAFE
 //#if BOOST_VERSION >= 103800
 #if 1
+#include <boost/version.hpp>
+#if BOOST_VERSION < 105000
+#define TIME_UTC_ TIME_UTC
+#endif
 #define BOOST_SPIRIT_USE_OLD_NAMESPACE
 #include <boost/spirit/include/classic_core.hpp>
 #include <boost/spirit/include/classic_loops.hpp>
