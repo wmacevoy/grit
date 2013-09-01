@@ -66,8 +66,8 @@ public:
 	mover->left.bicep.torque=0.75;
   }
   void setLElbow(float angle) {
-	mover->right.elbow.setup(angle);
-	mover->right.elbow.torque=0.75;
+	mover->left.elbow.setup(angle);
+	mover->left.elbow.torque=0.75;
   }
   void setRIO(float angle) {
 	mover->right.leftRight.setup(angle);
@@ -154,9 +154,20 @@ public:
   
   void yes()
   {
-    mover->neck.upDown.wave(0,2,-15,15);
-    mover->neck.leftRight.setup(0);
+     setPitch(20);
+     sleep(1);
+     setPitch(-20);
+     sleep(1);
+     setPitch(0);
   }
+  void no()
+  {
+     setYaw(20);
+     sleep(1);
+     setYaw(-20);
+     sleep(1);
+     setYaw(0);
+  } 
 
   void straight() {
 	setPitch(0);
@@ -191,12 +202,12 @@ public:
     }
     if (head == "yes") {
       yes();
+      answer("Yes");
     }
-#if 0
     if (head == "no") {
       no();
+      answer("No");
     }
-#endif
     if (head=="straight") {
       straight();
     }

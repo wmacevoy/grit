@@ -3,6 +3,9 @@
 
 void Neck::init()
 {
+  float t=768;
   upDown=servo("NECKUD");
   leftRight=servo("NECKLR");
+  leftRight->torque(t);
+  upDown->torque(t);
 }
