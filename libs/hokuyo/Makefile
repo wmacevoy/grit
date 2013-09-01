@@ -13,7 +13,7 @@ S_PREFIX = $(shell echo "$(PREFIX)" | sed "s/\//\\\\\\\\\//g")
 S_LIBS = $(shell if test x$(MSYSTEM) == x"MINGW32"; then echo "-lwsock32 -lsetupapi"; fi)
 all : $(CONFIG_FILE) $(CONFIG_FILE_CPP)
 	cd src/ && $(MAKE)
-	cd samples/ && $(MAKE)
+#	cd samples/ && $(MAKE)
 
 clean :
 	$(RM) $(CONFIG_FILE)
