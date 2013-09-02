@@ -231,9 +231,9 @@ struct DynamixelServoController : ServoController
 			//			servo->presentPosition = servo->goalPosition;
 		  }
 		  int position = servo->goalPosition & 4095;
-		  int speed = servo->goalSpeed;
+	//	  int speed = servo->goalSpeed;
 	//	  int position = 2048;
-	//	  int speed = 50;
+	      int speed = 90;
 		  if (output) {
 			cout << "id,"<<servo->id << "," << position << "," << speed << ",";
 		  }
@@ -281,8 +281,8 @@ struct DynamixelServoController : ServoController
 	  int id = k->first;
 	  if (id>=lower && id<=upper) {
 	    DynamixelServo *servo = &*k->second;
-//	    int torque = 768; // servo->goalTorque;  
-	    int torque = servo->goalTorque;  
+	    int torque = 1000; // servo->goalTorque;  
+//	    int torque = servo->goalTorque;  
 	    dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	    dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(torque));
 	    dxl_set_txpacket_parameter(i*(L+1)+4,dxl_get_highbyte(torque));
@@ -349,10 +349,11 @@ struct DynamixelServoController : ServoController
 		broadcastTorque(output,t,t1,50,59); // Left arms
 		broadcastTorque(output,t,t1,60,69); // arms
 
-		broadcastTorqueEnable(output,t,t1,0,49); // legs
+	/*	This makes the servos "tick" everytime it is sent
+	    broadcastTorqueEnable(output,t,t1,0,49); // legs
 		broadcastTorqueEnable(output,t,t1,90,99); // head/waist
-		broadcastTorqueEnable(output,t,t1,50,59); // Left arms
-		broadcastTorqueEnable(output,t,t1,60,69); // arms
+	    broadcastTorqueEnable(output,t,t1,50,59); // Left arms
+		broadcastTorqueEnable(output,t,t1,60,69); // arms */ 
 
 	    broadcastSpeedPosition(output,t,t1,0,49,broadcastCount);
 	    broadcastSpeedPosition(output,t,t1,90,99,broadcastCount);
