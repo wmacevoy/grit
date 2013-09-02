@@ -70,6 +70,17 @@
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\drivers\centaur\centaur.vcxproj">
+      <Project>{e8e2956e-777d-468b-9c85-05be54233583}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\bson\bson.vcxproj">
+      <Project>{b80a56cb-c564-40bc-b535-75f1ae6917e1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\zmq\zmq.vcxproj">
+      <Project>{43fce321-b1aa-4dd6-b983-98fdb32e217b}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

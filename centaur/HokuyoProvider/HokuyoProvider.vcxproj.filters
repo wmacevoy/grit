@@ -16,10 +16,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
+    <ClCompile Include="src\main_HokuyoProvider.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\main_HokuyoProvider.cpp">
+    <ClCompile Include="src\HokuyoProvider.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

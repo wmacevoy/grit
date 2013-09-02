@@ -10,12 +10,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <thread>
+
 #if _WIN32
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/thread/thread.hpp> 
-
 #pragma comment(lib, "pthreadVC2.lib")
-
 #else
 #include <unistd.h>
 #endif
@@ -191,10 +189,7 @@ void *freenect_threadfunc(void *arg)
 	freenect_start_video(f_dev);
 
 	while (!die && freenect_process_events(f_ctx) >= 0) {
-#if _WIN32
-#else
-		usleep(sleep_time);
-#endif
+		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
 
 	if(!die) die = 1;
@@ -324,7 +319,7 @@ int main(int argc, char** argv)
 #endif
 
 	//Sleep for 1 second to allow thread to initialize
-	boost::this_thread::sleep(boost::posix_time::seconds(1));
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 
 	printf("Publishing on tcp://*:9998 and tcp://*:9999\n");
 	while(!die)
@@ -338,7 +333,7 @@ int main(int argc, char** argv)
 		pthread_cond_signal(&frame_cond);
 		pthread_mutex_unlock(&buf_mutex);
 
-		boost::this_thread::sleep(boost::posix_time::microseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
 
 	//Cleanup

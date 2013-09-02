@@ -9,12 +9,7 @@
 #include <string.h>
 #include <signal.h>
 
-#if _WIN32
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/thread/thread.hpp> 
-#else
-#include <pthread.h>
-#endif
+#include <thread>
 
 #include <vector>
 #include <zmq.h>
@@ -80,11 +75,7 @@ void ZMQHub::rxLoop()
 
 void ZMQHub::txWait()
 {
-#if _WIN32
-	boost::this_thread::sleep(boost::posix_time::microseconds(int((1.0/rate)*1000000000)));
-#else
-	usleep(int((1.0/rate)*1000000000));
-#endif
+	std::this_thread::sleep_for(std::chrono::microseconds(int((1.0/rate)*1000000)));
 }
 
 void ZMQHub::txLoop() 
@@ -104,13 +95,8 @@ void ZMQHub::reportLoop()
   const float dt = 1.00;
   while (running) {
 
-#if _WIN32
-	  boost::this_thread::sleep(boost::posix_time::microseconds(int(dt*1000000)));
-#else
-	  usleep(int(dt*1000000));
-#endif
-
-    rxRate = rxCount/dt;
+    std::this_thread::sleep_for(std::chrono::microseconds(int(dt*1000000)));
+	rxRate = rxCount/dt;
     txRate = txCount/dt;
     report();
     rxCount = 0;

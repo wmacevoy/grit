@@ -22,7 +22,7 @@ int main( int argc, const char* argv[] )
 	int nScans = 0;
 	while(!wantsToQuit(nScans) && nScans > 0){
 		//std::cout << "You are going to request more data\n";
-		HokuyoData data = HokuyoProviderRequest::GetData(nScans);
+		HokuyoData data = HokuyoProviderRequest::GetData("tcp://192.168.2.100", nScans);
 		data.printToStdOut();
 	}
 }
