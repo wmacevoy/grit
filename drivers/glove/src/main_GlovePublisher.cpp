@@ -6,14 +6,15 @@
 #include <sstream>
 #include <signal.h>
 #include <strings.h>
+#include <stdint.h>
 
 #define BAUDRATE B9600
 
 int die = 0;
 
 struct hands{
-	long lthumb, ltrigger, lmiddle, lring;
-	long rthumb, rtrigger, rmiddle, rring;
+	int64_t lthumb, ltrigger, lmiddle, lring;
+	int64_t rthumb, rtrigger, rmiddle, rring;
 };
 
 void quitproc(int param)
@@ -23,7 +24,7 @@ void quitproc(int param)
 
 void publish(void* zmq_pub, hands* manos)
 {
-	int rc = zmq_send(zmq_pub, manos, sizeof(hands), ZMQ_DONTWAIT);
+	int rc = zmq_send(zmq_pub, manos, sizeof(hands),0);
 }
 
 int main(int argc, char** argv)
