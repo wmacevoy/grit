@@ -32,6 +32,42 @@
 #include "now.h"
 #include "BodyMover.h"
 
+struct Hands{
+	int64_t lthumb, ltrigger, lmiddle, lring;
+	int64_t rthumb, rtrigger, rmiddle, rring;
+	void clear() {
+	  lthumb=0;
+	  ltrigger=0;
+	  lmiddle=0; 
+	  lring=0;
+	  rthumb=0;
+	  rtrigger=0; 
+	  rmiddle=0; 
+	  rring=0;
+	}
+};
+
+int mapFingerAngle(int angle){
+	angle=(-180+angle);
+	if (angle<-175) angle=-175;
+	if (angle>175) angle=175; 
+	return angle;
+}
+
+void subscribe(void *zmq_sub, Hands* manos) 
+{
+	manos->clear();
+	int rc = zmq_recv(zmq_sub, manos, sizeof(Hands), 0);
+	manos->lthumb=mapFingerAngle(manos->lthumb);
+	manos->ltrigger=mapFingerAngle(manos->ltrigger);
+	manos->lmiddle=mapFingerAngle(manos->lmiddle); 
+	manos->lring=mapFingerAngle(360-manos->lring);
+	manos->rthumb=mapFingerAngle(360-manos->rthumb);
+	manos->rtrigger=mapFingerAngle(360-manos->rtrigger); 
+	manos->rmiddle=mapFingerAngle(360-manos->rmiddle); 
+	manos->rring=mapFingerAngle(manos->rring);
+}
+
 using namespace std;
 
 class BodyController : public ZMQHub
@@ -41,6 +77,7 @@ public:
 
   list < string > replies;
   mutex repliesMutex;
+  
 
   void answer(const string &reply)
   {
@@ -51,6 +88,37 @@ public:
   void answer(ostringstream &oss)
   {
     answer(oss.str());
+  }
+  
+  void subscribeToHands() {
+	int rc;
+	Hands manos;
+	
+	void *context = zmq_ctx_new ();
+	void *sub = zmq_socket(context, ZMQ_SUB);
+	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
+	
+	if (zmq_connect(sub, "tcp://192.168.2.115:6689") != 0)
+	{
+		printf("Error initializing 0mq...\n");
+		return;
+	}
+	
+	for (int i=0;i<100;i++) // Read 100 Hand Messages
+	{
+			subscribe(sub, &manos);
+			mover->left.trigger.setup(manos.ltrigger);
+			mover->left.middle.setup(manos.lmiddle);
+			mover->left.ring.setup(manos.lring);
+			mover->left.thumb.setup(manos.lthumb);
+			mover->right.trigger.setup(manos.rtrigger);
+			mover->right.middle.setup(manos.rmiddle);
+			mover->right.ring.setup(manos.rring);
+			mover->right.thumb.setup(manos.rthumb);
+	}	
+	
+	zmq_close(sub);
+	zmq_ctx_destroy(context);
   }
   
   void setLIO(float angle) {
@@ -200,6 +268,9 @@ public:
       body->report(oss);
       answer(oss);
     }
+    if (head=="hands") {
+		subscribeToHands();
+	}
     if (head == "yes") {
       yes();
       answer("Yes");
