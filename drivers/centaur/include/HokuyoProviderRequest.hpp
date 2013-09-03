@@ -2,10 +2,11 @@
 
 #include <CentaurTypes.h>
 #include <CentaurSockets.h>
-#include <bson.h>
 #include <vector>
 #include <string>
 #include <iostream>
+#include <libjson.h>
+#include <stdint.h>
 
 #include <chrono>
 #include <thread>
@@ -21,62 +22,40 @@ struct HokuyoData {
 	std::string						m_error;
 	std::vector<std::vector<long> >	m_dataArrayArray;
 	
-	void printToStdOut(){
-		if(m_error.empty()) {
-			std::cout << "Printing data\n";
-			for(unsigned int i = 0; i < m_dataArrayArray.size(); i++){
-				std::vector<long> &pointData = m_dataArrayArray[i];
-				
-				for(unsigned int j = 0; j < pointData.size(); j++) {
-					std::cout << pointData[j];
-					if(j < pointData.size())
-						std::cout << ", ";
-				}
-				std::cout << "\n";
-			}
-		} else {
-			
-			std::cout << "ERROR:\n\t"<< m_error << "\n";
+	std::string toJSONString(){
+		JSONNode retVal(JSON_NODE);
+		retVal.push_back(JSONNode(RESPONSE_ERROR, m_error));
+		JSONNode jsonArrayArray(JSON_ARRAY);
+		jsonArrayArray.set_name(RESPONSE_DATA);
+		for(unsigned int i = 0; i < m_dataArrayArray.size(); i++){
+			std::vector<long> &data = m_dataArrayArray[i];
+			JSONNode jsonArray(JSON_ARRAY);
+			for(unsigned int j = 0; j < data.size(); j++)
+				jsonArray.push_back(JSONNode("", data[j]));
+			jsonArrayArray.push_back(jsonArray);
 		}
+		retVal.push_back(jsonArrayArray);
+		return retVal.write();
 	}
-	
-	bson::bo toBSON(){
-		bson::BSONObjBuilder objBuilder;
-		bson::BSONArrayBuilder arrayBuilder;
-		if(m_error.empty()){
-			for(unsigned int i = 0; i < m_dataArrayArray.size(); i++){
-				vector<long> &data = m_dataArrayArray[i];
-				bson::BSONArrayBuilder dataBuilder;
-				for(unsigned int j = 0; j < data.size(); j++)
-					dataBuilder.append((long long)data[j]);
-				arrayBuilder.append(dataBuilder.arr());
-			}
-			objBuilder.append(RESPONSE_DATA, arrayBuilder.arr());
-			objBuilder.append(RESPONSE_ERROR, "");
-		} else {
-			objBuilder.append(RESPONSE_DATA, arrayBuilder.arr());
-			objBuilder.append(RESPONSE_ERROR, m_error);
-		}
-		return objBuilder.obj();
-	}
-	
-	void fromBSON(const char * input){
-		bson::bo responseObj(input);
-		m_error = responseObj.getField(RESPONSE_ERROR).String();
-		if(!m_error.empty())
-			return;
-		
-		std::vector<bson::BSONElement> bDataArrayArray = responseObj.getField(RESPONSE_DATA).Array();
-		for(unsigned int i = 0; i < bDataArrayArray.size(); i++){
-			std::vector<bson::BSONElement> bDataObj = bDataArrayArray[i].Array();
+
+	void fromJSONString(const char * data){
+		JSONNode jsonData = libjson::parse(data);
+		JSONNode jsonError = jsonData.at(RESPONSE_ERROR);
+		m_error = jsonError.as_string();
+		JSONNode jsonArrayArray = jsonData.at(RESPONSE_DATA).as_array();
+		JSONNode::iterator it = jsonArrayArray.begin();
+		while(it != jsonArrayArray.end()){
+			JSONNode jsonArray = it->as_array();
+			JSONNode::iterator it2 = jsonArray.begin();
 			std::vector<long> data;
-			for(unsigned int j = 0; j < bDataObj.size(); j++){
-				data.push_back((long)bDataObj[j].numberLong());
+			while(it2 != jsonArray.end()){
+				data.push_back(it2->as_int());
+				it2++;
 			}
 			m_dataArrayArray.push_back(data);
+			it++;
 		}
-	}
-	
+	}	
 };
 
 class HokuyoProviderRequest {
@@ -104,7 +83,7 @@ public:
 			return retVal;
 		}
 		
-		__int64 startTime = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+		int64_t startTime = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
 
 		int bytesReceived;
 
@@ -121,7 +100,7 @@ public:
 			retVal.m_error = "Unable to receive data\n";
 			return retVal;
 		}
-		retVal.fromBSON((const char *)response.getData());
+		retVal.fromJSONString((const char *)response.getData());
 		return retVal;
 	}
 	

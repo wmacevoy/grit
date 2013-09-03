@@ -84,6 +84,12 @@ public:
 	{
 		return send(data.getData(), data.getSize(), block);
 	}
+
+	template <class T>
+	int send(std::basic_string<T> &data, bool block = true)
+	{
+		return send(&data, sizeof(T) * data.length(), block);
+	}
 	
 	template <class T>
 	int recv(T * pData, int nData, bool block = true)

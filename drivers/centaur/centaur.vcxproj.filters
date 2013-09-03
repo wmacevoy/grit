@@ -46,5 +46,8 @@
     <ClInclude Include="include\Orientation.hpp">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\LeapMotionData.hpp">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
