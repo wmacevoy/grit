@@ -2,7 +2,7 @@
 #include <iostream>
 #include <string>
 #include <CentaurTypes.h>
-#include <bson.h>
+#include <libjson.h>
 #include <chrono>
 
 bool HokuyoDataSource::getData(std::vector<long> &data, std::string &error)
@@ -93,8 +93,8 @@ bool HokuyoProvider::run()
 			HokuyoData replyData;
 			getScans(replyData, nScans);
 
-			bson::bo response = replyData.toBSON();
-			replySocket.send(response.objdata(), response.objsize());
+			std::string response = replyData.toJSONString();
+			replySocket.send(response);
 		}
 	}
 
