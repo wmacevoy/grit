@@ -1,5 +1,4 @@
 PREFIX = /usr/local
-# PREFIX:=$(shell basename `realpath ..`)
 # PREFIX=/home/user/projects/mojavaton/trunk/libs
 #PREFIX = /mingw
 
