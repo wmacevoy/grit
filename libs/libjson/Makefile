@@ -197,11 +197,11 @@ else
 endif
 
 # Phony targets
-.PHONY: all banner installdirs install install_headers clean uninstall \
+.PHONY: old_all all banner installdirs install install_headers clean uninstall \
         uninstall_headers
 
 # Targets
-all: $(lib_target)
+old_all: $(lib_target)
 	@echo "============================================================"
 	@echo "Done"
 	@echo "============================================================"
@@ -336,3 +336,11 @@ test:
 	_internal/TestSuite/TestSuite2/NumberToString/isNumeric.cpp \
 	$(CXXFLAGS) -o ./testapp
 	./testapp
+
+all : old_all include/libjson.h lib/libjson.a
+
+include/libjson.h : libjson.h
+	cp $< $@
+
+lib/libjson.a : libjson.a
+	cp $< $@
