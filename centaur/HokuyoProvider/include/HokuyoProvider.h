@@ -2,7 +2,7 @@
 
 #include <HokuyoProviderRequest.hpp>
 #include <CentaurSockets.h>
-#include <Urg_Driver.h>
+#include <Urg_driver.h>
 #include <thread>
 #include <mutex>
 #include <condition_variable>
