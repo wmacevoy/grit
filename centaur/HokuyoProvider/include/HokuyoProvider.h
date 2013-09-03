@@ -11,7 +11,7 @@
 
 struct HokuyoProviderDataSource
 {
-	virtual bool getData(vector<long> &data, std::string &error) = 0;
+	virtual bool getData(std::vector<long> &data, std::string &error) = 0;
 };
 
 typedef std::shared_ptr<HokuyoProviderDataSource> HokuyoProviderDataSourcePtr;

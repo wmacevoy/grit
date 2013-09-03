@@ -5,7 +5,7 @@
 #include <bson.h>
 #include <chrono>
 
-bool HokuyoDataSource::getData(vector<long> &data, std::string &error)
+bool HokuyoDataSource::getData(std::vector<long> &data, std::string &error)
 {
 	qrk::Urg_driver lidarDevice;
 	if (connectToLidar(lidarDevice, error)) {

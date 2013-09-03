@@ -72,12 +72,12 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>../include;../../libs/hokuyo/include/cpp;../../libs/bson/src;../../drivers/centaur/include;../../libs/boost;../../libs/zmq/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../../libs/hokuyo/include/cpp;../../libs/libjson;../../drivers/centaur/include;../../libs/zmq/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>../../libs/boost/stage/lib/libboost_thread-vc110-mt-sgd-1_54.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../libs/boost/stage/lib/;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -100,14 +100,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>../include;../../libs/hokuyo/include/cpp;../../libs/bson/src;../../drivers/centaur/include;../../libs/boost;../../libs/zmq/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../include;../../libs/hokuyo/include/cpp;../../libs/libjson;../../drivers/centaur/include;../../libs/zmq/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>../../libs/boost/stage/lib/libboost_thread-vc110-mt-s-1_54.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../libs/boost/stage/lib/;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -139,11 +139,11 @@
     <ProjectReference Include="..\..\drivers\centaur\centaur.vcxproj">
       <Project>{e8e2956e-777d-468b-9c85-05be54233583}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\..\libs\bson\bson.vcxproj">
-      <Project>{b80a56cb-c564-40bc-b535-75f1ae6917e1}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\..\libs\hokuyo\hokuyo.vcxproj">
       <Project>{b28fb8a5-8316-49c6-94af-d77d75030ba9}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\libs\libjson\libjson.vcxproj">
+      <Project>{153a6fe5-40a9-4c31-b0c2-1c68d2e37bea}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
