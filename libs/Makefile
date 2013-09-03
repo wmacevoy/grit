@@ -1,4 +1,4 @@
-DIRS=$(shell find . -mindepth 2 -maxdepth 2 -name Makefile -printf '%h\n')
+DIRS=$(shell find . -mindepth 2 -maxdepth 2 -regex '.*[^-]/Makefile' -printf '%h\n')
 
 all :
 	ok=1; \

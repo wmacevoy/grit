@@ -1,4 +1,6 @@
 PREFIX = /usr/local
+# PREFIX:=$(shell basename `realpath ..`)
+# PREFIX=/home/user/projects/mojavaton/trunk/libs
 #PREFIX = /mingw
 
 include build_rule.mk
@@ -10,7 +12,7 @@ INCLUDE_DIR_CPP = $(PREFIX)/include/urg_cpp/
 URGLIB_C = liburg_c.a
 URGLIB_CPP = liburg_cpp.a
 S_PREFIX = $(shell echo "$(PREFIX)" | sed "s/\//\\\\\\\\\//g")
-S_LIBS = $(shell if test x$(MSYSTEM) == x"MINGW32"; then echo "-lwsock32 -lsetupapi"; fi)
+S_LIBS = $(shell if [ '$(MSYSTEM)' == 'MINGW32' ] ; then echo "-lwsock32 -lsetupapi"; fi)
 all : $(CONFIG_FILE) $(CONFIG_FILE_CPP)
 	cd src/ && $(MAKE)
 #	cd samples/ && $(MAKE)
