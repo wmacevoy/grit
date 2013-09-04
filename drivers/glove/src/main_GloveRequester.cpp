@@ -3,7 +3,8 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <glovestruct.h>
+#include "glovestruct.h"
+
 int die = 0;
 
 void quitproc(int param)

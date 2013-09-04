@@ -7,7 +7,7 @@
 #include <signal.h>
 #include <strings.h>
 #include <stdint.h>
-#include <glovestruct.h>
+#include "glovestruct.h"
 
 #define BAUDRATE B9600
 
