@@ -116,6 +116,8 @@ public:
 			mover->right.middle.setup(manos.rmiddle);
 			mover->right.ring.setup(manos.rring);
 			mover->right.thumb.setup(manos.rthumb);
+			
+			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
 	
 	zmq_close(sub);
