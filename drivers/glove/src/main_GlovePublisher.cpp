@@ -7,24 +7,20 @@
 #include <signal.h>
 #include <strings.h>
 #include <stdint.h>
+#include <glovestruct.h>
 
 #define BAUDRATE B9600
 
 int die = 0;
-
-struct hands{
-	int64_t lthumb, ltrigger, lmiddle, lring;
-	int64_t rthumb, rtrigger, rmiddle, rring;
-};
 
 void quitproc(int param)
 {
 	die = 1;
 }
 
-void publish(void* zmq_pub, hands* manos)
+void publish(void* zmq_pub, Hands* manos)
 {
-	int rc = zmq_send(zmq_pub, manos, sizeof(hands),0);
+	int rc = zmq_send(zmq_pub, manos, sizeof(Hands),0);
 }
 
 int main(int argc, char** argv)
@@ -33,7 +29,7 @@ int main(int argc, char** argv)
 	int fd;
 	int hwm = 1, rc;
 	struct termios oldtio,newtio;
-	hands manos;
+	Hands manos;
 	
 	if (argc!=2) {
 	  std::cerr << "Run GlovePublisher <serial>" << std::endl;
