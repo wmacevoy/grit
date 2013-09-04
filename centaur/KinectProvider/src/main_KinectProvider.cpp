@@ -337,7 +337,6 @@ int main(int argc, char** argv)
 	}
 
 	//Cleanup
-	pthread_join(freenect_thread, NULL);
 
 	printf("freeing memory for images...\n");
 	pthread_join(freenect_thread, NULL);

@@ -21,6 +21,7 @@
 #include <memory>
 #include <string.h>
 #include <mutex>
+#include <pthread.h>
 
 #include "BodyGlobals.h"
 
@@ -32,7 +33,7 @@
 #include "now.h"
 #include "BodyMover.h"
 
-struct Hands{
+struct Hands{  //Needs to get this data structure from /drivers/glove/include
 	int64_t lthumb, ltrigger, lmiddle, lring;
 	int64_t rthumb, rtrigger, rmiddle, rring;
 	void clear() {
@@ -90,7 +91,7 @@ public:
     answer(oss.str());
   }
   
-  void subscribeToHands() {
+  void subscribeToHands() {	//Hands thread function
 	int rc;
 	Hands manos;
 	
@@ -104,7 +105,7 @@ public:
 		return;
 	}
 	
-	for (int i=0;i<100;i++) // Read 100 Hand Messages
+	while(hands_on)
 	{
 			subscribe(sub, &manos);
 			mover->left.trigger.setup(manos.ltrigger);
@@ -269,8 +270,22 @@ public:
       answer(oss);
     }
     if (head=="hands") {
-		subscribeToHands();
-	}
+      if(hands_on)
+      {
+	  hands_on = false;
+          pthread_join(subscribeToHands, NULL);
+      }
+      else
+      {
+          hands_on = true;
+          int res = pthread_create(&thread_hands, NULL, subscribeToHands, NULL);
+          if (res)
+          {
+            printf("thread_hands failed to be created.\n");
+            hands_on = false;
+          }
+      }
+    }
     if (head == "yes") {
       yes();
       answer("Yes");
@@ -563,6 +578,8 @@ int main(int argc, char *argv[])
   cfg.servos();
   verbose = cfg.flag("body.verbose",false);
   if (verbose) cfg.show();
+
+  hands_on = false;
 
   run();
   cout << "done" << endl;
