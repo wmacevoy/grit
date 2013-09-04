@@ -201,7 +201,7 @@ endif
         uninstall_headers
 
 # Targets
-old_all: $(lib_target)
+all: $(lib_target)
 	@echo "============================================================"
 	@echo "Done"
 	@echo "============================================================"
@@ -336,11 +336,3 @@ test:
 	_internal/TestSuite/TestSuite2/NumberToString/isNumeric.cpp \
 	$(CXXFLAGS) -o ./testapp
 	./testapp
-
-all : old_all include/libjson.h lib/libjson.a
-
-include/libjson.h : libjson.h
-	cp $< $@
-
-lib/libjson.a : libjson.a
-	cp $< $@
