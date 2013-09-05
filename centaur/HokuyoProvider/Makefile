@@ -1,7 +1,7 @@
 all : libs progs
 
 DRIVER_DEPS=centaur utilities
-MY_FLAGS=-I../../libs/hokuyo/include/cpp -I../../libs/libjson -I../../libs/libjson/_internal/Source -I../../libs/libjson/_internal/Source/JSONDefs
-MY_LIBS=-L../../libs/hokuyo/src -lurg_cpp -lurg_c
+MY_FLAGS=-I../../libs/hokuyo/include/cpp -I../../libs/libjson -DNDEBUG
+MY_LIBS=../../libs/libjson/libjson.a ../../libs/hokuyo/src/liburg_cpp.a ../../libs/hokuyo/src/liburg_c.a 
 
 include ../rules.mk

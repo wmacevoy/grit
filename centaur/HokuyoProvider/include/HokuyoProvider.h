@@ -24,7 +24,7 @@ protected:
 	static bool connectToLidar(qrk::Urg_driver &lidarDevice, std::string &error);
 
 public:
-	virtual bool getData(vector<long> &data, std::string &error);
+	virtual bool getData(std::vector<long> &data, std::string &error);
 };
 
 class HokuyoProvider {
