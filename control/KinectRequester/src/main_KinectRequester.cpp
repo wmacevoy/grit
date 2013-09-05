@@ -511,7 +511,7 @@ int main(int argc, char** argv)
 	hokuyoThreadRunning = true;
 	getHData = false;
 
-	hThread = new std::thread(getData, NULL);
+	hThread = new std::thread(getData);
 
 	assert(atexit(bye) == 0);
 
