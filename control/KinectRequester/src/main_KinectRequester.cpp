@@ -94,7 +94,7 @@ typedef struct tagBITMAPINFOHEADER
  DWORD biClrImportant;
 } BITMAPINFOHEADER;
 
-void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount);
+void CaptureScreen(int Width, int Height, uint8_t *image, char *fname, int fcount);
 
 void getData()
 {
@@ -174,7 +174,6 @@ void RenderString(float x, float y)
 			locker.lock();
 			pos = convstr(data.m_dataArrayArray[index] * 0.00328084f);
 			locker.unlock();
-			//printf("index: %d  ---  pixel: %f\n", index, x);
 		}
 		else
 		{
