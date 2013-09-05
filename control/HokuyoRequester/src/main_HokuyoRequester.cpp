@@ -3,6 +3,8 @@
 #include <string>
 #include <sstream>
 
+using namespace std;
+
 bool wantsToQuit(int &nScans) {
 	nScans = 0;
 	std::cout << "Type \"q\" or \"quit\" to quit, Otherwise, type the number of scans you want to receive.\n";
@@ -23,6 +25,7 @@ int main( int argc, const char* argv[] )
 	while(!wantsToQuit(nScans) && nScans > 0){
 		//std::cout << "You are going to request more data\n";
 		HokuyoData data = HokuyoProviderRequest::GetData("tcp://192.168.2.100", nScans);
-		data.printToStdOut();
+		cout << "Data arrived." << endl;
+		//	data.printToStdOut();
 	}
 }
