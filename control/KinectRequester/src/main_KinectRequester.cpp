@@ -153,13 +153,13 @@ void RenderString(float x, float y)
 
 		if(x > 550) tmpX = x - 55;		
 
-		glColor3f(1.0, 1.0, 1.0); 
-		glRasterPos2f(tmpX + 2, y + 1);
+		glColor3f(1.0f, 1.0f, 1.0f); 
+		glRasterPos2f(tmpX + 1, y + 1);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
-		glColor3f(1.0, 1.0, 1.0); 
-		glRasterPos2f(tmpX - 2, y - 1);
+		glColor3f(1.0f, 1.0f, 1.0f); 
+		glRasterPos2f(tmpX - 1, y - 1);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
-		glColor3f(0.1, 0.1, 0.1); 
+		glColor3f(0.1f, 0.1f, 0.1f); 
 		glRasterPos2f(tmpX, y);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
 	}
