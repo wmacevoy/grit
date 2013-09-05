@@ -38,5 +38,3 @@ extern SPBody body;
 
 extern SPServo servo(std::string name);
 
-pthread_t thread_hands;		//Thread to run hands subscriber/mover
-std::atomic<bool> hands_on;	//Boolean for main loop in hands thread

@@ -21,7 +21,6 @@
 #include <memory>
 #include <string.h>
 #include <mutex>
-#include <pthread.h>
 
 #include "BodyGlobals.h"
 
@@ -91,6 +90,8 @@ public:
     answer(oss.str());
   }
   
+  std::thread *handsThread;
+  std::atomic < bool > hands_on;
   void subscribeToHands() {	//Hands thread function
 	int rc;
 	Hands manos;
@@ -249,6 +250,26 @@ public:
 	setWaist(10);
   }
 
+  
+  void handsOn()
+  {
+     if (handsThread == 0) {
+       hands_on = true;
+       handsThread = new std::thread(&BodyController::subscribeToHands, this);
+     }
+  }
+
+
+  void handsOff()
+  {
+     if (handsThread != 0) {
+       hands_on = false;
+       handsThread->join();
+       delete handsThread;
+       handsThread = 0;
+     }
+  }
+
   void act(string &command)
   {
     istringstream iss(command);
@@ -272,20 +293,12 @@ public:
       answer(oss);
     }
     if (head=="hands") {
-      if(hands_on)
-      {
-	  hands_on = false;
-          pthread_join(subscribeToHands, NULL);
-      }
-      else
-      {
-          hands_on = true;
-          int res = pthread_create(&thread_hands, NULL, subscribeToHands, NULL);
-          if (res)
-          {
-            printf("thread_hands failed to be created.\n");
-            hands_on = false;
-          }
+      string value;
+      iss >> value;
+      if (value == "on") {
+         handsOn();
+      } else if (value == "off") {
+         handsOff();
       }
     }
     if (head == "yes") {
@@ -511,6 +524,8 @@ public:
   {
     goUpdate = 0;
     mover = shared_ptr < BodyMover > (new BodyMover());
+    hands_on = false;
+    handsThread = 0;
   }
 
   thread *goUpdate;
@@ -580,8 +595,6 @@ int main(int argc, char *argv[])
   cfg.servos();
   verbose = cfg.flag("body.verbose",false);
   if (verbose) cfg.show();
-
-  hands_on = false;
 
   run();
   cout << "done" << endl;
