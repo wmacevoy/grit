@@ -64,6 +64,16 @@ commander()
     bin/commander
 }
 
+connection()
+{
+  type=$1
+  if [ -f "$MOJAVATON_DIR/setup/config.csv-$type" ] ; then
+      cp $MOJAVATON_DIR/setup/config.csv-$type $MOJAVATON_DIR/setup/config.csv
+      echo "setting connection type to $type."
+      echo "do this on the other side..."
+  fi
+}
+
 setup
 
 "$@"
