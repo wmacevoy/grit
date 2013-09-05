@@ -92,6 +92,7 @@ public:
 		return;
 	}
 	
+	cout << "starting hands control." << endl;
 	while(hands_on)
 	{
 			subscribe(sub, &manos);
@@ -103,10 +104,10 @@ public:
 			mover->right.middle.setup(manos.rmiddle);
 			mover->right.ring.setup(manos.rring);
 			mover->right.thumb.setup(manos.rthumb);
-			
+			cout << "adjusted hands." << endl;
 			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
-	
+	cout << "ending hands control." << endl;	
 	zmq_close(sub);
 	zmq_ctx_destroy(context);
   }
@@ -283,8 +284,10 @@ public:
       iss >> value;
       if (value == "on") {
          handsOn();
+	 answer("my hands are on.");
       } else if (value == "off") {
          handsOff();
+	 answer("my hands are off.");
       }
     }
     if (head == "yes") {
