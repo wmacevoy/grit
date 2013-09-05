@@ -68,6 +68,8 @@ std::atomic<bool> getHData;
 
 std::string providerAddress;
 
+void bye();
+
 typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
 {
  WORD bfType;
@@ -98,7 +100,7 @@ void getData()
 {
 	while(hokuyoThreadRunning)
 	{
-	  if(getHData) data = HokuyoProviderRequest::GetData(providerAddress.c_str(),nScans);
+	  if(getHData) data = HokuyoProviderRequest::GetData(providerAddress.c_str(), nScans);
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 }
@@ -377,7 +379,10 @@ void* gl_threadfunc(void* arg)
 
 	InitGL(640, 480);
 
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 	glutMainLoop();
+
+	bye();
 
 	return NULL;
 }
@@ -430,7 +435,7 @@ void bye()
 {
 	printf("Quitting...\n");
 
-	getHdata = false;
+	getHData = false;
 	hokuyoThreadRunning = false;
 	hThread->join();
 	delete hThread;
@@ -517,13 +522,12 @@ int main(int argc, char** argv)
 
 	view_state = 1;
 
-	mx = my = 0;
+	mx = my = 0;	
+	
 	hokuyoThreadRunning = true;
 	getHData = false;
 
 	hThread = new std::thread(getData);
-
-	assert(atexit(bye) == 0);
 
 	gl_threadfunc(NULL);
 
