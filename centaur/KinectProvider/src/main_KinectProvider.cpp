@@ -45,7 +45,7 @@
 pthread_t freenect_thread;
 volatile int die = 0;
 
-const int sleep_time = 200;
+const int sleep_time = 150;
 
 // back: owned by libfreenect (implicit for depth)
 // mid: owned by callbacks, "latest frame ready"
@@ -338,8 +338,9 @@ int main(int argc, char** argv)
 
 	//Cleanup
 
-	printf("freeing memory for images...\n");
 	pthread_join(freenect_thread, NULL);
+
+	printf("freeing memory for images...\n");
 	
 	free(depth_mid);
 	free(rgb_back);

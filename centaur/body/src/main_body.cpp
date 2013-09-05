@@ -31,21 +31,7 @@
 #include "Lock.h"
 #include "now.h"
 #include "BodyMover.h"
-
-struct Hands{  //Needs to get this data structure from /drivers/glove/include
-	int64_t lthumb, ltrigger, lmiddle, lring;
-	int64_t rthumb, rtrigger, rmiddle, rring;
-	void clear() {
-	  lthumb=0;
-	  ltrigger=0;
-	  lmiddle=0; 
-	  lring=0;
-	  rthumb=0;
-	  rtrigger=0; 
-	  rmiddle=0; 
-	  rring=0;
-	}
-};
+#include "glovestruct.h"
 
 int mapFingerAngle(int angle){
 	angle=(-180+angle);
