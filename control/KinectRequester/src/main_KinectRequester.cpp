@@ -27,8 +27,12 @@
 #include <atomic>
 #include <iomanip>
 #include <mutex>
+#include "Configure.h"
 
 using namespace std;
+
+Configure cfg;
+bool verbose;
 
 #define LONG  int
 #define DWORD unsigned int
@@ -466,6 +470,12 @@ void bye()
 
 int main(int argc, char** argv)
 {
+  cfg.path("../../setup");
+  cfg.args("kinect.requester.",argv);
+  if (argc == 1) cfg.load("config.csv");
+  verbose = cfg.flag("kinect.requester.verbose",false);
+  if (verbose) cfg.show();
+
 	int quit = 0;
 	int hwm = 1;
 	int rcc = 0;
@@ -476,24 +486,15 @@ int main(int argc, char** argv)
 	strcpy(ip1, "tcp://");
 	strcpy(ip2, "tcp://");
 
-	if(argc > 1)
-	{
-		strcat(ip1, argv[1]);
-		strcat(ip1, ":");
-		strcat(ip2, argv[1]);
-		strcat(ip2, ":");
-		g_argc = argc;
-		g_argv = argv;
-		providerAddress = "tcp://";
-		providerAddress.append(argv[1]);
-	}
-	else
-	{
-		strcat(ip1, "localhost:");
-		strcat(ip2, "localhost:");
-		providerAddress = "tcp://";
-		providerAddress.append("localhost");
-	}
+	std::string address = cfg.str("kinect.requester.address","localhost");
+	strcat(ip1, address.c_str());
+	strcat(ip1, ":");
+	strcat(ip2, address.c_str());
+	strcat(ip2, ":");
+	g_argc = argc;
+	g_argv = argv;
+	providerAddress = "tcp://";
+	providerAddress.append(address);
 
 	strcat(ip1, "9998\0");
 	strcat(ip2, "9999\0");
