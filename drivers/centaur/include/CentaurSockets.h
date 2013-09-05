@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <cstring>
+#include <string>
 
 #include <zmq.h>
 #include "CentaurTypes.h"

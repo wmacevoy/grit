@@ -153,11 +153,6 @@ update()
   do
       svn update $MOJAVATON_DIR/$dir
   done
-
-  for dir in libs drivers
-  do
-      make -C $MOJAVATON_DIR/$dir all
-  done
 }
 
 build()
