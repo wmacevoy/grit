@@ -21,6 +21,8 @@
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <thread>
+#include <chrono>
 #include <zmq.h>
 
 #define LONG  int
@@ -48,12 +50,17 @@ void* context_depth;
 uint8_t* img_color;
 uint8_t* img_depth;
 
-int mx, my;
+std::atomic<int> mx, my;
+
+std::thread* hThread;
 
 GLuint gl_depth_tex;
 GLuint gl_rgb_tex;
 
 HokuyoData data;
+
+std::atomic<bool> hokuyoThreadRunning;
+std::atomic<bool> getHData;
 
 typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
 {
@@ -81,6 +88,14 @@ typedef struct tagBITMAPINFOHEADER
 
 void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount);
 
+void getData()
+{
+	while(hokuyoThreadRunning)
+	{
+		if(getHData) data = HokuyoProviderRequest::GetData(nScans);
+		std::this_thread::sleep_for(std::chrono::microseconds(100));
+	}
+}
 
 ///////////////////////////////////////////////////////SUBSCRIBE START 
 void subscribe_color(void *zmq_sub) 
@@ -135,9 +150,8 @@ void RenderString(float x, float y)
 	//540 is lidar center left side = 426 right side = 654
 	if( x >= 0 && x <= 640 && y >= 240 && y <= 250)
 	{
-		//HokuyoData data = HokuyoProviderRequest::GetData(nScans);
+		getHData = true;
 		int tmpX = x;
-		
 		std::string pos;
 		
 		if(data.m_error.empty())
@@ -163,6 +177,10 @@ void RenderString(float x, float y)
 		glRasterPos2f(tmpX, y);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
 	}
+	else
+	{
+		getHData = false;
+	}
 }
 
 void DrawGLScene()
@@ -170,8 +188,7 @@ void DrawGLScene()
 	switch(view_state)
 	{
 	case 0:
-		subscribe_depth(sub_depth);
-		data = HokuyoProviderRequest::GetData(nScans);	
+		subscribe_depth(sub_depth);	
 
 		glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
@@ -217,8 +234,7 @@ void DrawGLScene()
 
 	case 1:
 		subscribe_color(sub_color);
-		data = HokuyoProviderRequest::GetData(nScans);
-
+		
 		glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
 		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
 
@@ -407,6 +423,12 @@ void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 void bye()
 {
 	printf("Quitting...\n");
+
+	getHdata = false;
+	hokuyoThreadRunning = false;
+	hThread->join();
+	delete hThread;
+
 	printf("freeing memory for images...\n");
 
 	free(img_color);
@@ -486,6 +508,10 @@ int main(int argc, char** argv)
 	view_state = 1;
 
 	mx = my = 0;
+	hokuyoThreadRunning = true;
+	getHData = false;
+
+	hThread = new std::thread(getData, NULL);
 
 	assert(atexit(bye) == 0);
 
