@@ -19,8 +19,8 @@
 
 struct HokuyoData {
 	
-	std::string		m_error;
-	std::vector<long>	m_dataArrayArray;
+	std::string						m_error;
+	std::vector<std::vector<long> >	m_dataArrayArray;
 	
 	std::string toJSONString(){
 		JSONNode retVal(JSON_NODE);
@@ -28,8 +28,10 @@ struct HokuyoData {
 		JSONNode jsonArrayArray(JSON_ARRAY);
 		jsonArrayArray.set_name(RESPONSE_DATA);
 		for(unsigned int i = 0; i < m_dataArrayArray.size(); i++){
+			std::vector<long> &data = m_dataArrayArray[i];
 			JSONNode jsonArray(JSON_ARRAY);
-			jsonArray.push_back(JSONNode("", &m_dataArrayArray));
+			for(unsigned int j = 0; j < data.size(); j++)
+				jsonArray.push_back(JSONNode("", data[j]));
 			jsonArrayArray.push_back(jsonArray);
 		}
 		retVal.push_back(jsonArrayArray);
@@ -45,18 +47,15 @@ struct HokuyoData {
 		while(it != jsonArrayArray.end()){
 			JSONNode jsonArray = it->as_array();
 			JSONNode::iterator it2 = jsonArray.begin();
+			std::vector<long> data;
 			while(it2 != jsonArray.end()){
-				m_dataArrayArray.push_back(it2->as_int());
+				data.push_back(it2->as_int());
 				it2++;
 			}
+			m_dataArrayArray.push_back(data);
 			it++;
 		}
 	}	
-
-	HokuyoData()
-	{
-		m_dataArrayArray.resize(1081, 0);
-	}
 };
 
 class HokuyoProviderRequest {
@@ -104,4 +103,5 @@ public:
 		retVal.fromJSONString((const char *)response.getData());
 		return retVal;
 	}
+	
 };
