@@ -91,7 +91,7 @@ public:
 		CM_Array<char, 2048> response;
 		while (		(bytesReceived = request.recv(response, false)) < 0
 				&&	request.getError() == EAGAIN
-				&&	(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)) - startTime < 50000)
+				&&	(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)) - startTime < 2000)
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
@@ -104,5 +104,4 @@ public:
 		retVal.fromJSONString((const char *)response.getData());
 		return retVal;
 	}
-	
 };
