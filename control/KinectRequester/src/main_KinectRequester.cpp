@@ -102,7 +102,7 @@ void getData()
 	{
 	  if(getHData)
 	  {
-		locker.lock();
+		locker.lock();	
 		data = HokuyoProviderRequest::GetData(providerAddress.c_str(), nScans);
 		locker.unlock();
 	  }
@@ -152,7 +152,7 @@ void subscribe_depth(void *zmq_sub)
 std::string convstr(const float t)
 {
 	std::stringstream ftoa;
-	ftoa << setprecision(3) << setw(4) << t;
+	ftoa << std::setprecision(3) << std::setw(4) << t;
 	return ftoa.str();
 }
 

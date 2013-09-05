@@ -24,8 +24,8 @@ int main( int argc, const char* argv[] )
 	int nScans = 0;
 	while(!wantsToQuit(nScans) && nScans > 0){
 		//std::cout << "You are going to request more data\n";
-		HokuyoData data = HokuyoProviderRequest::GetData("tcp://192.168.2.100", nScans);
+		HokuyoData data = HokuyoProviderRequest::GetData("tcp://192.168.2.101", nScans);
 		cout << "Data arrived." << endl;
-		//	data.printToStdOut();
+		cout << data.m_dataArrayArray[0][540] << std::endl;
 	}
 }

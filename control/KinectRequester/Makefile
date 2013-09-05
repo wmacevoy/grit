@@ -1,7 +1,7 @@
 all : libs progs
 
 DEPS=
-DRIVER_DEPS=centaur
+DRIVER_DEPS=centaur utilities
 
 MY_FLAGS=-DNDEBUG
 MY_LIBS=-lglut -lGLU -lGL -lXmu -lX11
