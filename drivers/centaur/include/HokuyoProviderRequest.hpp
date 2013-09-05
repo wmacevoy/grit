@@ -10,6 +10,7 @@
 
 #include <chrono>
 #include <thread>
+#include "now.h"
 
 #define HOKUYO_PORTNUMBER	"31777"
 #define	RESPONSE_ERROR		"error"
@@ -56,6 +57,12 @@ struct HokuyoData {
 			it++;
 		}
 	}	
+
+	HokuyoData()
+	{
+		m_dataArrayArray.resize(1);
+		m_dataArrayArray[0].resize(1081,0);
+	}
 };
 
 class HokuyoProviderRequest {
@@ -83,14 +90,16 @@ public:
 			return retVal;
 		}
 		
-		int64_t startTime = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
+		double startTime = now();
+
+//		auto startTime = std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1);
 
 		int bytesReceived;
 
 		CM_Array<char, 2048> response;
-		while (		(bytesReceived = request.recv(response, false)) < 0
+		while (		(bytesReceived = request.recv(response, true)) < 0
 				&&	request.getError() == EAGAIN
-				&&	(std::chrono::system_clock::now().time_since_epoch() / std::chrono::milliseconds(1)) - startTime < 2000)
+				&&	(now() - startTime) < 0.5 )
 		{
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		}
