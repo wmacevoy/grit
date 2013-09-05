@@ -95,7 +95,7 @@ void publish_img(uint8_t *image, void *zmq_pub)
 
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 {
-	static int count = 20;
+	static int count = 5;
 	if(count > 0)
 	{
 		--count;
@@ -156,7 +156,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 
 void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
 {
-	static int count = 20;
+  static int count = 5;
 	if(count > 0)
 	{
 		--count;
