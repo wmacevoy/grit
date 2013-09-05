@@ -163,7 +163,7 @@ void RenderString(float x, float y)
 		if(data.m_error.empty())
 		{
 			int index = 425 + ((x * 229) / 625);
-			pos = convstr(data.m_dataArrayArray[0][index] * 0.00328084f);
+			pos = convstr(data.m_dataArrayArray[index] * 0.00328084f);
 			//printf("index: %d  ---  pixel: %f\n", index, x);
 		}
 		else
@@ -430,7 +430,7 @@ void bye()
 {
 	printf("Quitting...\n");
 
-	//	getHdata = false;
+	getHdata = false;
 	hokuyoThreadRunning = false;
 	hThread->join();
 	delete hThread;
