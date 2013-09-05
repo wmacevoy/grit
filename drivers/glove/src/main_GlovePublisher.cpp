@@ -72,15 +72,15 @@ int main(int argc, char** argv)
 		buff[n - 1] = 0;
 		
 		std::istringstream ss(buff);
-		ss >> manos.lring >> manos.lmiddle >> manos.ltrigger >> 
-			manos.lthumb >> manos.rring >> manos.rmiddle >> 
-			manos.rtrigger >> manos.rthumb; 
+		ss >> manos.ltrigger >> manos.lmiddle >> manos.lring >> 
+			manos.lthumb >> manos.rtrigger >> manos.rmiddle >> 
+			manos.rring >> manos.rthumb; 
 			
 		publish(pub, &manos);
 		
-		std::cout << manos.lring << " " << manos.lmiddle << " " << manos.ltrigger << " " << 
+		/*std::cout << manos.lring << " " << manos.lmiddle << " " << manos.ltrigger << " " << 
 			manos.lthumb << " " << manos.rring << " " << manos.rmiddle << " " << 
-			manos.rtrigger << " " << manos.rthumb << " " << std::endl;
+			manos.rtrigger << " " << manos.rthumb << " " << std::endl;*/
 	}
 	
 	zmq_close(pub);
