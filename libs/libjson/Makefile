@@ -122,7 +122,6 @@
 #
 #
 #
-
 # JSON source files to build
 objects        = internalJSONNode.o JSONAllocator.o JSONChildren.o \
                  JSONDebug.o JSONIterators.o JSONMemory.o JSONNode.o \
@@ -185,6 +184,7 @@ else
 endif
 
 # SHARED specific settings
+SHARED=1
 ifeq ($(SHARED), 1)
 	libname_shared               = $(libname).$(suffix_shared)
 	libname_shared_major_version = $(libname_shared).$(major_version)
@@ -201,7 +201,7 @@ endif
         uninstall_headers
 
 # Targets
-all: $(lib_target)
+old_all: $(lib_target)
 	@echo "============================================================"
 	@echo "Done"
 	@echo "============================================================"
@@ -336,3 +336,15 @@ test:
 	_internal/TestSuite/TestSuite2/NumberToString/isNumeric.cpp \
 	$(CXXFLAGS) -o ./testapp
 	./testapp
+
+all : old_all lib/libjson.so.7.6.1 lib/libjson.so.7.6 lib/libjson.so.7 lib/libjson.so
+
+lib/libjson.so.7.6.1 : libjson.so.7.6.1
+	cp $< $@
+
+lib/libjson.so.7.6 :
+	cd lib; ln -s libjson.so.7.6.1 libjson.so.7.6
+lib/libjson.so.7 :
+	cd lib; ln -s libjson.so.7.6 libjson.so.7
+lib/libjson.so :
+	cd lib; ln -s libjson.so.7 libjson.so
