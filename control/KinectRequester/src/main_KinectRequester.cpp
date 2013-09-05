@@ -172,7 +172,7 @@ void RenderString(float x, float y)
 		{
 			int index = 425 + ((x * 229) / 625);
 			locker.lock();
-			pos = convstr(data.m_dataArrayArray[index] * 0.00328084f);
+			pos = convstr(data.m_dataArrayArray[0][index] * 0.00328084f);
 			locker.unlock();
 		}
 		else
