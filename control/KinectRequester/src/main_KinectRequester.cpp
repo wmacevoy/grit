@@ -26,6 +26,7 @@
 #include <zmq.h>
 #include <atomic>
 #include <iomanip>
+#include <mutex>
 
 using namespace std;
 
@@ -62,6 +63,7 @@ GLuint gl_depth_tex;
 GLuint gl_rgb_tex;
 
 HokuyoData data;
+std::mutex locker;
 
 std::atomic<bool> hokuyoThreadRunning;
 std::atomic<bool> getHData;
@@ -98,8 +100,13 @@ void getData()
 {
 	while(hokuyoThreadRunning)
 	{
-	  if(getHData) data = HokuyoProviderRequest::GetData(providerAddress.c_str(), nScans);
-		std::this_thread::sleep_for(std::chrono::microseconds(100));
+	  if(getHData)
+	  {
+		locker.lock();
+		data = HokuyoProviderRequest::GetData(providerAddress.c_str(), nScans);
+		locker.unlock();
+	  }
+	  std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 	
 }
@@ -164,12 +171,16 @@ void RenderString(float x, float y)
 		if(data.m_error.empty())
 		{
 			int index = 425 + ((x * 229) / 625);
+			locker.lock();
 			pos = convstr(data.m_dataArrayArray[index] * 0.00328084f);
+			locker.unlock();
 			//printf("index: %d  ---  pixel: %f\n", index, x);
 		}
 		else
 		{
+			locker.lock();
 			pos = data.m_error;
+			locker.unlock();
 		}
 
 		if(x > 550) tmpX = x - 55;		
