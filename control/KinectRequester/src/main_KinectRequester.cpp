@@ -24,6 +24,10 @@
 #include <thread>
 #include <chrono>
 #include <zmq.h>
+#include <atomic>
+#include <iomanip>
+
+using namespace std;
 
 #define LONG  int
 #define DWORD unsigned int
@@ -62,6 +66,8 @@ HokuyoData data;
 std::atomic<bool> hokuyoThreadRunning;
 std::atomic<bool> getHData;
 
+std::string providerAddress;
+
 typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
 {
  WORD bfType;
@@ -92,7 +98,7 @@ void getData()
 {
 	while(hokuyoThreadRunning)
 	{
-		if(getHData) data = HokuyoProviderRequest::GetData(nScans);
+	  if(getHData) data = HokuyoProviderRequest::GetData(providerAddress.c_str(),nScans);
 		std::this_thread::sleep_for(std::chrono::microseconds(100));
 	}
 }
@@ -424,7 +430,7 @@ void bye()
 {
 	printf("Quitting...\n");
 
-	getHdata = false;
+	//	getHdata = false;
 	hokuyoThreadRunning = false;
 	hThread->join();
 	delete hThread;
@@ -466,11 +472,15 @@ int main(int argc, char** argv)
 		strcat(ip2, ":");
 		g_argc = argc;
 		g_argv = argv;
+		providerAddress = "tcp://";
+		providerAddress.append(argv[1]);
 	}
 	else
 	{
 		strcat(ip1, "localhost:");
 		strcat(ip2, "localhost:");
+		providerAddress = "tcp://";
+		providerAddress.append("localhost");
 	}
 
 	strcat(ip1, "9998\0");
