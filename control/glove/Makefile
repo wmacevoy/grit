@@ -1,4 +1,9 @@
-g++ -o main_GlovePublisher src/main_GlovePublisher.cpp  -I../../libs/zmq/include -Iinclude -L../../libs/zmq/lib -lzmq -lrt
+all : libs progs
 
+DEPS=
+DRIVER_DEPS=centaur
 
-g++ -o main_GloveRequester src/main_GloveRequester.cpp  -I../../libs/zmq/include -Iinclude -L../../libs/zmq/lib -lzmq -lrt
+MY_FLAGS=
+MY_LIBS=
+
+include ../rules.mk
