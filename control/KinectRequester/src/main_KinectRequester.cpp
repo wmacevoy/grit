@@ -7,7 +7,6 @@
  * c - capture image
 */
 
-#include <HokuyoProviderRequest.hpp>
 #include <iostream>
 #include <sstream>
 #include <stdlib.h>
@@ -27,6 +26,7 @@
 #include <atomic>
 #include <iomanip>
 #include <mutex>
+#include "urg_ctrl.h"
 #include "Configure.h"
 
 using namespace std;
@@ -38,7 +38,8 @@ bool verbose;
 #define DWORD unsigned int
 #define WORD unsigned short
 
-const int sz_img = 640*480*3;
+const int sz_img_color = 640*480*3;
+const int sz_img_gray = 640*480;
 const int nScans = 1;
 
 int saveImagec;
@@ -52,27 +53,25 @@ int view_state;
 
 void* sub_color;
 void* sub_depth;
+void* sub_lidar;
 
 void* context_color;
 void* context_depth;
+void* context_lidar;
 
 uint8_t* img_color;
 uint8_t* img_depth;
+long* lidar_data;
+
+const int sz_lidar_data  = 1081;
 
 std::atomic<int> mx, my;
-
-std::thread* hThread;
 
 GLuint gl_depth_tex;
 GLuint gl_rgb_tex;
 
-HokuyoData data;
 std::mutex locker;
 
-std::atomic<bool> hokuyoThreadRunning;
-std::atomic<bool> getHData;
-
-std::string providerAddress;
 
 typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
 {
@@ -100,31 +99,18 @@ typedef struct tagBITMAPINFOHEADER
 
 void CaptureScreen(int Width, int Height, uint8_t *image, char *fname, int fcount);
 
-void getData()
-{
-	while(hokuyoThreadRunning)
-	{
-	  if(getHData)
-	  {
-		locker.lock();	
-		data = HokuyoProviderRequest::GetData(providerAddress.c_str(), nScans);
-		locker.unlock();
-	  }
-	  std::this_thread::sleep_for(std::chrono::microseconds(100));
-	}
-	
-}
-
 ///////////////////////////////////////////////////////SUBSCRIBE START 
-void subscribe_color(void *zmq_sub) 
+void subscribe_color(void* zmq_sub) 
 {
 	static int fcount = 0;
 
-	//printf("waiting...\n");
+	if(verbose) printf("waiting for color image...\n");
 
-	int rc = zmq_recv(zmq_sub, img_color, sz_img, ZMQ_DONTWAIT);
+	locker.lock();
+	int rc = zmq_recv(zmq_sub, img_color, sz_img_color, ZMQ_DONTWAIT);
+	locker.unlock();
 
-	//printf("received!\n");
+	if(verbose && rc > 0) printf("received color image!\n");
 	
 	if(saveImagec && img_color != NULL)
 	{
@@ -134,15 +120,17 @@ void subscribe_color(void *zmq_sub)
 	}
 }
 
-void subscribe_depth(void *zmq_sub) 
+void subscribe_depth(void* zmq_sub) 
 {
 	static int fcount = 0;
 
-	//printf("waiting...\n");
+	if(verbose) printf("waiting for depth image...\n");
+	
+	locker.lock();
+	int rc = zmq_recv(zmq_sub, img_depth, sz_img_color, ZMQ_DONTWAIT);
+	locker.unlock();
 
-	int rc = zmq_recv(zmq_sub, img_depth, sz_img, ZMQ_DONTWAIT);
-
-	//printf("received!\n");
+	if(verbose && rc > 0) printf("received depth image!\n");
 	
 	if(saveImaged && img_depth != NULL)
 	{
@@ -150,6 +138,17 @@ void subscribe_depth(void *zmq_sub)
 		fcount++; 
 		saveImaged = 0;
 	}
+}
+
+void subscribe_lidar(void* zmq_sub)
+{
+	if(verbose) printf("waiting for lidar data...\n);
+
+	locker.lock();
+	int rc = zmq_recv(zmq_sub, lidar_data, 228, ZMQ_DONTWAIT);
+	locker.unlock();
+
+	if(verbose && rc > 0) printf("received lidar data!\n");
 }
 ///////////////////////////////////////////////////////SUBSCRIBE END
 
@@ -174,9 +173,10 @@ void RenderString(float x, float y)
 		
 		if(data.m_error.empty())
 		{
-			int index = 425 + ((x * 229) / 625);
+			int index = (x * 229) / 625;
+
 			locker.lock();
-			pos = convstr(data.m_dataArrayArray[0][index] * 0.00328084f);
+			pos = convstr(lidar_data[index] * 0.00328084f);
 			locker.unlock();
 		}
 		else
@@ -446,11 +446,6 @@ void bye()
 {
 	printf("Quitting...\n");
 
-	getHData = false;
-	hokuyoThreadRunning = false;
-	hThread->join();
-	delete hThread;
-
 	printf("freeing memory for images...\n");
 
 	free(img_color);
@@ -480,9 +475,11 @@ int main(int argc, char** argv)
 	int hwm = 1;
 	int rcc = 0;
 	int rcd = 0;
+	int rcl = 0;
 	char ip1[40];
 	char ip2[40];
 
+	//Setup IP addresses
 	strcpy(ip1, "tcp://");
 	strcpy(ip2, "tcp://");
 
@@ -501,28 +498,36 @@ int main(int argc, char** argv)
 
 	printf("Listening on: %s, %s\n", ip1, ip2);
 
+	//Initialize ZMQ
 	context_color = zmq_ctx_new ();
 	context_depth = zmq_ctx_new ();
+	context_lidar = zmq_ctx_new ();
 
 	sub_color = zmq_socket(context_color, ZMQ_SUB);
 	sub_depth = zmq_socket(context_depth, ZMQ_SUB);
+	sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
 
 	rcc = zmq_setsockopt(sub_color, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rcd = zmq_setsockopt(sub_depth, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	assert (rcc == 0 && rcd == 0);
+	rcl = zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	assert (rcc == 0 && rcd == 0 && rcl ==0);
 
 	rcc = zmq_setsockopt(sub_color, ZMQ_SUBSCRIBE, "", 0);
 	rcd = zmq_setsockopt(sub_depth, ZMQ_SUBSCRIBE, "", 0);
-	assert (rcc == 0 && rcd == 0);
+	rcl = zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0);
+	assert (rcc == 0 && rcd == 0 && rcl == 0);
 
-	img_color = (uint8_t*)malloc(sz_img);
-	img_depth = (uint8_t*)malloc(sz_img);
+	//Allocate memory buffers
+	img_color = (uint8_t*)malloc(sz_img_color);
+	img_depth = (uint8_t*)malloc(sz_img_color);	
+	lidar_data = (long*)malloc(sz_lidar_data);
+	assert(img_color != NULL && img_depth != NULL && lidar_data != NULL);
 
 	//tcp://localhost:9998  tcp://localhost:9999
 	if (zmq_connect(sub_color, ip1) !=0 || zmq_connect(sub_depth, ip2) !=0)
 	{
 		printf("Error initializing 0mq...\n");
-		exit(1);
+		return 1;
 	}
 
 	saveImagec = 0;
@@ -531,11 +536,6 @@ int main(int argc, char** argv)
 	view_state = 1;
 
 	mx = my = 0;	
-	
-	hokuyoThreadRunning = true;
-	getHData = false;
-
-	hThread = new std::thread(getData);
 
 	gl_threadfunc(NULL);
 
