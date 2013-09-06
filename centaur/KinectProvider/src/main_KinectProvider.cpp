@@ -74,7 +74,7 @@ void publish_img(uint8_t* image, void* zmq_pub)
 
 void publish_lidar(void* data, void* zmq_pub)
 {
-	int ret, n;
+	int ret;
 	long data_trim[228];
 	
 	if (urg_isConnected(&urg) < 0) 
@@ -88,16 +88,14 @@ void publish_lidar(void* data, void* zmq_pub)
 		return;
 	}
 
-	n = urg_receiveData(&urg, lidar_data, sz_lidar_data);
-	if(verbose) printf("# n = %d\n", n);
-	if (n < 0)
+	pthread_mutex_lock(&buf_mutex);
+	ret = urg_receiveData(&urg, lidar_data, sz_lidar_data);
+	if(verbose) printf("# n = %d\n", ret);
+	if (ret < 0)
 	{
 		return;
 	}
 	
-	memcpy(data_trim, lidar_data[425], sz_lidar_data);
-	
-	pthread_mutex_lock(&buf_mutex);
 	int rc = zmq_send(zmq_pub, lidar_data, sizeof(long) * sz_lidar_data, ZMQ_DONTWAIT);
 	pthread_cond_signal(&frame_cond);
 	pthread_mutex_unlock(&buf_mutex);
@@ -240,6 +238,8 @@ int main(int argc, char** argv)
 	int rcd = 0;
 	int rcl = 0;
 
+	const char lidar_path[] = "/dev/ttyACM0"; /* For Linux */
+
 	//Setup ZMQ and allocate memory buffers
 	//tcp://*:9998 tcp://*:9999 tcp://9997
 	void* context_color = zmq_ctx_new ();	
@@ -291,14 +291,14 @@ int main(int argc, char** argv)
 	}
 	
 	//Connect lidar
-	ret = urg_connect(&urg, device, 115200);
+	int ret = urg_connect(&urg, lidar_path, 115200);
 	if (ret < 0) {
-		urg_exit(&urg, "urg_connect()");
+		return 1;
 	}
 
 	//Get max size of lidar data
 	sz_lidar_data = urg_dataMax(&urg);
-	if(verbose) printf("Max size of lidar data: %d", lidar_data_max);
+	if(verbose) printf("Max size of lidar data: %d", sz_lidar_data);
 
 	//Allocate memory buffers
 	depth_mid = (uint8_t*)malloc(sz_img_color);
@@ -361,7 +361,7 @@ int main(int argc, char** argv)
 	
 	printf("closing urg...\n");
 	
-	urg_disconnect(urg);
+	urg_disconnect(&urg);
 	
 	printf("--done\n");
 	printf("closing and destroying zmq\n");

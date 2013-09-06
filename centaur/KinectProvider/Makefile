@@ -1,7 +1,7 @@
 all : libs progs
 
 DEPS=
-DRIVER_DEPS=centaur
+DRIVER_DEPS=centaur utilities
 
 MY_FLAGS=
 MY_LIBS=
