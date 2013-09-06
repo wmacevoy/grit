@@ -142,7 +142,7 @@ void subscribe_depth(void* zmq_sub)
 
 void subscribe_lidar(void* zmq_sub)
 {
-	if(verbose) printf("waiting for lidar data...\n);
+	if(verbose) printf("waiting for lidar data...\n");
 
 	locker.lock();
 	int rc = zmq_recv(zmq_sub, lidar_data, 228, ZMQ_DONTWAIT);
@@ -167,25 +167,15 @@ void RenderString(float x, float y)
 	//540 is lidar center left side = 426 right side = 654
 	if( x >= 0 && x <= 640 && y >= 240 && y <= 250)
 	{
-		getHData = true;
 		int tmpX = x;
 		std::string pos;
 		
-		if(data.m_error.empty())
-		{
-			int index = (x * 229) / 625;
+		int index = 425 + ((x * 229) / 625);
 
-			locker.lock();
-			pos = convstr(lidar_data[index] * 0.00328084f);
-			locker.unlock();
-		}
-		else
-		{
-			locker.lock();
-			pos = data.m_error;
-			locker.unlock();
-		}
-
+		locker.lock();
+		pos = convstr(lidar_data[index] * 0.00328084f);
+		locker.unlock();
+		
 		if(x > 550) tmpX = x - 55;		
 
 		glColor3f(1.0f, 1.0f, 1.0f); 
@@ -197,10 +187,6 @@ void RenderString(float x, float y)
 		glColor3f(0.1f, 0.1f, 0.1f); 
 		glRasterPos2f(tmpX, y);
 		glutBitmapString(GLUT_BITMAP_TIMES_ROMAN_24, (unsigned char*)pos.c_str());
-	}
-	else
-	{
-		getHData = false;
 	}
 }
 
@@ -445,20 +431,22 @@ void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 void bye()
 {
 	printf("Quitting...\n");
-
 	printf("freeing memory for images...\n");
 
 	free(img_color);
 	free(img_depth);
+	free(lidar_data);
 
 	printf("-- done!\n");
 	printf("shutting down zmq...\n");
 
 	zmq_close(sub_color);
 	zmq_close(sub_depth);
+	zmq_close(sub_lidar);
 
 	zmq_ctx_destroy(context_color);
 	zmq_ctx_destroy(context_depth);
+	zmq_ctx_destroy(context_lidar);
 
 	printf("-- done!\n");
 }
@@ -466,9 +454,9 @@ void bye()
 int main(int argc, char** argv)
 {
   cfg.path("../../setup");
-  cfg.args("kinect.requester.",argv);
+  cfg.args("kinect.requester.", argv);
   if (argc == 1) cfg.load("config.csv");
-  verbose = cfg.flag("kinect.requester.verbose",false);
+  verbose = cfg.flag("kinect.requester.verbose", false);
   if (verbose) cfg.show();
 
 	int quit = 0;
@@ -490,8 +478,6 @@ int main(int argc, char** argv)
 	strcat(ip2, ":");
 	g_argc = argc;
 	g_argv = argv;
-	providerAddress = "tcp://";
-	providerAddress.append(address);
 
 	strcat(ip1, "9998\0");
 	strcat(ip2, "9999\0");

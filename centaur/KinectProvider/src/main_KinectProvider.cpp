@@ -229,9 +229,9 @@ void SignalHandler(int sig)
 int main(int argc, char** argv)
 {
 	cfg.path("../../setup");
-	cfg.args("kinect.provider.",argv);
+	cfg.args("kinect.provider.", argv);
 	if (argc == 1) cfg.load("config.csv");
-	verbose = cfg.flag("kinect.provider.verbose",false);
+	verbose = cfg.flag("kinect.provider.verbose", false);
 	if (verbose) cfg.show();
 	
 	int res;
