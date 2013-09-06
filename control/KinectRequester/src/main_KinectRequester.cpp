@@ -506,7 +506,7 @@ int main(int argc, char** argv)
 	//Allocate memory buffers
 	img_color = (uint8_t*)malloc(sz_img_color);
 	img_depth = (uint8_t*)malloc(sz_img_color);	
-	lidar_data = (long*)malloc(sz_lidar_data);
+	lidar_data = (long*)calloc(sz_lidar_data, sizeof(long));
 	assert(img_color != NULL && img_depth != NULL && lidar_data != NULL);
 
 	//tcp://localhost:9998  tcp://localhost:9999

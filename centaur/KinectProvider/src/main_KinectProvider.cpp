@@ -89,7 +89,7 @@ void publish_lidar(void* data, void* zmq_pub)
 	}
 
 	n = urg_receiveData(&urg, lidar_data, lidar_data_max);
-	printf("# n = %d\n", n);
+	if(verbose) printf("# n = %d\n", n);
 	if (n < 0)
 	{
 		return;
@@ -304,7 +304,7 @@ int main(int argc, char** argv)
 	depth_mid = (uint8_t*)malloc(sz_img_color);
 	rgb_back = (uint8_t*)malloc(sz_img_color);
 	rgb_mid = (uint8_t*)malloc(sz_img_color);
-	lidar_data = (long*)malloc(sz_lidar_data);
+	lidar_data = (long*)calloc(sz_lidar_data, sizeof(long));
 	assert(depth_mid != NULL && rgb_back != NULL && rgb_mid != NULL && lidar_data != NULL);
 
 	//Start freenect thread
