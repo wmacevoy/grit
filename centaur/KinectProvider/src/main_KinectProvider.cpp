@@ -20,27 +20,19 @@
 
 #include <assert.h>
 #include <signal.h>
-//#include <iterator>     // std::back_inserter
-//#include <vector>       // std::vector
-//#include <algorithm>    // std::copy
-
-#include <zmq.h>
-#include "libfreenect.h"
-
 #include <pthread.h>
-
 #include <math.h>
-
-//#include "opencv2/objdetect/objdetect.hpp"
-//#include "opencv2/highgui/highgui.hpp"
-//#include "opencv2/imgproc/imgproc.hpp"
-//#include "opencv2/core/utility.hpp"
-
-//#include "opencv2/highgui/highgui_c.h"
+#include <zmq.h>
+#include "urg_ctrl.h"
+#include "libfreenect.h"
+#include "Configure.h"
 
 #define LONG  int
 #define DWORD unsigned int
 #define WORD unsigned short
+
+Configure cfg;
+bool verbose;
 
 pthread_t freenect_thread;
 volatile int die = 0;
@@ -52,14 +44,14 @@ const int sleep_time = 150;
 uint8_t *depth_mid;
 uint8_t *rgb_back, *rgb_mid;
 
-//openCV Mat
-//cv::Mat frame;
-//std::string cascade_name = "detection.xml"; //Will eventually rewrite so it takes an input filename
-//cv::CascadeClassifier cascade;
-
 freenect_context *f_ctx;
 freenect_device *f_dev;
 int freenect_led;
+
+urg_t urg;
+int data_max;
+long* data;
+const int data_needed = 228;
 
 //Types = FREENECT_VIDEO_RGB or FREENECT_VIDEO_IR_8BIT;
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
@@ -67,33 +59,42 @@ freenect_video_format current_format = FREENECT_VIDEO_RGB;
 pthread_mutex_t buf_mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t frame_cond = PTHREAD_COND_INITIALIZER;
 
-const int sz_img = 640*480*3;
+const int sz_img_color = 640*480*3;
+const int sz_img_gray = 640*480;
 
 uint16_t t_gamma[2048];
 
-/*class Point
+void publish_img(uint8_t* image, void* zmq_pub)
 {
-	int x, y;
-};
-
-class Object
-{
-	bool Drill;
-	bool GateValve;
-	bool Ladder;
-	bool EV;
-	bool Cuttingtool1;
-	bool Cuttingtool2;
-	bool Cuttingtool3;
-	Point p;
-};*/
-
-void publish_img(uint8_t *image, void *zmq_pub)
-{
-	int rc = zmq_send(zmq_pub, image, sz_img, ZMQ_DONTWAIT);
+	int rc = zmq_send(zmq_pub, image, sz_img_color, ZMQ_DONTWAIT);
 }
 
-void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
+void publish_lidar(void* data, void* zmq_pub)
+{
+	int ret, n;
+	long data_trim[228];
+	
+	/* Request for GD data */
+	ret = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
+	if (ret < 0) 
+	{
+		return;
+	}
+
+	/* Reception */
+	n = urg_receiveData(&urg, data, data_max);
+	printf("# n = %d\n", n);
+	if (n < 0)
+	{
+		return;
+	}
+	
+	memcpy(data_trim, data[425], data_needed);
+	
+	int rc = zmq_send(zmq_pub, , sizeof(long) * data_needed, ZMQ_DONTWAIT);
+}
+
+void depth_cb(freenect_device* dev, void* v_depth, uint32_t timestamp)
 {
 	static int count = 5;
 	if(count > 0)
@@ -154,7 +155,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	pthread_mutex_unlock(&buf_mutex);
 }
 
-void rgb_cb(freenect_device *dev, void *rgb, uint32_t timestamp)
+void rgb_cb(freenect_device* dev, void* rgb, uint32_t timestamp)
 {
   static int count = 5;
 	if(count > 0)
@@ -208,27 +209,6 @@ void *freenect_threadfunc(void *arg)
 	return NULL;
 }
 
-/*void detectAndDisplay( cv::Mat frame )
-{ 
-   std::vector<cv::Rect> objects;
-   cv::Mat frame_gray;
-
-   cvtColor( frame, frame_gray, cv::COLOR_BGR2GRAY );
-   equalizeHist( frame_gray, frame_gray );
-
-   //-- Detect objects
-   cascade.detectMultiScale( frame_gray, objects, 1.1, 2, 0, cv::Size(80, 80) );
-
-   for( size_t i = 0; i < objects.size(); i++ )
-    {
-	cv::Mat faceROI = frame_gray( objects[i] );
-
-	//-- Draw the face
-	cv::Point center( objects[i].x + objects[i].width/2, objects[i].y + objects[i].height/2 );
-	cv::ellipse( frame, center, cv::Size( objects[i].width/2, objects[i].height/2), 0, 0, 360, cv::Scalar( 255, 0, 0 ), 2, 8, 0 );
-    }
-}*/
-
 void SignalHandler(int sig)
 {
 	printf("\nQuitting...\n");
@@ -237,40 +217,39 @@ void SignalHandler(int sig)
 
 int main(int argc, char** argv)
 {
+	cfg.path("../../setup");
+	cfg.args("kinect.provider.",argv);
+	if (argc == 1) cfg.load("config.csv");
+	verbose = cfg.flag("kinect.provider.verbose",false);
+	if (verbose) cfg.show();
+	
 	int res;
 	int hwm = 1;
 	int rcc = 0;
 	int rcd = 0;
+	int rcl = 0;
 
-	//tcp://*:9998 tcp://*:9999
-	void *context_color = zmq_ctx_new ();	
-	void *context_depth = zmq_ctx_new ();
+	//tcp://*:9998 tcp://*:9999 tcp://9997
+	void* context_color = zmq_ctx_new ();	
+	void* context_depth = zmq_ctx_new ();
+	void* context_lidar = zmq_ctx_new ();
 
-	void *pub_color = zmq_socket(context_color, ZMQ_PUB);
-	void *pub_depth = zmq_socket(context_depth, ZMQ_PUB);
-
-	/*if( argc > 1)
-	{
-		cascade_name = argv[1];
-	}
- 	else
-	{
-		printf("Default cascade name is detection.xml, otherwise it needs to be specified\nas the first term line parameter.\n");
-	}*/
+	void* pub_color = zmq_socket(context_color, ZMQ_PUB);
+	void* pub_depth = zmq_socket(context_depth, ZMQ_PUB);
+	void* pub_lidar = zmq_socket(context_lidar, ZMQ_PUB);
 
 	rcc = zmq_setsockopt(pub_color, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	rcd = zmq_setsockopt(pub_depth, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+	rcl = zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	assert (rcc == 0 && rcd == 0);
 
 	rcc = zmq_bind(pub_color, "tcp://*:9998");
-	rcd = zmq_bind(pub_depth, "tcp://*:9999");	
+	rcd = zmq_bind(pub_depth, "tcp://*:9999");
+	rcl = zmq_bind(pub_lidar, "tcp://*:9997");	
 
-	depth_mid = (uint8_t*)malloc(sz_img);
-	rgb_back = (uint8_t*)malloc(sz_img);
-	rgb_mid = (uint8_t*)malloc(sz_img);
-
-	//Initialize
-	//if( !cascade.load( cascade_name ) ){ printf("--(!)Error loading\n"); return -1; };
+	depth_mid = (uint8_t*)malloc(sz_img_color);
+	rgb_back = (uint8_t*)malloc(sz_img_color);
+	rgb_mid = (uint8_t*)malloc(sz_img_color);
 
 	for (int i = 0; i < 2048; ++i) {
 		float v = i/2048.0;
@@ -300,6 +279,20 @@ int main(int argc, char** argv)
 		freenect_shutdown(f_ctx);
 		return 1;
 	}
+	
+	/* Connection */
+	ret = urg_connect(&urg, device, 115200);
+	if (ret < 0) {
+		urg_exit(&urg, "urg_connect()");
+	}
+
+	/* Reserve for reception data */
+	data_max = urg_dataMax(&urg);
+	data = (long*)malloc(sizeof(long) * data_max);
+	if (data == NULL) {
+		perror("malloc");
+		return 1;
+	}
 
 	res = pthread_create(&freenect_thread, NULL, freenect_threadfunc, NULL);
 	if (res) {
@@ -326,9 +319,10 @@ int main(int argc, char** argv)
 	{
 		pthread_mutex_lock(&buf_mutex);
 
-		//Send image data via zmq
+		//Send image and lidar data via zmq
 		publish_img(rgb_mid, pub_color);
-		publish_img(depth_mid, pub_depth);	
+		publish_img(depth_mid, pub_depth);
+		publish_lidar(data, pub_lidar);
 
 		pthread_cond_signal(&frame_cond);
 		pthread_mutex_unlock(&buf_mutex);
@@ -346,6 +340,13 @@ int main(int argc, char** argv)
 	free(rgb_back);
 	free(rgb_mid);
 
+	printf("--done\n");
+	
+	printf("closing urg...\n");
+	
+	urg_disconnect(urg);
+	if(data) free(data);
+	
 	printf("--done\n");
 	printf("closing and destroying zmq\n");
 
