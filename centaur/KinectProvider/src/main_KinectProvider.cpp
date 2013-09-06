@@ -49,9 +49,9 @@ freenect_device *f_dev;
 int freenect_led;
 
 urg_t urg;
-int lidar_data_max;
+//int lidar_data_max;
 long* lidar_data;
-const int sz_lidar_data = 1081;
+int sz_lidar_data;
 
 //Types = FREENECT_VIDEO_RGB or FREENECT_VIDEO_IR_8BIT;
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
@@ -88,7 +88,7 @@ void publish_lidar(void* data, void* zmq_pub)
 		return;
 	}
 
-	n = urg_receiveData(&urg, lidar_data, lidar_data_max);
+	n = urg_receiveData(&urg, lidar_data, sz_lidar_data);
 	if(verbose) printf("# n = %d\n", n);
 	if (n < 0)
 	{
@@ -98,7 +98,7 @@ void publish_lidar(void* data, void* zmq_pub)
 	memcpy(data_trim, lidar_data[425], sz_lidar_data);
 	
 	pthread_mutex_lock(&buf_mutex);
-	int rc = zmq_send(zmq_pub, lidar_data, sizeof(long) * lidar_data_needed, ZMQ_DONTWAIT);
+	int rc = zmq_send(zmq_pub, lidar_data, sizeof(long) * sz_lidar_data, ZMQ_DONTWAIT);
 	pthread_cond_signal(&frame_cond);
 	pthread_mutex_unlock(&buf_mutex);
 }
@@ -297,7 +297,7 @@ int main(int argc, char** argv)
 	}
 
 	//Get max size of lidar data
-	lidar_data_max = urg_dataMax(&urg);
+	sz_lidar_data = urg_dataMax(&urg);
 	if(verbose) printf("Max size of lidar data: %d", lidar_data_max);
 
 	//Allocate memory buffers
