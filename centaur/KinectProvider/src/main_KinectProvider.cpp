@@ -74,14 +74,17 @@ void publish_lidar(void* data, void* zmq_pub)
 	int ret, n;
 	long data_trim[228];
 	
-	/* Request for GD data */
+	if (urg_isConnected(&urg) < 0) 
+	{
+		return;
+	}
+
 	ret = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
 	if (ret < 0) 
 	{
 		return;
 	}
 
-	/* Reception */
 	n = urg_receiveData(&urg, data, data_max);
 	printf("# n = %d\n", n);
 	if (n < 0)
