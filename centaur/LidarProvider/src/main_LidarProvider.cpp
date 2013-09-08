@@ -86,6 +86,7 @@ int main(int argc, char** argv)
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);
 
+	printf("Publishing on tcp://*:9997\n");
 	while(!die)
 	{
 		publish_lidar(lidar_data, pub_lidar);

@@ -275,7 +275,7 @@ int main(int argc, char** argv)
 
 
 	//Main loop
-	printf("Publishing on tcp://*:9998 and tcp://*:9999 and tcp://*:9997\n");
+	printf("Publishing on tcp://*:9998 and tcp://*:9999\n");
 	while(!die)
 	{
 		pthread_mutex_lock(&buf_mutex);
