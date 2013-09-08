@@ -29,8 +29,6 @@
 #include "urg_ctrl.h"
 #include "Configure.h"
 
-using namespace std;
-
 Configure cfg;
 bool verbose;
 
@@ -61,7 +59,7 @@ void* context_lidar;
 
 uint8_t* img_color;
 uint8_t* img_depth;
-long* lidar_data;
+int64_t* lidar_data;
 
 const int sz_lidar_data  = 1081;
 
@@ -104,13 +102,13 @@ void subscribe_color(void* zmq_sub)
 {
 	static int fcount = 0;
 
-	if(verbose) printf("waiting for color image...\n");
+	//if(verbose) printf("waiting for color image...\n");
 
 	locker.lock();
 	int rc = zmq_recv(zmq_sub, img_color, sz_img_color, ZMQ_DONTWAIT);
 	locker.unlock();
 
-	if(verbose && rc > 0) printf("received color image!\n");
+	//if(verbose && rc > 0) printf("received color image!\n");
 	
 	if(saveImagec && img_color != NULL)
 	{
@@ -124,13 +122,13 @@ void subscribe_depth(void* zmq_sub)
 {
 	static int fcount = 0;
 
-	if(verbose) printf("waiting for depth image...\n");
+	//if(verbose) printf("waiting for depth image...\n");
 	
 	locker.lock();
 	int rc = zmq_recv(zmq_sub, img_depth, sz_img_color, ZMQ_DONTWAIT);
 	locker.unlock();
 
-	if(verbose && rc > 0) printf("received depth image!\n");
+	//if(verbose && rc > 0) printf("received depth image!\n");
 	
 	if(saveImaged && img_depth != NULL)
 	{
@@ -145,7 +143,7 @@ void subscribe_lidar(void* zmq_sub)
 	if(verbose) printf("waiting for lidar data...\n");
 
 	locker.lock();
-	int rc = zmq_recv(zmq_sub, lidar_data, 228, ZMQ_DONTWAIT);
+	int rc = zmq_recv(zmq_sub, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);
 	locker.unlock();
 
 	if(verbose && rc > 0) printf("received lidar data!\n");
@@ -167,6 +165,8 @@ void RenderString(float x, float y)
 	//540 is lidar center left side = 426 right side = 654
 	if( x >= 0 && x <= 640 && y >= 240 && y <= 250)
 	{
+		subscribe_lidar(sub_lidar);
+		
 		int tmpX = x;
 		std::string pos;
 		
@@ -466,23 +466,28 @@ int main(int argc, char** argv)
 	int rcl = 0;
 	char ip1[40];
 	char ip2[40];
+	char ip3[40];
 
 	//Setup IP addresses
 	strcpy(ip1, "tcp://");
 	strcpy(ip2, "tcp://");
+	strcpy(ip3, "tcp://");
 
-	std::string address = cfg.str("kinect.requester.address","localhost");
+	std::string address = cfg.str("kinect.requester.address", "localhost");
 	strcat(ip1, address.c_str());
 	strcat(ip1, ":");
 	strcat(ip2, address.c_str());
 	strcat(ip2, ":");
+	strcat(ip3, address.c_str());
+	strcat(ip3, ":");
 	g_argc = argc;
 	g_argv = argv;
 
 	strcat(ip1, "9998\0");
 	strcat(ip2, "9999\0");
+	strcat(ip3, "9997\0");
 
-	printf("Listening on: %s, %s\n", ip1, ip2);
+	printf("Listening on: %s, %s, %s\n", ip1, ip2, ip3);
 
 	//Initialize ZMQ
 	context_color = zmq_ctx_new ();
@@ -506,11 +511,11 @@ int main(int argc, char** argv)
 	//Allocate memory buffers
 	img_color = (uint8_t*)malloc(sz_img_color);
 	img_depth = (uint8_t*)malloc(sz_img_color);	
-	lidar_data = (long*)calloc(sz_lidar_data, sizeof(long));
+	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(img_color != NULL && img_depth != NULL && lidar_data != NULL);
 
-	//tcp://localhost:9998  tcp://localhost:9999
-	if (zmq_connect(sub_color, ip1) !=0 || zmq_connect(sub_depth, ip2) !=0)
+	//tcp://localhost:9998  tcp://localhost:9999 tcp://localhost:9997
+	if (zmq_connect(sub_color, ip1) !=0 || zmq_connect(sub_depth, ip2) !=0 || zmq_connect(sub_lidar, ip3))
 	{
 		printf("Error initializing 0mq...\n");
 		return 1;

@@ -50,7 +50,7 @@ int freenect_led;
 
 urg_t urg;
 //int lidar_data_max;
-long* lidar_data;
+int64_t * lidar_data;
 int sz_lidar_data;
 
 //Types = FREENECT_VIDEO_RGB or FREENECT_VIDEO_IR_8BIT;
@@ -66,16 +66,12 @@ uint16_t t_gamma[2048];
 
 void publish_img(uint8_t* image, void* zmq_pub)
 {
-	pthread_mutex_lock(&buf_mutex);
 	int rc = zmq_send(zmq_pub, image, sz_img_color, ZMQ_DONTWAIT);
-	pthread_cond_signal(&frame_cond);
-	pthread_mutex_unlock(&buf_mutex);
 }
 
 void publish_lidar(void* data, void* zmq_pub)
 {
 	int ret;
-	long data_trim[228];
 	
 	if (urg_isConnected(&urg) < 0) 
 	{
@@ -88,7 +84,6 @@ void publish_lidar(void* data, void* zmq_pub)
 		return;
 	}
 
-	pthread_mutex_lock(&buf_mutex);
 	ret = urg_receiveData(&urg, lidar_data, sz_lidar_data);
 	if(verbose) printf("# n = %d\n", ret);
 	if (ret < 0)
@@ -96,9 +91,7 @@ void publish_lidar(void* data, void* zmq_pub)
 		return;
 	}
 	
-	int rc = zmq_send(zmq_pub, lidar_data, sizeof(long) * sz_lidar_data, ZMQ_DONTWAIT);
-	pthread_cond_signal(&frame_cond);
-	pthread_mutex_unlock(&buf_mutex);
+	int rc = zmq_send(zmq_pub, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
 }
 
 void depth_cb(freenect_device* dev, void* v_depth, uint32_t timestamp)
@@ -110,13 +103,13 @@ void depth_cb(freenect_device* dev, void* v_depth, uint32_t timestamp)
 		return;
 	}
 	else
-		count = 10;
+		count = 5;
 
 	int i;
 
-	pthread_mutex_lock(&buf_mutex);
-
 	uint16_t *depth = (uint16_t*)v_depth;
+
+	pthread_mutex_lock(&buf_mutex);
 
 	for (i=0; i<640*480; i++) {
 		int pval = t_gamma[depth[i]];
@@ -173,7 +166,7 @@ void rgb_cb(freenect_device* dev, void* rgb, uint32_t timestamp)
 		return;
 	}
 	else
-		count = 10;
+		count = 5;
 	pthread_mutex_lock(&buf_mutex);
 
 	// swap buffers
@@ -226,11 +219,11 @@ void SignalHandler(int sig)
 
 int main(int argc, char** argv)
 {
-	cfg.path("../../setup");
-	cfg.args("kinect.provider.", argv);
-	if (argc == 1) cfg.load("config.csv");
-	verbose = cfg.flag("kinect.provider.verbose", false);
-	if (verbose) cfg.show();
+	//cfg.path("../../setup");
+	//cfg.args("kinect.provider.", argv);
+	//if (argc == 1) cfg.load("config.csv");
+	//verbose = cfg.flag("kinect.provider.verbose", false);
+	//if (verbose) cfg.show();
 	
 	int res;
 	int hwm = 1;
@@ -330,7 +323,7 @@ int main(int argc, char** argv)
 
 
 	//Main loop
-	printf("Publishing on tcp://*:9998 and tcp://*:9999\n");
+	printf("Publishing on tcp://*:9998 and tcp://*:9999 and tcp://*:9997\n");
 	while(!die)
 	{
 		pthread_mutex_lock(&buf_mutex);
