@@ -1,3 +1,7 @@
+/*
+ * Provider for the lidar
+ * Written by Michaela Ervin and based off of c_urg samples
+*/
 
 #include <assert.h>
 #include <signal.h>
@@ -7,9 +11,9 @@
 #include <chrono>
 #include <zmq.h>
 #include "urg_ctrl.h"
-#include "Configure.h"
+//#include "Configure.h"
 
-Configure cfg;
+//Configure cfg;
 bool verbose;
 
 volatile int die = 0;
@@ -18,8 +22,8 @@ const int sleep_time = 25;
 
 urg_t urg;
 //int lidar_data_max;
-int64_t * lidar_data;
-int sz_lidar_data = NULL;
+int64_t * lidar_data  = NULL;
+int sz_lidar_data;
 
 void publish_lidar(void* data, void* zmq_pub)
 {
@@ -61,10 +65,9 @@ int main(int argc, char** argv)
 
 	const char lidar_path[] = "/dev/ttyACM0"; /* For Linux */
 
+	//Initialize ZMQ and LIDAR connection
 	void* context_lidar = zmq_ctx_new ();
-
 	void* pub_lidar = zmq_socket(context_lidar, ZMQ_PUB);
-
 	rcl = zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	assert(rcl == 0);
 

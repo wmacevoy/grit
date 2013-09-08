@@ -9,15 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <thread>
-
-#if _WIN32
-#pragma comment(lib, "pthreadVC2.lib")
-#else
-#include <unistd.h>
-#endif
-
 #include <assert.h>
 #include <signal.h>
 #include <pthread.h>
@@ -27,6 +19,12 @@
 #include "urg_ctrl.h"
 #include "libfreenect.h"
 #include "Configure.h"
+
+#if _WIN32
+#pragma comment(lib, "pthreadVC2.lib")
+#else
+#include <unistd.h>
+#endif
 
 #define LONG  int
 #define DWORD unsigned int
