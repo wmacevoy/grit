@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <signal.h>
 #include <pthread.h>
+#include <chrono>
 #include <math.h>
 #include <zmq.h>
 #include "urg_ctrl.h"
@@ -37,21 +38,16 @@ bool verbose;
 pthread_t freenect_thread;
 volatile int die = 0;
 
-const int sleep_time = 150;
+const int sleep_time = 25;
 
 // back: owned by libfreenect (implicit for depth)
 // mid: owned by callbacks, "latest frame ready"
-uint8_t *depth_mid;
-uint8_t *rgb_back, *rgb_mid;
+uint8_t *depth_mid = NULL;
+uint8_t *rgb_back = NULL, *rgb_mid = NULL;
 
 freenect_context *f_ctx;
 freenect_device *f_dev;
 int freenect_led;
-
-urg_t urg;
-//int lidar_data_max;
-int64_t * lidar_data;
-int sz_lidar_data;
 
 //Types = FREENECT_VIDEO_RGB or FREENECT_VIDEO_IR_8BIT;
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
@@ -69,41 +65,16 @@ void publish_img(uint8_t* image, void* zmq_pub)
 	int rc = zmq_send(zmq_pub, image, sz_img_color, ZMQ_DONTWAIT);
 }
 
-void publish_lidar(void* data, void* zmq_pub)
-{
-	int ret;
-	
-	if (urg_isConnected(&urg) < 0) 
-	{
-		return;
-	}
-
-	ret = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
-	if (ret < 0) 
-	{
-		return;
-	}
-
-	ret = urg_receiveData(&urg, lidar_data, sz_lidar_data);
-	if(verbose) printf("# n = %d\n", ret);
-	if (ret < 0)
-	{
-		return;
-	}
-	
-	int rc = zmq_send(zmq_pub, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
-}
-
 void depth_cb(freenect_device* dev, void* v_depth, uint32_t timestamp)
 {
-	static int count = 5;
+	/*static int count = 5;
 	if(count > 0)
 	{
 		--count;
 		return;
 	}
 	else
-		count = 5;
+		count = 5;*/
 
 	int i;
 
@@ -159,14 +130,15 @@ void depth_cb(freenect_device* dev, void* v_depth, uint32_t timestamp)
 
 void rgb_cb(freenect_device* dev, void* rgb, uint32_t timestamp)
 {
-  static int count = 5;
+  	/*static int count = 5;
 	if(count > 0)
 	{
 		--count;
 		return;
 	}
 	else
-		count = 5;
+		count = 5;*/
+	
 	pthread_mutex_lock(&buf_mutex);
 
 	// swap buffers
@@ -192,7 +164,7 @@ void *freenect_threadfunc(void *arg)
 	freenect_start_video(f_dev);
 
 	while (!die && freenect_process_events(f_ctx) >= 0) {
-		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
 	if(!die) die = 1;
@@ -229,28 +201,21 @@ int main(int argc, char** argv)
 	int hwm = 1;
 	int rcc = 0;
 	int rcd = 0;
-	int rcl = 0;
-
-	const char lidar_path[] = "/dev/ttyACM0"; /* For Linux */
 
 	//Setup ZMQ and allocate memory buffers
-	//tcp://*:9998 tcp://*:9999 tcp://9997
+	//tcp://*:9998 tcp://*:9999
 	void* context_color = zmq_ctx_new ();	
 	void* context_depth = zmq_ctx_new ();
-	void* context_lidar = zmq_ctx_new ();
 
 	void* pub_color = zmq_socket(context_color, ZMQ_PUB);
 	void* pub_depth = zmq_socket(context_depth, ZMQ_PUB);
-	void* pub_lidar = zmq_socket(context_lidar, ZMQ_PUB);
 
 	rcc = zmq_setsockopt(pub_color, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	rcd = zmq_setsockopt(pub_depth, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	rcl = zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	assert (rcc == 0 && rcd == 0);
 
 	rcc = zmq_bind(pub_color, "tcp://*:9998");
 	rcd = zmq_bind(pub_depth, "tcp://*:9999");
-	rcl = zmq_bind(pub_lidar, "tcp://*:9997");	
 
 	for (int i = 0; i < 2048; ++i) {
 		float v = i/2048.0;
@@ -282,23 +247,12 @@ int main(int argc, char** argv)
 		freenect_shutdown(f_ctx);
 		return 1;
 	}
-	
-	//Connect lidar
-	int ret = urg_connect(&urg, lidar_path, 115200);
-	if (ret < 0) {
-		return 1;
-	}
-
-	//Get max size of lidar data
-	sz_lidar_data = urg_dataMax(&urg);
-	if(verbose) printf("Max size of lidar data: %d", sz_lidar_data);
 
 	//Allocate memory buffers
 	depth_mid = (uint8_t*)malloc(sz_img_color);
 	rgb_back = (uint8_t*)malloc(sz_img_color);
 	rgb_mid = (uint8_t*)malloc(sz_img_color);
-	lidar_data = (long*)calloc(sz_lidar_data, sizeof(long));
-	assert(depth_mid != NULL && rgb_back != NULL && rgb_mid != NULL && lidar_data != NULL);
+	assert(depth_mid != NULL && rgb_back != NULL && rgb_mid != NULL);
 
 	//Start freenect thread
 	res = pthread_create(&freenect_thread, NULL, freenect_threadfunc, NULL);
@@ -328,15 +282,14 @@ int main(int argc, char** argv)
 	{
 		pthread_mutex_lock(&buf_mutex);
 
-		//Send image and lidar data via zmq
+		//Send image via zmq
 		publish_img(rgb_mid, pub_color);
 		publish_img(depth_mid, pub_depth);
-		publish_lidar(lidar_data, pub_lidar);
 
 		pthread_cond_signal(&frame_cond);
 		pthread_mutex_unlock(&buf_mutex);
 
-		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
 	//Cleanup
@@ -348,24 +301,15 @@ int main(int argc, char** argv)
 	free(depth_mid);
 	free(rgb_back);
 	free(rgb_mid);
-	free(lidar_data);
 
-	printf("--done\n");
-	
-	printf("closing urg...\n");
-	
-	urg_disconnect(&urg);
-	
 	printf("--done\n");
 	printf("closing and destroying zmq\n");
 
 	zmq_close(pub_color);
 	zmq_close(pub_depth);
-	zmq_close(pub_lidar);
 
 	zmq_ctx_destroy(context_color);
 	zmq_ctx_destroy(context_depth);
-	zmq_ctx_destroy(context_lidar);
 
 	printf("-- done!\n");
 
