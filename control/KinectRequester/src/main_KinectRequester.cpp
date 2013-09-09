@@ -16,7 +16,6 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <assert.h>
-#include <pthread.h>
 #include <GL/freeglut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -39,6 +38,7 @@ bool verbose;
 const int sz_img_color = 640*480*3;
 const int sz_img_gray = 640*480;
 const int nScans = 1;
+const int sleep_time = 25;
 
 int saveImagec;
 int saveImaged;
