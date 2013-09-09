@@ -36,7 +36,7 @@ bool verbose;
 pthread_t freenect_thread;
 volatile int die = 0;
 
-const int sleep_time = 25;
+int sleep_time;
 
 // back: owned by libfreenect (implicit for depth)
 // mid: owned by callbacks, "latest frame ready"
@@ -189,12 +189,14 @@ void SignalHandler(int sig)
 
 int main(int argc, char** argv)
 {
-	//cfg.path("../../setup");
-	//cfg.args("kinect.provider.", argv);
-	//if (argc == 1) cfg.load("config.csv");
-	//verbose = cfg.flag("kinect.provider.verbose", false);
-	//if (verbose) cfg.show();
+	cfg.path("../../setup");
+	cfg.args("kinect.provider.", argv);
+	if (argc == 1) cfg.load("config.csv");
+	verbose = cfg.flag("kinect.provider.verbose", false);
+	if (verbose) cfg.show();
 	
+	sleep_time = cfg.num("kinect.requester.sleep_time", 25);
+
 	int res;
 	int hwm = 1;
 	int rcc = 0;

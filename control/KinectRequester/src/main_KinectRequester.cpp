@@ -38,7 +38,7 @@ bool verbose;
 const int sz_img_color = 640*480*3;
 const int sz_img_gray = 640*480;
 const int nScans = 1;
-const int sleep_time = 25;
+int sleep_time;
 
 int saveImagec;
 int saveImaged;
@@ -102,13 +102,13 @@ void subscribe_color(void* zmq_sub)
 {
 	static int fcount = 0;
 
-	//if(verbose) printf("waiting for color image...\n");
+	if(verbose) printf("waiting for color image...\n");
 
 	locker.lock();
 	int rc = zmq_recv(zmq_sub, img_color, sz_img_color, ZMQ_DONTWAIT);
 	locker.unlock();
 
-	//if(verbose && rc > 0) printf("received color image!\n");
+	if(verbose && rc > 0) printf("received color image!\n");
 	
 	if(saveImagec && img_color != NULL)
 	{
@@ -122,13 +122,13 @@ void subscribe_depth(void* zmq_sub)
 {
 	static int fcount = 0;
 
-	//if(verbose) printf("waiting for depth image...\n");
+	if(verbose) printf("waiting for depth image...\n");
 	
 	locker.lock();
 	int rc = zmq_recv(zmq_sub, img_depth, sz_img_color, ZMQ_DONTWAIT);
 	locker.unlock();
 
-	//if(verbose && rc > 0) printf("received depth image!\n");
+	if(verbose && rc > 0) printf("received depth image!\n");
 	
 	if(saveImaged && img_depth != NULL)
 	{
@@ -430,15 +430,15 @@ void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 
 void bye()
 {
-	printf("Quitting...\n");
-	printf("freeing memory for images...\n");
+	if (verbose) printf("Quitting...\n");
+	if (verbose) printf("freeing memory for images...\n");
 
 	free(img_color);
 	free(img_depth);
 	free(lidar_data);
 
-	printf("-- done!\n");
-	printf("shutting down zmq...\n");
+	if (verbose) printf("-- done!\n");
+	if (verbose) printf("shutting down zmq...\n");
 
 	zmq_close(sub_color);
 	zmq_close(sub_depth);
@@ -448,16 +448,19 @@ void bye()
 	zmq_ctx_destroy(context_depth);
 	zmq_ctx_destroy(context_lidar);
 
-	printf("-- done!\n");
+	if (verbose) printf("-- done!\n");
 }
 
 int main(int argc, char** argv)
 {
-  cfg.path("../../setup");
-  cfg.args("kinect.requester.", argv);
-  if (argc == 1) cfg.load("config.csv");
-  verbose = cfg.flag("kinect.requester.verbose", false);
-  if (verbose) cfg.show();
+	cfg.path("../../setup");
+	cfg.args("kinect.requester.", argv);
+	if (argc == 1) cfg.load("config.csv");
+	verbose = cfg.flag("kinect.requester.verbose", false);
+	if (verbose) cfg.show();
+
+	sleep_time = cfg.num("kinect.requester.sleep_time", 25);
+	std::string address = cfg.str("kinect.requester.address", "localhost");
 
 	int quit = 0;
 	int hwm = 1;
@@ -473,7 +476,6 @@ int main(int argc, char** argv)
 	strcpy(ip2, "tcp://");
 	strcpy(ip3, "tcp://");
 
-	std::string address = cfg.str("kinect.requester.address", "localhost");
 	strcat(ip1, address.c_str());
 	strcat(ip1, ":");
 	strcat(ip2, address.c_str());
@@ -487,7 +489,7 @@ int main(int argc, char** argv)
 	strcat(ip2, "9999\0");
 	strcat(ip3, "9997\0");
 
-	printf("Listening on: %s, %s, %s\n", ip1, ip2, ip3);
+	if (verbose) printf("Listening on: %s, %s, %s\n", ip1, ip2, ip3);
 
 	//Initialize ZMQ
 	context_color = zmq_ctx_new ();
@@ -517,7 +519,7 @@ int main(int argc, char** argv)
 	//tcp://localhost:9998  tcp://localhost:9999 tcp://localhost:9997
 	if (zmq_connect(sub_color, ip1) !=0 || zmq_connect(sub_depth, ip2) !=0 || zmq_connect(sub_lidar, ip3))
 	{
-		printf("Error initializing 0mq...\n");
+		if (verbose) printf("Error initializing 0mq...\n");
 		return 1;
 	}
 

@@ -11,14 +11,14 @@
 #include <chrono>
 #include <zmq.h>
 #include "urg_ctrl.h"
-//#include "Configure.h"
+#include "Configure.h"
 
-//Configure cfg;
+Configure cfg;
 bool verbose;
 
 volatile int die = 0;
 
-const int sleep_time = 25;
+int sleep_time;
 
 urg_t urg;
 //int lidar_data_max;
@@ -47,23 +47,26 @@ void publish_lidar(void* data, void* zmq_pub)
 		return;
 	}
 	
+	if(verbose) printf("waiting for lidar data...\n");
 	int rc = zmq_send(zmq_pub, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
+	if(verbose && rc > 0) printf("received lidat data!\n");
 }
 
 int main(int argc, char** argv)
 {
-	//cfg.path("../../setup");
-	//cfg.args("lidar.provider.", argv);
-	//if (argc == 1) cfg.load("config.csv");
-	//verbose = cfg.flag("lidar.provider.verbose", false);
-	//if (verbose) cfg.show();
+	cfg.path("../../setup");
+	cfg.args("lidar.provider.", argv);
+	if (argc == 1) cfg.load("config.csv");
+	verbose = cfg.flag("lidar.provider.verbose", false);
+	if (verbose) cfg.show();
 	
 
 	int res;
 	int hwm = 1;
 	int rcl = 0;
 
-	const char lidar_path[] = "/dev/ttyACM0"; /* For Linux */
+	std::string lidar_path = cfg.str("lidar.provider.path", "/dev/ttyACM0").c_str();
+	sleep_time = cfg.num("lidar.provider.sleep_time", 25);
 
 	//Initialize ZMQ and LIDAR connection
 	void* context_lidar = zmq_ctx_new ();
@@ -74,7 +77,7 @@ int main(int argc, char** argv)
 	rcl = zmq_bind(pub_lidar, "tcp://*:9997");
 
 	//Connect lidar
-	int ret = urg_connect(&urg, lidar_path, 115200);
+	int ret = urg_connect(&urg, lidar_path.c_str(), 115200);
 	if (ret < 0) {
 		return 1;
 	}
@@ -86,30 +89,30 @@ int main(int argc, char** argv)
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);
 
-	printf("Publishing on tcp://*:9997\n");
+	if (verbose) printf("Publishing on tcp://*:9997\n");
 	while(!die)
 	{
 		publish_lidar(lidar_data, pub_lidar);
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
-	printf("freeing memory for data array...\n");
+	if (verbose) printf("freeing memory for data array...\n");
 
 	free(lidar_data);
 
-	printf("--done\n");
+	if (verbose) printf("--done\n");
 	
-	printf("closing urg...\n");
+	if (verbose) printf("closing urg...\n");
 	
 	urg_disconnect(&urg);
 	
-	printf("--done\n");
-	printf("closing and destroying zmq\n");
+	if (verbose) printf("--done\n");
+	if (verbose) printf("closing and destroying zmq\n");
 
 	zmq_close(pub_lidar);
 	zmq_ctx_destroy(context_lidar);
 
-	printf("-- done!\n");
+	if (verbose) printf("-- done!\n");
 
 	return 0;
 }

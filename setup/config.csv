@@ -14,3 +14,11 @@ body.commander.subscribers,"tcp://192.168.2.115:5504"
 body.verbose,true
 commander.publish,tcp://*:5504
 commander.subscribers,"tcp://192.168.2.101:5502"
+lidar.provider.dev_path,"/dev/ttyACM0"
+lidar.provider.sleep_time,"25"
+lidar.provider.verbose,"false"
+kinect.requester.verbose,"false"
+kinect.requester.sleep_time,"25"
+kinect.requester.address,"192.168.2.101"
+kinect.provider.sleep_time,"25"
+kinect.provider.verbose,"false"
