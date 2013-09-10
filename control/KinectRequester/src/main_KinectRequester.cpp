@@ -35,8 +35,7 @@ bool verbose;
 #define DWORD unsigned int
 #define WORD unsigned short
 
-const int sz_img_color = 640*480*3;
-const int sz_img_gray = 640*480;
+const int sz_img_color = 320*240*3;
 const int nScans = 1;
 int sleep_time;
 
@@ -61,7 +60,7 @@ uint8_t* img_color;
 uint8_t* img_depth;
 int64_t* lidar_data;
 
-const int sz_lidar_data  = 1081;
+const int sz_lidar_data  = 400;
 
 std::atomic<int> mx, my;
 
@@ -112,7 +111,7 @@ void subscribe_color(void* zmq_sub)
 	
 	if(saveImagec && img_color != NULL)
 	{
-		CaptureScreen(640, 480, img_color, "color_", fcount);
+		CaptureScreen(320, 240, img_color, "color_", fcount);
 		fcount++; 
 		saveImagec = 0;
 	}
@@ -132,7 +131,7 @@ void subscribe_depth(void* zmq_sub)
 	
 	if(saveImaged && img_depth != NULL)
 	{
-		CaptureScreen(640, 480, img_depth, "depth_", fcount);
+		CaptureScreen(320, 240, img_depth, "depth_", fcount);
 		fcount++; 
 		saveImaged = 0;
 	}
@@ -161,22 +160,22 @@ std::string convstr(const float t)
 void RenderString(float x, float y)
 {
 	//Kinect horizontal fov is 57 degrees, so 28.5 degrees left and 28.5 degrees right
-	//lidar does 1081 points in 270 degrees, so 4 pts per degree, with 114 pts left and 114 pts right
-	//540 is lidar center left side = 426 right side = 654
-	if( x >= 0 && x <= 640 && y >= 240 && y <= 250)
+	//lidar does 1081 points in 270 degrees, so 4 pts per degree
+	//540 is lidar center
+	if( x >= 0 && x <= 320 && y >= 120 && y <= 130)
 	{
 		subscribe_lidar(sub_lidar);
 		
 		int tmpX = x;
 		std::string pos;
 		
-		int index = 425 + ((x * 229) / 625);
+		int index = (x * 229) / 625;  //Need to remap
 
 		locker.lock();
 		pos = convstr(lidar_data[index] * 0.00328084f);
 		locker.unlock();
 		
-		if(x > 550) tmpX = x - 55;		
+		if(x > 280) tmpX = x - 55;		
 
 		glColor3f(1.0f, 1.0f, 1.0f); 
 		glRasterPos2f(tmpX + 1, y + 1);
@@ -198,42 +197,42 @@ void DrawGLScene()
 		subscribe_depth(sub_depth);	
 
 		glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, 320, 240, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
 
 		glBegin(GL_TRIANGLE_FAN);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glTexCoord2f(0, 0); glVertex3f(0,0,0);
-		glTexCoord2f(1, 0); glVertex3f(640,0,0);
-		glTexCoord2f(1, 1); glVertex3f(640,480,0);
-		glTexCoord2f(0, 1); glVertex3f(0,480,0);
+		glTexCoord2f(1, 0); glVertex3f(320,0,0);
+		glTexCoord2f(1, 1); glVertex3f(320,240,0);
+		glTexCoord2f(0, 1); glVertex3f(0,240,0);
 		glEnd();
 
 		//Left triangle
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.1, 0.1, 0.1);
-		glVertex3f(0, 240, 0);
-		glVertex3f(20, 245, 0);
-		glVertex3f(0, 250, 0);
+		glVertex3f(0, 120, 0);
+		glVertex3f(20, 125, 0);
+		glVertex3f(0, 130, 0);
 		glEnd();
 		
 		//Right triangle
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.1, 0.1, 0.1);
-		glVertex3f(640, 240, 0);
-		glVertex3f(620, 245, 0);
-		glVertex3f(640, 250, 0);
+		glVertex3f(320, 120, 0);
+		glVertex3f(300, 125, 0);
+		glVertex3f(320, 130, 0);
 		glEnd();
 
 		//Top line
 		glBegin(GL_LINES);
-		glVertex3f(0, 240, 0);
-		glVertex3f(640, 240, 0);
+		glVertex3f(0, 120, 0);
+		glVertex3f(320, 120, 0);
 		glEnd();
 
 		//Bottom line
 		glBegin(GL_LINES);
-		glVertex3f(0, 250, 0);
-		glVertex3f(640, 250, 0);
+		glVertex3f(0, 130, 0);
+		glVertex3f(320, 130, 0);
 		glEnd();
 
 		RenderString(mx, my);
@@ -243,42 +242,42 @@ void DrawGLScene()
 		subscribe_color(sub_color);
 		
 		glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, 640, 480, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, 320, 240, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
 
 		glBegin(GL_TRIANGLE_FAN);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glTexCoord2f(0, 0); glVertex3f(0,0,0);
-		glTexCoord2f(1, 0); glVertex3f(640,0,0);
-		glTexCoord2f(1, 1); glVertex3f(640,480,0);
-		glTexCoord2f(0, 1); glVertex3f(0,480,0);
+		glTexCoord2f(1, 0); glVertex3f(320,0,0);
+		glTexCoord2f(1, 1); glVertex3f(320,240,0);
+		glTexCoord2f(0, 1); glVertex3f(0,240,0);
 		glEnd();
 
 		//Left triangle
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.1, 0.1, 0.1);
-		glVertex3f(0, 240, 0);
-		glVertex3f(20, 245, 0);
-		glVertex3f(0, 250, 0);
+		glVertex3f(0, 120, 0);
+		glVertex3f(20, 125, 0);
+		glVertex3f(0, 130, 0);
 		glEnd();
 		
 		//Right triangle
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.1, 0.1, 0.1);
-		glVertex3f(640, 240, 0);
-		glVertex3f(620, 245, 0);
-		glVertex3f(640, 250, 0);
+		glVertex3f(320, 120, 0);
+		glVertex3f(300, 125, 0);
+		glVertex3f(320, 130, 0);
 		glEnd();
 
 		//Top line
 		glBegin(GL_LINES);
-		glVertex3f(0, 240, 0);
-		glVertex3f(640, 240, 0);
+		glVertex3f(0, 120, 0);
+		glVertex3f(320, 120, 0);
 		glEnd();
 
 		//Bottom line
 		glBegin(GL_LINES);
-		glVertex3f(0, 250, 0);
-		glVertex3f(640, 250, 0);
+		glVertex3f(0, 130, 0);
+		glVertex3f(320, 130, 0);
 		glEnd();
 
 		RenderString(mx, my);
@@ -329,7 +328,7 @@ void ReSizeGLScene(int Width, int Height)
 	glViewport(0,0,Width,Height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho (0, 640, 480, 0, -1.0f, 1.0f);
+	glOrtho (0, 320, 240, 0, -1.0f, 1.0f);
 	glMatrixMode(GL_MODELVIEW);
     	glLoadIdentity();
 }
@@ -365,7 +364,7 @@ void* gl_threadfunc(void* arg)
 	glutInit(&g_argc, g_argv);
 
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-	glutInitWindowSize(640, 480);
+	glutInitWindowSize(320, 240);
 	glutInitWindowPosition(0, 0);
 
 	window = glutCreateWindow("ICU");
@@ -376,7 +375,7 @@ void* gl_threadfunc(void* arg)
 	glutKeyboardFunc(&keyPressed);
 	glutPassiveMotionFunc(&MousePos);
 
-	InitGL(640, 480);
+	InitGL(320, 240);
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 	glutMainLoop();
@@ -404,7 +403,7 @@ void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 
 
 			bf.bfType	 = 'MB';
-			bf.bfSize	 = sizeof(bf)+sizeof(bi)+Width*Height*3;
+			bf.bfSize	 = sizeof(bf)+sizeof(bi)+Width*Height;
 			bf.bfOffBits	 = sizeof(bf)+sizeof(bi);
 			bi.biSize	 = sizeof(bi);
 			bi.biWidth	 = Width;
@@ -421,7 +420,7 @@ void CaptureScreen(int Width,int Height,uint8_t *image,char *fname,int fcount)
 				image[i] = image[i+2];
 				image[i+2] = c;
 			}
-			fwrite( image, sizeof(unsigned char), Height*Width*3, file );
+			fwrite( image, sizeof(unsigned char), Height*Width, file );
 
 			fclose( file );
 		}

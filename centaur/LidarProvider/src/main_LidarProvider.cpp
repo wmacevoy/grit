@@ -21,7 +21,7 @@ volatile int die = 0;
 int sleep_time;
 
 urg_t urg;
-//int lidar_data_max;
+int sz_lidar_data_max;
 int64_t * lidar_data  = NULL;
 int sz_lidar_data;
 
@@ -40,7 +40,7 @@ void publish_lidar(void* data, void* zmq_pub)
 		return;
 	}
 
-	ret = urg_receiveData(&urg, lidar_data, sz_lidar_data);
+	ret = urg_receivePartialData(&urg, lidar_data, sz_lidar_data, 340, 740);
 	if(verbose) printf("# n = %d\n", ret);
 	if (ret < 0)
 	{
@@ -83,8 +83,8 @@ int main(int argc, char** argv)
 	}
 
 	//Get max size of lidar data
-	sz_lidar_data = urg_dataMax(&urg);
-	if(verbose) printf("Max size of lidar data: %d", sz_lidar_data);
+	sz_lidar_data_max = urg_dataMax(&urg);
+	if(verbose) printf("Max size of lidar data: %d", sz_lidar_data_max);
 	
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);

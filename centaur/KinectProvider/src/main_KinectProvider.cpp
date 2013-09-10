@@ -15,6 +15,7 @@
 #include <pthread.h>
 #include <chrono>
 #include <math.h>
+#include <mutex>
 #include <zmq.h>
 #include "urg_ctrl.h"
 #include "libfreenect.h"
@@ -33,6 +34,8 @@
 Configure cfg;
 bool verbose;
 
+bool ready;
+
 pthread_t freenect_thread;
 volatile int die = 0;
 
@@ -47,14 +50,12 @@ freenect_context *f_ctx;
 freenect_device *f_dev;
 int freenect_led;
 
-//Types = FREENECT_VIDEO_RGB or FREENECT_VIDEO_IR_8BIT;
+//Types = FREENECT_VIDEO_RGB or FREENECT_VIDEO_BAYER 
 freenect_video_format current_format = FREENECT_VIDEO_RGB;
 
-pthread_mutex_t buf_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t frame_cond = PTHREAD_COND_INITIALIZER;
+std::mutex locker;
 
-const int sz_img_color = 640*480*3;
-const int sz_img_gray = 640*480;
+const int sz_img_color = 320*240*3;
 
 uint16_t t_gamma[2048];
 
@@ -78,9 +79,9 @@ void depth_cb(freenect_device* dev, void* v_depth, uint32_t timestamp)
 
 	uint16_t *depth = (uint16_t*)v_depth;
 
-	pthread_mutex_lock(&buf_mutex);
+	locker.lock();
 
-	for (i=0; i<640*480; i++) {
+	for (i=0; i<320*240; i++) {
 		int pval = t_gamma[depth[i]];
 		int lb = pval & 0xff;
 		switch (pval>>8) {
@@ -122,8 +123,7 @@ void depth_cb(freenect_device* dev, void* v_depth, uint32_t timestamp)
 		}
 	}
 
-	pthread_cond_signal(&frame_cond);
-	pthread_mutex_unlock(&buf_mutex);
+	locker.unlock();
 }
 
 void rgb_cb(freenect_device* dev, void* rgb, uint32_t timestamp)
@@ -137,7 +137,7 @@ void rgb_cb(freenect_device* dev, void* rgb, uint32_t timestamp)
 	else
 		count = 5;*/
 	
-	pthread_mutex_lock(&buf_mutex);
+	locker.lock();
 
 	// swap buffers
 	assert (rgb_back == rgb);
@@ -145,22 +145,22 @@ void rgb_cb(freenect_device* dev, void* rgb, uint32_t timestamp)
 	freenect_set_video_buffer(dev, rgb_back);
 	rgb_mid = (uint8_t*)rgb;
 
-	pthread_cond_signal(&frame_cond);
-	pthread_mutex_unlock(&buf_mutex);
+	locker.unlock();
 }
 
-void *freenect_threadfunc(void *arg)
+void* freenect_threadfunc(void* arg)
 {
 	freenect_set_led(f_dev,LED_GREEN);
 	freenect_set_depth_callback(f_dev, depth_cb);
 	freenect_set_video_callback(f_dev, rgb_cb);
-	freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
-	freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_11BIT));
+	freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_LOW, current_format));
+	freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_LOW, FREENECT_DEPTH_11BIT));
 	freenect_set_video_buffer(f_dev, rgb_back);
 
 	freenect_start_depth(f_dev);
 	freenect_start_video(f_dev);
 
+	ready = true;
 	while (!die && freenect_process_events(f_ctx) >= 0) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
@@ -183,7 +183,7 @@ void *freenect_threadfunc(void *arg)
 
 void SignalHandler(int sig)
 {
-	printf("\nQuitting...\n");
+	if(verbose) printf("\nQuitting...\n");
 	die = 1;
 }
 
@@ -202,7 +202,7 @@ int main(int argc, char** argv)
 	int rcc = 0;
 	int rcd = 0;
 
-	//Setup ZMQ and allocate memory buffers
+	//Setup ZMQ
 	//tcp://*:9998 tcp://*:9999
 	void* context_color = zmq_ctx_new ();	
 	void* context_depth = zmq_ctx_new ();
@@ -234,8 +234,6 @@ int main(int argc, char** argv)
 	int nr_devices = freenect_num_devices (f_ctx);
 	printf ("Number of devices found: %d\n", nr_devices);
 
-	int user_device_number = 0;
-
 	if (nr_devices < 1) {
 		freenect_shutdown(f_ctx);
 		return 1;
@@ -243,7 +241,7 @@ int main(int argc, char** argv)
 
 	//Open kinect device
 	if (freenect_open_device(f_ctx, &f_dev, 0) < 0) {
-		printf("Could not open device\n");
+		if(verbose) printf("Could not open device\n");
 		freenect_shutdown(f_ctx);
 		return 1;
 	}
@@ -272,28 +270,28 @@ int main(int argc, char** argv)
 	sigaction (SIGINT, &new_action, NULL);
 #endif
 
-	//Sleep for 1 second to allow thread to initialize
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	while(!ready)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+	}
 
 
 	//Main loop
 	printf("Publishing on tcp://*:9998 and tcp://*:9999\n");
 	while(!die)
 	{
-		pthread_mutex_lock(&buf_mutex);
+		locker.lock();
 
 		//Send image via zmq
 		publish_img(rgb_mid, pub_color);
 		publish_img(depth_mid, pub_depth);
 
-		pthread_cond_signal(&frame_cond);
-		pthread_mutex_unlock(&buf_mutex);
+		locker.unlock();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
 	//Cleanup
-
 	pthread_join(freenect_thread, NULL);
 
 	printf("freeing memory for images...\n");
