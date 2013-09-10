@@ -3,7 +3,7 @@ all : libs progs
 DEPS=
 DRIVER_DEPS=centaur utilities
 
-MY_FLAGS=-I../../libs/hokuyo/include/cpp -DNDEBUG
-MY_LIBS=../../libs/hokuyo/src/liburg_cpp.a ../../libs/hokuyo/src/liburg_c.a 
+MY_FLAGS=
+MY_LIBS=
 
 include ../rules.mk
