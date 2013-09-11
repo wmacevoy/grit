@@ -68,6 +68,7 @@ GLuint gl_depth_tex;
 GLuint gl_rgb_tex;
 
 std::mutex locker;
+const int64_t time_threshold = 1000;
 
 
 typedef struct __attribute__((packed)) tagBITMAPFILEHEADER
