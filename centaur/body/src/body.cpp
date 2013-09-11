@@ -2940,15 +2940,19 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_Body swig_types[0]
-#define SWIGTYPE_p_LeftArm swig_types[1]
-#define SWIGTYPE_p_Legs swig_types[2]
-#define SWIGTYPE_p_Neck swig_types[3]
-#define SWIGTYPE_p_RightArm swig_types[4]
-#define SWIGTYPE_p_char swig_types[5]
-#define SWIGTYPE_p_std__ostream swig_types[6]
-#define SWIGTYPE_p_std__shared_ptrT_Servo_t swig_types[7]
-static swig_type_info *swig_types[9];
-static swig_module_info swig_module = {swig_types, 8, 0, 0, 0, 0};
+#define SWIGTYPE_p_Configure swig_types[1]
+#define SWIGTYPE_p_LeftArm swig_types[2]
+#define SWIGTYPE_p_Legs swig_types[3]
+#define SWIGTYPE_p_Neck swig_types[4]
+#define SWIGTYPE_p_RightArm swig_types[5]
+#define SWIGTYPE_p_char swig_types[6]
+#define SWIGTYPE_p_std__ostream swig_types[7]
+#define SWIGTYPE_p_std__shared_ptrT_Body_t swig_types[8]
+#define SWIGTYPE_p_std__shared_ptrT_ServoController_t swig_types[9]
+#define SWIGTYPE_p_std__shared_ptrT_Servo_t swig_types[10]
+#define SWIGTYPE_p_std__string swig_types[11]
+static swig_type_info *swig_types[13];
+static swig_module_info swig_module = {swig_types, 12, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3046,25 +3050,158 @@ namespace swig {
 
 
 #define SWIG_FILE_WITH_INIT
+#include "Body.h"
+#include "BodyGlobals.h"
 
-#include <memory>
-#include <iostream>
 
-#include "Legs.h"
-#include "Neck.h"
-#include "Arms.h"
+  #define SWIG_From_double   PyFloat_FromDouble 
 
-class Body
+
+  #define SWIG_From_long   PyInt_FromLong 
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_int  (int value)
+{    
+  return SWIG_From_long  (value);
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_double (PyObject *obj, double *val)
 {
- public:
-  Legs legs;
-  std::shared_ptr < Servo > waist;
-  Neck neck;
-  LeftArm left;
-  RightArm right;
-  void init();
-  void report(std::ostream &out) const;
-};
+  int res = SWIG_TypeError;
+  if (PyFloat_Check(obj)) {
+    if (val) *val = PyFloat_AsDouble(obj);
+    return SWIG_OK;
+  } else if (PyInt_Check(obj)) {
+    if (val) *val = PyInt_AsLong(obj);
+    return SWIG_OK;
+  } else if (PyLong_Check(obj)) {
+    double v = PyLong_AsDouble(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    double d = PyFloat_AsDouble(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = d;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      long v = PyLong_AsLong(obj);
+      if (!PyErr_Occurred()) {
+	if (val) *val = v;
+	return SWIG_AddCast(SWIG_AddCast(SWIG_OK));
+      } else {
+	PyErr_Clear();
+      }
+    }
+  }
+#endif
+  return res;
+}
+
+
+#include <float.h>
+
+
+#include <math.h>
+
+
+SWIGINTERNINLINE int
+SWIG_CanCastAsInteger(double *d, double min, double max) {
+  double x = *d;
+  if ((min <= x && x <= max)) {
+   double fx = floor(x);
+   double cx = ceil(x);
+   double rd =  ((x - fx) < 0.5) ? fx : cx; /* simple rint */
+   if ((errno == EDOM) || (errno == ERANGE)) {
+     errno = 0;
+   } else {
+     double summ, reps, diff;
+     if (rd < x) {
+       diff = x - rd;
+     } else if (rd > x) {
+       diff = rd - x;
+     } else {
+       return 1;
+     }
+     summ = rd + x;
+     reps = diff/summ;
+     if (reps < 8*DBL_EPSILON) {
+       *d = rd;
+       return 1;
+     }
+   }
+  }
+  return 0;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_long (PyObject *obj, long* val)
+{
+  if (PyInt_Check(obj)) {
+    if (val) *val = PyInt_AsLong(obj);
+    return SWIG_OK;
+  } else if (PyLong_Check(obj)) {
+    long v = PyLong_AsLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_OK;
+    } else {
+      PyErr_Clear();
+    }
+  }
+#ifdef SWIG_PYTHON_CAST_MODE
+  {
+    int dispatch = 0;
+    long v = PyInt_AsLong(obj);
+    if (!PyErr_Occurred()) {
+      if (val) *val = v;
+      return SWIG_AddCast(SWIG_OK);
+    } else {
+      PyErr_Clear();
+    }
+    if (!dispatch) {
+      double d;
+      int res = SWIG_AddCast(SWIG_AsVal_double (obj,&d));
+      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, LONG_MIN, LONG_MAX)) {
+	if (val) *val = (long)(d);
+	return res;
+      }
+    }
+  }
+#endif
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_bool (PyObject *obj, bool *val)
+{
+  int r = PyObject_IsTrue(obj);
+  if (r == -1)
+    return SWIG_ERROR;
+  if (val) *val = r ? true : false;
+  return SWIG_OK;
+}
+
+
+SWIGINTERNINLINE PyObject*
+  SWIG_From_bool  (bool value)
+{
+  return PyBool_FromLong(value ? 1 : 0);
+}
 
 #ifdef __cplusplus
 extern "C" {
@@ -3464,6 +3601,218 @@ SWIGINTERN PyObject *Body_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject 
   return SWIG_Py_Void();
 }
 
+SWIGINTERN int Swig_var_verbose_set(PyObject *_val) {
+  {
+    bool val;
+    int res = SWIG_AsVal_bool(_val, &val);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""verbose""' of type '""bool""'");
+    }
+    verbose = static_cast< bool >(val);
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_verbose_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_From_bool(static_cast< bool >(verbose));
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_simTime_set(PyObject *_val) {
+  {
+    double val;
+    int res = SWIG_AsVal_double(_val, &val);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""simTime""' of type '""double""'");
+    }
+    simTime = static_cast< double >(val);
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_simTime_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_From_double(static_cast< double >(simTime));
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_simSpeed_set(PyObject *_val) {
+  {
+    double val;
+    int res = SWIG_AsVal_double(_val, &val);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""simSpeed""' of type '""double""'");
+    }
+    simSpeed = static_cast< double >(val);
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_simSpeed_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_From_double(static_cast< double >(simSpeed));
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_realTime_set(PyObject *_val) {
+  {
+    double val;
+    int res = SWIG_AsVal_double(_val, &val);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""realTime""' of type '""double""'");
+    }
+    realTime = static_cast< double >(val);
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_realTime_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_From_double(static_cast< double >(realTime));
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_cfg_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_Configure,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""cfg""' of type '""Configure""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""cfg""' of type '""Configure""'");
+    } else {
+      Configure * temp;
+      temp  = reinterpret_cast< Configure * >(argp);
+      cfg = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_cfg_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&cfg), SWIGTYPE_p_Configure,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_servoController_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__shared_ptrT_ServoController_t,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""servoController""' of type '""SPServoController""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""servoController""' of type '""SPServoController""'");
+    } else {
+      SPServoController * temp;
+      temp  = reinterpret_cast< SPServoController * >(argp);
+      servoController = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_servoController_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&servoController), SWIGTYPE_p_std__shared_ptrT_ServoController_t,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_body_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__shared_ptrT_Body_t,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""body""' of type '""SPBody""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""body""' of type '""SPBody""'");
+    } else {
+      SPBody * temp;
+      temp  = reinterpret_cast< SPBody * >(argp);
+      body = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_body_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&body), SWIGTYPE_p_std__shared_ptrT_Body_t,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN PyObject *_wrap_servo(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  std::string arg1 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  SPServo result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:servo",&obj0)) SWIG_fail;
+  {
+    res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_std__string,  0  | 0);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "servo" "', argument " "1"" of type '" "std::string""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "servo" "', argument " "1"" of type '" "std::string""'");
+    } else {
+      std::string * temp = reinterpret_cast< std::string * >(argp1);
+      arg1 = *temp;
+      if (SWIG_IsNewObj(res1)) delete temp;
+    }
+  }
+  result = servo(arg1);
+  resultobj = SWIG_NewPointerObj((new SPServo(static_cast< const SPServo& >(result))), SWIGTYPE_p_std__shared_ptrT_Servo_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
 	 { (char *)"Body_legs_set", _wrap_Body_legs_set, METH_VARARGS, NULL},
@@ -3481,6 +3830,7 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_Body", _wrap_new_Body, METH_VARARGS, NULL},
 	 { (char *)"delete_Body", _wrap_delete_Body, METH_VARARGS, NULL},
 	 { (char *)"Body_swigregister", Body_swigregister, METH_VARARGS, NULL},
+	 { (char *)"servo", _wrap_servo, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -3488,43 +3838,59 @@ static PyMethodDef SwigMethods[] = {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_Body = {"_p_Body", "Body *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Configure = {"_p_Configure", "Configure *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_LeftArm = {"_p_LeftArm", "LeftArm *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Legs = {"_p_Legs", "Legs *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Neck = {"_p_Neck", "Neck *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_RightArm = {"_p_RightArm", "RightArm *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__ostream = {"_p_std__ostream", "std::ostream *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__shared_ptrT_Servo_t = {"_p_std__shared_ptrT_Servo_t", "std::shared_ptr< Servo > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_Body_t = {"_p_std__shared_ptrT_Body_t", "SPBody *|std::shared_ptr< Body > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_ServoController_t = {"_p_std__shared_ptrT_ServoController_t", "std::shared_ptr< ServoController > *|SPServoController *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_Servo_t = {"_p_std__shared_ptrT_Servo_t", "std::shared_ptr< Servo > *|SPServo *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Body,
+  &_swigt__p_Configure,
   &_swigt__p_LeftArm,
   &_swigt__p_Legs,
   &_swigt__p_Neck,
   &_swigt__p_RightArm,
   &_swigt__p_char,
   &_swigt__p_std__ostream,
+  &_swigt__p_std__shared_ptrT_Body_t,
+  &_swigt__p_std__shared_ptrT_ServoController_t,
   &_swigt__p_std__shared_ptrT_Servo_t,
+  &_swigt__p_std__string,
 };
 
 static swig_cast_info _swigc__p_Body[] = {  {&_swigt__p_Body, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Configure[] = {  {&_swigt__p_Configure, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_LeftArm[] = {  {&_swigt__p_LeftArm, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Legs[] = {  {&_swigt__p_Legs, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Neck[] = {  {&_swigt__p_Neck, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_RightArm[] = {  {&_swigt__p_RightArm, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__ostream[] = {  {&_swigt__p_std__ostream, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_Body_t[] = {  {&_swigt__p_std__shared_ptrT_Body_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_ServoController_t[] = {  {&_swigt__p_std__shared_ptrT_ServoController_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_Servo_t[] = {  {&_swigt__p_std__shared_ptrT_Servo_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Body,
+  _swigc__p_Configure,
   _swigc__p_LeftArm,
   _swigc__p_Legs,
   _swigc__p_Neck,
   _swigc__p_RightArm,
   _swigc__p_char,
   _swigc__p_std__ostream,
+  _swigc__p_std__shared_ptrT_Body_t,
+  _swigc__p_std__shared_ptrT_ServoController_t,
   _swigc__p_std__shared_ptrT_Servo_t,
+  _swigc__p_std__string,
 };
 
 
@@ -4210,6 +4576,25 @@ SWIG_init(void) {
   
   SWIG_InstallConstants(d,swig_const_table);
   
+  SWIG_Python_SetConstant(d, "MOVE_RATE",SWIG_From_double(static_cast< double >(50.0)));
+  SWIG_Python_SetConstant(d, "ANGLE360",SWIG_From_double(static_cast< double >(360.0)));
+  SWIG_Python_SetConstant(d, "ANGLE180",SWIG_From_double(static_cast< double >((360.0/2.0))));
+  SWIG_Python_SetConstant(d, "ANGLE90",SWIG_From_double(static_cast< double >(((360.0/2.0)/2.0))));
+  SWIG_Python_SetConstant(d, "ANGLE45",SWIG_From_double(static_cast< double >((((360.0/2.0)/2.0)/2.0))));
+  SWIG_Python_SetConstant(d, "HIPAXISX",SWIG_From_double(static_cast< double >(5.707)));
+  SWIG_Python_SetConstant(d, "HIPAXISY",SWIG_From_double(static_cast< double >(5.707)));
+  SWIG_Python_SetConstant(d, "LEG1",SWIG_From_int(static_cast< int >(0)));
+  SWIG_Python_SetConstant(d, "LEG2",SWIG_From_int(static_cast< int >(1)));
+  SWIG_Python_SetConstant(d, "LEG3",SWIG_From_int(static_cast< int >(2)));
+  SWIG_Python_SetConstant(d, "LEG4",SWIG_From_int(static_cast< int >(3)));
+  PyDict_SetItemString(md,(char*)"cvar", SWIG_globals());
+  SWIG_addvarlink(SWIG_globals(),(char*)"verbose",Swig_var_verbose_get, Swig_var_verbose_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"simTime",Swig_var_simTime_get, Swig_var_simTime_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"simSpeed",Swig_var_simSpeed_get, Swig_var_simSpeed_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"realTime",Swig_var_realTime_get, Swig_var_realTime_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"cfg",Swig_var_cfg_get, Swig_var_cfg_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"servoController",Swig_var_servoController_get, Swig_var_servoController_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"body",Swig_var_body_get, Swig_var_body_set);
 #if PY_VERSION_HEX >= 0x03000000
   return m;
 #else

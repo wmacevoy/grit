@@ -99,6 +99,22 @@ class Body(_object):
 Body_swigregister = _body.Body_swigregister
 Body_swigregister(Body)
 
+MOVE_RATE = _body.MOVE_RATE
+ANGLE360 = _body.ANGLE360
+ANGLE180 = _body.ANGLE180
+ANGLE90 = _body.ANGLE90
+ANGLE45 = _body.ANGLE45
+HIPAXISX = _body.HIPAXISX
+HIPAXISY = _body.HIPAXISY
+LEG1 = _body.LEG1
+LEG2 = _body.LEG2
+LEG3 = _body.LEG3
+LEG4 = _body.LEG4
+
+def servo(*args):
+  return _body.servo(*args)
+servo = _body.servo
 # This file is compatible with both classic and new-style classes.
 
+cvar = _body.cvar
 
