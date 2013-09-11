@@ -11,6 +11,7 @@ StdCapture::StdCapture(): m_capturing(false), m_init(false), m_oldStdOut(0), m_o
   m_pipe[WRITE] = 0;
   if (pipe(m_pipe) == -1)
     return;
+  fcntl(m_pipe[READ], F_SETFL, O_NONBLOCK);
   m_oldStdOut = dup(fileno(stdout));
   m_oldStdErr = dup(fileno(stderr));
   if (m_oldStdOut == -1 || m_oldStdErr == -1)
@@ -88,13 +89,5 @@ bool StdCapture::EndCapture()
 
 std::string StdCapture::GetCapture() const
 {
-  std::string::size_type idx = m_captured.find_last_not_of("\r\n");
-  if (idx == std::string::npos)
-    {
-      return m_captured;
-    }
-  else
-    {
-      return m_captured.substr(0, idx+1);
-    }
+  return m_captured;
 }
