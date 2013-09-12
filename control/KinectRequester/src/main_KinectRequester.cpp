@@ -35,7 +35,10 @@ bool verbose;
 #define DWORD unsigned int
 #define WORD unsigned short
 
-const int sz_img_color = 320*240*3;
+const int width = 640;
+const int height = 480;
+
+const int sz_img_color = width*height*3;
 const int nScans = 1;
 int sleep_time;
 
@@ -60,7 +63,7 @@ uint8_t* img_color;
 uint8_t* img_depth;
 int64_t* lidar_data;
 
-const int sz_lidar_data  = 400;
+const int sz_lidar_data  = 1081;
 
 std::atomic<int> mx, my;
 
@@ -102,17 +105,17 @@ void subscribe_color(void* zmq_sub)
 {
 	static int fcount = 0;
 
-	if(verbose) printf("waiting for color image...\n");
+	//if(verbose) printf("waiting for color image...\n");
 
 	locker.lock();
 	int rc = zmq_recv(zmq_sub, img_color, sz_img_color, ZMQ_DONTWAIT);
 	locker.unlock();
 
-	if(verbose && rc > 0) printf("received color image!\n");
+	//if(verbose && rc > 0) printf("received color image!\n");
 	
 	if(saveImagec && img_color != NULL)
 	{
-		CaptureScreen(320, 240, img_color, "color_", fcount);
+		CaptureScreen(width, height, img_color, "color_", fcount);
 		fcount++; 
 		saveImagec = 0;
 	}
@@ -122,17 +125,17 @@ void subscribe_depth(void* zmq_sub)
 {
 	static int fcount = 0;
 
-	if(verbose) printf("waiting for depth image...\n");
+	//if(verbose) printf("waiting for depth image...\n");
 	
 	locker.lock();
 	int rc = zmq_recv(zmq_sub, img_depth, sz_img_color, ZMQ_DONTWAIT);
 	locker.unlock();
 
-	if(verbose && rc > 0) printf("received depth image!\n");
+	//if(verbose && rc > 0) printf("received depth image!\n");
 	
 	if(saveImaged && img_depth != NULL)
 	{
-		CaptureScreen(320, 240, img_depth, "depth_", fcount);
+		CaptureScreen(width, height, img_depth, "depth_", fcount);
 		fcount++; 
 		saveImaged = 0;
 	}
@@ -161,22 +164,22 @@ std::string convstr(const float t)
 void RenderString(float x, float y)
 {
 	//Kinect horizontal fov is 57 degrees, so 28.5 degrees left and 28.5 degrees right
-	//lidar does 1081 points in 270 degrees, so 4 pts per degree
-	//540 is lidar center
-	if( x >= 0 && x <= 320 && y >= 120 && y <= 130)
+	//lidar does 1081 points in 270 degrees, so 4 pts per degree, with 114 pts left and 114 pts right
+	//540 is lidar center left side = 426 right side = 654
+	if( x >= 0 && x <= width && y >= 240 && y <= 250)
 	{
 		subscribe_lidar(sub_lidar);
 		
 		int tmpX = x;
 		std::string pos;
 		
-		int index = (x * 229) / 625;  //Need to remap
+		int index = 425 + ((x * 229) / 625);  //Needs to be remapped
 
 		locker.lock();
 		pos = convstr(lidar_data[index] * 0.00328084f);
 		locker.unlock();
 		
-		if(x > 280) tmpX = x - 55;		
+		if(x > 550) tmpX = x - 55;		
 
 		glColor3f(1.0f, 1.0f, 1.0f); 
 		glRasterPos2f(tmpX + 1, y + 1);
@@ -198,42 +201,42 @@ void DrawGLScene()
 		subscribe_depth(sub_depth);	
 
 		glBindTexture(GL_TEXTURE_2D, gl_depth_tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, 320, 240, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_depth);
 
 		glBegin(GL_TRIANGLE_FAN);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glTexCoord2f(0, 0); glVertex3f(0,0,0);
-		glTexCoord2f(1, 0); glVertex3f(320,0,0);
-		glTexCoord2f(1, 1); glVertex3f(320,240,0);
-		glTexCoord2f(0, 1); glVertex3f(0,240,0);
+		glTexCoord2f(1, 0); glVertex3f(width,0,0);
+		glTexCoord2f(1, 1); glVertex3f(width,height,0);
+		glTexCoord2f(0, 1); glVertex3f(0,height,0);
 		glEnd();
 
 		//Left triangle
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.1, 0.1, 0.1);
-		glVertex3f(0, 120, 0);
-		glVertex3f(20, 125, 0);
-		glVertex3f(0, 130, 0);
+		glVertex3f(0, 240, 0);
+		glVertex3f(20, 245, 0);
+		glVertex3f(0, 250, 0);
 		glEnd();
 		
 		//Right triangle
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.1, 0.1, 0.1);
-		glVertex3f(320, 120, 0);
-		glVertex3f(300, 125, 0);
-		glVertex3f(320, 130, 0);
+		glVertex3f(640, 240, 0);
+		glVertex3f(620, 245, 0);
+		glVertex3f(640, 250, 0);
 		glEnd();
 
 		//Top line
 		glBegin(GL_LINES);
-		glVertex3f(0, 120, 0);
-		glVertex3f(320, 120, 0);
+		glVertex3f(0, 240, 0);
+		glVertex3f(640, 240, 0);
 		glEnd();
 
 		//Bottom line
 		glBegin(GL_LINES);
-		glVertex3f(0, 130, 0);
-		glVertex3f(320, 130, 0);
+		glVertex3f(0, 250, 0);
+		glVertex3f(640, 250, 0);
 		glEnd();
 
 		RenderString(mx, my);
@@ -243,42 +246,42 @@ void DrawGLScene()
 		subscribe_color(sub_color);
 		
 		glBindTexture(GL_TEXTURE_2D, gl_rgb_tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, 320, 240, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
+		glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_color);
 
 		glBegin(GL_TRIANGLE_FAN);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glTexCoord2f(0, 0); glVertex3f(0,0,0);
-		glTexCoord2f(1, 0); glVertex3f(320,0,0);
-		glTexCoord2f(1, 1); glVertex3f(320,240,0);
-		glTexCoord2f(0, 1); glVertex3f(0,240,0);
+		glTexCoord2f(1, 0); glVertex3f(width,0,0);
+		glTexCoord2f(1, 1); glVertex3f(width,height,0);
+		glTexCoord2f(0, 1); glVertex3f(0,height,0);
 		glEnd();
 
 		//Left triangle
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.1, 0.1, 0.1);
-		glVertex3f(0, 120, 0);
-		glVertex3f(20, 125, 0);
-		glVertex3f(0, 130, 0);
+		glVertex3f(0, 240, 0);
+		glVertex3f(20, 245, 0);
+		glVertex3f(0, 250, 0);
 		glEnd();
 		
 		//Right triangle
 		glBegin(GL_TRIANGLES);
 		glColor3f(0.1, 0.1, 0.1);
-		glVertex3f(320, 120, 0);
-		glVertex3f(300, 125, 0);
-		glVertex3f(320, 130, 0);
+		glVertex3f(640, 240, 0);
+		glVertex3f(620, 245, 0);
+		glVertex3f(640, 250, 0);
 		glEnd();
 
 		//Top line
 		glBegin(GL_LINES);
-		glVertex3f(0, 120, 0);
-		glVertex3f(320, 120, 0);
+		glVertex3f(0, 240, 0);
+		glVertex3f(640, 240, 0);
 		glEnd();
 
 		//Bottom line
 		glBegin(GL_LINES);
-		glVertex3f(0, 130, 0);
-		glVertex3f(320, 130, 0);
+		glVertex3f(0, 250, 0);
+		glVertex3f(640, 250, 0);
 		glEnd();
 
 		RenderString(mx, my);
@@ -329,7 +332,7 @@ void ReSizeGLScene(int Width, int Height)
 	glViewport(0,0,Width,Height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho (0, 320, 240, 0, -1.0f, 1.0f);
+	glOrtho (0, width, height, 0, -1.0f, 1.0f);
 	glMatrixMode(GL_MODELVIEW);
     	glLoadIdentity();
 }
@@ -365,7 +368,7 @@ void* gl_threadfunc(void* arg)
 	glutInit(&g_argc, g_argv);
 
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH);
-	glutInitWindowSize(320, 240);
+	glutInitWindowSize(width, height);
 	glutInitWindowPosition(0, 0);
 
 	window = glutCreateWindow("ICU");
@@ -376,7 +379,7 @@ void* gl_threadfunc(void* arg)
 	glutKeyboardFunc(&keyPressed);
 	glutPassiveMotionFunc(&MousePos);
 
-	InitGL(320, 240);
+	InitGL(width, height);
 
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
 	glutMainLoop();
@@ -511,8 +514,8 @@ int main(int argc, char** argv)
 	assert (rcc == 0 && rcd == 0 && rcl == 0);
 
 	//Allocate memory buffers
-	img_color = (uint8_t*)malloc(sz_img_color);
-	img_depth = (uint8_t*)malloc(sz_img_color);	
+	img_color = (uint8_t*)calloc(sz_img_color, sizeof(uint8_t));
+	img_depth = (uint8_t*)calloc(sz_img_color, sizeof(uint8_t));	
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(img_color != NULL && img_depth != NULL && lidar_data != NULL);
 
