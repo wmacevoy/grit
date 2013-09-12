@@ -21,9 +21,9 @@ volatile int die = 0;
 int sleep_time;
 
 urg_t urg;
-int sz_lidar_data_max;
-int64_t * lidar_data  = NULL;
+int64_t* lidar_data  = NULL;
 int sz_lidar_data;
+int sz_lidar_data_max;
 
 void publish_lidar(void* data, void* zmq_pub)
 {
@@ -40,7 +40,7 @@ void publish_lidar(void* data, void* zmq_pub)
 		return;
 	}
 
-	ret = urg_receivePartialData(&urg, lidar_data, sz_lidar_data, 340, 740);
+	ret = urg_receiveData(&urg, lidar_data, sz_lidar_data);;
 	if(verbose) printf("# n = %d\n", ret);
 	if (ret < 0)
 	{
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 	int rcl = 0;
 
 	std::string lidar_path = cfg.str("lidar.provider.path", "/dev/ttyACM0").c_str();
-	sleep_time = cfg.num("lidar.provider.sleep_time", 25);
+	sleep_time = (int)cfg.num("lidar.provider.sleep_time", 25);
 
 	//Initialize ZMQ and LIDAR connection
 	void* context_lidar = zmq_ctx_new ();
@@ -83,8 +83,8 @@ int main(int argc, char** argv)
 	}
 
 	//Get max size of lidar data
-	sz_lidar_data_max = urg_dataMax(&urg);
-	if(verbose) printf("Max size of lidar data: %d", sz_lidar_data_max);
+	sz_lidar_data = urg_dataMax(&urg);
+	if(verbose) printf("Max size of lidar data: %d\n", sz_lidar_data);
 	
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);

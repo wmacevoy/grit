@@ -36,6 +36,9 @@ bool verbose;
 
 bool ready;
 
+const int width = 640;
+const int height = 480;
+
 pthread_t freenect_thread;
 volatile int die = 0;
 
@@ -55,7 +58,7 @@ freenect_video_format current_format = FREENECT_VIDEO_RGB;
 
 std::mutex locker;
 
-const int sz_img_color = 320*240*3;
+const int sz_img_color = width*height*3;
 
 uint16_t t_gamma[2048];
 
@@ -81,7 +84,7 @@ void depth_cb(freenect_device* dev, void* v_depth, uint32_t timestamp)
 
 	locker.lock();
 
-	for (i=0; i<320*240; i++) {
+	for (i=0; i<width*height; i++) {
 		int pval = t_gamma[depth[i]];
 		int lb = pval & 0xff;
 		switch (pval>>8) {
@@ -153,8 +156,8 @@ void* freenect_threadfunc(void* arg)
 	freenect_set_led(f_dev,LED_GREEN);
 	freenect_set_depth_callback(f_dev, depth_cb);
 	freenect_set_video_callback(f_dev, rgb_cb);
-	freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_LOW, current_format));
-	freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_LOW, FREENECT_DEPTH_11BIT));
+	freenect_set_video_mode(f_dev, freenect_find_video_mode(FREENECT_RESOLUTION_MEDIUM, current_format));
+	freenect_set_depth_mode(f_dev, freenect_find_depth_mode(FREENECT_RESOLUTION_MEDIUM, FREENECT_DEPTH_11BIT));
 	freenect_set_video_buffer(f_dev, rgb_back);
 
 	freenect_start_depth(f_dev);
@@ -162,7 +165,7 @@ void* freenect_threadfunc(void* arg)
 
 	ready = true;
 	while (!die && freenect_process_events(f_ctx) >= 0) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
 
 	if(!die) die = 1;
@@ -195,7 +198,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("kinect.provider.verbose", false);
 	if (verbose) cfg.show();
 	
-	sleep_time = cfg.num("kinect.requester.sleep_time", 25);
+	sleep_time = (int)cfg.num("kinect.provider.sleep_time", 25);
 
 	int res;
 	int hwm = 1;
@@ -232,7 +235,7 @@ int main(int argc, char** argv)
 	freenect_select_subdevices(f_ctx, (freenect_device_flags)(FREENECT_DEVICE_MOTOR | FREENECT_DEVICE_CAMERA));
 
 	int nr_devices = freenect_num_devices (f_ctx);
-	printf ("Number of devices found: %d\n", nr_devices);
+	if(verbose) printf ("Number of devices found: %d\n", nr_devices);
 
 	if (nr_devices < 1) {
 		freenect_shutdown(f_ctx);
@@ -247,9 +250,9 @@ int main(int argc, char** argv)
 	}
 
 	//Allocate memory buffers
-	depth_mid = (uint8_t*)malloc(sz_img_color);
-	rgb_back = (uint8_t*)malloc(sz_img_color);
-	rgb_mid = (uint8_t*)malloc(sz_img_color);
+	depth_mid = (uint8_t*)calloc(sz_img_color, sizeof(uint8_t));
+	rgb_back = (uint8_t*)calloc(sz_img_color, sizeof(uint8_t));
+	rgb_mid = (uint8_t*)calloc(sz_img_color, sizeof(uint8_t));
 	assert(depth_mid != NULL && rgb_back != NULL && rgb_mid != NULL);
 
 	//Start freenect thread
@@ -272,12 +275,12 @@ int main(int argc, char** argv)
 
 	while(!ready)
 	{
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
 
 
 	//Main loop
-	printf("Publishing on tcp://*:9998 and tcp://*:9999\n");
+	if(verbose) printf("Publishing on tcp://*:9998 and tcp://*:9999\n");
 	while(!die)
 	{
 		locker.lock();
@@ -288,7 +291,7 @@ int main(int argc, char** argv)
 
 		locker.unlock();
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
 
 	//Cleanup
