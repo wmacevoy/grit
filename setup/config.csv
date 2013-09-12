@@ -10,14 +10,15 @@ servos.map,../../setup/servomap.csv
 body.servos.publish,tcp://*:5503
 body.servos.subscribers,tcp://127.0.0.1:5500
 body.commander.publish,tcp://*:5502
-body.commander.subscribers,"tcp://192.168.2.115:5504"
+body.commander.subscribers,"tcp://192.168.2.113:5504"
 body.verbose,true
 commander.publish,tcp://*:5504
 commander.subscribers,"tcp://192.168.2.101:5502"
 lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"900"
 lidar.provider.verbose,"true"
-kinect.requester.address,"192.168.2.101"
+kinect.requester.address,"192.168.2.100"
+kinect.requester.verbose,"false"
 kinect.provider.sleep_time,"500"
 kinect.provider.verbose,"false"
 kinect.requester.verbose,"false"
