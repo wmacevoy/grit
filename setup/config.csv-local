@@ -14,3 +14,10 @@ body.commander.subscribers,"tcp://127.0.0.1:5504"
 body.verbose,true
 commander.publish,tcp://*:5504
 commander.subscribers,"tcp://127.0.0.1:5502"
+lidar.provider.dev_path,"/dev/ttyACM0"
+lidar.provider.sleep_time,"900"
+lidar.provider.verbose,"true"
+kinect.requester.address,"192.168.2.101"
+kinect.provider.sleep_time,"500"
+kinect.provider.verbose,"false"
+kinect.requester.verbose,"false"
