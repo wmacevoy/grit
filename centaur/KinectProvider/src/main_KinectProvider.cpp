@@ -198,7 +198,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("kinect.provider.verbose", false);
 	if (verbose) cfg.show();
 	
-	sleep_time = (int)cfg.num("kinect.provider.sleep_time", 25);
+	sleep_time = (int)cfg.num("kinect.provider.sleep_time", 100);
 
 	int res;
 	int hwm = 1;

@@ -2,4 +2,5 @@
 	$(MAKE) -C commander $@
 	$(MAKE) -C HokuyoRequester $@
 	$(MAKE) -C KinectRequester $@
-	$(MAKE) -C glove $@
+	$(MAKE) -C glovePublisher $@
+	$(MAKE) -C leapPublisher $@
