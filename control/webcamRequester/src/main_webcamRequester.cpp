@@ -23,8 +23,6 @@ const int sz_mat = 640*480*1;
 
 int64_t* lidar_data;
 
-
-
 const int sz_lidar_data  = 1081;
 
 volatile int mx = 0;
@@ -74,9 +72,9 @@ void quitproc(int param)
 int main(int argc, char** argv)
 {
 	cfg.path("../../setup");
-	cfg.args("webcam.provider.", argv);
+	cfg.args("webcam.requester.", argv);
 	if (argc == 1) cfg.load("config.csv");
-	verbose = cfg.flag("webcam.provider.verbose", false);
+	verbose = cfg.flag("webcam.requester.verbose", false);
 	if (verbose) cfg.show();
 	
 	int hwm = 1;
