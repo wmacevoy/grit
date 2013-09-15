@@ -5,7 +5,9 @@
 #include <signal.h>
 #include <assert.h>
 #include <zmq.h>
-//#include "Configure.h"
+#include "Configure.h"
+
+Configure cfg;
 
 using namespace cv;
 
@@ -26,18 +28,20 @@ void quitproc(int param)
 
 int main(int argc, char** argv)
 {
-	//cfg.path("../../setup");
-	//cfg.args("webcam.provider.", argv);
-	//if (argc == 1) cfg.load("config.csv");
-	//verbose = cfg.flag("webcam.provider.verbose", false);
-	//if (verbose) cfg.show();
+	cfg.path("../../setup");
+	cfg.args("webcam.provider.", argv);
+	if (argc == 1) cfg.load("config.csv");
+	verbose = cfg.flag("webcam.provider.verbose", false);
+	if (verbose) cfg.show();
+
+	int index = cfg.num("webcam.provider.index", 1);
 
 	int hwm = 1;
 	int rc = 0;
 	Mat frame;
 	Mat gray;
 	
-	VideoCapture capture(1);
+	VideoCapture capture(index);
 	if(!capture.isOpened())
 	{
 		if(verbose) std::cout << "ERROR: capture is NULL \n";

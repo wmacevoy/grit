@@ -82,6 +82,7 @@ int main(int argc, char** argv)
 	int hwm = 1;
 	int rcm = 0;
 	int rcl = 0;
+	int index = 0;
 	Mat gray(480, 640, 0);
 	std::string winName = "ICU";
 	std::string text = "0";
