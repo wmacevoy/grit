@@ -1,10 +1,13 @@
 #include "opencv2/opencv.hpp"
+#include "cv.h"
+#include "highgui.h"
 #include <iostream>
 #include <signal.h>
 
 using namespace cv;
 
 bool die = false;
+bool verbose = false;
 
 void quitproc(int param)
 {
@@ -15,13 +18,14 @@ void quitproc(int param)
 int main(int argc, char** argv)
 {
 	Mat frame;
+	Mat gray;
 	std::string winName = "ICU";
 	namedWindow(winName, WINDOW_KEEPRATIO);
 	
 	VideoCapture capture(1);
 	if(!capture.isOpened())
 	{
-		std::cout << "ERROR: capture is NULL \n";
+		if(verbose) std::cout << "ERROR: capture is NULL \n";
 		return 1;
 	}
 
@@ -31,10 +35,12 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		capture >> frame;
-		imshow(winName, frame);
+		cvtColor(frame, gray, CV_RGB2GRAY);
+		imshow(winName, gray);
 		char c = waitKey(100);
 		if(c == 'q') die = 1;
-		std::cout << frame.size() << std::endl;
+		if(verbose) std::cout << frame.channels() << " " << frame.depth() << std::endl;
+		if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
 	}
 
 	//Cleanup
