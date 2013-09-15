@@ -83,13 +83,13 @@ int main(int argc, char** argv)
 	std::string text = "0";
 	namedWindow(winName, CV_WINDOW_AUTOSIZE);
 	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
-	double fontScale = 1;
+	double fontScale = 0.75;
 	int thickness = 2;
 	std::string ip1 = "tcp://";
 	std::string ip2 = "tcp://";
 
-	//ip1 += cfg.str("kinect.requester.address", "localhost");
-	//ip2 += cfg.str("kinect.requester.address", "localhost");
+	//ip1 += cfg.str("webcam.requester.address", "localhost");
+	//ip2 += cfg.str("webcam.requester.address", "localhost");
 	
 	ip1 += ":9993";
 	ip2 += ":9997";
@@ -128,15 +128,12 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		subscribe(gray, sub_mat);
-
-		//Check if mouse is in lidar bounds
+		line(gray, pt1, pt2, Scalar(0, 0, 0)); //Needs to be calibrated with lidar
 		if(inside)
 		{		
 			text = "X: " + convstr(mx) + " Y: " + convstr(my);
 			putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 		}
-
-		line(gray, pt1, pt2, Scalar(0, 0, 0)); //Needs to be calibrated with lidar
 		imshow(winName, gray);
 		char c = waitKey(200);
 		if(c == 'q') die = true;
