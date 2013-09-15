@@ -2945,14 +2945,16 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 #define SWIGTYPE_p_Legs swig_types[3]
 #define SWIGTYPE_p_Neck swig_types[4]
 #define SWIGTYPE_p_RightArm swig_types[5]
-#define SWIGTYPE_p_char swig_types[6]
-#define SWIGTYPE_p_std__ostream swig_types[7]
-#define SWIGTYPE_p_std__shared_ptrT_Body_t swig_types[8]
-#define SWIGTYPE_p_std__shared_ptrT_ServoController_t swig_types[9]
-#define SWIGTYPE_p_std__shared_ptrT_Servo_t swig_types[10]
-#define SWIGTYPE_p_std__string swig_types[11]
-static swig_type_info *swig_types[13];
-static swig_module_info swig_module = {swig_types, 12, 0, 0, 0, 0};
+#define SWIGTYPE_p_SPBodyMover swig_types[6]
+#define SWIGTYPE_p_SPServo swig_types[7]
+#define SWIGTYPE_p_SPServoController swig_types[8]
+#define SWIGTYPE_p_char swig_types[9]
+#define SWIGTYPE_p_std__ostream swig_types[10]
+#define SWIGTYPE_p_std__shared_ptrT_Body_t swig_types[11]
+#define SWIGTYPE_p_std__shared_ptrT_Servo_t swig_types[12]
+#define SWIGTYPE_p_std__string swig_types[13]
+static swig_type_info *swig_types[15];
+static swig_module_info swig_module = {swig_types, 14, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3726,7 +3728,7 @@ SWIGINTERN PyObject *Swig_var_cfg_get(void) {
 SWIGINTERN int Swig_var_servoController_set(PyObject *_val) {
   {
     void *argp = 0;
-    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__shared_ptrT_ServoController_t,  0  | 0);
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_SPServoController,  0  | 0);
     if (!SWIG_IsOK(res)) {
       SWIG_exception_fail(SWIG_ArgError(res), "in variable '""servoController""' of type '""SPServoController""'");
     }
@@ -3748,7 +3750,7 @@ fail:
 SWIGINTERN PyObject *Swig_var_servoController_get(void) {
   PyObject *pyobj = 0;
   
-  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&servoController), SWIGTYPE_p_std__shared_ptrT_ServoController_t,  0 );
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&servoController), SWIGTYPE_p_SPServoController,  0 );
   return pyobj;
 }
 
@@ -3783,6 +3785,36 @@ SWIGINTERN PyObject *Swig_var_body_get(void) {
 }
 
 
+SWIGINTERN int Swig_var_mover_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_SPBodyMover,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""mover""' of type '""SPBodyMover""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""mover""' of type '""SPBodyMover""'");
+    } else {
+      SPBodyMover * temp;
+      temp  = reinterpret_cast< SPBodyMover * >(argp);
+      mover = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_mover_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&mover), SWIGTYPE_p_SPBodyMover,  0 );
+  return pyobj;
+}
+
+
 SWIGINTERN PyObject *_wrap_servo(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::string arg1 ;
@@ -3806,7 +3838,7 @@ SWIGINTERN PyObject *_wrap_servo(PyObject *SWIGUNUSEDPARM(self), PyObject *args)
     }
   }
   result = servo(arg1);
-  resultobj = SWIG_NewPointerObj((new SPServo(static_cast< const SPServo& >(result))), SWIGTYPE_p_std__shared_ptrT_Servo_t, SWIG_POINTER_OWN |  0 );
+  resultobj = SWIG_NewPointerObj((new SPServo(static_cast< const SPServo& >(result))), SWIGTYPE_p_SPServo, SWIG_POINTER_OWN |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -3843,11 +3875,13 @@ static swig_type_info _swigt__p_LeftArm = {"_p_LeftArm", "LeftArm *", 0, 0, (voi
 static swig_type_info _swigt__p_Legs = {"_p_Legs", "Legs *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Neck = {"_p_Neck", "Neck *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_RightArm = {"_p_RightArm", "RightArm *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_SPBodyMover = {"_p_SPBodyMover", "SPBodyMover *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_SPServo = {"_p_SPServo", "SPServo *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_SPServoController = {"_p_SPServoController", "SPServoController *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__ostream = {"_p_std__ostream", "std::ostream *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_Body_t = {"_p_std__shared_ptrT_Body_t", "SPBody *|std::shared_ptr< Body > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__shared_ptrT_ServoController_t = {"_p_std__shared_ptrT_ServoController_t", "std::shared_ptr< ServoController > *|SPServoController *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__shared_ptrT_Servo_t = {"_p_std__shared_ptrT_Servo_t", "std::shared_ptr< Servo > *|SPServo *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_Servo_t = {"_p_std__shared_ptrT_Servo_t", "std::shared_ptr< Servo > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -3857,10 +3891,12 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Legs,
   &_swigt__p_Neck,
   &_swigt__p_RightArm,
+  &_swigt__p_SPBodyMover,
+  &_swigt__p_SPServo,
+  &_swigt__p_SPServoController,
   &_swigt__p_char,
   &_swigt__p_std__ostream,
   &_swigt__p_std__shared_ptrT_Body_t,
-  &_swigt__p_std__shared_ptrT_ServoController_t,
   &_swigt__p_std__shared_ptrT_Servo_t,
   &_swigt__p_std__string,
 };
@@ -3871,10 +3907,12 @@ static swig_cast_info _swigc__p_LeftArm[] = {  {&_swigt__p_LeftArm, 0, 0, 0},{0,
 static swig_cast_info _swigc__p_Legs[] = {  {&_swigt__p_Legs, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Neck[] = {  {&_swigt__p_Neck, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_RightArm[] = {  {&_swigt__p_RightArm, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_SPBodyMover[] = {  {&_swigt__p_SPBodyMover, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_SPServo[] = {  {&_swigt__p_SPServo, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_SPServoController[] = {  {&_swigt__p_SPServoController, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__ostream[] = {  {&_swigt__p_std__ostream, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_Body_t[] = {  {&_swigt__p_std__shared_ptrT_Body_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__shared_ptrT_ServoController_t[] = {  {&_swigt__p_std__shared_ptrT_ServoController_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_Servo_t[] = {  {&_swigt__p_std__shared_ptrT_Servo_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
 
@@ -3885,10 +3923,12 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Legs,
   _swigc__p_Neck,
   _swigc__p_RightArm,
+  _swigc__p_SPBodyMover,
+  _swigc__p_SPServo,
+  _swigc__p_SPServoController,
   _swigc__p_char,
   _swigc__p_std__ostream,
   _swigc__p_std__shared_ptrT_Body_t,
-  _swigc__p_std__shared_ptrT_ServoController_t,
   _swigc__p_std__shared_ptrT_Servo_t,
   _swigc__p_std__string,
 };
@@ -4595,6 +4635,7 @@ SWIG_init(void) {
   SWIG_addvarlink(SWIG_globals(),(char*)"cfg",Swig_var_cfg_get, Swig_var_cfg_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"servoController",Swig_var_servoController_get, Swig_var_servoController_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"body",Swig_var_body_get, Swig_var_body_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"mover",Swig_var_mover_get, Swig_var_mover_set);
 #if PY_VERSION_HEX >= 0x03000000
   return m;
 #else
