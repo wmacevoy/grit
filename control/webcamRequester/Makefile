@@ -1,6 +1,8 @@
-CFLAGS = `pkg-config --cflags opencv`
-LIBS = `pkg-config --libs opencv` -lzmq -lrt
+DRIVER_DEPS=utilities zmqpp centaur
 
-all:
-	g++ $(CFLAGS) -c src/main_webcamRequester.cpp -o webcamRequester.o
-	g++ webcamRequester.o $(LIBS) -o webcamRequester
+MY_FLAGS=`pkg-config --cflags opencv`
+MY_LIBS=`pkg-config --libs opencv`
+
+all : libs progs
+
+include ../rules.mk

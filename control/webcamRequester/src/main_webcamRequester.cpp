@@ -9,9 +9,11 @@
 #include <sstream>
 #include <iomanip>
 
-//#include "Configure.h"
+#include "Configure.h"
 
 using namespace cv;
+
+Configure cfg;
 
 bool die = false;
 bool inside = false;
@@ -20,6 +22,8 @@ bool verbose = false;
 const int sz_mat = 640*480*1;
 
 int64_t* lidar_data;
+
+
 
 const int sz_lidar_data  = 1081;
 
@@ -69,11 +73,11 @@ void quitproc(int param)
 
 int main(int argc, char** argv)
 {
-	//cfg.path("../../setup");
-	//cfg.args("webcam.provider.", argv);
-	//if (argc == 1) cfg.load("config.csv");
-	//verbose = cfg.flag("webcam.provider.verbose", false);
-	//if (verbose) cfg.show();
+	cfg.path("../../setup");
+	cfg.args("webcam.provider.", argv);
+	if (argc == 1) cfg.load("config.csv");
+	verbose = cfg.flag("webcam.provider.verbose", false);
+	if (verbose) cfg.show();
 	
 	int hwm = 1;
 	int rcm = 0;
@@ -88,8 +92,8 @@ int main(int argc, char** argv)
 	std::string ip1 = "tcp://";
 	std::string ip2 = "tcp://";
 
-	//ip1 += cfg.str("webcam.requester.address", "localhost");
-	//ip2 += cfg.str("webcam.requester.address", "localhost");
+	ip1 += cfg.str("webcam.requester.address", "localhost");
+	ip2 += cfg.str("webcam.requester.address", "localhost");
 	
 	ip1 += ":9993";
 	ip2 += ":9997";
@@ -108,8 +112,8 @@ int main(int argc, char** argv)
 	rcl = zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0);
 	assert(rcm == 0 && rcl == 0);
 
-	rcm = zmq_connect(sub_mat, "tcp://localhost:9993");
-	rcl = zmq_connect(sub_lidar, "tcp://localhost:9997");
+	rcm = zmq_connect(sub_mat, ip1.c_str());
+	rcl = zmq_connect(sub_lidar, ip2.c_str());
 	assert(rcm == 0 && rcl == 0);	
 
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
