@@ -1,13 +1,19 @@
-#include "opencv2/core/core.hpp"
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/opencv.hpp"
 #include <iostream>
+#include <signal.h>
 
 using namespace cv;
 
+bool die = false;
+
+void quitproc(int param)
+{
+	std::cout << "Quitting..." << std::endl;
+	die = true;
+}
+
 int main(int argc, char** argv)
 {
-	bool die = false;
 	Mat frame;
 	std::string winName = "ICU";
 	namedWindow(winName, WINDOW_KEEPRATIO);
@@ -19,12 +25,16 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
+	signal(SIGINT, quitproc);
+	signal(SIGQUIT, quitproc);
+
 	while(!die)
 	{
 		capture >> frame;
 		imshow(winName, frame);
-		char c = waitKey(5);
+		char c = waitKey(100);
 		if(c == 'q') die = 1;
+		std::cout << frame.size() << std::endl;
 	}
 
 	//Cleanup
