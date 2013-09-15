@@ -3,4 +3,5 @@
 	#$(MAKE) -C HokuyoRequester $@
 	#$(MAKE) -C KinectRequester $@
 	$(MAKE) -C glovePublisher $@
-	$(MAKE) -C leapPublisher $@
+	$(MAKE) -C webcamRequester $@
+	#$(MAKE) -C leapPublisher $@

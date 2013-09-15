@@ -21,13 +21,9 @@
 #include "Configure.h"
 #include "ServoController.h"
 #include "Body.h"
-
-typedef std::shared_ptr < ServoController > SPServoController;
-typedef std::shared_ptr < Servo > SPServo;
-typedef std::shared_ptr < Body > SPBody;
+#include "BodyMover.h"
 
 extern bool verbose;
-
 extern double simTime;
 extern double simSpeed;
 extern double realTime;
@@ -35,6 +31,6 @@ extern Configure cfg;
 
 extern SPServoController servoController;
 extern SPBody body;
+extern SPBodyMover mover;
 
 extern SPServo servo(std::string name);
-

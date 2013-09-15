@@ -16,6 +16,7 @@ Configure cfg;
 SPServoController servoController;
 
 SPBody body;
+SPBodyMover mover;
 
 SPServo servo(std::string name)
 {

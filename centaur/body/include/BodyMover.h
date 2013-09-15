@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Body.h"
 #include "LegsMover.h"
 #include "ServoMover.h"
@@ -14,4 +16,7 @@ class BodyMover
   NeckMover neck;
   ArmMover left,right;
   void move(Body &body);
+  bool load(const std::string &file);
 };
+
+typedef std::shared_ptr < BodyMover > SPBodyMover;
