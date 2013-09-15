@@ -8,6 +8,8 @@ setup_kinect_dependencies_all.sh - install required packages for freenect
 
 setup_environment_kinect.sh - sets up for kinect (run once, after running fullbuild.sh in the freenect folder)
 
+setup_leap.sh - Install leap package
+
 Configs for build/run environments
 
 config.mk -- top level build (make flag) configuration file
