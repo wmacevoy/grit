@@ -6,12 +6,15 @@
 #include <assert.h>
 #include <string>
 #include <zmq.h>
+#include <sstream>
+#include <iomanip>
 
 //#include "Configure.h"
 
 using namespace cv;
 
 bool die = false;
+bool inside = false;
 bool verbose = false;
 
 const int sz_mat = 640*480*1;
@@ -19,6 +22,16 @@ const int sz_mat = 640*480*1;
 int64_t* lidar_data;
 
 const int sz_lidar_data  = 1081;
+
+volatile int mx = 0;
+volatile int my = 0;
+
+std::string convstr(const float t)
+{
+	std::stringstream ftoa;
+	ftoa << std::setprecision(3) << std::setw(4) << t;
+	return ftoa.str();
+}
 
 void subscribe(Mat& mat, void* zmq_sub)
 {
@@ -31,6 +44,21 @@ void subscribe_lidar(void* zmq_sub)
 	if(verbose) printf("waiting for lidar data...\n");
 	int rc = zmq_recv(zmq_sub, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);
 	if(verbose && rc > 0) printf("received lidar data!\n");
+}
+
+void mouseEvent(int evt, int x, int y, int flags, void* param)
+{
+	if(evt == CV_EVENT_MOUSEMOVE)
+	{
+		if(x >=0 && x <= 640 && y >= 195 && y <= 205)
+		{
+			mx = x;
+			my = y;
+			inside = true;
+		}
+		else
+			inside = false;
+	}
 }
 
 void quitproc(int param)
@@ -52,7 +80,11 @@ int main(int argc, char** argv)
 	int rcl = 0;
 	Mat gray(480, 640, 0);
 	std::string winName = "ICU";
+	std::string text = "0";
 	namedWindow(winName, CV_WINDOW_AUTOSIZE);
+	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
+	double fontScale = 1;
+	int thickness = 2;
 	std::string ip1 = "tcp://";
 	std::string ip2 = "tcp://";
 
@@ -80,19 +112,31 @@ int main(int argc, char** argv)
 	rcl = zmq_connect(sub_lidar, "tcp://localhost:9997");
 	assert(rcm == 0 && rcl == 0);	
 
+	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
+	assert(lidar_data != NULL);
+
 	signal(SIGINT, quitproc);
 	signal(SIGQUIT, quitproc);
 
 	//Line on screen needs to be calibrated with lidar
 	Point pt1(0, 200);
 	Point pt2(640, 200);
+	Point textOrg(1, 30);
+
+	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
 	while(!die)
 	{
 		subscribe(gray, sub_mat);
 
-		line(gray, pt1, pt2, Scalar(0, 0, 255));
+		//Check if mouse is in lidar bounds
+		if(inside)
+		{		
+			text = "X: " + convstr(mx) + " Y: " + convstr(my);
+			putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+		}
 
+		line(gray, pt1, pt2, Scalar(0, 0, 0)); //Needs to be calibrated with lidar
 		imshow(winName, gray);
 		char c = waitKey(200);
 		if(c == 'q') die = true;
