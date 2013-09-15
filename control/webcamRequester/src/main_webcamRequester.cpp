@@ -4,6 +4,7 @@
 #include <iostream>
 #include <signal.h>
 #include <assert.h>
+#include <string>
 #include <zmq.h>
 
 //#include "Configure.h"
@@ -40,6 +41,7 @@ int main(int argc, char** argv)
 	Mat gray(480, 640, 0);
 	std::string winName = "ICU";
 	namedWindow(winName, WINDOW_KEEPRATIO);
+	std::string ip = "tcp://";
 
 	void* context_mat = zmq_ctx_new ();
 	
@@ -68,7 +70,7 @@ int main(int argc, char** argv)
 		subscribe(gray, sub_mat);
 		imshow(winName, gray);
 		char c = waitKey(100);
-		if(c == 'q') die = 1;
+		if(c == 'q') die = true;
 	}
 
 	destroyWindow(winName);
