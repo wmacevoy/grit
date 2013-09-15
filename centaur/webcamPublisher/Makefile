@@ -1,6 +1,9 @@
-CFLAGS = `pkg-config --cflags opencv`
-LIBS = `pkg-config --libs opencv` -lzmq -lrt
+all : progs
 
-all:
-	g++ $(CFLAGS) -c src/main_webcamPublisher.cpp -o webcamPublisher.o
-	g++ webcamPublisher.o $(LIBS) -o webcamPublisher
+DEPS=
+DRIVER_DEPS=utilities
+
+MY_FLAGS=`pkg-config --cflags opencv`
+MY_LIBS=`pkg-config --libs opencv`
+
+include ../rules.mk
