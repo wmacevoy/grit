@@ -1,5 +1,5 @@
 name,value
-servos.verbose,true
+servos.verbose,false
 servos.type,real
 servos.deviceindex,1
 servos.baudnum,34
