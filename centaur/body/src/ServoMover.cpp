@@ -51,29 +51,29 @@ void ServoMover::move(Servo &servo)
 
     ++after;
     if (after == angles.end()) {
-      cout << "wrapped newTime" << endl;
+//      cout << "wrapped newTime" << endl;
       after=angles.begin();
     }
     newTime = after->first;
     if (newTime < oldTime) {
-      cout << "shift newTime by T=" << T << endl;
+//      cout << "shift newTime by T=" << T << endl;
       newTime += T;
     }
     newAngle = after->second; 
     ++after;
     if (after == angles.end()) {
-      cout << "wrapped newTime2" << endl;
+//      cout << "wrapped newTime2" << endl;
       after=angles.begin();
     }
     newTime2 = after->first;
     if (newTime2 < oldTime) {
-      cout << "shift newTime2 by T=" << T << endl;
+//      cout << "shift newTime2 by T=" << T << endl;
       newTime2 += T;
     }
     newAngle2 = after->second;
 
-    cout << "time oldTime=" << oldTime << " newTime=" << newTime << " newTime2=" << newTime2 << endl;
-    cout << "time oldAngle=" << oldAngle << " newAngle=" << newAngle << " newAngle2=" << newAngle2 << endl;
+//    cout << "time oldTime=" << oldTime << " newTime=" << newTime << " newTime2=" << newTime2 << endl;
+//    cout << "time oldAngle=" << oldAngle << " newAngle=" << newAngle << " newAngle2=" << newAngle2 << endl;
       
     double realTimeNow  = realTime;
 

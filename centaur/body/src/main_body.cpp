@@ -83,13 +83,13 @@ public:
 	void *sub = zmq_socket(context, ZMQ_SUB);
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	
-	if (zmq_connect(sub, "tcp://192.168.2.115:6689") != 0)
+	if (zmq_connect(sub, "tcp://192.168.2.113:6689") != 0)
 	{
 		printf("Error initializing 0mq...\n");
 		return;
 	}
 	
-	cout << "starting hands control." << endl;
+//	cout << "starting hands control." << endl;
 	while(hands_on)
 	{
 			subscribe(sub, &manos);
@@ -101,10 +101,10 @@ public:
 			mover->right.middle.setup(manos.rmiddle);
 			mover->right.ring.setup(manos.rring);
 			mover->right.thumb.setup(manos.rthumb);
-			cout << "adjusted hands." << endl;
+//			cout << "adjusted hands (rthumb=" << manos.rthumb << ")." << endl;
 			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
-	cout << "ending hands control." << endl;	
+//	cout << "ending hands control." << endl;	
 	zmq_close(sub);
 	zmq_ctx_destroy(context);
   }
@@ -426,7 +426,7 @@ public:
       realTime = now();
       simTime += simSpeed*(realTime-lastRealTime);
       if (floor(realTime) != floor(lastRealTime)) {
-	cout << "delta=" << delta_bar << " sigma=" << sqrt(delta2_bar - delta_bar*delta_bar) << " max=" << max_delta << endl;
+//	cout << "delta=" << delta_bar << " sigma=" << sqrt(delta2_bar - delta_bar*delta_bar) << " max=" << max_delta << endl;
 	max_delta=0;
       }
       realTime = now();
