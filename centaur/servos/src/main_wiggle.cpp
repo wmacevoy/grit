@@ -7,9 +7,13 @@
 #include "CreateFakeServoController.h"
 #include "CreateZMQServoController.h"
 #include "CreateDynamixelServoController.h"
+#include "Configure.h"
 #include "now.h"
 
 using namespace std;
+
+Configure cfg;
+bool verbose;
 
 volatile bool running = true;
 
@@ -19,6 +23,12 @@ void SigIntHandler(int arg) {
 
 int main(int argc, char **argv)
 {
+  cfg.path("../../setup");
+  cfg.args("servos.",argv);
+  if (argc == 1) cfg.load("config.csv");
+  verbose = cfg.flag("servos.verbose",false);
+  if (verbose) cfg.show();
+
   string use_controller="zmq";
   string me = "tcp://*:5501";
   string server = "tcp://localhost:5500";
@@ -127,7 +137,7 @@ int main(int argc, char **argv)
   }
   if (use_controller == "dynamixel") {
     cout << "dynamixel controller device index " << deviceIndex << " baud number " << baudNum << endl;
-    controller = shared_ptr<ServoController>(CreateDynamixelServoController(deviceIndex,baudNum));    
+    controller = shared_ptr<ServoController>(CreateDynamixelServoController(cfg,deviceIndex,baudNum));    
   }
   shared_ptr<Servo> servo(controller->servo(servoId));
 

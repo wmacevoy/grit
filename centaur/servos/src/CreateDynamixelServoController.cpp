@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "ServoController.h"
+#include "Configure.h"
 
 #define USE_BROADCAST 1
 
@@ -42,16 +43,21 @@ struct DynamixelServo : Servo
   int goalSpeed;
   int goalTorque;
   bool readNextPosition;
+  float minSpeed;
+  float minTorque;
 
   bool curveMode;
   double t[2];
   float c0[3],c1[3];
 
-  DynamixelServo(DXLIO &io_, int id_) 
+  DynamixelServo(Configure &cfg, DXLIO &io_, int id_) 
     : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
   {
+    minSpeed = atof(cfg.servo(id,"speed").c_str());
+    minTorque = atof(cfg.servo(id,"torque").c_str());
     presentSpeed = 0;
     presentTorque = 0;
+ //   cout << "create dynamixel servo id = " << id << " minSeed=" << minSpeed << " minTorque=" << minTorque << endl;
     angle(0.0);
     speed(30.0);
     torque(0.10);
@@ -94,6 +100,10 @@ struct DynamixelServo : Servo
   void speed(float value) {
     // speed for MX-110t (not MX-28t)
     //    cout << "id=" << id << " set speed = " << value << endl;
+    if (fabs(value) < minSpeed) {
+      if (value < 0) value=-minSpeed;
+      else value = minSpeed;
+    }
     goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07);
     if (goalSpeed > 480) goalSpeed = 480;
   }
@@ -104,6 +114,10 @@ struct DynamixelServo : Servo
 
   void torque(float value) {
     //    cout << "id=" << id << " set torque = " << value << endl;
+    value = fabs(value);
+    if (0 < value && value < minTorque) {
+      value = minTorque;
+    }
     goalTorque = fabs(value)*(1023);
     if (goalTorque > 1023) goalTorque = 1023;
   }
@@ -143,7 +157,7 @@ struct DynamixelServo : Servo
   }
   void getPosition() {
 	  if (readNextPosition) rx();
-	  cout << "from Servo:"<< id << ",P," << presentPosition << ",S," << presentSpeed <<",T," << presentTorque << endl; 
+//	  cout << "from Servo:"<< id << ",P," << presentPosition << ",S," << presentSpeed <<",T," << presentTorque << endl; 
   }
 
   void update()
@@ -160,6 +174,7 @@ struct DynamixelServo : Servo
 
 struct DynamixelServoController : ServoController
 {
+  Configure &cfg;
   DXLIO io;
   typedef std::map < int , std::shared_ptr <DynamixelServo> > Servos;
   Servos servos;
@@ -170,7 +185,7 @@ struct DynamixelServoController : ServoController
     assert(running == false);
 
     return &*(servos[id] = 
-	      std::shared_ptr <DynamixelServo> (new DynamixelServo(io,id)));
+	      std::shared_ptr <DynamixelServo> (new DynamixelServo(cfg,io,id)));
   }
 
   int countServosInRange(int lower,int upper) {
@@ -192,12 +207,12 @@ struct DynamixelServoController : ServoController
 	dxl_set_txpacket_parameter(1, L);   // L bytes sent to each Dynamixel 
 	dxl_set_txpacket_length((L+1)*N+4); // bytes in packet exc. Header
 	int i = 0;
-	std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
-	std::cout.precision(5);
-	if (output) {
-	  cout << endl;
-	  cout << "t," << setprecision(15) << t << ",";
-	}
+//	std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
+//	std::cout.precision(5);
+//	if (output) {
+//	  cout << endl;
+//	  cout << "t," << setprecision(15) << t << ",";
+//	}
 	for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
 	  int id = k->first;
 	  if (id>=lower && id<=upper)  {
@@ -216,28 +231,24 @@ struct DynamixelServoController : ServoController
 			  dt = t-servo->t[0];
 			} else {
 			  dt = servo->t[1]-servo->t[0];
-			  cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
+//			  cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
 			}
 			double dt2 = dt*dt;
 			float *c = (dt <= 0) ? servo->c0 : servo->c1;
 			float angle = c[0]+c[1]*dt+c[2]*dt2/2.0;
 			float speed = 1.1*(c[1]+c[2]*dt);
 			servo->angle0(angle);
-			if (fabs(speed) < 5) {
-			  if (speed < 0) speed=-5;
-			  else speed=5;
-			}
 			servo->speed(speed);
 			//			servo->presentPosition = servo->goalPosition;
 		  }
 		  int position = servo->goalPosition & 4095;
-	//	  int speed = servo->goalSpeed;
+		  int speed = servo->goalSpeed;
 	//	  int position = 2048;
-	      int speed = 90;
+	//      int speed = 300;
 		  if (output) {
 			cout << "id,"<<servo->id << "," << position << "," << speed << ",";
 		  }
-	      cout << "ID " << id << " sent a position of " << position <<  "  speed " << speed << endl;
+//	      cout << "ID " << id << " sent a position of " << position <<  "  speed " << speed << endl;
 
 		  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 		  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
@@ -247,7 +258,7 @@ struct DynamixelServoController : ServoController
 	    ++i;
       }
 	}
-	cout << "Packet " << endl;
+//	cout << "Packet " << endl;
 	dxl_txrx_packet();
 	int result = dxl_get_result(); 
 
@@ -273,7 +284,7 @@ struct DynamixelServoController : ServoController
 
 	dxl_set_txpacket_id(BROADCAST_ID);
 	dxl_set_txpacket_instruction(INST_SYNC_WRITE);
-	dxl_set_txpacket_parameter(0, DXL_GOAL_TORQUE_WORD);
+	dxl_set_txpacket_parameter(0, DXL_TORQUE_WORD);
 	dxl_set_txpacket_parameter(1, L);   // L bytes sent to each Dynamixel 
 	dxl_set_txpacket_length((L+1)*N+4); // bytes in packet exc. Header
 	int i = 0;
@@ -281,16 +292,16 @@ struct DynamixelServoController : ServoController
 	  int id = k->first;
 	  if (id>=lower && id<=upper) {
 	    DynamixelServo *servo = &*k->second;
-	    int torque = 1000; // servo->goalTorque;  
+	    int torque = 1023; // servo->goalTorque;  
 //	    int torque = servo->goalTorque;  
 	    dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	    dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(torque));
 	    dxl_set_txpacket_parameter(i*(L+1)+4,dxl_get_highbyte(torque));
-	    cout << "ID " << id << " sent a torque of " << torque << endl;
+//	    cout << "ID " << id << " sent a torque of " << torque << endl;
 	    ++i;
       }
 	}
-	cout << "Packet " << endl;
+//	cout << "Packet " << endl;
 	dxl_txrx_packet();
 	int result = dxl_get_result(); 
 
@@ -318,11 +329,11 @@ struct DynamixelServoController : ServoController
 	    int torque = servo->goalTorque;  
 	    dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	    dxl_set_txpacket_parameter(i*(L+1)+3,(torque != 0));
-	    cout << "Enable servo " << id << " is " << (torque != 0) << endl;
+//	    cout << "Enable servo " << id << " is " << (torque != 0) << endl;
 	    ++i;
 	  }
 	}
-	cout << "Packet " << endl;
+//	cout << "Packet " << endl;
 	dxl_txrx_packet();
 	int result = dxl_get_result(); 
 
@@ -361,7 +372,7 @@ struct DynamixelServoController : ServoController
 	    broadcastSpeedPosition(output,t,t1,60,69,broadcastCount);
         broadcastCount--;
 	    if (broadcastCount<0)  {
-	      broadcastCount=100;  // every 100th time actually check servos
+	      broadcastCount=1000;  // every 100th time actually check servos
 	    }
 	  }
 #else
@@ -382,8 +393,8 @@ struct DynamixelServoController : ServoController
     }
   }
 
-  DynamixelServoController(int deviceIndex, int baudNum)
-    : io(deviceIndex,baudNum)
+  DynamixelServoController(Configure &cfg_, int deviceIndex, int baudNum)
+    : cfg(cfg_), io(deviceIndex,baudNum)
   {
     running = false;
   }
@@ -398,7 +409,7 @@ struct DynamixelServoController : ServoController
   }
 };
 
-ServoController* CreateDynamixelServoController(int deviceIndex,int baudNum)
+ServoController* CreateDynamixelServoController(Configure &cfg, int deviceIndex,int baudNum)
 {
-  return new DynamixelServoController(deviceIndex,baudNum);
+  return new DynamixelServoController(cfg, deviceIndex,baudNum);
 }

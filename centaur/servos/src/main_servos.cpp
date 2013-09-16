@@ -39,7 +39,7 @@ SPServo servo(string device, int id)
   }
   if (device == "real") {
     if (realServoController.get() == 0) {
-      realServoController = SPServoController(CreateDynamixelServoController(cfg.num("servos.deviceindex"),cfg.num("servos.baudnum")));
+      realServoController = SPServoController(CreateDynamixelServoController(cfg,cfg.num("servos.deviceindex"),cfg.num("servos.baudnum")));
     }
     controller=realServoController;
   }
@@ -76,6 +76,22 @@ SPServo servo(string name)
   return ans;
 }
 
+class ZMQServoPlacebo : public ZMQHub
+{
+public:
+  bool ready;
+  ZMQServoPlacebo()
+  {
+    ready=false;
+  }
+  void rx(ZMQSubscribeSocket &socket) {
+    ready = true;
+  }
+
+  void tx(ZMQPublishSocket &socket) {
+  }
+};
+
 class ZMQServoServer : public ZMQHub
 {
 public:
@@ -101,7 +117,7 @@ public:
 	cout << "rx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
       } else {
 	ZMQServoCurveMessage *curveData = (ZMQServoCurveMessage *) data;
-	cout << "rx msg id=" << curveData->messageId << " servo=" << curveData->servoId << " t=[" << curveData->t[0] << "," << curveData->t[1] << "] c0=[" << curveData->c0[0] << "," << curveData->c0[1] << "," << curveData->c0[2] << "]" << " c1=[" << curveData->c1[0] << "," << curveData->c1[1] << "," << curveData->c1[2] << "]"  << endl;
+	//cout << "rx msg id=" << curveData->messageId << " servo=" << curveData->servoId << " t=[" << curveData->t[0] << "," << curveData->t[1] << "] c0=[" << curveData->c0[0] << "," << curveData->c0[1] << "," << curveData->c0[2] << "]" << " c1=[" << curveData->c1[0] << "," << curveData->c1[1] << "," << curveData->c1[2] << "]"  << endl;
       }
     }
     switch(data->messageId) {
@@ -146,6 +162,8 @@ public:
 
 };
 
+shared_ptr < ZMQServoPlacebo > placebo;
+
 shared_ptr < ZMQServoServer > server;
 
 void SigIntHandler(int arg) {
@@ -166,6 +184,8 @@ void help()
   cout << "\t --servos [ids,...] (servo ids)" << endl;
   cout << "\t --configure [file] read csv configure file" << endl;
 }
+
+
 
 void args() 
 {
@@ -189,11 +209,26 @@ void args()
   }
 }
 
+
 void run() {
   server = shared_ptr < ZMQServoServer > (new ZMQServoServer());
+  placebo = shared_ptr < ZMQServoPlacebo > ( new ZMQServoPlacebo() );
   server->NO_SERVO = servo("fake",999);
 
   args();
+
+  placebo->rate=cfg.num("servos.rate");
+  placebo->publish=cfg.str("servos.publish");
+  placebo->subscribers=cfg.list("servos.subscribers");
+
+  placebo->start();
+  while (!placebo->ready) {
+    cout << "waiting for body messages..." << endl;
+    sleep(1);
+  }
+  placebo->stop();
+  placebo->join();
+  placebo = shared_ptr < ZMQServoPlacebo >();
 
   signal(SIGINT, SigIntHandler);
   signal(SIGTERM, SigIntHandler);
@@ -215,7 +250,6 @@ int main(int argc,char **argv) {
   if (argc == 1) cfg.load("config.csv");
   verbose = cfg.flag("servos.verbose",false);
   if (verbose) cfg.show();
-
   run();
 
   cout << "done" << endl;
