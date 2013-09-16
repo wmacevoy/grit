@@ -35,6 +35,7 @@ int main(int argc, char** argv)
 	if (verbose) cfg.show();
 
 	int index = cfg.num("webcam.provider.index", 1);
+	int sleep_time = cfg.num("webcam.provider.sleep_time", 200);
 
 	int hwm = 1;
 	int rc = 0;
@@ -68,7 +69,7 @@ int main(int argc, char** argv)
 		cvtColor(frame, gray, CV_RGB2GRAY);
 		gray.reshape(0,1);		
 		publish(gray, pub_mat);
-		waitKey(200);
+		waitKey(sleep_time);
 		if(verbose) std::cout << frame.channels() << " " << frame.depth() << std::endl;
 		if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
 	}

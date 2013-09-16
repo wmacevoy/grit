@@ -76,6 +76,8 @@ int main(int argc, char** argv)
 	if (argc == 1) cfg.load("config.csv");
 	verbose = cfg.flag("webcam.requester.verbose", false);
 	if (verbose) cfg.show();
+
+	int sleep_time = cfg.num("webcam.requester.sleep_time",200);
 	
 	int hwm = 1;
 	int rcm = 0;
@@ -138,7 +140,7 @@ int main(int argc, char** argv)
 			putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 		}
 		imshow(winName, gray);
-		char c = waitKey(200);
+		char c = waitKey(sleep_time);
 		if(c == 'q') die = true;
 	}
 
