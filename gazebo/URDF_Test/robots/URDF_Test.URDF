@@ -1,14 +1,11 @@
 <?xml version="1.0"?>
-<robot
-  name="URDF_Test">
-  <link
-    name="base_link">
+<robot name="URDF_Test">
+  <link name="base_link">
     <inertial>
       <origin
         xyz="-0.0289614768574194 -0.0201870951413994 -0.0254"
         rpy="0 0 0" />
-      <mass
-        value="0.0694146662904427" />
+      <mass value="0.0694146662904427" />
       <inertia
         ixx="3.32660943550834E-05"
         ixy="5.36393472231971E-09"
@@ -18,37 +15,26 @@
         izz="5.74285922304546E-05" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          uri="../meshes/base link.STL" />
+        <mesh filename="package://URDF_Test//meshes/base_link.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.866666666666667 0.909803921568627 1 1" />
+      <material name="mat1">
+        <color rgba="0.866666666666667 0.909803921568627 1 1" />
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          uri="../meshes/base link.STL" />
+        <mesh filename="package://URDF_Test//meshes/base_link.STL" />
       </geometry>
     </collision>
   </link>
-  <link
-    name="Hip_to_Frame">
+  <link name="Hip_to_Frame">
     <inertial>
-      <origin
-        xyz="-0.00958120637856823 0.020629271733955 0.00202823286813916"
+      <origin xyz="-0.00958120637856823 0.020629271733955 0.00202823286813916"
         rpy="0 0 0" />
-      <mass
-        value="0.166781712680389" />
+      <mass value="0.166781712680389" />
       <inertia
         ixx="0.000104668774214339"
         ixy="7.12474224135089E-07"
@@ -58,55 +44,32 @@
         izz="0.000282767001442046" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          uri="../meshes/Hip_to_Frame.STL" />
+        <mesh filename="package://URDF_Test//meshes/Hip_to_Frame.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.866666666666667 0.909803921568627 1 1" />
+      <material name="mat2">
+        <color rgba="0.866666666666667 0.909803921568627 1 1" />
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          uri="../meshes/Hip_to_Frame.STL" />
+        <mesh filename="package://URDF_Test//meshes/Hip_to_Frame.STL" />
       </geometry>
     </collision>
   </link>
-  <joint
-    name="Hip_Joint"
-    type="revolute">
-    <origin
-      xyz="-0.0508 0 -0.0254"
-      rpy="3.14159265358979 0 0" />
-    <parent
-      link="base link" />
-    <child
-      link="Hip_to_Frame" />
-    <axis
-      xyz="0 1 0" />
-    <limit
-      "lower"="-3.14159"
-      "upper"="3.14159"
-    />
-
+  <joint name="Hip_Joint" type="revolute">
+    <origin xyz="-0.0508 0 -0.0254" rpy="3.14159265358979 0 0" />
+    <parent link="base_link" />
+    <child link="Hip_to_Frame" />
+    <axis xyz="0 1 0" />
+    <limit effort="1000" velocity="1000" lower="-3.14159" upper="3.14159" />
   </joint>
-  <link
-    name="Frame_to_Femur">
+  <link name="Frame_to_Femur">
     <inertial>
-      <origin
-        xyz="-0.0811442933383664 0.0263711529247446 0.0249709877832928"
-        rpy="0 0 0" />
-      <mass
-        value="0.224333333871537" />
+      <origin xyz="-0.0811442933383664 0.0263711529247446 0.0249709877832928" rpy="0 0 0" />
+      <mass value="0.224333333871537" />
       <inertia
         ixx="0.000150950010381523"
         ixy="-9.56650545985976E-06"
@@ -116,53 +79,32 @@
         izz="0.00211141136884642" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          uri="../meshes/Frame_to_Femur.STL" />
+        <mesh filename="package://URDF_Test//meshes/Frame_to_Femur.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.866666666666667 0.909803921568627 1 1" />
+      <material name="mat3">
+        <color rgba="0.866666666666667 0.909803921568627 1 1" />
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          uri="../meshes/Frame_to_Femur.STL" />
+        <mesh filename="package://URDF_Test//meshes/Frame_to_Femur.STL" />
       </geometry>
     </collision>
   </link>
-  <joint
-    name="FrameFemur"
-    type="revolute">
-    <origin
-      xyz="-0.032315 -0.005207 -0.021636"
-      rpy="-4.3612E-17 0.10577 -4.604E-18" />
-    <parent
-      link="Hip_to_Frame" />
-    <child
-      link="Frame_to_Femur" />
-    <axis
-      xyz="0 0 1" />
-    <limit
-      effort="0"
-      velocity="0" />
+  <joint name="FrameFemur" type="revolute">
+    <origin xyz="-0.032315 -0.005207 -0.021636" rpy="-4.3612E-17 0.10577 -4.604E-18" />
+    <parent link="Hip_to_Frame" />
+    <child link="Frame_to_Femur" />
+    <axis xyz="0 0 1" />
+    <limit effort="1000" velocity="1000" lower="0" upper="0" />
   </joint>
-  <link
-    name="Femur_to_Knee">
+  <link name="Femur_to_Knee">
     <inertial>
-      <origin
-        xyz="0.114747203406949 0.0370251106349478 0.0111735455681891"
-        rpy="0 0 0" />
-      <mass
-        value="0.130105534907908" />
+      <origin xyz="0.114747203406949 0.0370251106349478 0.0111735455681891" rpy="0 0 0" />
+      <mass value="0.130105534907908" />
       <inertia
         ixx="8.86786118819988E-05"
         ixy="6.25645725145747E-05"
@@ -172,43 +114,26 @@
         izz="0.00104724850616732" />
     </inertial>
     <visual>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          uri="../meshes/Femur_to_Knee.STL" />
+        <mesh filename="package://URDF_Test//meshes/Femur_to_Knee.STL" />
       </geometry>
-      <material
-        name="">
-        <color
-          rgba="0.866666666666667 0.909803921568627 1 1" />
+      <material name="mat4">
+        <color rgba="0.866666666666667 0.909803921568627 1 1" />
       </material>
     </visual>
     <collision>
-      <origin
-        xyz="0 0 0"
-        rpy="0 0 0" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
       <geometry>
-        <mesh
-          uri="../meshes/Femur_to_Knee.STL" />
+        <mesh filename="package://URDF_Test//meshes/Femur_to_Knee.STL" />
       </geometry>
     </collision>
   </link>
-  <joint
-    name="KneeJoint"
-    type="revolute">
-    <origin
-      xyz="-0.091603 -0.0042319 0.04512"
-      rpy="-3.1416 2.6323E-16 3.1312" />
-    <parent
-      link="Frame_to_Femur" />
-    <child
-      link="Femur_to_Knee" />
-    <axis
-      xyz="0 0 1" />
-    <limit
-      effort="0"
-      velocity="0" />
+  <joint name="KneeJoint" type="revolute">
+    <origin xyz="-0.091603 -0.0042319 0.04512" rpy="-3.1416 2.6323E-16 3.1312" />
+    <parent link="Frame_to_Femur" />
+    <child link="Femur_to_Knee" />
+    <axis xyz="0 0 1" />
+    <limit effort="1000" velocity="1000" lower="0" upper="0" />
   </joint>
 </robot>
