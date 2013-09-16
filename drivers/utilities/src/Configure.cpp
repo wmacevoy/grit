@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string.h>
 #include <stdexcept>
 
@@ -130,7 +131,8 @@ void Configure::servos()
 
 void Configure::servos(const std::string &file)
 {
-  servoRowMap.clear();
+  servoNameMap.clear();
+  servoIdMap.clear();
   servoColumnMap.clear();
   servoTable.clear();
   string header = "name,id,device,scale,offset,torque,speed";
@@ -141,20 +143,36 @@ void Configure::servos(const std::string &file)
   }
   CSVRead(file,header,servoTable);
   for (size_t i=0; i<servoTable.size(); ++i) {
-    servoRowMap[servoTable[i][0]]=i;
+    servoNameMap[servoTable[i][0]]=i;
+    servoIdMap[atoi(servoTable[i][1].c_str())]=i;
   }
-  if (servoRowMap.empty()) {
+  if (servoNameMap.empty()) {
     throw invalid_argument(file);
   }
 }
 
+std::string Configure::servo(int id, const std::string &parameter) const
+{
+  ServoIdMap::const_iterator i = servoIdMap.find(id);
+  if (i == servoIdMap.end()) {
+    ostringstream oss;
+    oss << id;
+    throw out_of_range(oss.str());
+  }
+  ServoColumnMap::const_iterator j = servoColumnMap.find(parameter);
+  if (j == servoColumnMap.end()) {
+    throw out_of_range(parameter);
+  }
+  return servoTable[i->second][j->second];
+}
+
 std::string Configure::servo(const std::string &name, const std::string &parameter) const
 {
-  ServoMap::const_iterator i = servoRowMap.find(name);
-  if (i == servoRowMap.end()) {
+  ServoNameMap::const_iterator i = servoNameMap.find(name);
+  if (i == servoNameMap.end()) {
     throw out_of_range(name);
   }
-  ServoMap::const_iterator j = servoColumnMap.find(parameter);
+  ServoColumnMap::const_iterator j = servoColumnMap.find(parameter);
   if (j == servoColumnMap.end()) {
     throw out_of_range(parameter);
   }
@@ -169,10 +187,9 @@ bool Configure::find(const std::string &name) const
 std::set < std::string > Configure::servoNames() const
 {
   std::set < std::string > ans;
-  for (ServoMap::const_iterator i=servoRowMap.begin(); i!=servoRowMap.end(); ++i) {
+  for (ServoNameMap::const_iterator i=servoNameMap.begin(); i!=servoNameMap.end(); ++i) {
     ans.insert(i->first);
   }
   return ans;
 }
-
 

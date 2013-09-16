@@ -14,11 +14,14 @@ class Configure
   typedef std::map < std::string , std::string > Values;
 
   typedef std::vector < std::vector < std::string > > ServoTable;
-  typedef std::map < std::string , int > ServoMap;
+  typedef std::map < std::string , int > ServoNameMap;
+  typedef std::map < std::string , int > ServoColumnMap;
+  typedef std::map < int , int > ServoIdMap;
   Values values;
   ServoTable servoTable;
-  ServoMap servoRowMap;
-  ServoMap servoColumnMap;
+  ServoIdMap servoIdMap;
+  ServoNameMap servoNameMap;
+  ServoColumnMap servoColumnMap;
 
  public:
   void path(const std::string &spath);
@@ -41,4 +44,5 @@ class Configure
   void servos();
   std::set < std::string > servoNames() const;
   std::string servo(const std::string &name,const std::string &parameter) const;
+  std::string servo(int id,const std::string &parameter) const;
 };
