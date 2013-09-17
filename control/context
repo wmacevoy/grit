@@ -31,6 +31,7 @@ setup()
   for lib in $MOJAVATON_DIR/libs/lib $MOJAVATON_DIR/drivers/*/lib $MOJAVATON_DIR/control/*/lib
   do
     export LD_LIBRARY_PATH="$lib:$LD_LIBRARY_PATH"
+    export PYTHONPATH="$lib:$PYTHONPATH"
   done
 }
 
