@@ -146,6 +146,11 @@ Script::Object Script::eval(const std::string &e)
   return eval(compile(e));
 }
 
+void Script::run(const std::string &s)
+{
+  PyRun_SimpleString(s.c_str());
+}
+
 
 #if 0
 Script::Object Script::set()

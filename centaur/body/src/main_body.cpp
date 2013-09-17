@@ -32,6 +32,10 @@
 #include "now.h"
 #include "BodyMover.h"
 #include "glovestruct.h"
+#include "Script.h"
+#include "StdCapture.h"
+
+SPScript py;
 
 int mapFingerAngle(int angle){
 	angle=(-180+angle);
@@ -111,46 +115,54 @@ public:
   
   void setLIO(float angle) {
 	mover->left.leftRight.setup(angle);
-	mover->left.leftRight.torque=0.75;
+//	mover->left.leftRight.torque=0.75;
   }
   void setLUD(float angle) {
 	mover->left.upDown.setup(angle);
-	mover->left.upDown.torque=0.75;
+//	mover->left.upDown.torque=0.75;
   }
   void setLBicep(float angle) {
 	mover->left.bicep.setup(angle);
-	mover->left.bicep.torque=0.75;
+//	mover->left.bicep.torque=0.75;
   }
   void setLElbow(float angle) {
 	mover->left.elbow.setup(angle);
-	mover->left.elbow.torque=0.75;
+//	mover->left.elbow.torque=0.75;
+  }
+  void setLForearm(float angle) {
+	mover->left.forearm.setup(angle);
+//	mover->left.elbow.torque=0.75;
   }
   void setRIO(float angle) {
 	mover->right.leftRight.setup(angle);
-	mover->right.leftRight.torque=0.75;
+//	mover->right.leftRight.torque=0.75;
   }
   void setRUD(float angle) {
 	mover->right.upDown.setup(angle);
-	mover->right.upDown.torque=0.75;
+//	mover->right.upDown.torque=0.75;
   }
   void setRBicep(float angle) {
 	mover->right.bicep.setup(angle);
-	mover->right.bicep.torque=0.75;
+//	mover->right.bicep.torque=0.75;
   }
   void setRElbow(float angle) {
 	mover->right.elbow.setup(angle);
-	mover->right.elbow.torque=0.75;
+//	mover->right.elbow.torque=0.75;
+  }
+  void setRForearm(float angle) {
+	mover->right.forearm.setup(angle);
+//	mover->right.elbow.torque=0.75;
   }
   void goHome() {
     load("home.csv");
     setWaist(0);
     setLIO(-45);
     setLUD(-45);
-    setLElbow(-15);
+    setLElbow(-30);
     setLBicep(-20);
     setRIO(45);
     setRUD(40);
-    setRElbow(-5);
+    setRElbow(30);
     setRBicep(0);    
   }
   
@@ -173,8 +185,31 @@ public:
     return mover->load(file);
   }
   
+  void shake() {
+	setRBicep(-30);
+	sleep(1);
+	setRElbow(44);
+	sleep(1);
+	setRIO(-40);
+	setRUD(0);
+	sleep(2);
+	for (int i=0;i<3;i++) {
+	  setRElbow(30);
+	  sleep(1);
+	  setRElbow(44);
+	  sleep(1);
+	}
+	setRIO(44);
+	setRBicep(0);
+    setRElbow(10);
+	setRUD(30);
+  }
   void yes()
   {
+     setPitch(20);
+     sleep(1);
+     setPitch(-20);
+     sleep(1);
      setPitch(20);
      sleep(1);
      setPitch(-20);
@@ -183,6 +218,10 @@ public:
   }
   void no()
   {
+     setYaw(20);
+     sleep(1);
+     setYaw(-20);
+     sleep(1);
      setYaw(20);
      sleep(1);
      setYaw(-20);
@@ -226,6 +265,13 @@ public:
 
     string head;
     iss >> head;
+    if (head == "py") {
+      StdCapture capture;
+      capture.BeginCapture();
+      py->run(command.substr(3));
+      capture.EndCapture();
+      answer(capture.GetCapture());
+    }
     if (head == "RightArmLimp") {
       mover->right.torque(0);
       oss << "my right arm is numb!";
@@ -252,6 +298,10 @@ public:
 	 answer("my hands are off.");
       }
     }
+    if (head=="shake") {
+	  shake();
+	  answer("Shake");
+	}
     if (head == "yes") {
       yes();
       answer("Yes");
@@ -334,6 +384,14 @@ public:
       oss << "LeftArmBicep " << angle << " :ok."; 
       answer(oss.str());
     }    
+    if (head == "LeftArmForearm") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setLForearm(angle);
+      oss << "LeftArmForearm " << angle << " :ok."; 
+      answer(oss.str());
+    }    
     if (head == "RightArmInOut") {
       float angle;
       iss >> angle;
@@ -364,6 +422,14 @@ public:
       ostringstream oss;
       setRBicep(angle);
       oss << "RightArmBicep " << angle << " :ok."; 
+      answer(oss.str());
+    }    
+    if (head == "RightArmForearm") {
+      float angle;
+      iss >> angle;
+      ostringstream oss;
+      setRForearm(angle);
+      oss << "RightArmForeArm " << angle << " :ok."; 
       answer(oss.str());
     }    
     if (head == "headPitch") {
@@ -546,6 +612,17 @@ int main(int argc, char *argv[])
   cfg.servos();
   verbose = cfg.flag("body.verbose",false);
   if (verbose) cfg.show();
+
+  py = SPScript(new Script(argc,argv));
+  try {
+    if (argc >= 2) {
+      py->addPaths(getenv("LD_LIBRARY_PATH"));
+      py->import("body");
+    }
+  } catch (const Script::Error &e) {
+    cout << e << endl;
+    assert(false);
+  }
 
   run();
   cout << "done" << endl;

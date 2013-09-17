@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include <Python.h>
 
 
@@ -36,6 +37,7 @@ class Script
   Object compile(const std::string &e);
   Object eval(Object compiled);
   Object eval(const std::string &e);
+  void run(const std::string &script);
   
   Script(int argc, char **argv);
   ~Script();
@@ -43,6 +45,8 @@ class Script
   Object globals;
   Object locals;
 };
+
+typedef std::shared_ptr < Script > SPScript;
 
 std::ostream& operator<< (std::ostream &out, const Script::Object &o);
 std::ostream& operator<< (std::ostream &out, const Script::Error &e);
