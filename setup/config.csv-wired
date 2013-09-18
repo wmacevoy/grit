@@ -1,5 +1,5 @@
 name,value
-servos.verbose,true
+servos.verbose,false
 servos.type,real
 servos.deviceindex,1
 servos.baudnum,34
@@ -17,11 +17,12 @@ commander.subscribers,"tcp://192.168.2.101:5502"
 lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"900"
 lidar.provider.verbose,"true"
-leap.provider.verbose,"false"
-leap.provider.sleep_time,"500"
+kinect.requester.address,"192.168.2.100"
+kinect.requester.verbose,"false"
+kinect.provider.sleep_time,"500"
+kinect.provider.verbose,"false"
+kinect.requester.verbose,"false"
 webcam.requester.verbose,"false"
-webcam.requester.address,"192.168.2.101"
-webcam.requester.sleep_time,"200"
+webcam.requester.address,"127.0.0.1"
 webcam.provider.verbose,"false"
 webcam.provider.index,"0"
-webcam.provider.sleep_time,"200"
