@@ -53,22 +53,78 @@ void Configure::args(const std::string &prefix, char **argv)
     if (arg.length() > 2 && (arg[0] == '-' && arg[1] == '-')) {
       string name = arg.substr(2);
       char *op = *(argp+1);
-      if (op == 0 || strlen(op) <= 2 || (op[0]=='-' && op[1] == '-')) {
-	string fullname = prefix;
-	fullname.append(name);
-	values[fullname]="true";
+      string value;
+      if (op == 0 || (strlen(op) >= 2 && (op[0]=='-' && op[1] == '-'))) {
+	value = "true";
       } else {
-	if (name == "configure") {
-	  load(op);
-	} else {
-	  string fullname = prefix;
-	  fullname.append(name);
-	  values[fullname]=op;
-	}
+	value = op;
 	++argp;
+      }
+
+      string fullname;
+      if (name[0]=='.') {
+	fullname = prefix;
+	if (fullname.length() > 0 && fullname[fullname.length()-1] == '.') {
+	  fullname.resize(fullname.length()-1);
+	}
+	fullname.append(name);
+      } else {
+	fullname = name;
+      }
+
+      if (name == "configure") {
+	load(op);
+      } else {
+	cout << fullname << "->" << value << endl;
+	values[fullname]=value;
       }
     }
   }
+}
+
+std::string Configure::substitute(const std::string &word_) const
+{
+  std::string word=word_;
+  bool matches = true;
+  size_t i = 0;
+  while (matches) {
+    matches = false;
+    for (;;) {
+      i=word.find('$',i);
+      if (i != std::string::npos) {
+	++i;
+	if (i < word.length() && word[i]=='{') {
+	  ++i;
+	  size_t j=i+1;
+	  while (j < word.length() && (word[j]=='.'||word[j]=='_'||isalpha(word[j])||isdigit(word[j]))) { ++j; }
+	  if (j < word.length() && word[j] == '}') {
+	    if (j > i+1) {
+	      string parameter = word.substr(i,j-i);
+	      map < string , string > :: const_iterator k = 
+		values.find(parameter);
+	      if (k != values.end()) {
+		string pre=word.substr(0,i-2);
+		string post=word.substr(j+1);
+		string newWord = pre + k->second + post;
+		word=newWord;
+		i += pre.length() + k->second.length();
+		matches = true;
+	      }
+	    }
+	  }
+	}
+      }
+      if ((i == string::npos || i >= word.length())) {
+	if (matches) {
+	  i = 0;
+	  matches = false;
+	}  else {
+	  break;
+	}
+      }
+    }
+  }
+  return word;
 }
 
 std::string Configure::str(const std::string &name) const
@@ -77,13 +133,13 @@ std::string Configure::str(const std::string &name) const
   if (i == values.end()) {
     throw out_of_range(name);
   }
-  return i->second;
+  return substitute(i->second);
 }
 
 std::string Configure::str(const std::string &name, const std::string &def) const
 {
   map < string , string > :: const_iterator i = values.find(name);
-  return (i != values.end()) ? i->second : def;
+  return substitute((i != values.end()) ? i->second : def);
 }
 
 double Configure::num(const std::string &name) const
@@ -94,7 +150,7 @@ double Configure::num(const std::string &name) const
 double Configure::num(const std::string &name, double def) const
 {
   map < string , string > :: const_iterator i = values.find(name);
-  return (i != values.end()) ? atof(i->second.c_str()) : def;
+  return (i != values.end()) ? atof(substitute(i->second).c_str()) : def;
 }
 
 bool Configure::flag(const std::string &name) const
@@ -105,7 +161,7 @@ bool Configure::flag(const std::string &name) const
 bool Configure::flag(const std::string &name, bool def) const
 {
   map < string , string > :: const_iterator i = values.find(name);
-  return (i != values.end()) ? i->second == "true" : def;
+  return (i != values.end()) ? substitute(i->second) == "true" : def;
 }
 
 std::vector<std::string> Configure::list(const std::string &name) const
@@ -163,20 +219,20 @@ std::string Configure::servo(int id, const std::string &parameter) const
   if (j == servoColumnMap.end()) {
     throw out_of_range(parameter);
   }
-  return servoTable[i->second][j->second];
+  return substitute(servoTable[i->second][j->second]);
 }
 
 std::string Configure::servo(const std::string &name, const std::string &parameter) const
 {
   ServoNameMap::const_iterator i = servoNameMap.find(name);
   if (i == servoNameMap.end()) {
-    throw out_of_range(name);
+    return substitute(parameter);
   }
   ServoColumnMap::const_iterator j = servoColumnMap.find(parameter);
   if (j == servoColumnMap.end()) {
-    throw out_of_range(parameter);
+    return substitute(parameter);
   }
-  return servoTable[i->second][j->second];
+  return substitute(servoTable[i->second][j->second]);
 }
 
 bool Configure::find(const std::string &name) const
