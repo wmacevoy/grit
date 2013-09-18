@@ -174,12 +174,12 @@ commit()
 
 start()
 {
-    start_apps body servos KinectProvider HokuyoProvider
+    start_apps body servos KinectProvider
 }
 
 stop()
 {
-    stop_apps servos body KinectProvider HokuyoProvider
+    stop_apps servos body KinectProvider
 }
 
 commander()
