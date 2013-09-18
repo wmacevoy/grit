@@ -38,8 +38,9 @@ class Script
   Object eval(Object compiled);
   Object eval(const std::string &e);
   void run(const std::string &script);
-  
-  Script(int argc, char **argv);
+
+  std::string name;
+  Script(const std::string &name_);
   ~Script();
 
   Object globals;

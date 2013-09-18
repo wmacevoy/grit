@@ -11,7 +11,7 @@ double simTime;
 double simSpeed;
 double realTime;
 
-Configure cfg;
+std::shared_ptr < Configure > cfg;
 
 SPServoController servoController;
 
@@ -20,7 +20,7 @@ SPBodyMover mover;
 
 SPServo servo(std::string name)
 {
-  int id = atoi(cfg.servo(name,"id").c_str());
+  int id = atoi(cfg->servo(name,"id").c_str());
   if (verbose) {
     cout << "servo " << name << " is " << id << endl;
   }

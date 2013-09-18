@@ -8,7 +8,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-  Script s(argc,argv);
+  Script s(argv[0]);
   try {
     if (argc >= 2) {
       s.addPaths(getenv("LD_LIBRARY_PATH"));

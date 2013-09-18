@@ -27,7 +27,7 @@ extern bool verbose;
 extern double simTime;
 extern double simSpeed;
 extern double realTime;
-extern Configure cfg;
+extern std::shared_ptr < Configure > cfg;
 
 extern SPServoController servoController;
 extern SPBody body;

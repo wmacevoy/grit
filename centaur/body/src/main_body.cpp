@@ -582,14 +582,14 @@ void SigIntHandler(int arg) {
 
 void run()
 {
-  servoController = shared_ptr<ServoController>(CreateZMQServoController(cfg.str("body.servos.publish"),cfg.str("body.servos.subscribers")));
+  servoController = shared_ptr<ServoController>(CreateZMQServoController(cfg->str("body.servos.publish"),cfg->str("body.servos.subscribers")));
 
   body = shared_ptr <Body> (new Body());
   body->init();
 
   bodyController = shared_ptr <BodyController> (new BodyController());
-  bodyController->publish = cfg.str("body.commander.publish");
-  bodyController->subscribers = cfg.list("body.commander.subscribers");
+  bodyController->publish = cfg->str("body.commander.publish");
+  bodyController->subscribers = cfg->list("body.commander.subscribers");
 
   servoController->start();
   bodyController->start();
@@ -602,30 +602,23 @@ void run()
 
 int main(int argc, char *argv[])
 {
+  py = SPScript(new Script(argv[0]));
+  py->import("body");
+
   simTime = 0;
   simSpeed = 1;
   realTime = now();
-  
-  cfg.path("../../setup");
-  cfg.args("body.",argv);
-  if (argc == 1) cfg.load("config.csv");
-  cfg.servos();
-  verbose = cfg.flag("body.verbose",false);
-  if (verbose) cfg.show();
 
-  py = SPScript(new Script(argc,argv));
-  try {
-    if (argc >= 2) {
-      py->addPaths(getenv("LD_LIBRARY_PATH"));
-      py->import("body");
-    }
-  } catch (const Script::Error &e) {
-    cout << e << endl;
-    assert(false);
-  }
+  cfg = shared_ptr < Configure > ( new Configure() );
+  cfg->path("../../setup");
+  cfg->args("body.",argv);
+  if (argc == 1) cfg->load("config.csv");
+  cfg->servos();
+  verbose = cfg->flag("body.verbose",false);
+  if (verbose) cfg->show();
 
   run();
+
   cout << "done" << endl;
   return 0;
 }
-

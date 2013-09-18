@@ -97,7 +97,8 @@ void Script::addPaths(const std::string &directories,char sep)
 
 void Script::addPath(const std::string &directory)
 {
-  Object path(PySys_GetObject("path")); path.own();
+  std::string sPath("path");
+  Object path(PySys_GetObject(&sPath[0])); path.own();
   Object pyDirectory(directory);
   PyList_Insert(path.py,0,pyDirectory.py);
 }
@@ -123,10 +124,11 @@ Script::Object Script::import(const std::string &name)
   return ans;
 }
 
-Script::Script(int argc, char **argv)
+Script::Script(const std::string &name_)
 {
+  name=name_;
   Py_Initialize();
-  Py_SetProgramName(argv[0]);
+  Py_SetProgramName(&name[0]);
   globals = import("__main__");
   locals = Object(PyDict_New());
 }
