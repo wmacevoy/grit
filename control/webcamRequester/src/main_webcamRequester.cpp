@@ -19,14 +19,17 @@ bool die = false;
 bool inside = false;
 bool verbose = false;
 
-const int sz_mat = 640*480*1;
-
 int64_t* lidar_data;
-
+const int sz_mat = 640*480*3;
 const int sz_lidar_data  = 1081;
 
 volatile int mx = 0;
 volatile int my = 0;
+
+const int x_min = 19;
+const int x_max = 617;
+const int ind_min = 464;
+const int ind_max = 614;
 
 std::string convstr(const float t)
 {
@@ -35,13 +38,13 @@ std::string convstr(const float t)
 	return ftoa.str();
 }
 
-void subscribe(Mat& mat, void* zmq_sub)
+void subscribe_cam(Mat& mat, void* zmq_sub)
 {
 	int rc = zmq_recv(zmq_sub, mat.data, sz_mat, ZMQ_DONTWAIT);
 	if(verbose) std::cout << "Received: " << rc << std::endl;
 }
 
-void subscribe_lidar(void* zmq_sub)
+void subscribe_lidar(int64_t* data, void* zmq_sub)
 {
 	if(verbose) printf("waiting for lidar data...\n");
 	int rc = zmq_recv(zmq_sub, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);
@@ -52,7 +55,7 @@ void mouseEvent(int evt, int x, int y, int flags, void* param)
 {
 	if(evt == CV_EVENT_MOUSEMOVE)
 	{
-		if(x >=0 && x <= 640 && y >= 195 && y <= 205)
+		if(x >=0 && x <= 640 && y >= 190 && y <= 210)
 		{
 			mx = x;
 			my = y;
@@ -84,6 +87,7 @@ int main(int argc, char** argv)
 	int rcl = 0;
 	int index = 0;
 	Mat gray(480, 640, 0);
+	
 	std::string winName = "ICU";
 	std::string text = "0";
 	namedWindow(winName, CV_WINDOW_AUTOSIZE);
@@ -124,20 +128,23 @@ int main(int argc, char** argv)
 	signal(SIGQUIT, quitproc);
 
 	//Line on screen needs to be calibrated with lidar
-	Point pt1(0, 200);
-	Point pt2(640, 200);
+	Point pt1(0, 195);
+	Point pt2(640, 195);
 	Point textOrg(1, 30);
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
 	while(!die)
 	{
-		subscribe(gray, sub_mat);
+		subscribe_cam(gray, sub_mat);
 		line(gray, pt1, pt2, Scalar(0, 0, 0)); //Needs to be calibrated with lidar
 		if(inside)
-		{		
-			text = "X: " + convstr(mx) + " Y: " + convstr(my);
+		{	
+			subscribe_lidar(lidar_data, sub_lidar);	
+			index = ind_min + ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+			text = convstr(lidar_data[index] * 0.00328084);
 			putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+			std::cout << "Pixel: " << mx << "   Index: " << index << std::endl;
 		}
 		imshow(winName, gray);
 		char c = waitKey(sleep_time);
