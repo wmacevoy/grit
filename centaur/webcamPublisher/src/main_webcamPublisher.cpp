@@ -45,7 +45,8 @@ int main(int argc, char** argv)
 	VideoCapture capture(index);
 	if(!capture.isOpened())
 	{
-		if(verbose) std::cout << "ERROR: capture is NULL \n";
+		if (!verbose) cfg.show();
+		std::cout << "ERROR: capture is NULL \n";
 		return 1;
 	}
 
