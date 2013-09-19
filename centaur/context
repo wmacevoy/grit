@@ -174,12 +174,12 @@ commit()
 
 start()
 {
-    start_apps body servos KinectProvider
+    start_apps body servos webcamPublisher LidarProvider
 }
 
 stop()
 {
-    stop_apps servos body KinectProvider
+    stop_apps servos body webcamPublisher LidarProvider
 }
 
 commander()
