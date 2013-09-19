@@ -226,11 +226,11 @@ std::string Configure::servo(const std::string &name, const std::string &paramet
 {
   ServoNameMap::const_iterator i = servoNameMap.find(name);
   if (i == servoNameMap.end()) {
-    return substitute(parameter);
+    throw out_of_range(name);
   }
   ServoColumnMap::const_iterator j = servoColumnMap.find(parameter);
   if (j == servoColumnMap.end()) {
-    return substitute(parameter);
+    throw out_of_range(parameter);
   }
   return substitute(servoTable[i->second][j->second]);
 }
