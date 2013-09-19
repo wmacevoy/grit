@@ -7,6 +7,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 #include <thread>
 #include <chrono>
 #include <zmq.h>
@@ -79,7 +80,8 @@ int main(int argc, char** argv)
 	//Connect lidar
 	int ret = urg_connect(&urg, lidar_path.c_str(), 115200);
 	if (ret < 0) {
-		return 1;
+	  std::cout << "could not connect to " << lidar_path << std::endl;
+	  return 1;
 	}
 
 	//Get max size of lidar data

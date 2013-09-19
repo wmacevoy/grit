@@ -67,12 +67,12 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		capture >> frame;
-		cvtColor(frame, gray, CV_RGB2GRAY);
-		gray.reshape(0,1);		
-		publish(gray, pub_mat);
+		//cvtColor(frame, gray, CV_RGB2GRAY);
+		frame.reshape(0,1);		
+		publish(frame, pub_mat);
 		waitKey(sleep_time);
 		if(verbose) std::cout << frame.channels() << " " << frame.depth() << std::endl;
-		if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
+		//if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
 	}
 
 	//Cleanup

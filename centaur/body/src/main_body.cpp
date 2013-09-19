@@ -603,7 +603,7 @@ void run()
 int main(int argc, char *argv[])
 {
   py = SPScript(new Script(argv[0]));
-  py->import("body");
+  //py->import("body");
 
   simTime = 0;
   simSpeed = 1;
