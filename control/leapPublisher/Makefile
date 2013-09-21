@@ -1,0 +1,9 @@
+all : libs progs
+
+DEPS=
+DRIVER_DEPS=centaur utilities
+
+MY_FLAGS=
+MY_LIBS=
+
+include ../rules.mk
