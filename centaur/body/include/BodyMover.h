@@ -15,6 +15,7 @@ class BodyMover
   ServoMover waist;
   NeckMover neck;
   ArmMover left,right;
+  bool circle(float r,float x,float y,float z);
   void move(Body &body);
   bool load(const std::string &file);
 };

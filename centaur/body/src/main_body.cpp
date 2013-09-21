@@ -277,6 +277,14 @@ public:
       oss << "my right arm is numb!";
       answer(oss);
     }
+    if (head == "Circle") {
+      float radius;
+      iss >> radius;
+      mover->circle(radius,17,17,-15.5);
+      ostringstream oss;
+      oss << "Circle " << radius << " :ok."; 
+      answer(oss.str());
+	}
     if (head == "RightArmMove") {
       mover->right.torque(0.75);
       oss << "my right arm is not numb.";

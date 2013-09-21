@@ -4,6 +4,7 @@
 #include "BodyMover.h"
 #include "CSVRead.h"
 #include "BodyGlobals.h"
+#include <cmath>
 
 using namespace std;
 
@@ -14,6 +15,29 @@ void BodyMover::move(Body &body)
   neck.move(body.neck);
   left.move(body.left);
   right.move(body.right);
+}
+
+bool BodyMover::circle(float r,float x,float y,float z) {
+  vector<vector<double>> data;
+  float steps=4.0/10.0; // 4s in ten of a second steps;
+  float da=2.0*M_PI/steps;
+  float waist=0;
+  for(float a=0;a<2.0*M_PI;a+=da) {
+	float t=4.0*a/(2.0*M_PI);
+    float l1x=-x;
+    float l1y=y;
+    float l1z=z;
+    float l2x=x;
+    float l2y=y;
+    float l2z=z;
+    float l3x=x;
+    float l3y=-y;
+    float l3z=z;
+    float l4x=-x;
+    float l4y=-y;
+    float l4z=z;
+  }
+  return true;
 }
 
 bool BodyMover::load(const std::string &file)
