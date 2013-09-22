@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 
 	while(!die)
 	{
-		subscribe(&leapD, sub);	
+		subscribe(&leapD, sub);
 		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.normala << " " << leapD.normalb << " " << leapD.normalc << std::endl;
 		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
