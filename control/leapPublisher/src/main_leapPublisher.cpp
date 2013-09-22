@@ -13,7 +13,7 @@ using namespace Leap;
 Configure cfg;
 bool verbose;
 volatile int die = 0;
-int sleep_time = 100;
+int sleep_time = 100000;
 std::mutex locker;
 leapData leapD;
 
@@ -68,10 +68,10 @@ void handListener::onFrame(const Controller& controller)
 		if(verbose) std::cout << "Palm position: " << hand.palmPosition() << "  Palm normal: " << hand.palmNormal() << std::endl;
 		locker.lock();
 		leapD.x = hand.palmPosition()[0]; leapD.y = hand.palmPosition()[1]; leapD.z = hand.palmPosition()[2];
-		leapD.normala = hand.palmNormal()[0]; leapD.normalb = hand.palmNormal()[1]; leapD.normalc = hand.palmNormal()[2];
+		leapD.roll = hand.palmNormal().roll();
 		locker.unlock();
 
-		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.normala << " " << leapD.normalb << " " << leapD.normalc << std::endl;
+		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.roll << std::endl;
 	}	
 }
 
