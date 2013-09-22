@@ -6,15 +6,7 @@ struct leapData{
 	float normalb;
 	float normalc;
 
-	leapData()
-	{
-		x = 0;
-		y = 0;
-		z = 0;
-		normala = 0;
-		normalb = 0;
-		normalc = 0;
-	}
+	leapData() {clear();}
 	void clear()
 	{
 		x = 0;
