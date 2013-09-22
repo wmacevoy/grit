@@ -22,7 +22,7 @@ void publish(Mat& gray, void* zmq_pub)
 
 void quitproc(int param)
 {
-	std::cout << "Quitting..." << std::endl;
+	std::cout << "\nQuitting..." << std::endl;
 	die = true;
 }
 
@@ -45,10 +45,12 @@ int main(int argc, char** argv)
 	VideoCapture capture(index);
 	if(!capture.isOpened())
 	{
-		if (!verbose) cfg.show();
 		std::cout << "ERROR: capture is NULL \n";
 		return 1;
 	}
+
+	capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 
 	//Setup ZMQ
 	//tcp://*:9993
@@ -64,15 +66,18 @@ int main(int argc, char** argv)
 	signal(SIGINT, quitproc);
 	signal(SIGQUIT, quitproc);
 
+	
+	if(verbose) std::cout << frame.channels() << " " << frame.depth() << std::endl;
+	//if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
+
 	while(!die)
 	{
 		capture >> frame;
+		std::cout << frame.size() << std::endl;
 		//cvtColor(frame, gray, CV_RGB2GRAY);
 		frame.reshape(0,1);		
 		publish(frame, pub_mat);
 		waitKey(sleep_time);
-		if(verbose) std::cout << frame.channels() << " " << frame.depth() << std::endl;
-		//if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
 	}
 
 	//Cleanup
