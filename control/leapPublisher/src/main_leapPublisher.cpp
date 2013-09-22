@@ -71,7 +71,7 @@ void handListener::onFrame(const Controller& controller)
 		leapD.normala = hand.palmNormal()[0]; leapD.normalb = hand.palmNormal()[1]; leapD.normalc = hand.palmNormal()[2];
 		locker.unlock();
 
-		std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.normala << " " << leapD.normalb << " " << leapD.normalc << std::endl;
+		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.normala << " " << leapD.normalb << " " << leapD.normalc << std::endl;
 	}	
 }
 
