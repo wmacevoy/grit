@@ -268,7 +268,7 @@ public:
     if (head == "py") {
       StdCapture capture;
       capture.BeginCapture();
-      py->run(command.substr(3));
+      if (command.length() > 2) py->run(command.substr(3));
       capture.EndCapture();
       answer(capture.GetCapture());
     }
@@ -611,7 +611,7 @@ void run()
 int main(int argc, char *argv[])
 {
   py = SPScript(new Script(argv[0]));
-  //py->import("body");
+  py->import("__main__");
 
   simTime = 0;
   simSpeed = 1;
