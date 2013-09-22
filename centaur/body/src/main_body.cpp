@@ -154,10 +154,10 @@ public:
 	{
 			subscribeF(subLeft,&leapLeft);
 			//subscribeF(subRight,&leapRight);
-			tmpLeft = leapLeft.roll;
+			tmpLeft = leapLeft.roll * -1.0;
 			if (tmpLeft > 44.0) tmpLeft = 44.0;
 			if (tmpLeft < -44.0) tmpLeft = -44.0;
-			mover->left.forearm.setup(tmpLeft*(-1));
+			mover->left.forearm.setup(tmpLeft);
 			//mover->right.forearm.setup(leapRight.roll);
 //			cout << "adjusted hands (rthumb=" << manos.rthumb << ")." << endl;
 			std::this_thread::sleep_for(std::chrono::microseconds(25));
