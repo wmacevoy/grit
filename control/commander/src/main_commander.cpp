@@ -37,7 +37,8 @@ public:
     msg.recv(socket);
     char *data = (char*) msg.data();
     string reply(data+1,data[0]);
-    cout << "reply: " << reply << endl;
+    cout << "\rreply: " << reply << endl << "?";
+    cout.flush();
   }
 
   void tx(ZMQPublishSocket &socket)
