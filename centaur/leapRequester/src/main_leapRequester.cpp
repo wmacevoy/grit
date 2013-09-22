@@ -1,6 +1,9 @@
 #include <iostream>
 #include <zmq.h>
+#include <assert.h>
 #include <chrono>
+#include <thread>
+#include <signal.h>
 #include "leapStruct.h"
 #include "Configure.h"
 
@@ -8,11 +11,12 @@ leapData leapD;
 Configure cfg;
 bool verbose;
 volatile int die = 0;
+int sleep_time;
 
 void subscribe(leapData* data, void* zmq_sub)
 {
 	if(verbose) std::cout << "Receiving leap data..." << std::endl;
-
+	int rc = zmq_recv(zmq_sub, data, sizeof(leapData), 0);
 	if(verbose && rc > 0) std::cout << "Leap data received!" << std::endl;
 }
 
@@ -46,7 +50,7 @@ int main(int argc, char** argv)
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	assert(rc == 0);
 
-	rc = zmq_connect(sub, ip2.c_str());
+	rc = zmq_connect(sub, address.c_str());
 	assert(rc == 0);
 
 	struct sigaction new_action;
@@ -60,6 +64,7 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		subscribe(&leapD, sub);	
+		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.normala << " " << leapD.normalb << " " << leapD.normalc << std::endl;
 		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
 
