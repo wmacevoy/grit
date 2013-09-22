@@ -34,6 +34,8 @@
 #include "glovestruct.h"
 #include "Script.h"
 #include "StdCapture.h"
+#include "leapStruct.h"
+
 
 SPScript py;
 
@@ -56,6 +58,13 @@ void subscribe(void *zmq_sub, Hands* manos)
 	manos->rtrigger=mapFingerAngle(360-manos->rtrigger); 
 	manos->rmiddle=mapFingerAngle(360-manos->rmiddle); 
 	manos->rring=mapFingerAngle(manos->rring);
+}
+
+void subscribeF(void *zmq_sub, leapData *leapItem)
+{
+  leapItem->clear();
+  int rc = zmq_recv(zmq_sub, leapItem, sizeof(leapData), 0);
+  //NEED XYZ MAPPING STUFF
 }
 
 using namespace std;
@@ -113,6 +122,54 @@ public:
 	zmq_ctx_destroy(context);
   }
   
+
+  std::thread *forearmsThread;
+  std::atomic < bool > forearms_on;
+  void subscribeToForearms() {	//Forearms thread function
+    int rcLeft, rcRight;
+    float tmpLeft = 0, tmpRight = 0;
+    leapData leapLeft;
+	//	leapData leapRight;
+	
+	void *contextLeft = zmq_ctx_new ();
+	//void *contextRight = zmq_ctx_new ();
+	void *subLeft = zmq_socket(contextLeft, ZMQ_SUB);
+	//	void *subRight = zmq_socket(contextRight, ZMQ_SUB);
+	rcLeft = zmq_setsockopt(subLeft, ZMQ_SUBSCRIBE, "", 0);
+	//rcRight = zmq_setsockopt(subRight, ZMQ_SUBSCRIBE,"",0);
+	if (zmq_connect(subLeft, "tcp://192.168.2.113:9990") != 0)
+	{
+		printf("Error initializing 0mq LEFT FOREARM...\n");
+		return;
+	}
+	
+	/*if (zmq_connect(subRight, "tcp://192.168.2.113:9991") != 0)
+	{
+		printf("Error initializing 0mq RIGHT FOREARM...\n");
+		return;
+		}*/
+	
+
+	while(forearms_on)
+	{
+			subscribeF(subLeft,&leapLeft);
+			//subscribeF(subRight,&leapRight);
+			tmpLeft = leapLeft.roll;
+			if (tmpLeft > 44.0) tmpLeft = 44.0;
+			if (tmpLeft < -44.0) tmpLeft = -44.0;
+			mover->left.forearm.setup(tmpLeft);
+			//mover->right.forearm.setup(leapRight.roll);
+//			cout << "adjusted hands (rthumb=" << manos.rthumb << ")." << endl;
+			std::this_thread::sleep_for(std::chrono::microseconds(25));
+	}	
+//	cout << "ending hands control." << endl;	
+	zmq_close(subLeft);
+	//zmq_close(subRight);
+	zmq_ctx_destroy(contextLeft);
+	//zmq_ctx_destroy(contextRight);
+  }
+
+
   void setLIO(float angle) {
 	mover->left.leftRight.setup(angle);
 //	mover->left.leftRight.torque=0.75;
@@ -258,6 +315,25 @@ public:
      }
   }
 
+  void forearmsOn()
+  {
+    if (forearmsThread == 0) {
+      forearms_on = true;
+      forearmsThread = new std::thread(&BodyController::subscribeToForearms, this);
+    }
+  }
+
+   void forearmsOff()
+  {
+     if (forearmsThread != 0) {
+       forearms_on = false;
+       forearmsThread->join();
+       delete forearmsThread;
+       forearmsThread = 0;
+     }
+  }
+
+
   void act(string &command)
   {
     istringstream iss(command);
@@ -304,6 +380,17 @@ public:
       } else if (value == "off") {
          handsOff();
 	 answer("my hands are off.");
+      }
+    }
+    if (head=="forearms"){
+      string value;
+      iss >> value;
+      if (value == "on"){
+	forearmsOn();
+	answer("my forearms are on.");
+      } else if (value=="off") {
+	forearmsOff();
+	answer("my forearms are off.");
       }
     }
     if (head=="shake") {
@@ -360,7 +447,7 @@ public:
       oss << "played Gait2_3 script"; 
       answer(oss.str());
     }
-    if (head == "LeftArmInOut") {
+    if (head == "LeftArmInOut" || head == "laio") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -368,7 +455,7 @@ public:
       oss << "LeftArmInOut " << angle << " :ok."; 
       answer(oss.str());
     }    
-    if (head == "LeftArmUpDown") {
+    if (head == "LeftArmUpDown" || head == "laud") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -376,7 +463,7 @@ public:
       oss << "LeftArmUpDown " << angle << " :ok."; 
       answer(oss.str());
     }
-    if (head == "LeftArmElbow") {
+    if (head == "LeftArmElbow" || head == "lae") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -384,7 +471,7 @@ public:
       oss << "LeftArmElbow " << angle << " :ok."; 
       answer(oss.str());
     }
-    if (head == "LeftArmBicep") {
+    if (head == "LeftArmBicep" || head == "lab") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -392,7 +479,7 @@ public:
       oss << "LeftArmBicep " << angle << " :ok."; 
       answer(oss.str());
     }    
-    if (head == "LeftArmForearm") {
+    if (head == "LeftArmForearm" || head == "laf") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -400,7 +487,7 @@ public:
       oss << "LeftArmForearm " << angle << " :ok."; 
       answer(oss.str());
     }    
-    if (head == "RightArmInOut") {
+    if (head == "RightArmInOut" || head == "raio") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -408,7 +495,7 @@ public:
       oss << "RightArmInOut " << angle << " :ok."; 
       answer(oss.str());
     }    
-    if (head == "RightArmUpDown") {
+    if (head == "RightArmUpDown" || head == "raud") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -416,7 +503,7 @@ public:
       oss << "RightArmUpDown " << angle << " :ok."; 
       answer(oss.str());
     }
-    if (head == "RightArmElbow") {
+    if (head == "RightArmElbow" || head == "rae") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -424,7 +511,7 @@ public:
       oss << "RightArmElbow " << angle << " :ok."; 
       answer(oss.str());
     }
-    if (head == "RightArmBicep") {
+    if (head == "RightArmBicep" || head == "rab") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -432,7 +519,7 @@ public:
       oss << "RightArmBicep " << angle << " :ok."; 
       answer(oss.str());
     }    
-    if (head == "RightArmForearm") {
+    if (head == "RightArmForearm" || head == "raf") {
       float angle;
       iss >> angle;
       ostringstream oss;
@@ -484,6 +571,10 @@ public:
       iss >> value;
       simSpeed = value;
       oss << "set speed to " << value << ".";
+      answer(oss.str());
+    }
+    if (head == "help") {
+      oss << "laio|raio|laud|raud|lae|rae|lab|rab|laf|raf";
       answer(oss.str());
     }
   }
