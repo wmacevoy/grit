@@ -1,6 +1,4 @@
 #include "opencv2/opencv.hpp"
-#include "cv.h"
-#include "highgui.h"
 #include <iostream>
 #include <signal.h>
 #include <assert.h>
@@ -20,7 +18,7 @@ bool inside = false;
 bool verbose = false;
 
 int64_t* lidar_data;
-const int sz_mat = 640*480*3;
+const int sz_mat = 320*240*3;
 const int sz_lidar_data  = 1081;
 
 volatile int mx = 0;
@@ -81,13 +79,14 @@ int main(int argc, char** argv)
 	if (verbose) cfg.show();
 
 	int sleep_time = cfg.num("webcam.requester.sleep_time",200);
+	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
 	int hwm = 1;
 	int rcm = 0;
 	int rcl = 0;
 	int index = 0;
-	Mat gray(480, 640, 0);
-	
+	Mat gray(240, 320, CV_8UC3);
+
 	std::string winName = "ICU";
 	std::string text = "0";
 	namedWindow(winName, CV_WINDOW_AUTOSIZE);
@@ -137,14 +136,14 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		subscribe_cam(gray, sub_mat);
-		line(gray, pt1, pt2, Scalar(0, 0, 0)); //Needs to be calibrated with lidar
+		line(gray, pt1, pt2, Scalar(0, 0, 0));
 		if(inside)
 		{	
 			subscribe_lidar(lidar_data, sub_lidar);	
 			index = ind_min + ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 			text = convstr(lidar_data[index] * 0.00328084);
 			putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-			std::cout << "Pixel: " << mx << "   Index: " << index << std::endl;
+			if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << std::endl;
 		}
 		imshow(winName, gray);
 		char c = waitKey(sleep_time);
