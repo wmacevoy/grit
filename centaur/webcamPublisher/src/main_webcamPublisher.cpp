@@ -1,6 +1,5 @@
-#include "opencv2/opencv.hpp"
-#include "cv.h"
-#include "highgui.h"
+#include "/usr/include/opencv2/opencv.hpp"
+
 #include <iostream>
 #include <signal.h>
 #include <assert.h>
@@ -73,7 +72,6 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		capture >> frame;
-		std::cout << frame.size() << std::endl;
 		//cvtColor(frame, gray, CV_RGB2GRAY);
 		frame.reshape(0,1);		
 		publish(frame, pub_mat);
