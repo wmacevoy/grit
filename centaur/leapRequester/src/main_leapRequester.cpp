@@ -11,7 +11,7 @@ leapData leapD;
 Configure cfg;
 bool verbose;
 volatile int die = 0;
-int sleep_time;
+int sleep_time = 100000;
 
 void subscribe(leapData* data, void* zmq_sub)
 {
@@ -64,7 +64,7 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		subscribe(&leapD, sub);
-		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.normala << " " << leapD.normalb << " " << leapD.normalc << std::endl;
+		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.roll << std::endl;
 		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
 
