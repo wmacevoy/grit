@@ -78,7 +78,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("webcam.requester.verbose", false);
 	if (verbose) cfg.show();
 
-	int sleep_time = cfg.num("webcam.requester.sleep_time",200);
+	int sleep_time = cfg.num("webcam.requester.sleep_time",100);
 	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
 	int hwm = 1;
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 
 	std::string winName = "ICU";
 	std::string text = "0";
-	namedWindow(winName, CV_WINDOW_AUTOSIZE);
+	namedWindow(winName, CV_WINDOW_NORMAL);
 	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
 	double fontScale = 0.75;
 	int thickness = 2;

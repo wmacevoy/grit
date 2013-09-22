@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <mutex>
 #include <zmq.h>
+#include <math.h>
 #include "leapStruct.h"
 #include "Configure.h"
 #include "Leap.h"
@@ -68,7 +69,7 @@ void handListener::onFrame(const Controller& controller)
 		if(verbose) std::cout << "Palm position: " << hand.palmPosition() << "  Palm normal: " << hand.palmNormal() << std::endl;
 		locker.lock();
 		leapD.x = hand.palmPosition()[0]; leapD.y = hand.palmPosition()[1]; leapD.z = hand.palmPosition()[2];
-		leapD.roll = hand.palmNormal().roll();
+		leapD.roll = hand.palmNormal().roll() * 180.0 / M_PI;
 		locker.unlock();
 
 		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.roll << std::endl;
