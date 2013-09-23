@@ -20,11 +20,11 @@ leapData leapD;
 
 void publish(leapData* data, void* zmq_pub)
 {
-	if(verbose) std::cout << "Sending hand data..." << std::endl;
+	if(verbose) std::cout << "Sending leap data..." << std::endl;
 	locker.lock();
-	int rc = zmq_send(zmq_pub, data, sizeof(leapData), 0);
+	int rc = zmq_send(zmq_pub, data, sizeof(leapData), ZMQ_DONTWAIT);
 	locker.unlock();
-	if(verbose && rc > 0) std::cout << "Hand data sent!" << std::endl;
+	if(verbose && rc > 0) std::cout << "Leap data sent!" << std::endl;
 }
 
 class handListener : public Listener
@@ -96,9 +96,14 @@ int main(int argc, char** argv)
 	int rc = 0;
 
 	handListener listener;
-	Controller controller;
+	Controller controller(listener);
 
-	controller.addListener(listener);
+	while(!controller.isConnected())
+	{
+		std::cout << ".";
+		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
+	}	
+	std::cout << std::endl;
 
 	void *context = zmq_ctx_new ();
 	void *pub = zmq_socket(context,ZMQ_PUB);
@@ -128,6 +133,8 @@ int main(int argc, char** argv)
 	std::cout << "\nQuitting..." << std::endl;
 
 	controller.removeListener(listener);
+	zmq_close(pub);
+	zmq_ctx_destroy(context);
 
 	return 0;
 }
