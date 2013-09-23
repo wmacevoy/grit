@@ -126,7 +126,6 @@ int main(int argc, char** argv)
 	controller.removeListener(listener);
 	zmq_close(pub);
 	zmq_ctx_destroy(context);
-	std::cout << "done" << std::cout.flush() << std::endl;
 
 	return 0;
 }
