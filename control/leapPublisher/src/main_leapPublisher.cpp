@@ -96,14 +96,7 @@ int main(int argc, char** argv)
 	int rc = 0;
 
 	handListener listener;
-	Controller controller(listener);
-
-	while(!controller.isConnected())
-	{
-		std::cout << ".";
-		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
-	}	
-	std::cout << std::endl;
+	Controller controller(listener);	
 
 	void *context = zmq_ctx_new ();
 	void *pub = zmq_socket(context,ZMQ_PUB);
@@ -124,17 +117,16 @@ int main(int argc, char** argv)
 	sigaction (SIGTERM, &new_action, NULL);
 	sigaction (SIGINT, &new_action, NULL);
 
-	while(!die)
+	while(!die || controller.isConnected())
 	{
 		publish(&leapD, pub);
 		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
-	
-	std::cout << "\nQuitting..." << std::endl;
 
 	controller.removeListener(listener);
 	zmq_close(pub);
 	zmq_ctx_destroy(context);
+	std::cout << "done" << std::cout.flush() << std::endl;
 
 	return 0;
 }
