@@ -103,7 +103,7 @@ public:
 	}
 	
 //	cout << "starting hands control." << endl;
-	while(hands_on)
+	while(hands_on.load())
 	{
 			subscribe(sub, &manos);
 			mover->left.trigger.setup(manos.ltrigger);
@@ -150,7 +150,7 @@ public:
 		}*/
 	
 
-	while(forearms_on)
+	while(forearms_on.load())
 	{
 			subscribeF(subLeft,&leapLeft);
 			//subscribeF(subRight,&leapRight);
@@ -299,7 +299,7 @@ public:
   void handsOn()
   {
      if (handsThread == 0) {
-       hands_on = true;
+       hands_on.store(true);
        handsThread = new std::thread(&BodyController::subscribeToHands, this);
      }
   }
@@ -308,7 +308,7 @@ public:
   void handsOff()
   {
      if (handsThread != 0) {
-       hands_on = false;
+       hands_on.store(false);
        handsThread->join();
        delete handsThread;
        handsThread = 0;
@@ -318,7 +318,7 @@ public:
   void forearmsOn()
   {
     if (forearmsThread == 0) {
-      forearms_on = true;
+      forearms_on.store(true);
       forearmsThread = new std::thread(&BodyController::subscribeToForearms, this);
     }
   }
@@ -326,7 +326,7 @@ public:
    void forearmsOff()
   {
      if (forearmsThread != 0) {
-       forearms_on = false;
+       forearms_on.store(false);
        forearmsThread->join();
        delete forearmsThread;
        forearmsThread = 0;
