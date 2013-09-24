@@ -16,7 +16,7 @@ int sleep_time = 100000;
 void subscribe(leapData* data, void* zmq_sub)
 {
 	if(verbose) std::cout << "Receiving leap data..." << std::endl;
-	int rc = zmq_recv(zmq_sub, data, sizeof(leapData), 0);
+	int rc = zmq_recv(zmq_sub, data, sizeof(leapData), ZMQ_DONTWAIT);
 	if(verbose && rc > 0) std::cout << "Leap data received!" << std::endl;
 }
 
@@ -64,13 +64,13 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		subscribe(&leapD, sub);
-		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.roll << std::endl;
+		if(verbose) std::cout << "LEFT: " << leapD.lx << " " << leapD.ly << " " << leapD.lz << " " << leapD.lroll << std::endl;
+		if(verbose) std::cout << "RIGHT: " << leapD.rx << " " << leapD.ry << " " << leapD.rz << " " << leapD.rroll << std::endl;
 		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
 	}
 
 	zmq_close(sub);
 	zmq_ctx_destroy(context);
 
-	
 	return 0;
 }
