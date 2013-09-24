@@ -126,47 +126,32 @@ public:
   std::thread *forearmsThread;
   std::atomic < bool > forearms_on;
   void subscribeToForearms() {	//Forearms thread function
-    int rcLeft, rcRight;
+    int rc;
     float tmpLeft = 0, tmpRight = 0;
-    leapData leapLeft;
-	//	leapData leapRight;
+    leapData leap;
 	
-	void *contextLeft = zmq_ctx_new ();
-	//void *contextRight = zmq_ctx_new ();
-	void *subLeft = zmq_socket(contextLeft, ZMQ_SUB);
-	//	void *subRight = zmq_socket(contextRight, ZMQ_SUB);
-	rcLeft = zmq_setsockopt(subLeft, ZMQ_SUBSCRIBE, "", 0);
-	//rcRight = zmq_setsockopt(subRight, ZMQ_SUBSCRIBE,"",0);
-	if (zmq_connect(subLeft, "tcp://192.168.2.113:9990") != 0)
+	void *context = zmq_ctx_new ();
+	void *sub = zmq_socket(context, ZMQ_SUB);
+	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
+	if (zmq_connect(sub, "tcp://192.168.2.113:9990") != 0)
 	{
 		printf("Error initializing 0mq LEFT FOREARM...\n");
 		return;
-	}
-	
-	/*if (zmq_connect(subRight, "tcp://192.168.2.113:9991") != 0)
-	{
-		printf("Error initializing 0mq RIGHT FOREARM...\n");
-		return;
-		}*/
-	
+	}	
 
 	while(forearms_on.load())
 	{
-			subscribeF(subLeft,&leapLeft);
-			//subscribeF(subRight,&leapRight);
-			tmpLeft = leapLeft.roll * -1.0;
+			subscribeF(sub,&leap);
+			tmpLeft = leap.lroll * -1.0;
 			if (tmpLeft > 44.0) tmpLeft = 44.0;
 			if (tmpLeft < -44.0) tmpLeft = -44.0;
 			mover->left.forearm.setup(tmpLeft);
-			//mover->right.forearm.setup(leapRight.roll);
-//			cout << "adjusted hands (rthumb=" << manos.rthumb << ")." << endl;
+			//mover->right.forearm.setup(leapRight.rroll);
 			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
-//	cout << "ending hands control." << endl;	
-	zmq_close(subLeft);
-	//zmq_close(subRight);
-	zmq_ctx_destroy(contextLeft);
-	//zmq_ctx_destroy(contextRight);
+//	cout << "ending forearm control." << endl;	
+	zmq_close(sub);
+	zmq_ctx_destroy(context);
   }
 
 
