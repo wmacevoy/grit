@@ -65,14 +65,23 @@ void handListener::onFrame(const Controller& controller)
 	if (!frame.hands().empty())
 	{
 		// Get the first hand
-		const Hand hand = frame.hands()[0];
-		if(verbose) std::cout << "Palm position: " << hand.palmPosition() << "  Palm normal: " << hand.palmNormal() << std::endl;
+		const Hand lhand = frame.hands()[0];
+		const Hand rhand = frame.hands()[1];
+		if(verbose) std::cout << "Left Palm position: " << lhand.palmPosition() << std::endl;
+		if(verbose) std::cout << "Left Palm position: " << rhand.palmPosition() << std::endl;
+
 		locker.lock();
-		leapD.x = hand.palmPosition()[0]; leapD.y = hand.palmPosition()[1]; leapD.z = hand.palmPosition()[2];
-		leapD.roll = hand.palmNormal().roll() * 180.0 / M_PI;
+
+		leapD.lx = lhand.palmPosition()[0]; leapD.ly = lhand.palmPosition()[1]; leapD.lz = lhand.palmPosition()[2];
+		leapD.lroll = lhand.palmNormal().roll() * 180.0 / M_PI;
+
+		leapD.rx = rhand.palmPosition()[0]; leapD.ry = rhand.palmPosition()[1]; leapD.rz = rhand.palmPosition()[2];
+		leapD.rroll = rhand.palmNormal().roll() * 180.0 / M_PI;
+
 		locker.unlock();
 
-		if(verbose) std::cout << leapD.x << " " << leapD.y << " " << leapD.z << " " << leapD.roll << std::endl;
+		if(verbose) std::cout << "LEFT: " << leapD.lx << " " << leapD.ly << " " << leapD.lz << " " << leapD.lroll << std::endl;
+		if(verbose) std::cout << "RIGHT: " << leapD.rx << " " << leapD.ry << " " << leapD.rz << " " << leapD.rroll << std::endl;
 	}	
 }
 
