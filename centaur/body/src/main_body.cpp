@@ -60,10 +60,20 @@ void subscribe(void *zmq_sub, Hands* manos)
 	manos->rring=mapFingerAngle(manos->rring);
 }
 
+float mapForearmRollAngle(float angle, float left_right)
+{
+  angle *= left_right;
+  if (angle < -175.0) angle = -175.0;
+  if (angle > 175.0) angle = 175.0;
+  return angle;
+}
+
 void subscribeF(void *zmq_sub, leapData *leapItem)
 {
   leapItem->clear();
   int rc = zmq_recv(zmq_sub, leapItem, sizeof(leapData), 0);
+  leapItem->lroll = mapForearmRollAngle(leapItem->lroll, -1.0);
+  leapItem->rroll = mapForearmRollAngle(leapItem->rroll, 1.0);
   //NEED XYZ MAPPING STUFF
 }
 
@@ -142,11 +152,8 @@ public:
 	while(forearms_on.load())
 	{
 			subscribeF(sub,&leap);
-			tmpLeft = leap.lroll * -1.0;
-			if (tmpLeft > 44.0) tmpLeft = 44.0;
-			if (tmpLeft < -44.0) tmpLeft = -44.0;
-			mover->left.forearm.setup(tmpLeft);
-			//mover->right.forearm.setup(leapRight.rroll);
+			mover->left.forearm.setup(leap.lroll);
+			//mover->right.forearm.setup(leap.rroll);
 			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
 //	cout << "ending forearm control." << endl;	
