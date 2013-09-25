@@ -63,8 +63,8 @@ void subscribe(void *zmq_sub, Hands* manos)
 float mapForearmRollAngle(float angle, float left_right)
 {
   angle *= left_right;
-  if (angle < -175.0) angle = -175.0;
-  if (angle > 175.0) angle = 175.0;
+  if (angle < -90.0) angle = -90.0;
+  if (angle > 90.0) angle = 90.0;
   return angle;
 }
 
