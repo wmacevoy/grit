@@ -101,12 +101,13 @@ public:
   void subscribeToHands() {	//Hands thread function
 	int rc;
 	Hands manos;
+	std::string address = cfg->str("body.commander.glovesAddress", "tcp://192.168.2.113:6689");
 	
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	
-	if (zmq_connect(sub, "tcp://192.168.2.113:6689") != 0)
+	if (zmq_connect(sub, address.c_str()) != 0)
 	{
 		printf("Error initializing 0mq...\n");
 		return;
@@ -138,11 +139,12 @@ public:
   void subscribeToForearms() {	//Forearms thread function
     int rc;
     leapData leap;
-	
+    std::string address = cfg->str("body.commander.leapAddress", "tcp://192.168.2.113:9990");	
+
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
-	if (zmq_connect(sub, "tcp://192.168.2.113:9990") != 0)
+	if (zmq_connect(sub, address.c_str()) != 0)
 	{
 		printf("Error initializing 0mq ARMS...\n");
 		return;
