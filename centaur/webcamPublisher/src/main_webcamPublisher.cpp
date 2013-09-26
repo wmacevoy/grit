@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 	if (verbose) cfg.show();
 
 	int index = cfg.num("webcam.provider.index", 1);
-	int sleep_time = cfg.num("webcam.provider.sleep_time", 200);
+	int sleep_time = cfg.num("webcam.provider.sleep_time", 500);
 
 	int hwm = 1;
 	int rc = 0;

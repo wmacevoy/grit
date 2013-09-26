@@ -60,11 +60,11 @@ void subscribe(void *zmq_sub, Hands* manos)
 	manos->rring=mapFingerAngle(manos->rring);
 }
 
-float mapForearmRollAngle(float angle, float left_right)
+float mapForearmRollAngle(float angle)
 {
-  angle *= left_right;
-  if (angle < -90.0) angle = -90.0;
-  if (angle > 90.0) angle = 90.0;
+  angle *= -1.0;
+  if (angle < -44.0) angle = -44.0;
+  if (angle > 44.0) angle = 44.0;
   return angle;
 }
 
@@ -72,8 +72,8 @@ void subscribeF(void *zmq_sub, leapData *leapItem)
 {
   leapItem->clear();
   int rc = zmq_recv(zmq_sub, leapItem, sizeof(leapData), 0);
-  leapItem->lroll = mapForearmRollAngle(leapItem->lroll, -1.0);
-  leapItem->rroll = mapForearmRollAngle(leapItem->rroll, 1.0);
+  leapItem->lroll = mapForearmRollAngle(leapItem->lroll);
+  leapItem->rroll = mapForearmRollAngle(leapItem->rroll);
   //NEED XYZ MAPPING STUFF
 }
 
@@ -137,7 +137,6 @@ public:
   std::atomic < bool > forearms_on;
   void subscribeToForearms() {	//Forearms thread function
     int rc;
-    float tmpLeft = 0, tmpRight = 0;
     leapData leap;
 	
 	void *context = zmq_ctx_new ();
@@ -145,7 +144,7 @@ public:
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	if (zmq_connect(sub, "tcp://192.168.2.113:9990") != 0)
 	{
-		printf("Error initializing 0mq LEFT FOREARM...\n");
+		printf("Error initializing 0mq ARMS...\n");
 		return;
 	}	
 
@@ -153,7 +152,7 @@ public:
 	{
 			subscribeF(sub,&leap);
 			mover->left.forearm.setup(leap.lroll);
-			//mover->right.forearm.setup(leap.rroll);
+			mover->right.forearm.setup(leap.rroll);
 			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
 //	cout << "ending forearm control." << endl;	
