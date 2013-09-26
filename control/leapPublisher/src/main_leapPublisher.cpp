@@ -68,15 +68,17 @@ void handListener::onFrame(const Controller& controller)
 		const Hand lhand = frame.hands()[0];
 		const Hand rhand = frame.hands()[1];
 		if(verbose) std::cout << "Left Palm position: " << lhand.palmPosition() << std::endl;
-		if(verbose) std::cout << "Left Palm position: " << rhand.palmPosition() << std::endl;
+		if(verbose) std::cout << "Right Palm position: " << rhand.palmPosition() << std::endl;
 
 		locker.lock();
 
 		leapD.lx = lhand.palmPosition()[0]; leapD.ly = lhand.palmPosition()[1]; leapD.lz = lhand.palmPosition()[2];
 		leapD.lroll = lhand.palmNormal().roll() * 180.0 / M_PI;
+		leapD.lroll = lhand.palmNormal().pitch()  * 180.0 / M_PI;
 
 		leapD.rx = rhand.palmPosition()[0]; leapD.ry = rhand.palmPosition()[1]; leapD.rz = rhand.palmPosition()[2];
 		leapD.rroll = rhand.palmNormal().roll() * 180.0 / M_PI;
+		leapD.rroll = rhand.palmNormal().pitch()  * 180.0 / M_PI;
 
 		locker.unlock();
 
