@@ -65,31 +65,45 @@ void handListener::onFrame(const Controller& controller)
 	if (!frame.hands().empty())
 	{
 		// Get the first hand
-		const Hand lhand = frame.hands()[0];
-		//const Hand rhand = frame.hands()[1];
-		if(verbose) std::cout << "Left Palm position: " << lhand.palmPosition() << std::endl;
-		//if(verbose) std::cout << "Right Palm position: " << rhand.palmPosition() << std::endl;
+		const Hand hand0 = frame.hands()[0];
+		const Hand hand1 = frame.hands()[1];
+		if(verbose) std::cout << "hand0 Palm position: " << hand0.palmPosition() << std::endl;
+		if(verbose) std::cout << "hand1 Palm position: " << hand1.palmPosition() << std::endl;
 
 		locker.lock();
 
-		if(lhand.isValid())
+		//This is a possible solution to keep the hands appropriately distinguished.  
+		if(hand0.palmPosition()[0] < 0)
 		{
-			leapD.lx = lhand.palmPosition()[0]; leapD.ly = lhand.palmPosition()[1]; leapD.lz = lhand.palmPosition()[2];
-			leapD.lroll = lhand.palmNormal().roll() * 180.0 / M_PI;
-			leapD.lroll = lhand.palmNormal().pitch()  * 180.0 / M_PI;
+			leapD.lx = hand0.palmPosition()[0]; leapD.ly = hand0.palmPosition()[1]; leapD.lz = hand0.palmPosition()[2];
+			leapD.roll = hand0.palmNormal().roll() * 180.0 / M_PI;
+			leapD.roll = hand0.palmNormal().pitch()  * 180.0 / M_PI;
+			
+			if(hand1.isValid())
+			{
+				leapD.rx = hand1.palmPosition()[0]; leapD.ry = hand1.palmPosition()[1]; leapD.rz = hand1.palmPosition()[2];
+				leapD.rroll = hand1.palmNormal().roll() * 180.0 / M_PI;
+				leapD.rroll = hand1.palmNormal().pitch()  * 180.0 / M_PI;
+			}
 		}
-
-		/*if(rhand.isValid())
+		else if(hand0.palmPosition()[0] > 0)
 		{
-			leapD.rx = rhand.palmPosition()[0]; leapD.ry = rhand.palmPosition()[1]; leapD.rz = rhand.palmPosition()[2];
-			leapD.rroll = rhand.palmNormal().roll() * 180.0 / M_PI;
-			leapD.rroll = rhand.palmNormal().pitch()  * 180.0 / M_PI;
-		}*/
+			leapD.rx = hand0.palmPosition()[0]; leapD.ry = hand0.palmPosition()[1]; leapD.rz = hand0.palmPosition()[2];
+			leapD.rroll = hand0.palmNormal().roll() * 180.0 / M_PI;
+			leapD.rroll = hand0.palmNormal().pitch()  * 180.0 / M_PI;
+
+			if(hand1.isValid())
+			{
+				leapD.lx = hand1.palmPosition()[0]; leapD.ly = hand1.palmPosition()[1]; leapD.lz = hand1.palmPosition()[2];
+				leapD.roll = hand1.palmNormal().roll() * 180.0 / M_PI;
+				leapD.roll = hand1.palmNormal().pitch()  * 180.0 / M_PI;
+			}
+		}
 
 		locker.unlock();
 
 		if(verbose) std::cout << "LEFT: " << leapD.lx << " " << leapD.ly << " " << leapD.lz << " " << leapD.lroll << std::endl;
-		//if(verbose) std::cout << "RIGHT: " << leapD.rx << " " << leapD.ry << " " << leapD.rz << " " << leapD.rroll << std::endl;
+		if(verbose) std::cout << "RIGHT: " << leapD.rx << " " << leapD.ry << " " << leapD.rz << " " << leapD.rroll << std::endl;
 	}	
 }
 
