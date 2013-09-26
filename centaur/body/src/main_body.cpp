@@ -234,6 +234,11 @@ public:
   {
     return mover->load(file);
   }
+
+  bool play(const string &file)
+  {
+    return mover->play(file);
+  }
   
   void shake() {
 	setRBicep(-30);
@@ -327,6 +332,29 @@ public:
   }
 
 
+  bool enable(string part, bool value)
+  {
+    float torque = (value) ? 0.75 : 0.0;
+    bool ok = false;
+    if (part == "left") {
+      mover->left.torque(torque);
+      ok=true;
+    }
+    if (part == "right") {
+      mover->right.torque(torque);
+      ok=true;
+    }
+
+    ostringstream oss;
+    if (ok) {
+      oss << "my " << part << " is " << (value ? "enabled" : "disabled");
+      answer(oss);
+    } else {
+      oss << "what is " << part << "?";
+      answer(oss);
+    }
+  }
+
   void act(string &command)
   {
     istringstream iss(command);
@@ -341,10 +369,15 @@ public:
       capture.EndCapture();
       answer(capture.GetCapture());
     }
-    if (head == "RightArmLimp") {
-      mover->right.torque(0);
-      oss << "my right arm is numb!";
-      answer(oss);
+    if (head == "enable") {
+      string part;
+      iss >> part;
+      enable(part,true);
+    }
+    if (head == "disable") {
+      string part;
+      iss >> part;
+      enable(part,false);
     }
     if (head == "Circle") {
       float radius;
@@ -354,11 +387,6 @@ public:
       oss << "Circle " << radius << " :ok."; 
       answer(oss.str());
 	}
-    if (head == "RightArmMove") {
-      mover->right.torque(0.75);
-      oss << "my right arm is not numb.";
-      answer(oss);
-    }
     if (head == "report") {
       ostringstream oss;
       body->report(oss);
@@ -542,6 +570,14 @@ public:
       ostringstream oss;
       setWaist(angle);
       oss << "waist " << angle << " :ok."; 
+      answer(oss.str());
+    }
+    if (head == "play") {
+      string file;
+      iss >> file;
+      ostringstream oss;
+      oss << "play file '" << file << "' :" 
+	  << (play(file) ? "ok" : "failed") << ".";
       answer(oss.str());
     }
     if (head == "load") {

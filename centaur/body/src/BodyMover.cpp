@@ -5,6 +5,7 @@
 #include "CSVRead.h"
 #include "BodyGlobals.h"
 #include <cmath>
+#include <sstream>
 
 using namespace std;
 
@@ -39,6 +40,61 @@ bool BodyMover::circle(float r,float x,float y,float z) {
   }
   return true;
 }
+
+ServoMover* BodyMover::getMover(const std::string &name)
+{
+  if (name == "LEFTARM_SHOULDER_IO") return &left.leftRight;
+  if (name == "LEFTARM_SHOULDER_UD") return &left.upDown;
+  if (name == "LEFTARM_BICEP_ROTATE") return &left.bicep;
+  if (name == "LEFTARM_ELBOW") return &left.elbow;
+  if (name == "LEFTARM_FOREARM_ROTATE") return &left.forearm;
+  if (name == "LEFTARM_TRIGGER") return &left.trigger;  
+  if (name == "LEFTARM_MIDDLE") return &left.middle;  
+  if (name == "LEFTARM_RING") return &left.ring;
+  if (name == "LEFTARM_THUMB") return &left.thumb;
+
+  return 0;
+}
+
+bool BodyMover::play(const std::string &file)
+{
+  vector<vector<double>> data;
+
+  ostringstream oss;
+  oss << "time";
+  for (std::map < int , SPServo > :: iterator i = servos.begin();  i!=servos.end(); ++i) {
+    oss << "," << i->first;
+  }
+  
+  string headers = oss.str();
+  
+  if (!CSVRead(file,headers,data)) {
+    cout << "CSVRead failed " << endl;
+    return false;
+  }
+  
+  int nr=data.size();
+  int c=0;
+
+  double T = data[nr-1][0]-data[0][0]+(data[nr-1][0]-data[nr-2][0]);
+  
+  for (std::map < int , SPServo > :: iterator i = servos.begin();  i!=servos.end(); ++i) {
+    ++c;
+    string name = cfg->servo(i->first,"name");
+    ServoMover *mover = getMover(name);
+    if (mover == 0) {
+      cout << "skipped unknown servo " << name << endl;
+    } else {
+      std::map < float , float > angles;
+      for (int r=0; r<nr; ++r) {
+	angles[data[r][0]]=data[r][c];
+      }
+      mover->setup(T,angles,simTime,simTime+T);
+    }
+  }
+  return false;
+}
+
 
 bool BodyMover::load(const std::string &file)
 {

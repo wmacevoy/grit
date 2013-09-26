@@ -30,6 +30,7 @@ extern double realTime;
 extern std::shared_ptr < Configure > cfg;
 
 extern SPServoController servoController;
+extern std::map < int , SPServo > servos;
 extern SPBody body;
 extern SPBodyMover mover;
 

@@ -18,6 +18,8 @@ class BodyMover
   bool circle(float r,float x,float y,float z);
   void move(Body &body);
   bool load(const std::string &file);
+  bool play(const std::string &file);
+  ServoMover* getMover(const std::string &name);
 };
 
 typedef std::shared_ptr < BodyMover > SPBodyMover;
