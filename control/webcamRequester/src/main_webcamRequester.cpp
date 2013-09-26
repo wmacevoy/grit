@@ -140,7 +140,7 @@ int main(int argc, char** argv)
 		if(inside)
 		{	
 			subscribe_lidar(lidar_data, sub_lidar);	
-			index = ind_min + ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+			index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 			//index = 380 + mx;
 			text = convstr(lidar_data[index] * 0.00328084);
 			putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
