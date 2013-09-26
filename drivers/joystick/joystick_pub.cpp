@@ -82,6 +82,7 @@ int main(int argc,char **argv) {
               }
             break;
             case SDL_QUIT:
+		SDL_Quit();
               return 0;
             break;
           }
