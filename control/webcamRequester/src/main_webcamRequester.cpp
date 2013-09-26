@@ -24,10 +24,10 @@ const int sz_lidar_data  = 1081;
 volatile int mx = 0;
 volatile int my = 0;
 
-const int x_min = 19;
-const int x_max = 617;
-const int ind_min = 464;
-const int ind_max = 614;
+const int x_min = 34;
+const int x_max = 285;
+const int ind_min = 479;
+const int ind_max = 605;
 
 std::string convstr(const float t)
 {
@@ -53,7 +53,7 @@ void mouseEvent(int evt, int x, int y, int flags, void* param)
 {
 	if(evt == CV_EVENT_MOUSEMOVE)
 	{
-		if(x >=0 && x <= 640 && y >= 190 && y <= 210)
+		if(x >=0 && x <= 640 && y >= 45 && y <= 65)
 		{
 			mx = x;
 			my = y;
@@ -127,8 +127,8 @@ int main(int argc, char** argv)
 	signal(SIGQUIT, quitproc);
 
 	//Line on screen needs to be calibrated with lidar
-	Point pt1(0, 195);
-	Point pt2(640, 195);
+	Point pt1(0, 55);
+	Point pt2(640, 55);
 	Point textOrg(1, 30);
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
@@ -141,6 +141,7 @@ int main(int argc, char** argv)
 		{	
 			subscribe_lidar(lidar_data, sub_lidar);	
 			index = ind_min + ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+			//index = 380 + mx;
 			text = convstr(lidar_data[index] * 0.00328084);
 			putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 			if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << std::endl;
