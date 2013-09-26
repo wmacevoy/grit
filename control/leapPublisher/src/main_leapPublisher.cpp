@@ -87,7 +87,7 @@ void handListener::onFrame(const Controller& controller)
 
 void SignalHandler(int sig)
 {
-	if(verbose) printf("\nQuitting...\n");
+	printf("\nQuitting...\n");
 	die = 1;
 }
 
@@ -126,7 +126,7 @@ int main(int argc, char** argv)
 	sigaction (SIGTERM, &new_action, NULL);
 	sigaction (SIGINT, &new_action, NULL);
 
-	while(!die || controller.isConnected())
+	while(!die)
 	{
 		publish(&leapD, pub);
 		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
