@@ -76,8 +76,8 @@ void handListener::onFrame(const Controller& controller)
 		if(hand0.palmPosition()[0] < 0)
 		{
 			leapD.lx = hand0.palmPosition()[0]; leapD.ly = hand0.palmPosition()[1]; leapD.lz = hand0.palmPosition()[2];
-			leapD.roll = hand0.palmNormal().roll() * 180.0 / M_PI;
-			leapD.roll = hand0.palmNormal().pitch()  * 180.0 / M_PI;
+			leapD.lroll = hand0.palmNormal().roll() * 180.0 / M_PI;
+			leapD.lroll = hand0.palmNormal().pitch()  * 180.0 / M_PI;
 			
 			if(hand1.isValid())
 			{
@@ -95,8 +95,8 @@ void handListener::onFrame(const Controller& controller)
 			if(hand1.isValid())
 			{
 				leapD.lx = hand1.palmPosition()[0]; leapD.ly = hand1.palmPosition()[1]; leapD.lz = hand1.palmPosition()[2];
-				leapD.roll = hand1.palmNormal().roll() * 180.0 / M_PI;
-				leapD.roll = hand1.palmNormal().pitch()  * 180.0 / M_PI;
+				leapD.lroll = hand1.palmNormal().roll() * 180.0 / M_PI;
+				leapD.lroll = hand1.palmNormal().pitch()  * 180.0 / M_PI;
 			}
 		}
 
