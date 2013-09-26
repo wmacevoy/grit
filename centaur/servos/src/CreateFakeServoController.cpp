@@ -10,7 +10,7 @@ class FakeServo : public Servo
  float goalAngle;
  float minAngle;
  float maxAngle;
- float rate;
+ float goalSpeed;
 
   bool curveMode;
   double ct[2];
@@ -21,7 +21,7 @@ class FakeServo : public Servo
     goalAngle = 0;
     minAngle = -10*360;
     maxAngle =  10*360;
-    rate = 90.0;
+    goalSpeed = 90.0;
     t = now();
 
     curveMode = false;
@@ -46,7 +46,7 @@ class FakeServo : public Servo
     }
 #endif
     
-    float dist = rate*delta;
+    float dist = goalSpeed*delta;
     float effectiveGoalAngle = goalAngle;
     
     if (goalAngle < minAngle) effectiveGoalAngle = minAngle;
@@ -89,10 +89,15 @@ class FakeServo : public Servo
 
   void speed(float value)
   {
-    rate = value;
+    goalSpeed = value;
   }
 
   void torque(float value)
+  {
+    // ignored
+  }
+
+  void rate(float value)
   {
     // ignored
   }

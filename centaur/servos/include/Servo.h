@@ -14,6 +14,7 @@ public:
   virtual void  angle(float value)=0;
   virtual void  speed(float value)=0; // degrees/sec
   virtual void  torque(float value)=0; // fraction of maximum, zero is disabled.
+  virtual void  rate(float value)=0; // hertz
   virtual ~Servo();
   virtual void id(int id_);
   virtual void name(const std::string &name_);

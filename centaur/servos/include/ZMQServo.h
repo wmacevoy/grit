@@ -9,6 +9,7 @@ class ZMQServo : public Servo
   float currentAngle;
   float goalSpeed;
   float goalTorque;
+  float goalRate;
 
   bool curveMode;
   double t[2];
@@ -23,4 +24,5 @@ class ZMQServo : public Servo
   void speed(float value);
   float torque() const;
   void torque(float value);
+  void rate(float value);
 };

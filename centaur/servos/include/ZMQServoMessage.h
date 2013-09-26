@@ -7,6 +7,7 @@ public:
 	 SET_SPEED,
 	 SET_TORQUE,
 	 SET_CURVE,
+	 SET_RATE,
 	 DO_NOTHING
   };
 

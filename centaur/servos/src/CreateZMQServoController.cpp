@@ -12,16 +12,20 @@
 #include "ZMQServoMessage.h"
 #include "ZMQHub.h"
 #include "ZMQServo.h"
+#include "now.h"
+#include "math.h"
 
 struct ZMQServoController : ServoController, ZMQHub
 {
   typedef std::map < int , ZMQServo* > Servos;
   Servos servos;
+  double txTime;
 
   void start()
   {
     ServoController::start();
     ZMQHub::start();
+    txTime = 0;
   }
 
   void rx(ZMQSubscribeSocket &socket) 
@@ -39,6 +43,8 @@ struct ZMQServoController : ServoController, ZMQHub
   }
 
   void tx(ZMQPublishSocket &socket) {
+    double lastTxTime = txTime;
+    txTime = now();
     for (Servos::iterator i = servos.begin(); i!=servos.end(); ++i) {
       if (i->second->curveMode) {
 	{
@@ -55,15 +61,6 @@ struct ZMQServoController : ServoController, ZMQHub
 	  data->c1[0] = i->second->c1[0];
 	  data->c1[1] = i->second->c1[1];
 	  data->c1[2] = i->second->c1[2];
-	  msg.send(socket);
-	}
-	{
-	  ZMQMessage msg(sizeof(ZMQServoMessage));
-	  ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
-	  
-	  data->messageId = ZMQServoMessage::SET_TORQUE;
-	  data->servoId = i->first;
-	  data->value = i->second->goalTorque;
 	  msg.send(socket);
 	}
       } else {
@@ -86,15 +83,29 @@ struct ZMQServoController : ServoController, ZMQHub
 	  data->value = i->second->goalSpeed;
 	  msg.send(socket);
 	}
-	
+      }
+
+      // send these messages only once per second
+      if (txTime == 0 || floor(lastTxTime) != floor(txTime)) {
 	{
-	  ZMQMessage msg(sizeof(ZMQServoMessage));
-	  ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+	  {
+	    ZMQMessage msg(sizeof(ZMQServoMessage));
+	    ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
 	  
-	  data->messageId = ZMQServoMessage::SET_TORQUE;
-	  data->servoId = i->first;
-	  data->value = i->second->goalTorque;
-	  msg.send(socket);
+	    data->messageId = ZMQServoMessage::SET_TORQUE;
+	    data->servoId = i->first;
+	    data->value = i->second->goalTorque;
+	    msg.send(socket);
+	  }
+	  {
+	    ZMQMessage msg(sizeof(ZMQServoMessage));
+	    ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+	  
+	    data->messageId = ZMQServoMessage::SET_RATE;
+	    data->servoId = i->first;
+	    data->value = i->second->goalRate;
+	    msg.send(socket);
+	  }
 	}
       }
     }

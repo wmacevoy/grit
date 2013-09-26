@@ -54,3 +54,7 @@ float ZMQServo::torque() const
   return goalTorque; 
 }
 
+void ZMQServo::rate(float value)
+{
+  goalRate = value;
+}
