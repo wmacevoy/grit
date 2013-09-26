@@ -71,35 +71,35 @@ void handListener::onFrame(const Controller& controller)
 		if(verbose) std::cout << "hand1 Palm position: " << hand1.palmPosition() << std::endl;
 
 		locker.lock();
-
+		
 		//This is a possible solution to keep the hands appropriately distinguished.  
 		if(hand0.palmPosition()[0] < 0)
 		{
 			leapD.lx = hand0.palmPosition()[0]; leapD.ly = hand0.palmPosition()[1]; leapD.lz = hand0.palmPosition()[2];
 			leapD.lroll = hand0.palmNormal().roll() * 180.0 / M_PI;
-			leapD.lroll = hand0.palmNormal().pitch()  * 180.0 / M_PI;
+			leapD.lpitch = hand0.palmNormal().pitch()  * 180.0 / M_PI;
 			
 			if(hand1.isValid())
 			{
 				leapD.rx = hand1.palmPosition()[0]; leapD.ry = hand1.palmPosition()[1]; leapD.rz = hand1.palmPosition()[2];
 				leapD.rroll = hand1.palmNormal().roll() * 180.0 / M_PI;
-				leapD.rroll = hand1.palmNormal().pitch()  * 180.0 / M_PI;
+				leapD.rpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
 			}
 		}
 		else if(hand0.palmPosition()[0] > 0)
 		{
 			leapD.rx = hand0.palmPosition()[0]; leapD.ry = hand0.palmPosition()[1]; leapD.rz = hand0.palmPosition()[2];
 			leapD.rroll = hand0.palmNormal().roll() * 180.0 / M_PI;
-			leapD.rroll = hand0.palmNormal().pitch()  * 180.0 / M_PI;
+			leapD.rpitch = hand0.palmNormal().pitch()  * 180.0 / M_PI;
 
 			if(hand1.isValid())
 			{
 				leapD.lx = hand1.palmPosition()[0]; leapD.ly = hand1.palmPosition()[1]; leapD.lz = hand1.palmPosition()[2];
 				leapD.lroll = hand1.palmNormal().roll() * 180.0 / M_PI;
-				leapD.lroll = hand1.palmNormal().pitch()  * 180.0 / M_PI;
+				leapD.lpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
 			}
-		}
-
+			}
+		  
 		locker.unlock();
 
 		if(verbose) std::cout << "LEFT: " << leapD.lx << " " << leapD.ly << " " << leapD.lz << " " << leapD.lroll << std::endl;
