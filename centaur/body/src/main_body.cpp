@@ -73,7 +73,7 @@ void subscribeF(void *zmq_sub, leapData *leapItem)
   leapItem->clear();
   int rc = zmq_recv(zmq_sub, leapItem, sizeof(leapData), 0);
   leapItem->lroll = mapForearmRollAngle(leapItem->lroll);
-  leapItem->rroll = mapForearmRollAngle(leapItem->rroll);
+  //leapItem->rroll = mapForearmRollAngle(leapItem->rroll);
   //NEED XYZ MAPPING STUFF
 }
 
@@ -152,7 +152,7 @@ public:
 	{
 			subscribeF(sub,&leap);
 			mover->left.forearm.setup(leap.lroll);
-			mover->right.forearm.setup(leap.rroll);
+			//			mover->right.forearm.setup(leap.rroll);
 			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
 //	cout << "ending forearm control." << endl;	
