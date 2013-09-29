@@ -73,9 +73,10 @@ void subscribeF(void *zmq_sub, leapData *leapItem)
   leapItem->clear();
   int rc = zmq_recv(zmq_sub, leapItem, sizeof(leapData), 0);
   leapItem->lroll = mapForearmAngle(leapItem->lroll);
-  leapItem->rroll = mapForearmAngle(leapItem->rroll);
-  leapItem->lpitch = mapForearmAngle(leapItem->lpitch);
-  leapItem->rpitch = mapForearmAngle(leapItem->rpitch);
+  //leapItem->rroll = mapForearmAngle(leapItem->rroll);
+  //leapItem->lpitch = mapForearmAngle(leapItem->lpitch);
+  //leapItem->rpitch = mapForearmAngle(leapItem->rpitch);
+  //leapItem->lyaw = mapForearmAngle(leapItem->lyaw);
   //NEED XYZ MAPPING STUFF
 }
 
@@ -156,9 +157,9 @@ public:
 	{
 			subscribeF(sub,&leap);
 			mover->left.forearm.setup(leap.lroll);
-			mover->right.forearm.setup(leap.rroll);
+			//mover->right.forearm.setup(leap.rroll);
 			mover->left.elbow.setup(leap.lpitch);
-			move->right.elbow.setup(leap.rpitch);
+			//mover->right.elbow.setup(leap.rpitch);
 			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
 //	cout << "ending forearm control." << endl;	
