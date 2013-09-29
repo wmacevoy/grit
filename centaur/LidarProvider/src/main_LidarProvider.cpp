@@ -67,7 +67,7 @@ int main(int argc, char** argv)
 	int rcl = 0;
 
 	std::string lidar_path = cfg.str("lidar.provider.path", "/dev/ttyACM0").c_str();
-	sleep_time = (int)cfg.num("lidar.provider.sleep_time", 25);
+	sleep_time = (int)cfg.num("lidar.provider.sleep_time", 1000);
 
 	//Initialize ZMQ and LIDAR connection
 	void* context_lidar = zmq_ctx_new ();
