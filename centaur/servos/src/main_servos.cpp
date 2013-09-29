@@ -3,6 +3,7 @@
 #include <iostream>
 #include <assert.h>
 #include <signal.h>
+#include <unistd.h>
 
 #include "Configure.h"
 #include "zmq.hpp"
@@ -44,7 +45,7 @@ SPServo servo(string device, int id)
     controller=realServoController;
   }
   
-  if (controller.get() == 0) throw out_of_range(device);
+//  if (controller.get() == 0) throw out_of_range(device);
   
   SPServo ans = SPServo(controller->servo(id));
   return ans;

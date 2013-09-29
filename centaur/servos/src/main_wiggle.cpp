@@ -3,6 +3,7 @@
 #include <memory>
 #include <math.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "CreateFakeServoController.h"
 #include "CreateZMQServoController.h"
