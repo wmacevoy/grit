@@ -143,6 +143,7 @@ int main(int argc, char **argv)
   shared_ptr<Servo> servo(controller->servo(servoId));
 
   controller->start();
+  servo->torque(0.25);
   double t0 = now();
 
   while (running) {
