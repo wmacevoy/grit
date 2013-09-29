@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "Body.h"
 #include "LegsMover.h"
@@ -15,7 +16,8 @@ class BodyMover
   ServoMover waist;
   NeckMover neck;
   ArmMover left,right;
-  bool circle(float r,float x,float y,float z);
+  bool circle(double r,double x,double y,double z);
+  void fromTips(std::vector<std::vector <double> > data);  
   void move(Body &body);
   bool load(const std::string &file);
   bool play(const std::string &file);
