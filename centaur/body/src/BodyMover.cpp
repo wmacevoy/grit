@@ -18,26 +18,51 @@ void BodyMover::move(Body &body)
   right.move(body.right);
 }
 
-bool BodyMover::circle(float r,float x,float y,float z) {
+void BodyMover::fromTips(vector<vector <double> > data) {
+    int nr=data.size();
+
+    // assume regular spacing of samples
+    double T = data[nr-1][0]-data[0][0] + (data[1][0]-data[0][0]);
+
+    map < float , Point > t2tips[4];
+    map < float , float > t2waist;
+
+    for (size_t r=0; r<data.size(); ++r) {
+      for (int el=0; el<4; ++el) {
+	float t=data[r][0];
+	t2tips[el][t]=Point(data[r][1+3*el],
+				     data[r][2+3*el],
+				     data[r][3+3*el]);
+	t2waist[t]=data[r][13];
+      }
+    }
+
+    legs.setup(T,body->legs,t2tips,simTime,simTime+T);
+    waist.setup(T,t2waist,simTime,simTime+T);	
+}
+
+bool BodyMover::circle(double r,double x,double y,double z) {
   vector<vector<double>> data;
-  float steps=4.0/10.0; // 4s in ten of a second steps;
-  float da=2.0*M_PI/steps;
-  float waist=0;
-  for(float a=0;a<2.0*M_PI;a+=da) {
-	float t=4.0*a/(2.0*M_PI);
-    float l1x=-x;
-    float l1y=y;
-    float l1z=z;
-    float l2x=x;
-    float l2y=y;
-    float l2z=z;
-    float l3x=x;
-    float l3y=-y;
-    float l3z=z;
-    float l4x=-x;
-    float l4y=-y;
-    float l4z=z;
+  double steps=4.0/10.0; // 4s in ten of a second steps;
+  double da=2.0*M_PI/steps;
+  double waist=0;
+  for(double a=0;a<2.0*M_PI;a+=da) {
+	double t=4.0*a/(2.0*M_PI);
+    double l1x=-x; double l1y=y;  double l1z=z;  // default positions
+    double l2x=x;  double l2y=y;  double l2z=z;
+    double l3x=x;  double l3y=-y; double l3z=z;
+    double l4x=-x; double l4y=-y; double l4z=z;
+    double dx=r*cos(a); double dy=r*sin(a); // offset of center of mass
+    vector<double> p;
+    p.push_back(t);
+    p.push_back(l1x+dx); p.push_back(l1y+dy); p.push_back(l1z);
+    p.push_back(l2x+dx); p.push_back(l2y+dy); p.push_back(l2z);
+    p.push_back(l3x+dx); p.push_back(l3y+dy); p.push_back(l3z);
+    p.push_back(l4x+dx); p.push_back(l4y+dy); p.push_back(l4z);
+    p.push_back(waist);
+    data.push_back(p);
   }
+  fromTips(data);
   return true;
 }
 
@@ -107,7 +132,8 @@ bool BodyMover::load(const std::string &file)
     }
 
     cout << "read '" << file << "' ok." << endl;
-
+    fromTips(data);
+/*  All below copied into fromTips
     //    // add last row to finish cycle
     //data.push_back(data[0]);
     //int nr=data.size();
@@ -133,5 +159,6 @@ bool BodyMover::load(const std::string &file)
 
     legs.setup(T,body->legs,t2tips,simTime,simTime+T);
     waist.setup(T,t2waist,simTime,simTime+T);
+    */ 
     return true;
 }
