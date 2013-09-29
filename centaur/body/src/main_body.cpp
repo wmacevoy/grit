@@ -50,14 +50,14 @@ void subscribe(void *zmq_sub, Hands* manos)
 {
 	manos->clear();
 	int rc = zmq_recv(zmq_sub, manos, sizeof(Hands), 0);
-	manos->lthumb=mapFingerAngle(manos->lthumb);
-	manos->ltrigger=mapFingerAngle(manos->ltrigger);
-	manos->lmiddle=mapFingerAngle(manos->lmiddle); 
-	manos->lring=mapFingerAngle(360-manos->lring);
-	manos->rthumb=mapFingerAngle(360-manos->rthumb);
-	manos->rtrigger=mapFingerAngle(360-manos->rtrigger); 
-	manos->rmiddle=mapFingerAngle(360-manos->rmiddle); 
-	manos->rring=mapFingerAngle(manos->rring);
+	manos->lthumb=manos->lthumb;
+	manos->ltrigger=manos->ltrigger;
+	manos->lmiddle=manos->lmiddle; 
+	manos->lring=manos->lring;
+	manos->rthumb=manos->rthumb;
+	manos->rtrigger=manos->rtrigger; 
+	manos->rmiddle=manos->rmiddle; 
+	manos->rring=manos->rring;
 }
 
 float mapForearmAngle(float angle)

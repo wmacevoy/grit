@@ -39,6 +39,8 @@ struct DynamixelServo : Servo
   DXLIO &io;
   int id;
   int presentPosition;
+  int minAngle;
+  int maxAngle;
   int presentSpeed;
   int presentTorque;
   int goalPosition;
@@ -60,6 +62,8 @@ struct DynamixelServo : Servo
     enabled=true;
     minSpeed = atof(cfg.servo(id,"speed").c_str());
     minTorque = atof(cfg.servo(id,"torque").c_str());
+    minAngle = atof(cfg.servo(id,"minangle").c_str());
+    maxAngle = atof(cfg.servo(id,"maxangle").c_str());
     presentSpeed = 0;
     presentTorque = 0;
     //   cout << "create dynamixel servo id = " << id << " minSeed=" << minSpeed << " minTorque=" << minTorque << endl;
@@ -95,6 +99,8 @@ struct DynamixelServo : Servo
   }
 
   void angle0(float value) {
+    if (value < minAngle) value = minAngle;
+    else if (value > maxAngle) value = maxAngle;
     goalPosition = value*(2048/180.0)+2048;
     //    cout << "dynamixel servo=" << id << " goal position=" << goalPosition << endl;
   }
