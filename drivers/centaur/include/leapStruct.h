@@ -4,12 +4,14 @@ struct leapData{
 	float lz;
 	float lroll;
 	float lpitch;
+        float lyaw;
 
 	float rx;
 	float ry;
 	float rz;
 	float rroll;
 	float rpitch;
+  //float ryaw;
 
 	leapData() {clear();}
 	void clear()
