@@ -4,6 +4,7 @@ ZMQServo::ZMQServo()
   : goalAngle(0), currentAngle(0), goalSpeed(0), goalTorque(0)
 {
   curveMode = false;
+  goalRate = 1.0;
   t[0] = 0.0;
   t[1] = 0.0;
   c0[0]=c0[1]=c0[2] = 0.0;

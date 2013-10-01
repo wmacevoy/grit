@@ -118,7 +118,7 @@ public:
 	cout << "rx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
       } else {
 	ZMQServoCurveMessage *curveData = (ZMQServoCurveMessage *) data;
-	//cout << "rx msg id=" << curveData->messageId << " servo=" << curveData->servoId << " t=[" << curveData->t[0] << "," << curveData->t[1] << "] c0=[" << curveData->c0[0] << "," << curveData->c0[1] << "," << curveData->c0[2] << "]" << " c1=[" << curveData->c1[0] << "," << curveData->c1[1] << "," << curveData->c1[2] << "]"  << endl;
+	cout << "rx msg id=" << curveData->messageId << " servo=" << curveData->servoId << " t=[" << curveData->t[0] << "," << curveData->t[1] << "] c0=[" << curveData->c0[0] << "," << curveData->c0[1] << "," << curveData->c0[2] << "]" << " c1=[" << curveData->c1[0] << "," << curveData->c1[1] << "," << curveData->c1[2] << "]"  << endl;
       }
     }
     switch(data->messageId) {
