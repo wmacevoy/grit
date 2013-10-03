@@ -19,8 +19,17 @@ void Body::report(std::ostream &out) const
   out << endl;
 }
 
-void Body::temp_report(std::ostream &out) const
+void Body::temp_report(std::ostream &out, std::string part) const
 {
-  right.temp_report(out);
+  if (part == "right")
+    right.temp_report(out);
+  else if (part == "left")
+    left.temp_report(out);
+  /*else if (part == "waist")
+    waist.temp_report(out);
+  else if (part == "neck")
+    neck.temp_report(out);
+  else if (part == "legs")
+  legs.temp_report(out);*/
   out << endl;
 }

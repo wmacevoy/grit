@@ -684,9 +684,11 @@ public:
       oss << "laio|raio|laud|raud|lae|rae|lab|rab|laf|raf";
       answer(oss.str());
     }
-    if (head == "temps"){
+    if (head == "temp"){
       ostringstream oss;
-      body->temp_report(oss);
+      string temp = "";
+      iss >> temp;
+      body->temp_report(oss, temp);
       answer(oss.str());
       }
   }

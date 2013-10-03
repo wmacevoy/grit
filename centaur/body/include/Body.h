@@ -17,7 +17,7 @@ class Body
   RightArm right;
   void init();
   void report(std::ostream &out) const;
-  void temp_report(std::ostream &out) const;
+  void temp_report(std::ostream &out, std::string part) const;
 };
 
 typedef std::shared_ptr < Body > SPBody;
