@@ -323,4 +323,26 @@ bool DXLIO::readWord(int id, int address, int *value)
 #endif
 }
 
+bool DXLIO::readByte(int id, int address, int *value)
+{
+#if USE_DXL
+  int ans = dxl_read_byte(id,address);
+  int result = dxl_get_result();
+  bool ok = (result == COMM_RXSUCCESS || result == COMM_RXTIMEOUT || result == COMM_RXCORRUPT);
+  if (ok) {
+    if (value != 0) *value = ans;
+    okSince = now();
+  } else {
+    cout << "DXLIO::readByte(" 
+	 << id << "," 
+	 << address << ")=" 
+	 << ans << ", result=" << result << endl;
+    reopen();
+  }
+  return ok;
+#else
+#error readbyte not supported
+#endif
+}
+
 DXLIO::~DXLIO() { close(); }

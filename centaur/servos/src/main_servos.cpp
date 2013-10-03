@@ -134,18 +134,34 @@ public:
 
   void tx(ZMQPublishSocket &socket) {
     for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
-      ZMQMessage msg(sizeof(ZMQServoMessage));
-      ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
-    
-      data->messageId = ZMQServoMessage::GET_ANGLE;
-      data->servoId = i->first;
-      data->value = i->second->angle();
-
-      if (verbose) {
-	cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+      {
+	ZMQMessage msg(sizeof(ZMQServoMessage));
+	ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+	
+	data->messageId = ZMQServoMessage::GET_ANGLE;
+	data->servoId = i->first;
+	data->value = i->second->angle();
+	
+	if (verbose) {
+	  cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+	}
+	msg.send(socket);
       }
-      msg.send(socket);
+      {
+	ZMQMessage msg(sizeof(ZMQServoMessage));
+	ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
+	
+	data->messageId = ZMQServoMessage::GET_STATUS;
+	data->servoId = i->first;
+	data->value = i->second->status();
+	
+	if (verbose) {
+	  cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
+	}
+	msg.send(socket);
+      }
     }
+
   }
 
   void report()
@@ -156,7 +172,7 @@ public:
     for (Servos::iterator i = servos.begin();
 	 i != servos.end();
 	 ++i) {
-      cout << " angle[" << i->first << "]=" << i->second->angle() /*<< " speed " << i->second->speed()  */<< ",";
+      cout << " angle[" << i->first << "]=" << i->second->angle() << " status " << i->second->status()  << ",";
     }
     cout << endl;
   }

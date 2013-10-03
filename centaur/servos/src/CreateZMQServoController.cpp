@@ -37,7 +37,7 @@ struct ZMQServoController : ServoController, ZMQHub
     if (j != servos.end()) {
       switch(data->messageId) {
       case ZMQServoMessage::GET_ANGLE: 
-	j->second->currentAngle=data->value; break;
+	j->second->presentAngle=data->value; break;
       }
     }
   }

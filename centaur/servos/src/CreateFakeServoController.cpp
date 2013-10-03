@@ -30,7 +30,11 @@ class FakeServo : public Servo
   
   float speed() const { return 0.0; }
   float torque() const { return 0.0; }
-
+  
+  uint8_t status() const
+  {
+    return 0;
+  }
   void update() const
   {
     double delta = now()-t;

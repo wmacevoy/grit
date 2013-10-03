@@ -1,7 +1,7 @@
 #include "ZMQServo.h"
 
 ZMQServo::ZMQServo() 
-  : goalAngle(0), currentAngle(0), goalSpeed(0), goalTorque(0)
+  : goalAngle(0), presentAngle(0), goalSpeed(0), goalTorque(0)
 {
   curveMode = false;
   goalRate = 1.0;
@@ -26,7 +26,7 @@ void ZMQServo::curve(double t_[2], float c0_[3],float c1_[3])
 
 float ZMQServo::angle() const 
 { 
-  return currentAngle; 
+  return presentAngle; 
 }
 
 void ZMQServo::angle(float value) 
@@ -58,4 +58,9 @@ float ZMQServo::torque() const
 void ZMQServo::rate(float value)
 {
   goalRate = value;
+}
+
+uint8_t ZMQServo::status() const
+{
+  return presentStatus;
 }

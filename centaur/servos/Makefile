@@ -1,4 +1,4 @@
-all : libs progs
+oall : libs progs
 
 DRIVER_DEPS=utilities zmqpp
 MY_FLAGS=
