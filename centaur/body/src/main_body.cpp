@@ -131,6 +131,10 @@ public:
 		subscribeN(sub, &jm);
 		currentUpDown = currentUpDown + (deltat)*(float(jm.y2)/32.0)*(15.0);
 		currentLeftRight = currentLeftRight + (deltat)*(float(jm.x2)/32.0)*(15.0);
+		if(currentUpDown < -33) currentUpDown = -33;
+		else if(currentUpDown > 33) currentUpDown = 33;
+		if(currentLeftRight < -33) currentLeftRight = -33;
+		else if(currentLeftRight > 33) currentLeftRight = 33;
 		mover->neck.upDown.setup(currentUpDown);
 		mover->neck.leftRight.setup(currentLeftRight);
 		std::this_thread::sleep_for(std::chrono::microseconds(25));
@@ -680,6 +684,11 @@ public:
       oss << "laio|raio|laud|raud|lae|rae|lab|rab|laf|raf";
       answer(oss.str());
     }
+   /* if (head == "temps")
+      {
+	oss << mover->left.upDown.temp();
+	answer(oss.str());
+      }*/
   }
 
   void update()

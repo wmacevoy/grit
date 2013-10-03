@@ -4,7 +4,6 @@
 #include <assert.h>
 #include <signal.h>
 #include <unistd.h>
-#include <bitset>
 
 #include "Configure.h"
 #include "zmq.hpp"
