@@ -25,9 +25,9 @@ void Body::temp_report(std::ostream &out, std::string part) const
     right.temp_report(out);
   else if (part == "left")
     left.temp_report(out);
-  /*else if (part == "waist")
-    waist.temp_report(out);
-  else if (part == "neck")
+  else if (part == "waist")
+    waist->temp_report(out);
+  /*else if (part == "neck")
     neck.temp_report(out);
   else if (part == "legs")
   legs.temp_report(out);*/
