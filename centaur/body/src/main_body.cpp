@@ -35,6 +35,7 @@
 #include "Script.h"
 #include "StdCapture.h"
 #include "leapStruct.h"
+#include "joystick.h"
 
 
 SPScript py;
@@ -46,7 +47,7 @@ int mapFingerAngle(int angle){
 	return angle;
 }
 
-void subscribe(void *zmq_sub, Hands* manos) 
+void subscribeH(void *zmq_sub, Hands* manos) 
 {
 	manos->clear();
 	int rc = zmq_recv(zmq_sub, manos, sizeof(Hands), 0);
@@ -76,8 +77,13 @@ void subscribeF(void *zmq_sub, leapData *leapItem)
   //leapItem->rroll = mapForearmAngle(leapItem->rroll);
   //leapItem->lpitch = mapForearmAngle(leapItem->lpitch);
   //leapItem->rpitch = mapForearmAngle(leapItem->rpitch);
-  //leapItem->lyaw = mapForearmAngle(leapItem->lyaw);
   //NEED XYZ MAPPING STUFF
+}
+
+void subscribeN(void* zmq_sub, joystick* j)
+{
+	int rc = zmq_recv(zmq_sub, j, sizeof(joystick), ZMQ_DONTWAIT);
+	//Map mover to joystick x2, y2
 }
 
 using namespace std;
@@ -98,8 +104,36 @@ public:
   {
     answer(oss.str());
   }
+
+  std::thread* neckThread;
+  std::atomic < bool > neck_on;
+  void subscribeToNeck() {	//Neck thread function
+	int rc;
+	joystick jm;
+	std::string address = cfg->str("body.commander.neckAddress", "tcp://192.168.2.113:5555");
+
+	void* context = zmq_ctx_new();
+	void* sub = zmq_socket(context, ZMQ_SUB);
+	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
+
+	if (zmq_connect(sub, address.c_str()) != 0)
+	{
+		printf("Error initializing 0mq...\n");
+		return;
+	}
+
+	while(neck_on.load())
+	{
+		subscribeN(sub, &jm);
+		
+		std::this_thread::sleep_for(std::chrono::microseconds(25));
+	}  
+
+	zmq_close(sub);
+	zmq_ctx_destroy(context);
+  }
   
-  std::thread *handsThread;
+  std::thread* handsThread;
   std::atomic < bool > hands_on;
   void subscribeToHands() {	//Hands thread function
 	int rc;
@@ -119,7 +153,7 @@ public:
 //	cout << "starting hands control." << endl;
 	while(hands_on.load())
 	{
-			subscribe(sub, &manos);
+			subscribeH(sub, &manos);
 			mover->left.trigger.setup(manos.ltrigger);
 			mover->left.middle.setup(manos.lmiddle);
 			mover->left.ring.setup(manos.lring);
@@ -137,7 +171,7 @@ public:
   }
   
 
-  std::thread *forearmsThread;
+  std::thread* forearmsThread;
   std::atomic < bool > forearms_on;
   void subscribeToForearms() {	//Forearms thread function
     int rc;
@@ -298,6 +332,23 @@ public:
 	setWaist(10);
   }
 
+  void neckOn()
+  {
+     if(neckThread == 0) {
+       neck_on.store(true);
+       neckThread = new std::thread(&BodyController::subscribeToNeck, this);
+     }
+  }
+
+  void neckOff()
+  {
+     if (neckThread != 0) {
+       neck_on.store(false);
+       neckThread->join();
+       delete neckThread;
+       neckThread = 0;
+     }
+  }
   
   void handsOn()
   {
@@ -337,7 +388,7 @@ public:
   }
 
 
-  bool enable(string part, bool value)
+  void enable(string part, bool value)
   {
     float torque = (value) ? 0.75 : 0.0;
     bool ok = false;
@@ -396,6 +447,17 @@ public:
       ostringstream oss;
       body->report(oss);
       answer(oss);
+    }
+    if (head=="neck") {
+      string value;
+      iss >> value;
+      if (value == "on") {
+         neckOn();
+	 answer("my neck is on.");
+      } else if (value == "off") {
+         neckOff();
+	 answer("my neck is off.");
+      }
     }
     if (head=="hands") {
       string value;
