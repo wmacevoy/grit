@@ -35,7 +35,7 @@ int main(int argc,char **argv) {
         cerr<< "Couldn't initialize SDL:"<< SDL_GetError()<<endl;
         return 1;
   } else {
-    cout << "Press Square to terminate"<<endl;
+    cout << "Press 1 to terminate"<<endl;
     SDL_JoystickEventState(SDL_ENABLE);
     void *pub=zmq_socket(context,ZMQ_PUB);
     int rc = zmq_bind(pub, "tcp://*:5555");
