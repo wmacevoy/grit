@@ -20,5 +20,5 @@ void Servo::report(std::ostream &out) const
 
 void Servo::temp_report(std::ostream &out) const
 {
-  out << name() << "," << id() << "," << temp();
+  out << name() << "," << id() << "," << (int)temp();
 }
