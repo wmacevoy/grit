@@ -66,9 +66,9 @@ void handListener::onFrame(const Controller& controller)
 	{
 		// Get the first hand
 		const Hand hand0 = frame.hands()[0];
-		//		const Hand hand1 = frame.hands()[1];
-		//if(verbose) std::cout << "hand0 Palm position: " << hand0.palmPosition() << std::endl;
-		//	if(verbose) std::cout << "hand1 Palm position: " << hand1.palmPosition() << std::endl;
+		const Hand hand1 = frame.hands()[1];
+		if(verbose) std::cout << "hand0 Palm position: " << hand0.palmPosition() << std::endl;
+		if(verbose) std::cout << "hand1 Palm position: " << hand1.palmPosition() << std::endl;
 
 		locker.lock();
 		
@@ -78,8 +78,7 @@ void handListener::onFrame(const Controller& controller)
 			leapD.lpitch = hand0.palmNormal().pitch()  * 180.0 / M_PI;
 			leapD.lyaw = hand0.palmNormal().yaw() * 180.0 / M_PI;
 			
-/*
-	if(hand0.palmPosition()[0] < 0)
+		if(hand0.palmPosition()[0] < 0)
 		{
 			leapD.lx = hand0.palmPosition()[0]; leapD.ly = hand0.palmPosition()[1]; leapD.lz = hand0.palmPosition()[2];
 			leapD.lroll = hand0.palmNormal().roll() * 180.0 / M_PI;
@@ -87,9 +86,9 @@ void handListener::onFrame(const Controller& controller)
 			
 			if(hand1.isValid())
 			{
-				leapD.rx = hand1.palmPosition()[0]; leapD.ry = hand1.palmPosition()[1]; leapD.rz = hand1.palmPosition()[2];
-				leapD.rroll = hand1.palmNormal().roll() * 180.0 / M_PI;
-				leapD.rpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
+					leapD.rx = hand1.palmPosition()[0]; leapD.ry = hand1.palmPosition()[1]; leapD.rz = hand1.palmPosition()[2];
+					leapD.rroll = hand1.palmNormal().roll() * 180.0 / M_PI;
+					leapD.rpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
 			}
 		}
 		else if(hand0.palmPosition()[0] > 0)
@@ -105,15 +104,15 @@ void handListener::onFrame(const Controller& controller)
 				leapD.lpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
 			}
 			}
-										  */		  
+	  
 		locker.unlock();
 
 		if(verbose) std::cout << "LEFT: " << leapD.lx << " " << leapD.ly << " " << leapD.lz << " roll:" << leapD.lroll << " pitch:" << leapD.lpitch << " yaw:" << leapD.lyaw << " hnorm:" << hand0.palmNormal() << std::endl;
-		//		if(verbose) std::cout << "RIGHT: " << leapD.rx << " " << leapD.ry << " " << leapD.rz << " " << leapD.rroll << std::endl;
+		if(verbose) std::cout << "RIGHT: " << leapD.rx << " " << leapD.ry << " " << leapD.rz << " " << leapD.rroll << std::endl;
 	}	
 }
 
-void SignalHandler(int sig)
+void quitproc(int sig)
 {
 	printf("\nQuitting...\n");
 	die = 1;
@@ -146,13 +145,8 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	struct sigaction new_action;
-	new_action.sa_handler = SignalHandler;
-	sigemptyset (&new_action.sa_mask);
-	new_action.sa_flags = 0;
-
-	sigaction (SIGTERM, &new_action, NULL);
-	sigaction (SIGINT, &new_action, NULL);
+	signal(SIGINT, quitproc);
+	signal(SIGQUIT, quitproc);
 
 	while(!die)
 	{
