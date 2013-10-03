@@ -11,11 +11,9 @@ int main(int argc, char *argv[])
   Script s(argv[0]);
   try {
     if (argc >= 2) {
-      s.addPaths(getenv("LD_LIBRARY_PATH"));
-      s.import("body");
-      string e = argv[1];
-      Script::Object ans(s.eval(e));
-      cout << e << "=" << ans << endl;
+      for (int argi=1; argi<argc; ++argi) {
+	s.run(argv[argi]);
+      }
     }
   } catch (const Script::Error &e) {
     cout << e << endl;

@@ -19,73 +19,33 @@ void ServoMover::move(Servo &servo)
     else if (simTime < simTime1) myTime = simTime-simTime0;
     else myTime= simTime1;
 
-    //    float s= (myTime-t0)/T;
-    //    s=s-floor(s);
-    //    s=t0+T*s;
-
-    float s = myTime;
-
-    Angles::iterator after(at);
-
-    while (at != angles.end() && s > at->first) {
-      after = at;
-      ++after;
-      if (after == angles.end()) break;
-      at = after;
+    if (at == angles.end() || at->first > myTime) {
+      at = angles.begin();
     }
-    //    if (at == angles.end()) at=angles.begin();
-//    while (at != angles.begin() && s < at->first) --at;
-//    int count=0;
-//    for (Angles::iterator it=angles.begin();it!=angles.end();it++) {
-//      if (it==at) cout << "Step "<< count << " of " << angles.size() << endl;
-//      count++;
-//    }
+    Angles::iterator samples[4];
+    samples[0]=at;
+    samples[1]=samples[0]; if (samples[1] != angles.end()) ++samples[1];
+    samples[2]=samples[1]; if (samples[2] != angles.end()) ++samples[2];
+    samples[3]=samples[2]; if (samples[3] != angles.end()) ++samples[3];
 
-    float oldTime = at->first;
-    float oldAngle = at->second;
-
-    float newTime,newTime2;
-    float newAngle,newAngle2;
-
-    after=at;
-
-    ++after;
-    if (after == angles.end()) {
-//      cout << "wrapped newTime" << endl;
-      after=angles.begin();
+    while (samples[3] != angles.end() && (myTime > samples[1]->first)) {
+      samples[0]=samples[1];
+      samples[1]=samples[2];
+      samples[2]=samples[3];
+      if (samples[3] != angles.end()) ++samples[3];
     }
-    newTime = after->first;
-    if (newTime < oldTime) {
-//      cout << "shift newTime by T=" << T << endl;
-      newTime += T;
-    }
-    newAngle = after->second; 
-    ++after;
-    if (after == angles.end()) {
-//      cout << "wrapped newTime2" << endl;
-      after=angles.begin();
-    }
-    newTime2 = after->first;
-    if (newTime2 < oldTime) {
-//      cout << "shift newTime2 by T=" << T << endl;
-      newTime2 += T;
-    }
-    newAngle2 = after->second;
-
-//    cout << "time oldTime=" << oldTime << " newTime=" << newTime << " newTime2=" << newTime2 << endl;
-//    cout << "time oldAngle=" << oldAngle << " newAngle=" << newAngle << " newAngle2=" << newAngle2 << endl;
+    at=samples[0];
       
-    double realTimeNow  = realTime;
-
     double lambda = (fabs(simSpeed) > 0.1) ? 1/simSpeed : 10.0;
-    ts[0] = lambda*(oldTime-s) + realTimeNow;
-    ts[1] = lambda*(newTime-s) + realTimeNow;
-    ts[2] = lambda*(newTime2-s) + realTimeNow;
+    ts[0] = lambda*(samples[0]->first-myTime) + realTime;
+    ts[1] = lambda*(samples[1]->first-myTime) + realTime;
+    ts[2] = lambda*(samples[2]->first-myTime) + realTime;
 
+    //    cout << "t=" << simTime << " ts=[" << ts[0] << "," << ts[1] << "," << ts[2]  << "]" << endl;
 	
-    p[0]=oldAngle;
-    p[1]=newAngle;
-    p[2]=newAngle2;
+    p[0]=samples[0]->second;
+    p[1]=samples[1]->second;
+    p[2]=samples[2]->second;
     fit(ts,p,c0,c1);
     servo.curve(ts+1,c0,c1);
     servo.torque(torque);
