@@ -22,7 +22,7 @@ volatile int die = 0;
 int sleep_time;
 
 urg_t urg;
-int64_t* lidar_data  = NULL;
+int64_t* lidar_data = NULL;
 int sz_lidar_data;
 int sz_lidar_data_max;
 
@@ -51,6 +51,12 @@ void publish_lidar(void* data, void* zmq_pub)
 	if(verbose) printf("waiting for lidar data...\n");
 	int rc = zmq_send(zmq_pub, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
 	if(verbose && rc > 0) printf("received lidat data!\n");
+}
+
+void quitproc(int param)
+{
+	std::cout << "\nQuitting..." << std::endl;
+	die = true;
 }
 
 int main(int argc, char** argv)
@@ -90,6 +96,9 @@ int main(int argc, char** argv)
 	
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);
+
+	signal(SIGINT, quitproc);
+	signal(SIGQUIT, quitproc);
 
 	if (verbose) printf("Publishing on tcp://*:9997\n");
 	while(!die)
