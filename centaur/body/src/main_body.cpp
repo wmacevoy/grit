@@ -109,9 +109,10 @@ public:
   void subscribeToNeck() {	//Neck thread function
 	float currentUpDown = 0;
 	float currentLeftRight = 0;
+	int currentLeftRight = 0;
 	int rc;
 	joystick jm;
-	std::string address = cfg->str("body.commander.neckAddress", "tcp://192.168.2.113:5555");
+	std::string address = cfg->str("body.commander.neckAddress", "tcp://192.168.2.113:5556");
 
 	void* context = zmq_ctx_new();
 	void* sub = zmq_socket(context, ZMQ_SUB);
@@ -131,6 +132,7 @@ public:
 		subscribeN(sub, &jm);
 		currentUpDown = currentUpDown + (deltat)*(float(jm.y2)/32.0)*(15.0);
 		currentLeftRight = currentLeftRight + (deltat)*(float(jm.x2)/32.0)*(15.0);
+		currentUpDown = currentLeftRight + (deltat)*(jm.x2*jm.x2*jm.x2)/(32*32*32)*(15.0);
 		mover->neck.upDown.setup(currentUpDown);
 		mover->neck.leftRight.setup(currentLeftRight);
 		std::this_thread::sleep_for(std::chrono::microseconds(25));
