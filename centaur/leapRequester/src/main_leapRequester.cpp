@@ -20,7 +20,7 @@ void subscribe(leapData* data, void* zmq_sub)
 	if(verbose && rc > 0) std::cout << "Leap data received!" << std::endl;
 }
 
-void SignalHandler(int sig)
+void quitproc(int sig)
 {
 	if(verbose) printf("\nQuitting...\n");
 	die = 1;
@@ -53,13 +53,8 @@ int main(int argc, char** argv)
 	rc = zmq_connect(sub, address.c_str());
 	assert(rc == 0);
 
-	struct sigaction new_action;
-	new_action.sa_handler = SignalHandler;
-	sigemptyset (&new_action.sa_mask);
-	new_action.sa_flags = 0;
-
-	sigaction (SIGTERM, &new_action, NULL);
-	sigaction (SIGINT, &new_action, NULL);
+	signal(SIGINT, quitproc);
+	signal(SIGQUIT, quitproc);
 
 	while(!die)
 	{
