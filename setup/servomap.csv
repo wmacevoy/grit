@@ -11,7 +11,7 @@ LEG3_HIP,33,${servos.type},1.0,0.0,1.0,29,-175,175
 LEG4_KNEE,41,${servos.type},-4.0,11.0,1.0,23,-175,175
 LEG4_FEMUR,42,${servos.type},-4.0,-5.0,1.0,9,-175,175
 LEG4_HIP,43,${servos.type},1.0,0.0,1.0,29,-175,175
-LEFTARM_THUMB,51,${servos.type},1.0,-90.0,1.0,300,-175,175
+LEFTARM_THUMB,51,${servos.type},1.0,-90.0,0.25,300,-175,175
 LEFTARM_TRIGGER,52,${servos.type},-1.0,180.0,1.0,300,-175,175
 LEFTARM_MIDDLE,53,${servos.type},1.0,-180.0,1.0,300,-175,175
 LEFTARM_RING,54,${servos.type},1.0,-180.0,1.0,300,-175,175
@@ -20,7 +20,7 @@ LEFTARM_ELBOW,56,${servos.type},3.7,0.0,1.0,100,-175,175
 LEFTARM_BICEP_ROTATE,57,${servos.type},3.7,0.0,1.0,100,-175,175
 LEFTARM_SHOULDER_UD,58,${servos.type},3.7,0.0,1.0,100,-175,175
 LEFTARM_SHOULDER_IO,59,${servos.type},3.7,0.0,1.0,100,-175,175
-RIGHTARM_THUMB,61,${servos.type},-1.0,90.0,1.0,300,-175,175
+RIGHTARM_THUMB,61,${servos.type},-1.0,90.0,0.25,300,-175,175
 RIGHTARM_TRIGGER,62,${servos.type},1.0,-180.0,1.0,300,-175,175
 RIGHTARM_MIDDLE,63,${servos.type},-1.0,180.0,1.0,300,-175,175
 RIGHTARM_RING,64,${servos.type},-1.0,180.0,1.0,300,-175,175
