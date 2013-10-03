@@ -1,4 +1,5 @@
 #include <zmq.h>
+#include <signal.h>
 #include <iostream>
 #include <SDL/SDL.h>
 #include <assert.h>
@@ -7,12 +8,18 @@
 
 Configure cfg;
 bool verbose = false;
+volatile bool die = false;
 
 int last;
 
 void publish(joystick *j,void *zmq_pub) 
 {
 	int rc = zmq_send(zmq_pub, j, sizeof(joystick), ZMQ_DONTWAIT);
+}
+
+void quitproc(int param)
+{
+	die = true;
 }
 
 int main(int argc,char **argv)
@@ -27,7 +34,6 @@ int main(int argc,char **argv)
 	SDL_Joystick *joystick;
 	int rc;
 	int hwm = 1;
-	bool die = false;
 	void *context = zmq_ctx_new ();
 	void* pub;
 
@@ -52,6 +58,9 @@ int main(int argc,char **argv)
 
 	joystick = SDL_JoystickOpen(0);
 	SDL_Event event;
+
+	signal(SIGINT, quitproc);
+	signal(SIGQUIT, quitproc);
 
 	while(!die)
 	{  
