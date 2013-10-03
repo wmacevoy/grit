@@ -684,11 +684,11 @@ public:
       oss << "laio|raio|laud|raud|lae|rae|lab|rab|laf|raf";
       answer(oss.str());
     }
-   /* if (head == "temps")
-      {
-	oss << mover->left.upDown.temp();
-	answer(oss.str());
-      }*/
+    if (head == "temps"){
+      ostringstream oss;
+      body->temp_report(oss);
+      answer(oss.str());
+      }
   }
 
   void update()

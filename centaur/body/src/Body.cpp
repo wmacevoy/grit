@@ -18,3 +18,9 @@ void Body::report(std::ostream &out) const
   right.report(out);
   out << endl;
 }
+
+void Body::temp_report(std::ostream &out) const
+{
+  right.temp_report(out);
+  out << endl;
+}

@@ -13,3 +13,7 @@ void Leg::init(string newName) {
 void Leg::report() {
   cout << name << ":" << " knee=" << knee->angle() << " femur=" << femur->angle() << " hip=" << hip->angle() << endl;
 }
+
+void Leg::temp_report() {
+    cout << name << ":" << " knee=" << knee->temp() << " femur=" << femur->temp() << " hip=" << hip->temp() << endl;
+}
