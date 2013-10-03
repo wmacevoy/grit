@@ -64,7 +64,7 @@ int main(int argc,char **argv)
 
 	while(!die)
 	{  
-		SDL_Delay(10); // Don't check faster than 10 times a second
+		SDL_Delay(100); // Don't check faster than 10 times a second
 		while (SDL_PollEvent(&event)) 
 		{
 			switch(event.type)
@@ -82,12 +82,12 @@ int main(int argc,char **argv)
 				}
 				else if (event.jaxis.axis==2 && event.jaxis.which==0) 
 				{ 
-					jm.setX2(event.jaxis.value);
+					jm.setX2(event.jaxis.value / -1000);
 					publish(&jm,pub);
 				}
 				else if (event.jaxis.axis==3 && event.jaxis.which==0)
 				{
-					jm.setY2(event.jaxis.value); 
+					jm.setY2(event.jaxis.value / -1000); 
 					publish(&jm,pub);
 				} 
 				break;
