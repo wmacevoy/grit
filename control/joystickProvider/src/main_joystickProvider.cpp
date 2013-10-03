@@ -52,7 +52,7 @@ int main(int argc,char **argv)
 		rc = zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 		assert(rc == 0);
 
-		rc = zmq_bind(pub, "tcp://*:5555");
+		rc = zmq_bind(pub, "tcp://*:5556");
 		assert(rc == 0);
 	}
 
