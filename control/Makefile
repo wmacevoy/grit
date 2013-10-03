@@ -3,4 +3,5 @@
 	$(MAKE) -C glovePublisher $@
 	$(MAKE) -C webcamRequester $@
 	$(MAKE) -C gui $@
-	#$(MAKE) -C leapPublisher $@
+	$(MAKE) -C joystickProvider $@ 
+	$(MAKE) -C leapPublisher $@
