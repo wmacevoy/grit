@@ -83,7 +83,6 @@ void subscribeF(void *zmq_sub, leapData *leapItem)
 void subscribeN(void* zmq_sub, joystick* j)
 {
 	int rc = zmq_recv(zmq_sub, j, sizeof(joystick), ZMQ_DONTWAIT);
-	//Map mover to joystick x2, y2
 }
 
 using namespace std;
@@ -125,7 +124,8 @@ public:
 	while(neck_on.load())
 	{
 		subscribeN(sub, &jm);
-		
+		mover->neck.upDown.setup(jm.y2);
+		mover->neck.leftRight.setup(jm.x2);
 		std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}  
 
