@@ -8,7 +8,7 @@ public:
 	 SET_TORQUE,
 	 SET_CURVE,
 	 SET_RATE, /* rx rate */
-	 GET_STATUS,
+	 GET_TEMP,
 	 DO_NOTHING
   };
 

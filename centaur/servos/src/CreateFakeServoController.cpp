@@ -31,7 +31,7 @@ class FakeServo : public Servo
   float speed() const { return 0.0; }
   float torque() const { return 0.0; }
   
-  uint8_t status() const
+  uint8_t temp() const
   {
     return 0;
   }

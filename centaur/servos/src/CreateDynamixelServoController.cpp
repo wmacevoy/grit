@@ -51,7 +51,7 @@ struct DynamixelServo : Servo
   float minSpeed;
   float minTorque;
   bool verbose;
-  uint8_t presentStatus;
+  uint8_t presentTemp;
 
   bool enabled;
   bool curveMode;
@@ -75,7 +75,7 @@ struct DynamixelServo : Servo
     angle(0.0);
     speed(30.0);
     torque(0.10);
-    presentStatus = 0;
+    presentTemp = 0;
     //    io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
     curveMode = false;
     readNextPosition=true;
@@ -84,9 +84,9 @@ struct DynamixelServo : Servo
 #endif
   }
   
-  uint8_t status() const
+  uint8_t temp() const
   {
-    return presentStatus;
+    return presentTemp;
   }
 
   void curve(double t_[2], float c0_[3],float c1_[3])
@@ -193,10 +193,10 @@ struct DynamixelServo : Servo
     } else {
       cout << "comm rx load error" << endl;
     }
-    if (io.readByte(id,DXL_STATUS_BYTE,&inp)) {
-      presentStatus = inp;
+    if (io.readByte(id,DXL_PRESENT_TEMP_BYTE,&inp)) {
+      presentTemp = inp;
     } else {
-      cout << "comm rx status error" << endl;
+      cout << "comm rx temp error" << endl;
     }
   }
 

@@ -7,6 +7,7 @@
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <iostream>
+#include <bitset>
 
 #include "now.h"
 
@@ -339,6 +340,7 @@ bool DXLIO::readByte(int id, int address, int *value)
 	 << ans << ", result=" << result << endl;
     reopen();
   }
+  //if (id == 31) cout << "USEFUL INFORMATION on 31, TEMP should be a temperature: " << (int) ans << endl;
   return ok;
 #else
 #error readbyte not supported

@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <signal.h>
 #include <unistd.h>
+#include <bitset>
 
 #include "Configure.h"
 #include "zmq.hpp"
@@ -151,9 +152,9 @@ public:
 	ZMQMessage msg(sizeof(ZMQServoMessage));
 	ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
 	
-	data->messageId = ZMQServoMessage::GET_STATUS;
+	data->messageId = ZMQServoMessage::GET_TEMP;
 	data->servoId = i->first;
-	data->value = i->second->status();
+	data->value = i->second->temp();
 	
 	if (verbose) {
 	  cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
@@ -172,7 +173,7 @@ public:
     for (Servos::iterator i = servos.begin();
 	 i != servos.end();
 	 ++i) {
-      cout << " angle[" << i->first << "]=" << i->second->angle() << " status " << i->second->status()  << ",";
+      cout << " angle[" << i->first << "]=" << i->second->angle() << " temp " << (int)i->second->temp()  << ",";
     }
     cout << endl;
   }

@@ -60,7 +60,7 @@ void ZMQServo::rate(float value)
   goalRate = value;
 }
 
-uint8_t ZMQServo::status() const
+uint8_t ZMQServo::temp() const
 {
-  return presentStatus;
+  return presentTemp;
 }

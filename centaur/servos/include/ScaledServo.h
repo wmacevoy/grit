@@ -21,5 +21,5 @@ class ScaledServo : public Servo
   inline void speed(float value) { unscaledServo->speed(slope*value); }
   inline void torque(float value) { unscaledServo->torque(value/slope); }
   inline void rate(float value) { unscaledServo->rate(value); }
-  inline uint8_t status() const { return unscaledServo->status(); }
+  inline uint8_t temp() const { return unscaledServo->temp(); }
 };

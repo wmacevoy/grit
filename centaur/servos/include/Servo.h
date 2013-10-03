@@ -21,7 +21,7 @@ public:
   virtual const std::string& name() const;
   virtual int id() const;
   virtual void report(std::ostream &out) const;
-  virtual uint8_t status() const=0;
+  virtual uint8_t temp() const=0;
 };
 
 typedef std::shared_ptr < Servo > SPServo;
