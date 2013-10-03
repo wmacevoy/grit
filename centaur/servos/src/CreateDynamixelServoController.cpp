@@ -33,7 +33,6 @@
 using namespace std;
 
 const float UPDATE_RATE = 10.0;
-double t0=now();
 
 struct DynamixelServo : Servo
 {
@@ -49,6 +48,7 @@ struct DynamixelServo : Servo
   int goalTorque;
   bool readNextPosition;
   float minSpeed;
+  float maxSpeed;
   float minTorque;
   bool verbose;
   uint8_t presentTemp;
@@ -63,7 +63,8 @@ struct DynamixelServo : Servo
     : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
   {
     enabled=true;
-    minSpeed = atof(cfg.servo(id,"speed").c_str());
+    minSpeed = atof(cfg.servo(id,"minspeed").c_str());
+    minSpeed = atof(cfg.servo(id,"maxspeed").c_str());
     minTorque = atof(cfg.servo(id,"torque").c_str());
     minAngle = atof(cfg.servo(id,"minangle").c_str());
     maxAngle = atof(cfg.servo(id,"maxangle").c_str());
@@ -101,7 +102,7 @@ struct DynamixelServo : Servo
     c1[1]=c1_[1];
     c1[2]=c1_[2];
 
-    if (verbose) cout << "dynamixel curve" << " servo=" << id << " t=[" << t[0]-t0 << "," << t[1]-t0 << "] c0=[" << c0[0] << "," << c0[1] << "," << c0[2] << "]" << " c1=[" << c1[0] << "," << c1[1] << "," << c1[2] << "]"  << endl;
+    if (verbose) cout << "dynamixel curve" << " servo=" << id << " t=[" << t[0] << "," << t[1] << "] c0=[" << c0[0] << "," << c0[1] << "," << c0[2] << "]" << " c1=[" << c1[0] << "," << c1[1] << "," << c1[2] << "]"  << endl;
   }
 
   float angle() const { 
@@ -122,11 +123,14 @@ struct DynamixelServo : Servo
   void speed(float value) {
     // speed for MX-110t (not MX-28t)
     //    cout << "id=" << id << " set speed = " << value << endl;
-    value = fabs(value) + 0.5*fabs(goalPosition-presentPosition);
+    //    value = fabs(value) + 0.5*fabs(goalPosition-presentPosition);
     //    if (fabs(value) < minSpeed) {
     //      if (value < 0) value=-minSpeed;
     //      else value = minSpeed;
     //    }
+    value = fabs(value);
+    if (value < minSpeed) { value = minSpeed; cout << "min clip" << endl; }
+    else if (value > maxSpeed) { value = maxSpeed; cout << "max clip" << endl; }
     goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07);
     if (goalSpeed > 480) goalSpeed = 480;
   }
@@ -284,6 +288,7 @@ struct DynamixelServoController : ServoController
 	      dt = t-servo->t[0];
 	    } else {
 	      dt = servo->t[1]-servo->t[0];
+	      cout << id << " is stale by " << t-servo->t[1] << endl;
 	      //			  cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
 	    }
 	    double dt2 = dt*dt;
@@ -298,7 +303,7 @@ struct DynamixelServoController : ServoController
 	  int speed = servo->goalSpeed;
 	  //	  int position = 2048;
 	  //      int speed = 300;
-	  //	      cout << "ID " << id << " sent a position of " << position <<  "  speed " << speed << endl;
+	    cout << "DXL " << t << "," << id << "," << position <<  "," << speed << endl;
 	  
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
