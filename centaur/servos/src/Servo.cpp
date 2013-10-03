@@ -17,3 +17,8 @@ void Servo::report(std::ostream &out) const
 {
   out << name() << "," << id() << "," << angle();
 }
+
+void Servo::temp_report(std::ostream &out) const
+{
+  out << name() << "," << id() << "," << temp();
+}

@@ -18,6 +18,7 @@ class Arm
   virtual void init()=0;
   void goLimp();
   void report(std::ostream &out) const;
+  void temp_report(std::ostream &out) const;
 };
 
 class LeftArm:public Arm {

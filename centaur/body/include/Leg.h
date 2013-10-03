@@ -11,4 +11,5 @@ public:
   std::string name;
   void init(std::string newName);
   void report();
+  void temp_report();
 };

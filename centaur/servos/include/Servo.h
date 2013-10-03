@@ -21,6 +21,7 @@ public:
   virtual const std::string& name() const;
   virtual int id() const;
   virtual void report(std::ostream &out) const;
+  virtual void temp_report(std::ostream &out) const;
   virtual uint8_t temp() const=0;
 };
 
