@@ -15,6 +15,7 @@ body.commander.publish,tcp://*:5502
 body.commander.subscribers,"tcp://${control.ip}:5504"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
 body.commander.leapAddress,"tcp://${control.ip}:9990"
+body.commander.neckAddress,"tcp://${control.ip}:5556"
 body.verbose,true
 commander.publish,tcp://*:5504
 commander.subscribers,"tcp://${centaur.ip}:5502"
