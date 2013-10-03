@@ -35,9 +35,9 @@ void Body::temp_report(std::ostream &out, std::string part) const
   else if (part == "legs")
     for (int i = 0; i < 4; i++)
       {
-	legs[i].knee->temp_report(out);
-	legs[i].femur->temp_report(out);
-	legs[i].hip->temp_report(out);
+	legs.legs[i].knee->temp_report(out);
+	legs.legs[i].femur->temp_report(out);
+	legs.legs[i].hip->temp_report(out);
       }
   out << endl;
 }
