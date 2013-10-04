@@ -296,7 +296,7 @@ struct DynamixelServoController : ServoController
 	  int speed = servo->goalSpeed;
 	  //	  int position = 2048;
 	  //      int speed = 300;
-	  //	    cout << "DXL " << t << "," << id << "," << position <<  "," << speed << endl;
+	  cout << "DXL " << t << "," << id << "," << position <<  "," << speed << endl;
 	  
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
