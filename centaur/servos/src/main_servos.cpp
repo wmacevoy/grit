@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 #include "Configure.h"
-#include "zmq.hpp"
+//#include "zmq.hpp"
 #include "ZMQHub.h"
 #include "ZMQServoMessage.h"
 #include "CreateFakeServoController.h"
