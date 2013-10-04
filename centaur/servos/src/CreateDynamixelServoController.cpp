@@ -408,6 +408,15 @@ struct DynamixelServoController : ServoController
       if (us > 0) usleep(us);
       double t = now();
       t1=t+1.0/UPDATE_RATE;
+      for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
+	i->second->update();
+	if (i->second->curveMode) {
+	  if (t < i->second->t[0]) {
+	    t1=min(t1,i->second->t[1]+0.0001);
+	  }
+	}
+      }
+
       bool output =(floor(t) != floor(t1));
       if (output) {
 	cout << "dynamixel: t=" << t << endl;
@@ -418,34 +427,26 @@ struct DynamixelServoController : ServoController
 	//	This makes the servos "tick" everytime it is sent
 #if USE_TORQUE_ENABLED
 #warning torque enable code enabled
-	broadcastTorqueEnable(output,t,0,49); // legs
-	broadcastTorqueEnable(output,t,90,99); // head/waist
-	broadcastTorqueEnable(output,t,50,59); // Left arms
-	broadcastTorqueEnable(output,t,60,69); // arms
+	broadcastTorqueEnable(output,t1,0,49); // legs
+	broadcastTorqueEnable(output,t1,90,99); // head/waist
+	broadcastTorqueEnable(output,t1,50,59); // Left arms
+	broadcastTorqueEnable(output,t1,60,69); // arms
 #endif
 
 
 
-	broadcastTorque(output,t,0,49); // legs
-	broadcastTorque(output,t,90,99); // head/waist
-	broadcastTorque(output,t,50,59); // Left arms
-	broadcastTorque(output,t,60,69); // arms
+	broadcastTorque(output,t1,0,49); // legs
+	broadcastTorque(output,t1,90,99); // head/waist
+	broadcastTorque(output,t1,50,59); // Left arms
+	broadcastTorque(output,t1,60,69); // arms
 
 
-	broadcastSpeedPosition(output,t,0,49);
-	broadcastSpeedPosition(output,t,90,99);
-	broadcastSpeedPosition(output,t,50,59);
-	broadcastSpeedPosition(output,t,60,69);
+	broadcastSpeedPosition(output,t1,0,49);
+	broadcastSpeedPosition(output,t1,90,99);
+	broadcastSpeedPosition(output,t1,50,59);
+	broadcastSpeedPosition(output,t1,60,69);
       }
 #endif
-      for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
-	i->second->update();
-	if (i->second->curveMode) {
-	  if (t < i->second->t[0]) {
-	    t1=min(t1,i->second->t[1]+0.0001);
-	  }
-	}
-      }
     }
   }
 
