@@ -14,6 +14,7 @@
 #include "Servo.h"
 #include "ScaledServo.h"
 #include "CSVRead.h"
+#include "now.h"
 
 
 using namespace std;
@@ -161,7 +162,6 @@ public:
 	msg.send(socket);
       }
     }
-
   }
 
   void report()
@@ -175,6 +175,7 @@ public:
       cout << " angle[" << i->first << "]=" << i->second->angle() << " temp " << (int)i->second->temp()  << ",";
     }
     cout << endl;
+    cout << "servos: realTime=" << now() << endl;
   }
 
 };

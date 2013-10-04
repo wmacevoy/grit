@@ -1,5 +1,6 @@
 #include "CreateFakeServoController.h"
 #include "now.h"
+#include "math.h"
 
 class FakeServo : public Servo
 {
@@ -7,10 +8,11 @@ class FakeServo : public Servo
  mutable float currentAngle;
  mutable double t;
 
- float goalAngle;
+ mutable float goalAngle;
+ mutable float goalSpeed;
+
  float minAngle;
  float maxAngle;
- float goalSpeed;
 
   bool curveMode;
   double ct[2];
@@ -40,28 +42,25 @@ class FakeServo : public Servo
     double delta = now()-t;
     t += delta;
 
-#if SERVO_MODE == 1
     if (curveMode) {
       float dt=(t < ct[1]) ? (t-ct[0]) : (ct[1]-ct[0]);
       float dt2=dt*dt;
-      float *c = dt <= 0 ? c0 : c1;
+      const float *c = dt <= 0 ? c0 : c1;
       goalAngle = c[0]+c[1]*dt+c[2]*dt2/2.0;
       goalSpeed = c[1]+c[2]*dt;
     }
-#endif
-    
-    float dist = goalSpeed*delta;
+
     float effectiveGoalAngle = goalAngle;
-    
     if (goalAngle < minAngle) effectiveGoalAngle = minAngle;
     if (goalAngle > maxAngle) effectiveGoalAngle = maxAngle;
     
-    if (currentAngle < effectiveGoalAngle - dist) {
-      currentAngle += dist;
-    } else if (currentAngle < effectiveGoalAngle + dist) {
-      currentAngle = effectiveGoalAngle;
+    float dist = goalSpeed*delta;
+    if (currentAngle < effectiveGoalAngle) {
+      currentAngle += fabs(dist);
+      if (currentAngle > effectiveGoalAngle) currentAngle = effectiveGoalAngle;
     } else {
-      currentAngle -= dist;
+      currentAngle -= fabs(dist);
+      if (currentAngle < effectiveGoalAngle) currentAngle = effectiveGoalAngle;
     }
   }
 

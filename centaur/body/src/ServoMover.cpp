@@ -41,7 +41,7 @@ void ServoMover::move(Servo &servo)
     ts[1] = lambda*(samples[1]->first-myTime) + realTime;
     ts[2] = lambda*(samples[2]->first-myTime) + realTime;
 
-    cout << "t=" << simTime << " ts=[" << ts[0] << "," << ts[1] << "," << ts[2]  << "]" << endl;
+    //    cout << "t=" << simTime << " ts=[" << ts[0] << "," << ts[1] << "," << ts[2]  << "]" << endl;
 	
     p[0]=samples[0]->second;
     p[1]=samples[1]->second;
@@ -62,8 +62,10 @@ void ServoMover::move(Servo &servo)
 
 void ServoMover::setup(float T_, const map < float , float > &angles_,
 		       double simTime0_, double simTime1_) {
-  for (Angles::const_iterator i=angles_.begin(); i!=angles_.end(); ++i) {
-    cout << "ServoMover@" << (void*) this << "[" << i->first << "]=" << i->second << endl;
+  if (verbose) {
+    for (Angles::const_iterator i=angles_.begin(); i!=angles_.end(); ++i) {
+      cout << "ServoMover@" << (void*) this << "[" << i->first << "]=" << i->second << endl;
+    }
   }
   Lock lock(anglesMutex);
   angles=angles_;

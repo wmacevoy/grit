@@ -64,14 +64,14 @@ struct DynamixelServo : Servo
   {
     enabled=true;
     minSpeed = atof(cfg.servo(id,"minspeed").c_str());
-    minSpeed = atof(cfg.servo(id,"maxspeed").c_str());
+    maxSpeed = atof(cfg.servo(id,"maxspeed").c_str());
     minTorque = atof(cfg.servo(id,"torque").c_str());
     minAngle = atof(cfg.servo(id,"minangle").c_str());
     maxAngle = atof(cfg.servo(id,"maxangle").c_str());
     verbose = cfg.flag("servos.verbose",false);
     presentSpeed = 0;
     presentTorque = 0;
-    //   cout << "create dynamixel servo id = " << id << " minSeed=" << minSpeed << " minTorque=" << minTorque << endl;
+    //    cout << "create dynamixel servo id = " << id << " minSpeed=" << minSpeed << " maxSpeed=" << maxSpeed << " minTorque=" << minTorque << endl;
     rate(1.0);
     angle(0.0);
     speed(30.0);
@@ -129,8 +129,8 @@ struct DynamixelServo : Servo
     //      else value = minSpeed;
     //    }
     value = fabs(value);
-    if (value < minSpeed) { value = minSpeed; cout << "min clip" << endl; }
-    else if (value > maxSpeed) { value = maxSpeed; cout << "max clip" << endl; }
+    if (value < minSpeed) { value = minSpeed; }
+    else if (value > maxSpeed) { value = maxSpeed; }
     goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07);
     if (goalSpeed > 480) goalSpeed = 480;
   }
@@ -242,9 +242,8 @@ struct DynamixelServoController : ServoController
     return retval;
   }
 
-  void broadcastSpeedPosition(bool output,double t,double t1,int lower,int upper) {
+  void broadcastSpeedPosition(bool output,double t,int lower,int upper) {
     io.reopen(); // reopen if failing recently...
-
     int N = 0;
     for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
       if (k->first>=lower && k->first<=upper) {
@@ -277,19 +276,13 @@ struct DynamixelServoController : ServoController
 	  
 	  if (servo->curveMode) {
 	    double t0=servo->t[0];
-	    if (t < t0) {
-	      if (t1 > t0+0.0001) {
-		t1 = t0+0.0001;
-	      }
-	    }
 	    
 	    double dt;
 	    if (t < servo->t[1]) {
 	      dt = t-servo->t[0];
 	    } else {
 	      dt = servo->t[1]-servo->t[0];
-	      cout << id << " is stale by " << t-servo->t[1] << endl;
-	      //			  cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
+	      //	      cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
 	    }
 	    double dt2 = dt*dt;
 	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
@@ -303,7 +296,7 @@ struct DynamixelServoController : ServoController
 	  int speed = servo->goalSpeed;
 	  //	  int position = 2048;
 	  //      int speed = 300;
-	    cout << "DXL " << t << "," << id << "," << position <<  "," << speed << endl;
+	  //	    cout << "DXL " << t << "," << id << "," << position <<  "," << speed << endl;
 	  
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
@@ -315,7 +308,7 @@ struct DynamixelServoController : ServoController
       }
       if (output) {
 	DynamixelServo *servo = &*(k->second);
-	cout << "id,"<<servo->id << "," << servo->presentPosition << "," << servo->presentSpeed << ",";
+	//	cout << "id,"<<servo->id << "," << servo->presentPosition << "," << servo->presentSpeed << ",";
       }
       
     }
@@ -328,7 +321,7 @@ struct DynamixelServoController : ServoController
     }
   }
 
-  void broadcastTorque(bool output,double t,double t1,int lower,int upper) {
+  void broadcastTorque(bool output,double t,int lower,int upper) {
     io.reopen(); // reopen if failing recently...
 
     int N = countServosInRange(lower,upper);
@@ -362,7 +355,7 @@ struct DynamixelServoController : ServoController
     }
   }
 
-  void broadcastTorqueEnable(bool output,double t,double t1,int lower,int upper) {
+  void broadcastTorqueEnable(bool output,double t,int lower,int upper) {
     io.reopen(); // reopen if failing recently...
 
     // count servos with changed enable state...
@@ -416,34 +409,42 @@ struct DynamixelServoController : ServoController
       double t = now();
       t1=t+1.0/UPDATE_RATE;
       bool output =(floor(t) != floor(t1));
+      if (output) {
+	cout << "dynamixel: t=" << t << endl;
+      }
 #if USE_BROADCAST
       {
 
 	//	This makes the servos "tick" everytime it is sent
 #if USE_TORQUE_ENABLED
 #warning torque enable code enabled
-	broadcastTorqueEnable(output,t,t1,0,49); // legs
-	broadcastTorqueEnable(output,t,t1,90,99); // head/waist
-	broadcastTorqueEnable(output,t,t1,50,59); // Left arms
-	broadcastTorqueEnable(output,t,t1,60,69); // arms
+	broadcastTorqueEnable(output,t,0,49); // legs
+	broadcastTorqueEnable(output,t,90,99); // head/waist
+	broadcastTorqueEnable(output,t,50,59); // Left arms
+	broadcastTorqueEnable(output,t,60,69); // arms
 #endif
 
 
 
-	broadcastTorque(output,t,t1,0,49); // legs
-	broadcastTorque(output,t,t1,90,99); // head/waist
-	broadcastTorque(output,t,t1,50,59); // Left arms
-	broadcastTorque(output,t,t1,60,69); // arms
+	broadcastTorque(output,t,0,49); // legs
+	broadcastTorque(output,t,90,99); // head/waist
+	broadcastTorque(output,t,50,59); // Left arms
+	broadcastTorque(output,t,60,69); // arms
 
 
-	broadcastSpeedPosition(output,t,t1,0,49);
-	broadcastSpeedPosition(output,t,t1,90,99);
-	broadcastSpeedPosition(output,t,t1,50,59);
-	broadcastSpeedPosition(output,t,t1,60,69);
+	broadcastSpeedPosition(output,t,0,49);
+	broadcastSpeedPosition(output,t,90,99);
+	broadcastSpeedPosition(output,t,50,59);
+	broadcastSpeedPosition(output,t,60,69);
       }
 #endif
       for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
 	i->second->update();
+	if (i->second->curveMode) {
+	  if (t < i->second->t[0]) {
+	    t1=min(t1,i->second->t[1]+0.0001);
+	  }
+	}
       }
     }
   }

@@ -707,8 +707,8 @@ public:
       if (floor(realTime) != floor(lastRealTime)) {
 //	cout << "delta=" << delta_bar << " sigma=" << sqrt(delta2_bar - delta_bar*delta_bar) << " max=" << max_delta << endl;
 	max_delta=0;
+	cout << "body: realTime=" << realTime << " delta=" << now()-realTime << endl;
       }
-      realTime = now();
       lastRealTime = realTime;
       mover->move(*body);
       double delta = now()-realTime;
@@ -718,6 +718,9 @@ public:
 
       if (delta > delta_bar + 3*sqrt(delta2_bar - delta_bar*delta_bar)) {
 	cout << "slow at simTime = " << simTime << " realTime=" << realTime << endl;
+      }
+      if (floor(realTime) != floor(lastRealTime)) {
+
       }
     }
   }
