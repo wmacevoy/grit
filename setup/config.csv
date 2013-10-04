@@ -1,7 +1,7 @@
 name,value
 control.ip,192.168.2.113
 centaur.ip,192.168.2.101
-servos.verbose,true
+servos.verbose,false
 servos.type,real
 servos.deviceindex,1
 servos.baudnum,34
