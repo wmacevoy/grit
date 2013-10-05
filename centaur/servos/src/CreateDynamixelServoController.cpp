@@ -44,7 +44,6 @@ struct DynamixelServo : Servo
   int goalPosition;
   int goalSpeed;
   int goalTorque;
-  bool readNextPosition;
   float minSpeed;
   float maxSpeed;
   float minTorque;
@@ -55,10 +54,11 @@ struct DynamixelServo : Servo
   bool curveMode;
   double t[2];
   float c0[3],c1[3];
-  float rxRate;
+  float rxTempRate;
+  float rxPositionRate;
 
-  DynamixelServo(Configure &cfg, DXLIO &io_, int id_, float rxRate_) 
-    : io(io_),id(id_), rxRate(rxRate_), presentPosition(2048), goalPosition(2048) 
+  DynamixelServo(Configure &cfg, DXLIO &io_, int id_) 
+    : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
   {
     enabled=true;
     minSpeed = atof(cfg.servo(id,"minspeed").c_str());
@@ -67,16 +67,14 @@ struct DynamixelServo : Servo
     minAngle = atof(cfg.servo(id,"minangle").c_str());
     maxAngle = atof(cfg.servo(id,"maxangle").c_str());
     verbose = cfg.flag("servos.verbose",false);
-    presentSpeed = 0;
-    presentTorque = 0;
-    //    cout << "create dynamixel servo id = " << id << " minSpeed=" << minSpeed << " maxSpeed=" << maxSpeed << " minTorque=" << minTorque << endl;
+
     angle(0.0);
-    speed(30.0);
-    torque(0.10);
+    speed(atof(cfg.servo(id,"minspeed").c_str()));
+    torque(atof(cfg.servo(id,"torque").c_str()));
+    tempRate(atof(cfg.servo(id,"rxtemprate").c_str()));
+    positionRate(atof(cfg.servo(id,"rxpositionrate").c_str()));
     presentTemp = 0;
-    //    io.writeWord(id,DXL_TORQUE_WORD,int(goalTorque*1023));
     curveMode = false;
-    readNextPosition=true;
 #if USE_BROADCAST != 1
     update();
 #endif
@@ -151,11 +149,20 @@ struct DynamixelServo : Servo
   }
 
   void rate(float value) {
-    rxRate = value;
-    if (rxRate == 0) {
-      rxTime = 0;
-    } else if (rxTime > now() + 1.0/rxRate) {
-      rxTime = now()+1.0/rxRate;
+    positionRate(value);
+  }
+
+  void positionRate(float value) {
+    rxPositionRate = value;
+    if (rxPositionRate > 0) {
+      rxPositionTime = min(rxPositionTime,now()+1.0/rxPositionRate);
+    }
+  }
+
+  void tempRate(float value) {
+    rxTempRate = value;
+    if (rxTempRate > 0) {
+      rxTempTime = min(rxTempTime,now()+1.0/rxTempRate);
     }
   }
 
@@ -171,12 +178,31 @@ struct DynamixelServo : Servo
     }
   }
 
-  double rxTime;
+  double rxTempTime;
+  double rxPositionTime;
+
   void rx()
   {
-    if (rxRate ==0 || rxTime >= now()) return;
+    rxTemp();
+    rxPosition();
+  }
 
-    rxTime = now() + 1.0/rxRate;
+  void rxTemp()
+  {
+    if (rxTempRate == 0 || rxTempTime >= now()) return;
+
+    int inp;
+    if (io.readByte(id,DXL_PRESENT_TEMP_BYTE,&inp)) {
+      presentTemp = inp;
+    } else {
+      cout << "comm rx temp error" << endl;
+    }
+    rxTempTime = now() + 1.0/rxTempRate;
+  }
+
+  void rxPosition()
+  {
+    if (rxPositionRate= 0 || rxPositionTime > now()) return;
 
     int inp;
     if (io.readWord(id,DXL_PRESENT_POSITION_WORD,&inp)) {
@@ -184,21 +210,7 @@ struct DynamixelServo : Servo
     } else {
       cout << "comm rx position error" << endl;
     }
-    if (io.readWord(id,DXL_PRESENT_SPEED_WORD,&inp)) {
-      presentSpeed = inp;
-    } else {
-      cout << "comm rx speed error" << endl;
-    }
-    if (io.readWord(id,DXL_PRESENT_LOAD_WORD,&inp)) {
-      presentTorque = inp;
-    } else {
-      cout << "comm rx load error" << endl;
-    }
-    if (io.readByte(id,DXL_PRESENT_TEMP_BYTE,&inp)) {
-      presentTemp = inp;
-    } else {
-      cout << "comm rx temp error" << endl;
-    }
+    rxPositionTime = now() + 1.0/rxPositionRate;
   }
 
   void update()
@@ -223,14 +235,13 @@ struct DynamixelServoController : ServoController
   Servos servos;
   bool running;
   double txRate;
-  double rxRate;
   Servo* servo(int id) {
     Servos::iterator i = servos.find(id);
     if (i != servos.end()) return &*i->second;
     assert(running == false);
 
     return &*(servos[id] = 
-	      std::shared_ptr <DynamixelServo> (new DynamixelServo(cfg,io,id,rxRate)));
+	      std::shared_ptr <DynamixelServo> (new DynamixelServo(cfg,io,id)));
   }
 
   int countServosInRange(int lower,int upper) {
@@ -289,13 +300,11 @@ struct DynamixelServoController : ServoController
 	    float speed = 1.1*(c[1]+c[2]*dt);
 	    servo->angle0(angle);
 	    servo->speed(speed);
-	    //			servo->presentPosition = servo->goalPosition;
 	  }
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
-	  //	  int position = 2048;
-	  //      int speed = 300;
-	  cout << "DXL " << t << "," << id << "," << position <<  "," << speed << endl;
+
+	  //	  cout << "DXL " << t << "," << id << "," << position <<  "," << speed << endl;
 	  
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
@@ -305,11 +314,6 @@ struct DynamixelServoController : ServoController
 	  ++i;
 	}
       }
-      if (output) {
-	DynamixelServo *servo = &*(k->second);
-	//	cout << "id,"<<servo->id << "," << servo->presentPosition << "," << servo->presentSpeed << ",";
-      }
-      
     }
     //	cout << "Packet " << endl;
     dxl_txrx_packet();
@@ -402,21 +406,22 @@ struct DynamixelServoController : ServoController
   // Packets are really limited to about 20 servos for three registers.  
   void update() {
     while (running) {
-      double t = now();
-      double t1=t+1.0/txRate;
       for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
 	i->second->update();
+      }
+
+      double t = now();
+      double t1=t+1.0/txRate;
+
+      for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
 	if (i->second->curveMode) {
-	  if (t < i->second->t[0]) {
-	    t1=min(t1,i->second->t[1]+0.0001);
+	  if (t < i->second->t[0] && t1 > i->second->t[0]+0.0001) {
+	    t1=i->second->t[0]+0.0001;
 	  }
 	}
       }
 
       bool output =(floor(t) != floor(t1));
-      if (output) {
-	cout << "dynamixel: t=" << t << endl;
-      }
 #if USE_BROADCAST
       {
 
@@ -445,8 +450,11 @@ struct DynamixelServoController : ServoController
 #endif
       t=now();
       if (t1 > t) {
+	cout << "sleeping for " << t1-t << " seconds" << endl;
+	cout << "now=" << now() << endl;
 	usleep(int((t1-t)*1000000));
       }
+      cout << "tx done at =" << now() << endl;
     }
   }
 
@@ -465,7 +473,6 @@ struct DynamixelServoController : ServoController
   {
     running = false;
     txRate=cfg.num("servos.dynamixel.rate.tx");
-    rxRate=cfg.num("servos.dynamixel.rate.rx");
   }
 
   ~DynamixelServoController()
