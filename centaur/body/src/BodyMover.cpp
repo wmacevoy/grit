@@ -1,9 +1,11 @@
 #include <vector>
 #include <string>
+#include <fstream>
 
 #include "BodyMover.h"
 #include "CSVRead.h"
 #include "BodyGlobals.h"
+#include "split.h"
 #include <cmath>
 #include <sstream>
 
@@ -78,34 +80,45 @@ ServoMover* BodyMover::getMover(const std::string &name)
   if (name == "LEFTARM_RING") return &left.ring;
   if (name == "LEFTARM_THUMB") return &left.thumb;
 
+  if (name == "RIGHTARM_SHOULDER_IO") return &right.leftRight;
+  if (name == "RIGHTARM_SHOULDER_UD") return &right.upDown;
+  if (name == "RIGHTARM_BICEP_ROTATE") return &right.bicep;
+  if (name == "RIGHTARM_ELBOW") return &right.elbow;
+  if (name == "RIGHTARM_FOREARM_ROTATE") return &right.forearm;
+  if (name == "RIGHTARM_TRIGGER") return &right.trigger;  
+  if (name == "RIGHTARM_MIDDLE") return &right.middle;  
+  if (name == "RIGHTARM_RING") return &right.ring;
+  if (name == "RIGHTARM_THUMB") return &right.thumb;
+
   return 0;
 }
 
 bool BodyMover::play(const std::string &file)
 {
+  vector<string> names;
   vector<vector<double>> data;
+  string header;
 
-  ostringstream oss;
-  oss << "time";
-  for (std::map < int , SPServo > :: iterator i = servos.begin();  i!=servos.end(); ++i) {
-    oss << "," << i->first;
+  { 
+    ifstream ifs(file.c_str()); 
+    getline(ifs,header);
+    split(header,names);
   }
-  
-  string headers = oss.str();
-  
-  if (!CSVRead(file,headers,data)) {
+    
+  if (!CSVRead(file,header,data)) {
     cout << "CSVRead failed " << endl;
     return false;
   }
   
   int nr=data.size();
-  int c=0;
+  int nc=data[0].size();
+  float T=data[nr-1][0]-data[0][0];
 
-  double T = data[nr-1][0]-data[0][0]+(data[nr-1][0]-data[nr-2][0]);
-  
-  for (std::map < int , SPServo > :: iterator i = servos.begin();  i!=servos.end(); ++i) {
-    ++c;
-    string name = cfg->servo(i->first,"name");
+  for (int c=1; c<nc; ++c) {
+    string name=names[c];
+    if (atoi(name.c_str()) != 0) {
+      name = cfg->servo(atoi(name.c_str()),"name");
+    }
     ServoMover *mover = getMover(name);
     if (mover == 0) {
       cout << "skipped unknown servo " << name << endl;
@@ -117,7 +130,7 @@ bool BodyMover::play(const std::string &file)
       mover->setup(angles,simTime,simTime+T);
     }
   }
-  return false;
+  return true;
 }
 
 

@@ -1,6 +1,7 @@
 #include <csignal>
 #include <map>
 #include <iostream>
+#include <iomanip>
 #include <assert.h>
 #include <signal.h>
 #include <unistd.h>
@@ -58,8 +59,8 @@ SPServo servo(string name)
   int id=atoi(cfg.servo(name,"id").c_str());
   double scale = atof(cfg.servo(name,"scale").c_str());
   double offset = atof(cfg.servo(name,"offset").c_str());
-  double torque = atof(cfg.servo(name,"torque").c_str());
-  double speed = atof(cfg.servo(name,"maxspeed").c_str());
+  double torque = atof(cfg.servo(name,"mintorque").c_str());
+  double speed = atof(cfg.servo(name,"minspeed").c_str());
 
   SPServo ans;
 
@@ -166,7 +167,7 @@ public:
 
   void report()
   {
-    cout << "report: ";
+    cout << "report: t=" << fixed << setprecision(4) << now() << setprecision(1) ;
     cout << " tx/s=" << txRate;
     cout << " rx/s=" << rxRate;
     for (Servos::iterator i = servos.begin();
@@ -175,7 +176,7 @@ public:
       cout << " angle[" << i->first << "]=" << i->second->angle() << " temp " << (int)i->second->temp()  << ",";
     }
     cout << endl;
-    cout << "servos: realTime=" << now() << endl;
+    cout << setprecision(5);
   }
 
 };

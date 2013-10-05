@@ -47,6 +47,7 @@ struct DynamixelServo : Servo
   float minSpeed;
   float maxSpeed;
   float minTorque;
+  float maxTorque;
   bool verbose;
   uint8_t presentTemp;
 
@@ -63,14 +64,15 @@ struct DynamixelServo : Servo
     enabled=true;
     minSpeed = atof(cfg.servo(id,"minspeed").c_str());
     maxSpeed = atof(cfg.servo(id,"maxspeed").c_str());
-    minTorque = atof(cfg.servo(id,"torque").c_str());
+    minTorque = atof(cfg.servo(id,"mintorque").c_str());
+    maxTorque = atof(cfg.servo(id,"maxtorque").c_str());
     minAngle = atof(cfg.servo(id,"minangle").c_str());
     maxAngle = atof(cfg.servo(id,"maxangle").c_str());
     verbose = cfg.flag("servos.verbose",false);
 
     angle(0.0);
     speed(atof(cfg.servo(id,"minspeed").c_str()));
-    torque(atof(cfg.servo(id,"torque").c_str()));
+    torque(atof(cfg.servo(id,"mintorque").c_str()));
     tempRate(atof(cfg.servo(id,"rxtemprate").c_str()));
     positionRate(atof(cfg.servo(id,"rxpositionrate").c_str()));
     presentTemp = 0;
@@ -139,6 +141,8 @@ struct DynamixelServo : Servo
     value = fabs(value);
     if (0 < value && value < minTorque) {
       value = minTorque;
+    } else if (value > maxTorque) {
+      value = maxTorque;
     }
     goalTorque = fabs(value)*(1023);
     if (goalTorque > 1023) goalTorque = 1023;
@@ -202,7 +206,7 @@ struct DynamixelServo : Servo
 
   void rxPosition()
   {
-    if (rxPositionRate= 0 || rxPositionTime > now()) return;
+    if (rxPositionRate==0 || rxPositionTime > now()) return;
 
     int inp;
     if (io.readWord(id,DXL_PRESENT_POSITION_WORD,&inp)) {
@@ -450,11 +454,8 @@ struct DynamixelServoController : ServoController
 #endif
       t=now();
       if (t1 > t) {
-	cout << "sleeping for " << t1-t << " seconds" << endl;
-	cout << "now=" << now() << endl;
 	usleep(int((t1-t)*1000000));
       }
-      cout << "tx done at =" << now() << endl;
     }
   }
 
