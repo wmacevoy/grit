@@ -110,11 +110,13 @@ public:
 	float currentUpDown = 0;
 	float currentLeftRight = 0;
 	int rc;
+	int hwm = 1;
 	joystick jm;
 	std::string address = cfg->str("body.commander.neckAddress", "tcp://192.168.2.113:5556");
 
 	void* context = zmq_ctx_new();
 	void* sub = zmq_socket(context, ZMQ_SUB);
+	rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 
 	if (zmq_connect(sub, address.c_str()) != 0)
