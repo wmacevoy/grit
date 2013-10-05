@@ -5,7 +5,8 @@ servos.verbose,true
 servos.type,real
 servos.deviceindex,1
 servos.baudnum,34
-servos.rate,5,Server TX delay divisor for a second 1/5 200ms delay
+servos.rate,10,Server TX delay divisor for a second 1/10 100ms delay
+servos.dynamixel.rate.tx,10.0
 servos.publish,tcp://*:5500
 servos.subscribers,"tcp://127.0.0.1:5501,tcp://127.0.0.1:5503"
 servos.map,../../setup/servomap.csv
