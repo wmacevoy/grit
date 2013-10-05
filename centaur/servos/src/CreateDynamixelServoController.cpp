@@ -32,8 +32,6 @@
 
 using namespace std;
 
-const float UPDATE_RATE = 10.0;
-
 struct DynamixelServo : Servo
 {
   DXLIO &io;
@@ -59,8 +57,8 @@ struct DynamixelServo : Servo
   float c0[3],c1[3];
   float rxRate;
 
-  DynamixelServo(Configure &cfg, DXLIO &io_, int id_) 
-    : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
+  DynamixelServo(Configure &cfg, DXLIO &io_, int id_, float rxRate_) 
+    : io(io_),id(id_), rxRate(rxRate_), presentPosition(2048), goalPosition(2048) 
   {
     enabled=true;
     minSpeed = atof(cfg.servo(id,"minspeed").c_str());
@@ -72,7 +70,6 @@ struct DynamixelServo : Servo
     presentSpeed = 0;
     presentTorque = 0;
     //    cout << "create dynamixel servo id = " << id << " minSpeed=" << minSpeed << " maxSpeed=" << maxSpeed << " minTorque=" << minTorque << endl;
-    rate(1.0);
     angle(0.0);
     speed(30.0);
     torque(0.10);
@@ -225,13 +222,15 @@ struct DynamixelServoController : ServoController
   typedef std::map < int , std::shared_ptr <DynamixelServo> > Servos;
   Servos servos;
   bool running;
+  double txRate;
+  double rxRate;
   Servo* servo(int id) {
     Servos::iterator i = servos.find(id);
     if (i != servos.end()) return &*i->second;
     assert(running == false);
 
     return &*(servos[id] = 
-	      std::shared_ptr <DynamixelServo> (new DynamixelServo(cfg,io,id)));
+	      std::shared_ptr <DynamixelServo> (new DynamixelServo(cfg,io,id,rxRate)));
   }
 
   int countServosInRange(int lower,int upper) {
@@ -402,12 +401,9 @@ struct DynamixelServoController : ServoController
   }
   // Packets are really limited to about 20 servos for three registers.  
   void update() {
-    double t1 = now() + 1.0/UPDATE_RATE;
     while (running) {
-      int us = (t1-now())*1000000;
-      if (us > 0) usleep(us);
       double t = now();
-      t1=t+1.0/UPDATE_RATE;
+      double t1=t+1.0/txRate;
       for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
 	i->second->update();
 	if (i->second->curveMode) {
@@ -447,6 +443,10 @@ struct DynamixelServoController : ServoController
 	broadcastSpeedPosition(output,t1,60,69);
       }
 #endif
+      t=now();
+      if (t1 > t) {
+	usleep(int((t1-t)*1000000));
+      }
     }
   }
 
@@ -464,6 +464,8 @@ struct DynamixelServoController : ServoController
     : cfg(cfg_), io(deviceIndex,baudNum)
   {
     running = false;
+    txRate=cfg.num("servos.dynamixel.rate.tx");
+    rxRate=cfg.num("servos.dynamixel.rate.rx");
   }
 
   ~DynamixelServoController()
@@ -472,7 +474,7 @@ struct DynamixelServoController : ServoController
       running = false;
       go->join();
       delete go;
-    }
+   }
   }
 };
 
