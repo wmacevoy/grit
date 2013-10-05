@@ -187,11 +187,16 @@ void Configure::servos()
 
 void Configure::servos(const std::string &file)
 {
+  string header;
+  {
+    ifstream ifs(file.c_str());
+    getline(ifs,header);
+  }
+
   servoNameMap.clear();
   servoIdMap.clear();
   servoColumnMap.clear();
   servoTable.clear();
-  string header = "name,id,device,scale,offset,torque,minspeed,maxspeed,minangle,maxangle";
   vector<string> cols;
   split(header,cols);
   for (size_t i=0; i<cols.size(); ++i) {
