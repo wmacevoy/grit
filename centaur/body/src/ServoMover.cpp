@@ -60,7 +60,7 @@ void ServoMover::move(Servo &servo)
   }
 }
 
-void ServoMover::setup(float T_, const map < float , float > &angles_,
+void ServoMover::setup(const map < float , float > &angles_,
 		       double simTime0_, double simTime1_) {
   if (verbose) {
     for (Angles::const_iterator i=angles_.begin(); i!=angles_.end(); ++i) {
@@ -69,14 +69,7 @@ void ServoMover::setup(float T_, const map < float , float > &angles_,
   }
   Lock lock(anglesMutex);
   angles=angles_;
-
   at=angles.begin();
-  if (angles.size() == 0) {
-    t0=0;
-  } else {
-    t0=angles.begin()->first;
-  }
-  T=T_;
   simTime0=simTime0_;
   simTime1=simTime1_;
 }
@@ -84,27 +77,15 @@ void ServoMover::setup(float T_, const map < float , float > &angles_,
 void ServoMover::setup(float angle)
 {
   map < float , float > angles;
-  angles[0]=angle;
-  angles[1.0/3.0]=angle;
-  angles[2.0/3.0]=angle;
-  setup(1.0,angles);
+  
+  angles[simTime]=angle;
+  angles[simTime+1e8]=angle;
+  angles[simTime+2e8]=angle;
+  setup(angles,simTime,simTime+2e8);
 }
-
-void ServoMover::wave(double t0,double T,double amin, double amax,int n,
-		      double simTime0_,double simTime1_) 
-{
-  Lock lock(anglesMutex);
-  map < float , float > angles;
-  for (int i=0; i<=n; ++i) {
-    double t=t0+T*double(i)/double(n);
-    angles[t]=(amin+amax)/2+(amax-amin)/2*sin(2*M_PI*(t-t0)/T);
-  }
-  setup(T,angles,simTime0_,simTime1_);
-}
-
 
 ServoMover::ServoMover()
 {
-  torque = 10;
   setup(0);
+  torque=10;
 }

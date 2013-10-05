@@ -37,8 +37,8 @@ void BodyMover::fromTips(vector<vector <double> > data) {
       }
     }
 
-    legs.setup(T,body->legs,t2tips,simTime,simTime+T);
-    waist.setup(T,t2waist,simTime,simTime+T);	
+    legs.setup(body->legs,t2tips,simTime,simTime+T);
+    waist.setup(t2waist,simTime,simTime+T);	
 }
 
 bool BodyMover::circle(double r,double x,double y,double z) {
@@ -114,7 +114,7 @@ bool BodyMover::play(const std::string &file)
       for (int r=0; r<nr; ++r) {
 	angles[data[r][0]]=data[r][c];
       }
-      mover->setup(T,angles,simTime,simTime+T);
+      mover->setup(angles,simTime,simTime+T);
     }
   }
   return false;

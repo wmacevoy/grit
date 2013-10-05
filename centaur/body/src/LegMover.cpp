@@ -8,7 +8,7 @@ void LegMover::move(Leg &leg)  {
   hipMover.move(*leg.hip);
 }
 
-void LegMover::setup(float T, Leg &leg, const std::map < float , Point > &t2tips,
+void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips,
 		     double simTime0, double simTime1) {
   std::map < float , float > t2knee,t2femur,t2hip;
   for (map < float , Point > :: const_iterator i = t2tips.begin();
@@ -24,9 +24,9 @@ void LegMover::setup(float T, Leg &leg, const std::map < float , Point > &t2tips
     t2femur[t]=femur;
     t2hip[t]=hip;
   }
-  kneeMover.setup(T,t2knee,simTime0,simTime1);
-  femurMover.setup(T,t2femur,simTime0,simTime1);
-  hipMover.setup(T,t2hip,simTime0,simTime1);
+  kneeMover.setup(t2knee,simTime0,simTime1);
+  femurMover.setup(t2femur,simTime0,simTime1);
+  hipMover.setup(t2hip,simTime0,simTime1);
 }
 
 void LegMover::setup(Leg &leg, Point p)

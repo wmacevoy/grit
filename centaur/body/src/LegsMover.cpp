@@ -9,10 +9,10 @@ void LegsMover::move(Legs &legs)
   }
 }
 
-void LegsMover::setup(float T, Legs &legs, const std::map < float , Point > *t2tips,
+void LegsMover::setup(Legs &legs, const std::map < float , Point > *t2tips,
 		      double simTime0, double simTime1) 
 {
   for (int i=0; i<4; ++i) {
-    legMovers[i].setup(T,legs.legs[i],t2tips[i],simTime0,simTime1);
+    legMovers[i].setup(legs.legs[i],t2tips[i],simTime0,simTime1);
   }
 }
