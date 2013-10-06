@@ -39,5 +39,4 @@ void Body::temp_report(std::ostream &out, std::string part) const
 	legs.legs[i].femur->temp_report(out);
 	legs.legs[i].hip->temp_report(out);
       }
-  out << endl;
 }
