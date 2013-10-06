@@ -33,6 +33,14 @@ setup()
     export LD_LIBRARY_PATH="$lib:$LD_LIBRARY_PATH"
     export PYTHONPATH="$lib:$PYTHONPATH"
   done
+
+  if [ "`uname -m`" = "x86_x64" ]
+  then
+      LEAP_LIB=$MOJAVATON_DIR/libs/LeapSDK/lib/x64
+  else
+      LEAP_LIB=$MOJAVATON_DIR/libs/LeapSDK/lib/x86
+  fi
+  LD_LIBRARY_PATH="$LEAP_LIB:$LD_LIBRARY_PATH"
 }
 
 update()
