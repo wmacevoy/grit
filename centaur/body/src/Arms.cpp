@@ -18,7 +18,6 @@ void Arm::goLimp()
 
 void Arm::report(std::ostream &out) const
 {
-  out << ",";
   leftRight->report(out);
   out << ",";
   upDown->report(out);
