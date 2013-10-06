@@ -45,24 +45,117 @@ void BodyMover::fromTips(vector<vector <double> > data) {
 
 bool BodyMover::circle(double r,double x,double y,double z) {
   vector<vector<double>> data;
-  double steps=4.0/10.0; // 4s in ten of a second steps;
+  double T = 10.0;
+  double steps=T*10.0; // 4s in ten of a second steps;
   double da=2.0*M_PI/steps;
   double waist=0;
+  double toffset=0;
+  double lift=5.0;
+  double stepTime=1.0;
   for(double a=0;a<2.0*M_PI;a+=da) {
-	double t=4.0*a/(2.0*M_PI);
+	double t=T*a/(2.0*M_PI)+toffset;
     double l1x=-x; double l1y=y;  double l1z=z;  // default positions
     double l2x=x;  double l2y=y;  double l2z=z;
     double l3x=x;  double l3y=-y; double l3z=z;
     double l4x=-x; double l4y=-y; double l4z=z;
     double dx=r*cos(a); double dy=r*sin(a); // offset of center of mass
     vector<double> p;
-    p.push_back(t);
+    p.push_back(t+toffset);
     p.push_back(l1x+dx); p.push_back(l1y+dy); p.push_back(l1z);
     p.push_back(l2x+dx); p.push_back(l2y+dy); p.push_back(l2z);
     p.push_back(l3x+dx); p.push_back(l3y+dy); p.push_back(l3z);
     p.push_back(l4x+dx); p.push_back(l4y+dy); p.push_back(l4z);
     p.push_back(waist);
     data.push_back(p);
+    if (fabs(a-M_PI/4.0)<0.1) {  // Leg 2 up
+      for (int i=0;i<10;i++) {
+        vector<double> pu;
+        pu.push_back(t+((float)i)*stepTime/10.0+toffset);
+        pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z);
+        pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z+lift);
+        pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
+        pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z);
+        pu.push_back(waist);
+        data.push_back(pu);
+      }
+      for (int i=0;i<10;i++) {
+        vector<double> pd;
+        pd.push_back(t+1.0+((float)i)*stepTime/10.0+toffset);
+        pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
+        pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
+        pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
+        pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
+        pd.push_back(waist);
+        data.push_back(pd);
+      }
+	  toffset+=2.0*stepTime;
+	} else if (fabs(a-3.0*M_PI/4.0)<0.1) {  // Leg 1 up
+      for (int i=0;i<10;i++) {
+        vector<double> pu;
+        pu.push_back(t+((float)i)*stepTime/10.0+toffset);
+        pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z+lift);
+        pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z);
+        pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
+        pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z);
+        pu.push_back(waist);
+        data.push_back(pu);
+      }
+      for (int i=0;i<10;i++) {
+        vector<double> pd;
+        pd.push_back(t+1.0+((float)i)*stepTime/10.0+toffset);
+        pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
+        pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
+        pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
+        pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
+        pd.push_back(waist);
+        data.push_back(pd);
+	  }
+	  toffset+=2.0*stepTime;
+	} else if (fabs(a-5.0*M_PI/4.0)<0.1) {  //  Leg 4 up
+      for (int i=0;i<10;i++) {
+        vector<double> pu;
+        pu.push_back(t+((float)i)*stepTime/10.0+toffset);
+        pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z);
+        pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z);
+        pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
+        pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z+lift);
+        pu.push_back(waist);
+        data.push_back(pu);
+	  }
+      for (int i=0;i<10;i++) {
+        vector<double> pd;
+        pd.push_back(t+1.0+((float)i)*stepTime/10.0+toffset);
+        pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
+        pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
+        pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
+        pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
+        pd.push_back(waist);
+        data.push_back(pd);
+      }
+	  toffset+=2.0*stepTime;
+	} else if (fabs(a-7.0*M_PI/4.0) <0.1) {  // Leg3 up
+      for (int i=0;i<10;i++) {
+        vector<double> pu;
+        pu.push_back(t+((float)i)*stepTime/10.0+toffset);
+        pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z);
+        pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z);
+        pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z+lift);
+        pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z);
+        pu.push_back(waist);
+        data.push_back(pu);
+      }  
+      for (int i=0;i<10;i++) {
+        vector<double> pd;
+        pd.push_back(t+1.0+((float)i)*stepTime/10.0+toffset);
+        pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
+        pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
+        pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
+        pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
+        pd.push_back(waist);
+        data.push_back(pd);
+	  }
+	  toffset+=2.0*stepTime;
+	}
   }
   fromTips(data);
   return true;

@@ -256,7 +256,7 @@ struct DynamixelServoController : ServoController
     return retval;
   }
 
-  void broadcastSpeedPosition(bool output,double t,int lower,int upper) {
+  void broadcastSpeedPosition(bool output,double t,double t1,int lower,int upper) {
     io.reopen(); // reopen if failing recently...
     int N = 0;
     for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
@@ -290,7 +290,7 @@ struct DynamixelServoController : ServoController
 	  
 	  if (servo->curveMode) {
 	    double t0=servo->t[0];
-	    
+
 	    double dt;
 	    if (t < servo->t[1]) {
 	      dt = t-servo->t[0];
@@ -298,17 +298,35 @@ struct DynamixelServoController : ServoController
 	      dt = servo->t[1]-servo->t[0];
 	      //	      cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
 	    }
-	    double dt2 = dt*dt;
-	    float *c = (dt <= 0) ? servo->c0 : servo->c1;
-	    float angle = c[0]+c[1]*dt+c[2]*dt2/2.0;
-	    float speed = 1.1*(c[1]+c[2]*dt);
-	    servo->angle0(angle);
-	    servo->speed(speed);
+	    float angle;
+	    {
+	      double dtsq = dt*dt;
+	      float *c = (dt <= 0) ? servo->c0 : servo->c1;
+	      angle = c[0]+c[1]*dt+c[2]*dtsq/2.0;
+	    }
+
+	    double dt1;
+	    if (t1 < servo->t[1]) {
+	      dt1 = t-servo->t[0];
+	    } else {
+	      dt1 = servo->t[1]-servo->t[0];
+	      //	      cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
+	    }
+
+	    float angle1;
+	    {
+	      double dt1sq = dt1*dt1;
+	      float *c = (dt1 <= 0) ? servo->c0 : servo->c1;
+	      angle1 = c[0]+c[1]*dt1+c[2]*dt1sq/2.0;
+	    }
+
+	    servo->angle0(angle1);
+	    servo->speed((angle-angle1)/(t-t1));
 	  }
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
 
-	  //	  cout << "DXL " << t << "," << id << "," << position <<  "," << speed << endl;
+	  cout << "DXL PS," << t << "," << id << "," << position <<  "," << speed << endl;
 	  
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));
@@ -349,7 +367,7 @@ struct DynamixelServoController : ServoController
 	dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(torque));
 	dxl_set_txpacket_parameter(i*(L+1)+4,dxl_get_highbyte(torque));
-	//	    cout << "ID " << id << " sent a torque of " << torque << endl;
+	//	cout << "DXL T," << t << "," << id << "," << torque << endl;
 	++i;
       }
     }
@@ -446,10 +464,10 @@ struct DynamixelServoController : ServoController
 	broadcastTorque(output,t1,60,69); // arms
 
 
-	broadcastSpeedPosition(output,t1,0,49);
-	broadcastSpeedPosition(output,t1,90,99);
-	broadcastSpeedPosition(output,t1,50,59);
-	broadcastSpeedPosition(output,t1,60,69);
+	broadcastSpeedPosition(output,t,t1,0,49);
+	broadcastSpeedPosition(output,t,t1,90,99);
+	broadcastSpeedPosition(output,t,t1,50,59);
+	broadcastSpeedPosition(output,t,t1,60,69);
       }
 #endif
       t=now();

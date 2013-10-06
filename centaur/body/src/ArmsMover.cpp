@@ -1,5 +1,13 @@
 #include "ArmsMover.h"
 
+ArmMover::ArmMover()
+{
+  trigger.linearCutoff=0;
+  middle.linearCutoff=0;
+  ring.linearCutoff=0;
+  thumb.linearCutoff=0;
+}
+
 void ArmMover::move(Arm &arm)
 {
   upDown.move(*arm.upDown);

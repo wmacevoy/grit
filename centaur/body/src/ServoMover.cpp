@@ -46,7 +46,7 @@ void ServoMover::move(Servo &servo)
     p[0]=samples[0]->second;
     p[1]=samples[1]->second;
     p[2]=samples[2]->second;
-    fit(ts,p,c0,c1);
+    fit(ts,p,c0,c1,linearCutoff);
     servo.curve(ts+1,c0,c1);
     servo.torque(torque);
   } else if (angles.size() == 1) {
@@ -88,4 +88,5 @@ ServoMover::ServoMover()
 {
   setup(0);
   torque=10;
+  linearCutoff=1.0;
 }

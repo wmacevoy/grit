@@ -13,6 +13,7 @@ public:
   Angles::iterator at;
   double simTime0,simTime1;
   float torque;
+  float linearCutoff;
 
   void move(Servo &servo);
   void setup(const std::map < float , float > &angles_,

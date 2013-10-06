@@ -260,11 +260,11 @@ public:
     setWaist(0);
     setLIO(-45);
     setLUD(-45);
-    setLElbow(-30);
+    setLElbow(40);
     setLBicep(-20);
     setRIO(45);
     setRUD(40);
-    setRElbow(30);
+    setRElbow(-40);
     setRBicep(0);    
   }
   
@@ -413,6 +413,22 @@ public:
       mover->right.torque(torque);
       ok=true;
     }
+    if (part == "leg1"){
+      mover->legs.torque(torque,0);
+      ok = true;
+    }
+    if (part == "leg2"){
+      mover->legs.torque(torque,1);
+      ok = true;
+    }
+    if (part == "leg3"){
+      mover->legs.torque(torque,2);
+      ok = true;
+    }
+    if (part == "leg4"){
+      mover->legs.torque(torque,3);
+      ok = true;
+    }
 
     ostringstream oss;
     if (ok) {
@@ -451,11 +467,11 @@ public:
     if (head == "Circle") {
       float radius;
       iss >> radius;
-      mover->circle(radius,17,17,-15.5);
+      mover->circle(radius,14.9,14.9,-14.665);
       ostringstream oss;
       oss << "Circle " << radius << " :ok."; 
       answer(oss.str());
-	}
+    }
     if (head == "report") {
       ostringstream oss;
       body->report(oss);

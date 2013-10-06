@@ -17,4 +17,5 @@ class ArmMover
   ServoMover thumb;
   void move(Arm &arm);
   void torque(float t);
+  ArmMover();
 };

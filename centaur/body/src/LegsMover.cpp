@@ -16,3 +16,8 @@ void LegsMover::setup(Legs &legs, const std::map < float , Point > *t2tips,
     legMovers[i].setup(legs.legs[i],t2tips[i],simTime0,simTime1);
   }
 }
+
+void LegsMover::torque(float t, int num)
+{
+  legMovers[num].torque(t);
+}

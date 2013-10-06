@@ -40,3 +40,10 @@ void LegMover::setup(Leg &leg, Point p)
   femurMover.setup(femur);
   hipMover.setup(hip);
 }
+
+void LegMover::torque(float t)
+{
+  femurMover.torque=t;
+  kneeMover.torque=t;
+  hipMover.torque=t;
+}
