@@ -183,6 +183,27 @@ ServoMover* BodyMover::getMover(const std::string &name)
   if (name == "RIGHTARM_RING") return &right.ring;
   if (name == "RIGHTARM_THUMB") return &right.thumb;
 
+  if (name == "LEG1_KNEE") return &legs.legMovers[LEG1].kneeMover;
+  if (name == "LEG1_FEMUR") return &legs.legMovers[LEG1].femurMover;
+  if (name == "LEG1_HIP") return &legs.legMovers[LEG1].hipMover;
+
+  if (name == "LEG2_KNEE") return &legs.legMovers[LEG2].kneeMover;
+  if (name == "LEG2_FEMUR") return &legs.legMovers[LEG2].femurMover;
+  if (name == "LEG2_HIP") return &legs.legMovers[LEG2].hipMover;
+
+  if (name == "LEG3_KNEE") return &legs.legMovers[LEG3].kneeMover;
+  if (name == "LEG3_FEMUR") return &legs.legMovers[LEG3].femurMover;
+  if (name == "LEG3_HIP") return &legs.legMovers[LEG3].hipMover;
+
+  if (name == "LEG4_KNEE") return &legs.legMovers[LEG4].kneeMover;
+  if (name == "LEG4_FEMUR") return &legs.legMovers[LEG4].femurMover;
+  if (name == "LEG4_HIP") return &legs.legMovers[LEG4].hipMover;
+
+  if (name == "WAIST") return &waist;
+
+  if (name == "NECKUD") return &neck.upDown;
+  if (name == "NECKLR") return &neck.leftRight;
+
   return 0;
 }
 
