@@ -21,7 +21,7 @@ body.verbose,true
 commander.publish,tcp://*:5504
 commander.subscribers,"tcp://${centaur.ip}:5502"
 lidar.provider.dev_path,"/dev/ttyACM0"
-lidar.provider.sleep_time,"900"
+lidar.provider.sleep_time,"700"
 lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
 webcam.requester.address,"127.0.0.1"
