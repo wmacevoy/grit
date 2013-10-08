@@ -38,13 +38,15 @@ int main(int argc, char** argv)
 	time_t t;
 	struct tm timeinfo;
 
+	die = false;	
+
 	void* context = zmq_ctx_new ();
 	void* pub = zmq_socket(context, ZMQ_PUB);
 	zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	if(zmq_bind(pub, "tcp://*:9800") != 0)
 	{
 		printf("Could not connect zmq...\n");
-		return 1;
+		die = true;
 	}
 
 	signal(SIGINT, quitproc);
@@ -56,7 +58,7 @@ int main(int argc, char** argv)
 		timeinfo = *localtime(&t);
 		strftime(strTime, sizeof(strTime), "%Y-%m-%d(%X)", &timeinfo);
 		publish(strTime, pub);
-		if(verbose) printf ( "Current local time and date: %s", strTime );
+		if(verbose){ printf ( "%s\n", strTime ); fflush(stdout);}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));	
 	}
