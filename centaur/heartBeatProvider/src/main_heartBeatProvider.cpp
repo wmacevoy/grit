@@ -11,11 +11,6 @@ Configure cfg;
 bool verbose;
 volatile bool die;
 
-void publish(void* time, void* zmq_pub)
-{
-	int rc = zmq_send(zmq_pub, time, strlen((char*)time) * sizeof(char), ZMQ_DONTWAIT);\
-}
-
 void quitproc(int param)
 {
 	printf("\nQuitting...\n");
@@ -33,6 +28,7 @@ int main(int argc, char** argv)
 	int sleep_time = (int)cfg.num("heartbeat.provider.sleep_time", 500);
 
 	int hwm = 1;
+	int rc = 0;
 
 	char strTime[80];
 	time_t t;
@@ -41,9 +37,8 @@ int main(int argc, char** argv)
 	die = false;	
 
 	void* context = zmq_ctx_new ();
-	void* pub = zmq_socket(context, ZMQ_PUB);
-	zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	if(zmq_bind(pub, "tcp://*:9800") != 0)
+	void* rep = zmq_socket(context, ZMQ_REP);
+	if(zmq_bind(rep, "tcp://*:9800") != 0)
 	{
 		printf("Could not connect zmq...\n");
 		die = true;
@@ -54,16 +49,23 @@ int main(int argc, char** argv)
 
 	while(!die)
 	{
+		rc = zmq_recv (rep, strTime, strlen(strTime) * sizeof(char), 0);
+		if(rc && verbose)
+		{
+			printf("Received request for time...\n");
+		}
 		t = time(0);
 		timeinfo = *localtime(&t);
 		strftime(strTime, sizeof(strTime), "%Y-%m-%d(%X)", &timeinfo);
-		publish(strTime, pub);
+
+		zmq_send (rep, strTime, strlen(strTime) * sizeof(char), 0);
+
 		if(verbose){ printf ( "%s\n", strTime ); fflush(stdout);}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));	
 	}
 
-	zmq_close(pub);
+	zmq_close(rep);
 	zmq_ctx_destroy(context);
 
 	return 0;
