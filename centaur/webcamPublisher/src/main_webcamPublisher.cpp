@@ -77,8 +77,8 @@ int main(int argc, char** argv)
 	signal(SIGQUIT, quitproc);
 
 	
-	if(verbose) std::cout << frame.channels() << " " << frame.depth() << std::endl;
-	if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
+	if(verbose) std::cout << "Color: " << frame.channels() << " " << frame.depth() << std::endl;
+	if(verbose) std::cout << "Gray: " << gray.channels() << " " << gray.depth() << std::endl;
 
 	while(!die)
 	{
