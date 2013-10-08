@@ -18,7 +18,6 @@ bool inside = false;
 bool verbose = false;
 
 int64_t* lidar_data;
-const int sz_mat = 320*240*3;
 const int sz_lidar_data  = 1081;
 
 volatile int mx = 0;
@@ -38,7 +37,7 @@ std::string convstr(const float t)
 
 void subscribe_cam(Mat& mat, void* zmq_sub)
 {
-	int rc = zmq_recv(zmq_sub, mat.data, sz_mat, ZMQ_DONTWAIT);
+	int rc = zmq_recv(zmq_sub, mat.data, mat.total() * mat.elemSize(), ZMQ_DONTWAIT);
 	if(verbose) std::cout << "Received: " << rc << std::endl;
 }
 
@@ -53,7 +52,7 @@ void mouseEvent(int evt, int x, int y, int flags, void* param)
 {
 	if(evt == CV_EVENT_MOUSEMOVE)
 	{
-		if(x >=0 && x <= 640 && y >= 45 && y <= 65)
+		if(x >=0 && x <= 320 && y >= 45 && y <= 65)
 		{
 			mx = x;
 			my = y;
@@ -78,14 +77,19 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("webcam.requester.verbose", false);
 	if (verbose) cfg.show();
 
-	int sleep_time = cfg.num("webcam.requester.sleep_time",100);
+	int sleep_time_color = cfg.num("webcam.requester.sleep_time_color", 450);
+	int sleep_time_gray = cfg.num("webcam.requester.sleep_time_gray", 100);
 	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
 	int hwm = 1;
-	int rcm = 0;
+	int rcc = 0;
+	int rcg = 0;
 	int rcl = 0;
 	int index = 0;
-	Mat gray(240, 320, CV_8UC3);
+	int sleep_time = sleep_time_gray;
+	bool CorG  = false;
+	Mat color(240, 320, CV_8UC3);
+	Mat gray(240, 320, CV_8UC1);
 
 	std::string winName = "ICU";
 	std::string text = "0";
@@ -95,30 +99,38 @@ int main(int argc, char** argv)
 	int thickness = 2;
 	std::string ip1 = "tcp://";
 	std::string ip2 = "tcp://";
+	std::string ip3 = "tcp://";
 
 	ip1 += cfg.str("webcam.requester.address", "localhost");
 	ip2 += cfg.str("webcam.requester.address", "localhost");
+	ip3 += cfg.str("webcam.requester.address", "localhost");
 	
 	ip1 += ":9993";
 	ip2 += ":9997";
+	ip3 += ":9994";
 
-	void* context_mat = zmq_ctx_new ();
+	void* context_color = zmq_ctx_new ();
+	void* context_gray = zmq_ctx_new ();
 	void* context_lidar = zmq_ctx_new ();
 
-	void* sub_mat = zmq_socket(context_mat, ZMQ_SUB);
+	void* sub_color = zmq_socket(context_color, ZMQ_SUB);
+	void* sub_gray = zmq_socket(context_gray, ZMQ_SUB);
 	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
 
-	rcm = zmq_setsockopt(sub_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	rcc = zmq_setsockopt(sub_color, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	rcg = zmq_setsockopt(sub_gray, ZMQ_RCVHWM, &hwm, sizeof(hwm)); 
 	rcl = zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	assert(rcm == 0 && rcl == 0);
+	assert(rcc == 0 && rcg == 0 && rcl == 0);
 
-	rcm = zmq_setsockopt(sub_mat, ZMQ_SUBSCRIBE, "", 0);
+	rcc = zmq_setsockopt(sub_color, ZMQ_SUBSCRIBE, "", 0);
+	rcg = zmq_setsockopt(sub_gray, ZMQ_SUBSCRIBE, "", 0);
 	rcl = zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0);
-	assert(rcm == 0 && rcl == 0);
+	assert(rcc == 0 && rcg == 0 && rcl == 0);
 
-	rcm = zmq_connect(sub_mat, ip1.c_str());
+	rcc = zmq_connect(sub_color, ip1.c_str());
+	rcg = zmq_connect(sub_gray, ip3.c_str());
 	rcl = zmq_connect(sub_lidar, ip2.c_str());
-	assert(rcm == 0 && rcl == 0);	
+	assert(rcc == 0 && rcg == 0 && rcl == 0);	
 
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);
@@ -128,31 +140,68 @@ int main(int argc, char** argv)
 
 	//Line on screen needs to be calibrated with lidar
 	Point pt1(0, 55);
-	Point pt2(640, 55);
+	Point pt2(320, 55);
 	Point textOrg(1, 30);
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
 	while(!die)
 	{
-		subscribe_cam(gray, sub_mat);
-		line(gray, pt1, pt2, Scalar(0, 0, 0));
-		if(inside)
-		{	
-			subscribe_lidar(lidar_data, sub_lidar);	
-			index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-			//index = 380 + mx;
-			text = convstr(lidar_data[index] * 0.00328084);
-			putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-			if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << std::endl;
+		switch(CorG)
+		{
+		case true:
+			subscribe_cam(color, sub_color);
+			line(color, pt1, pt2, Scalar(0, 0, 0));
+			if(inside)
+			{	
+				subscribe_lidar(lidar_data, sub_lidar);	
+				index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+				//index = 380 + mx;
+				text = convstr(lidar_data[index] * 0.00328084);
+				putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+				if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << " " << sleep_time << std::endl;
+			}
+			imshow(winName, color);
+			break;
+		case false:
+			subscribe_cam(gray, sub_gray);
+			line(gray, pt1, pt2, Scalar(0, 0, 0));
+			if(inside)
+			{	
+				subscribe_lidar(lidar_data, sub_lidar);	
+				index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+				//index = 380 + mx;
+				text = convstr(lidar_data[index] * 0.00328084);
+				putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+				if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << " " << sleep_time << std::endl;
+			}
+			imshow(winName, gray);
+			break;
 		}
-		imshow(winName, gray);
 		char c = waitKey(sleep_time);
-		if(c == 'q') die = true;
+		if(c == 't') 
+		{
+			if(CorG == false)
+			{
+				CorG = true;
+				sleep_time = sleep_time_color;
+			}
+			else
+			{
+				CorG = false;
+				sleep_time = sleep_time_gray;
+			}
+		}
+		else if(c == 'q') die = true;
 	}
 
 	destroyWindow(winName);
-	zmq_close(sub_mat);
-	zmq_ctx_destroy(context_mat);
+	zmq_close(sub_color);
+	zmq_close(sub_gray);
+	zmq_close(sub_lidar);
+	zmq_ctx_destroy(context_color);
+	zmq_ctx_destroy(context_gray);
+	zmq_ctx_destroy(context_lidar);
+
 	return 0;
 }

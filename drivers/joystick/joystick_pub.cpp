@@ -89,6 +89,7 @@ int main(int argc,char **argv) {
         }
      }
     zmq_ctx_destroy(context);
+    SDL_Quit();
     return 0;
   }
 }

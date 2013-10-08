@@ -13,9 +13,15 @@ using namespace cv;
 bool die = false;
 bool verbose = false;
 
-void publish(Mat& gray, void* zmq_pub)
+void publish_gray(Mat& gray, void* zmq_pub)
 {
 	int rc = zmq_send(zmq_pub, gray.data, gray.total() * gray.elemSize(), ZMQ_DONTWAIT);
+	if(verbose) std::cout << "Sent: " << rc << std::endl;
+}
+
+void publish_color(Mat& color, void* zmq_pub)
+{
+	int rc = zmq_send(zmq_pub, color.data, color.total() * color.elemSize(), ZMQ_DONTWAIT);
 	if(verbose) std::cout << "Sent: " << rc << std::endl;
 }
 
@@ -38,6 +44,7 @@ int main(int argc, char** argv)
 
 	int hwm = 1;
 	int rc = 0;
+	int rc2 = 0;
 	Mat frame;
 	Mat gray;
 	
@@ -53,32 +60,38 @@ int main(int argc, char** argv)
 
 	//Setup ZMQ
 	//tcp://*:9993
-	void* context_mat = zmq_ctx_new ();	
+	void* context_mat = zmq_ctx_new ();
+	void* context_mat2 = zmq_ctx_new ();	
 
 	void* pub_mat = zmq_socket(context_mat, ZMQ_PUB);
+	void* pub_mat2 = zmq_socket(context_mat2, ZMQ_PUB);
 	rc = zmq_setsockopt(pub_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	assert(rc == 0);
+	rc2 = zmq_setsockopt(pub_mat2, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+	assert(rc == 0 && rc2 == 0);
 
 	rc = zmq_bind(pub_mat, "tcp://*:9993");
-	assert(rc == 0);
+	rc2 = zmq_bind(pub_mat2, "tcp://*:9994");
+	assert(rc == 0 && rc2 == 0);
 
 	signal(SIGINT, quitproc);
 	signal(SIGQUIT, quitproc);
 
 	
 	if(verbose) std::cout << frame.channels() << " " << frame.depth() << std::endl;
-	//if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
+	if(verbose) std::cout << gray.channels() << " " << gray.depth() << std::endl;
 
 	while(!die)
 	{
 		capture >> frame;
-		//cvtColor(frame, gray, CV_RGB2GRAY);
+		cvtColor(frame, gray, CV_RGB2GRAY);
 		frame.reshape(0,1);		
-		publish(frame, pub_mat);
+		publish_color(frame, pub_mat);
+		publish_gray(gray, pub_mat2);
 		waitKey(sleep_time);
 	}
 
 	//Cleanup
+	capture.release();
 	zmq_close(pub_mat);
 	zmq_ctx_destroy(context_mat);
 	return 0;
