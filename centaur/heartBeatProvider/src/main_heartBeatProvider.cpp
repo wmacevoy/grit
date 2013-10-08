@@ -1,4 +1,5 @@
 #include <chrono>
+#include <thread>
 #include <time.h>
 #include <zmq.h>
 #include <string.h>
@@ -29,6 +30,8 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("heartbeat.provider.verbose", false);
 	if (verbose) cfg.show();
 
+	int sleep_time = (int)cfg.num("heartbeat.provider.sleep_time", 500);
+
 	int hwm = 1;
 
 	char strTime[80];
@@ -53,7 +56,9 @@ int main(int argc, char** argv)
 		timeinfo = *localtime(&t);
 		strftime(strTime, sizeof(strTime), "%Y-%m-%d(%X)", &timeinfo);
 		publish(strTime, pub);
-		if(verbose) printf ( "Current local time and date: %s", strTime );	
+		if(verbose) printf ( "Current local time and date: %s", strTime );
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));	
 	}
 
 	zmq_close(pub);
