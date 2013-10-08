@@ -25,7 +25,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("heartbeat.provider.verbose", false);
 	if (verbose) cfg.show();
 
-	int sleep_time = (int)cfg.num("heartbeat.provider.sleep_time", 500);
+	int sleep_time = (int)cfg.num("heartbeat.provider.sleep_time", 1000);
 
 	int hwm = 1;
 	int rc = 0;

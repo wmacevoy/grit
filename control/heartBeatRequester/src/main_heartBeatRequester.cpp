@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	if (verbose) cfg.show();
 
 	std::string address = cfg.str("heartbeat.requester.address", "tcp://localhost:9800");
-	int sleep_time = (int)cfg.num("heartbeat.requester.sleep_time", 10000);
+	int sleep_time = (int)cfg.num("heartbeat.requester.sleep_time", 1000);
 
 	char strTime[80];
 	die = false;
