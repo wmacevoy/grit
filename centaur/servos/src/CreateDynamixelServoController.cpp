@@ -299,10 +299,12 @@ struct DynamixelServoController : ServoController
 	      //	      cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
 	    }
 	    float angle;
+	    float speed;
 	    {
 	      double dtsq = dt*dt;
 	      float *c = (dt <= 0) ? servo->c0 : servo->c1;
 	      angle = c[0]+c[1]*dt+c[2]*dtsq/2.0;
+	      speed = c[1]+c[2]*dt;
 	    }
 
 	    double dt1;
@@ -314,19 +316,21 @@ struct DynamixelServoController : ServoController
 	    }
 
 	    float angle1;
+	    float speed1;
 	    {
 	      double dt1sq = dt1*dt1;
 	      float *c = (dt1 <= 0) ? servo->c0 : servo->c1;
 	      angle1 = c[0]+c[1]*dt1+c[2]*dt1sq/2.0;
+	      speed1 = c[1]+c[2]*dt1;
 	    }
 
 	    servo->angle0(angle1);
-	    servo->speed((angle-angle1)/(t-t1));
+	    servo->speed(max(fabs(speed),fabs(speed1)));
 	  }
 	  int position = servo->goalPosition & 4095;
 	  int speed = servo->goalSpeed;
 
-	  cout << "DXL PS," << t << "," << id << "," << position <<  "," << speed << endl;
+	  //	  cout << "DXL PS," << t << "," << id << "," << position <<  "," << speed << endl;
 	  
 	  dxl_set_txpacket_parameter(i*(L+1)+2,id);
 	  dxl_set_txpacket_parameter(i*(L+1)+3,dxl_get_lowbyte(position));

@@ -73,6 +73,7 @@ bool BodyMover::circle(double r,double x,double y,double z) {
   bool l3=true;
   bool l4=true;
   double t=0.0;
+  double yoffset=4.0;
   double l1x=-x; double l1y=y;  double l1z=z;  // default positions
   double l2x=x;  double l2y=y;  double l2z=z;
   double l3x=x;  double l3y=-y; double l3z=z;
@@ -82,13 +83,26 @@ bool BodyMover::circle(double r,double x,double y,double z) {
   double dl3x=xAdder;  double dl3y=-yAdder; double dl3z=zAdder;
   double dl4x=-xAdder; double dl4y=-yAdder; double dl4z=zAdder;
   for(double a=0;a<fullCircle;a+=da) {
+	double p=a/fullCircle;
+	double pl1=p+7.0/8.0;
+	pl1 = pl1-floor(pl1);
+	double pl2=p+7.0/8.0+1.0/4.0;
+	pl2 = pl2-floor(pl2);
+	double pl3=p+7.0/8.0+2.0/4.0;
+	pl3 = pl3-floor(pl3);
+	double pl4=p+7.0/8.0+3.0/4.0;
+	pl4 = pl4-floor(pl4);
     double dx=r*cos(a); double dy=r*sin(a); // offset of center of mass
+    double dy1=dy+pl1*yoffset;
+    double dy2=dy+pl2*yoffset;
+    double dy3=dy+pl3*yoffset;
+    double dy4=dy+pl4*yoffset;
     vector<double> p;
     p.push_back(t);
-    p.push_back(l1x+dx); p.push_back(l1y+dy); p.push_back(l1z);
-    p.push_back(l2x+dx); p.push_back(l2y+dy); p.push_back(l2z);
-    p.push_back(l3x+dx); p.push_back(l3y+dy); p.push_back(l3z);
-    p.push_back(l4x+dx); p.push_back(l4y+dy); p.push_back(l4z);
+    p.push_back(l1x+dx); p.push_back(l1y+dy1); p.push_back(l1z);
+    p.push_back(l2x+dx); p.push_back(l2y+dy2); p.push_back(l2z);
+    p.push_back(l3x+dx); p.push_back(l3y+dy3); p.push_back(l3z);
+    p.push_back(l4x+dx); p.push_back(l4y+dy4); p.push_back(l4z);
     p.push_back(waist);
     data.push_back(p);
     t+=dt;
@@ -98,10 +112,10 @@ bool BodyMover::circle(double r,double x,double y,double z) {
 	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
         pu.push_back(t);
-        pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z);
-        pu.push_back(l2x+dx+dl2x*f); pu.push_back(l2y+dy+dl2y*f); pu.push_back(l2z+dl2z*f);
-        pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
-        pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z);
+        pu.push_back(l1x+dx); pu.push_back(l1y+dy1); pu.push_back(l1z);
+        pu.push_back(l2x+dx+dl2x*f); pu.push_back(l2y+dy2); pu.push_back(l2z+dl2z*f);
+        pu.push_back(l3x+dx); pu.push_back(l3y+dy3); pu.push_back(l3z);
+        pu.push_back(l4x+dx); pu.push_back(l4y+dy4); pu.push_back(l4z);
         pu.push_back(waist);
         data.push_back(pu);
         t+=dt;
@@ -110,10 +124,10 @@ bool BodyMover::circle(double r,double x,double y,double z) {
 	    double f=1.0-(float)i/(stepTime*timeDivider);
         vector<double> pd;
         pd.push_back(t);
-        pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
-        pd.push_back(l2x+dx+dl2x*f); pd.push_back(l2y+dy+dl2y*f); pd.push_back(l2z+dl2z*f);
-        pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
-        pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
+        pd.push_back(l1x+dx); pd.push_back(l1y+dy1); pd.push_back(l1z);
+        pd.push_back(l2x+dx+dl2x*f); pd.push_back(l2y+dy2+dl2y*f+yoffset); pd.push_back(l2z+dl2z*f);
+        pd.push_back(l3x+dx); pd.push_back(l3y+dy3); pd.push_back(l3z);
+        pd.push_back(l4x+dx); pd.push_back(l4y+dy4); pd.push_back(l4z);
         pd.push_back(waist);
         data.push_back(pd);
         t+=dt;
@@ -124,10 +138,10 @@ bool BodyMover::circle(double r,double x,double y,double z) {
 	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
         pu.push_back(t);
-        pu.push_back(l1x+dx+dl1x*f); pu.push_back(l1y+dy+dl1y*f); pu.push_back(l1z+dl1z*f);
-        pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z);
-        pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
-        pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z);
+        pu.push_back(l1x+dx+dl1x*f); pu.push_back(l1y+dy1+dl1y*f); pu.push_back(l1z+dl1z*f);
+        pu.push_back(l2x+dx); pu.push_back(l2y+dy2); pu.push_back(l2z);
+        pu.push_back(l3x+dx); pu.push_back(l3y+dy3); pu.push_back(l3z);
+        pu.push_back(l4x+dx); pu.push_back(l4y+dy4); pu.push_back(l4z);
         pu.push_back(waist);
         data.push_back(pu);
         t+=dt;
@@ -136,10 +150,10 @@ bool BodyMover::circle(double r,double x,double y,double z) {
 	    double f=1.0-(float)i/(stepTime*timeDivider);
         vector<double> pd;
         pd.push_back(t);
-        pd.push_back(l1x+dx+dl1x*f); pd.push_back(l1y+dy+dl1y*f); pd.push_back(l1z+dl1z*f);
-        pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
-        pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
-        pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
+        pd.push_back(l1x+dx+dl1x*f); pd.push_back(l1y+dy1+dl1y*f+yoffset); pd.push_back(l1z+dl1z*f);
+        pd.push_back(l2x+dx); pd.push_back(l2y+dy2); pd.push_back(l2z);
+        pd.push_back(l3x+dx); pd.push_back(l3y+dy3); pd.push_back(l3z);
+        pd.push_back(l4x+dx); pd.push_back(l4y+dy4); pd.push_back(l4z);
         pd.push_back(waist);
         data.push_back(pd);
         t+=dt;
@@ -150,10 +164,10 @@ bool BodyMover::circle(double r,double x,double y,double z) {
 	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
         pu.push_back(t);
-        pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z);
-        pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z);
-        pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
-        pu.push_back(l4x+dx+dl4x*f); pu.push_back(l4y+dy+dl4y*f); pu.push_back(l4z+dl4z*f);
+        pu.push_back(l1x+dx); pu.push_back(l1y+dy1); pu.push_back(l1z);
+        pu.push_back(l2x+dx); pu.push_back(l2y+dy2); pu.push_back(l2z);
+        pu.push_back(l3x+dx); pu.push_back(l3y+dy3); pu.push_back(l3z);
+        pu.push_back(l4x+dx+dl4x*f); pu.push_back(l4y+dy4+dl4y*f); pu.push_back(l4z+dl4z*f);
         pu.push_back(waist);
         data.push_back(pu);
         t+=dt;
@@ -162,10 +176,10 @@ bool BodyMover::circle(double r,double x,double y,double z) {
 	    double f=1.0-(float)i/(stepTime*timeDivider);
         vector<double> pd;
         pd.push_back(t);
-        pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
-        pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
-        pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
-        pd.push_back(l4x+dx+dl4x*f); pd.push_back(l4y+dy+dl4y*f); pd.push_back(l4z+dl4z*f);
+        pd.push_back(l1x+dx); pd.push_back(l1y+dy1); pd.push_back(l1z);
+        pd.push_back(l2x+dx); pd.push_back(l2y+dy2); pd.push_back(l2z);
+        pd.push_back(l3x+dx); pd.push_back(l3y+dy3); pd.push_back(l3z);
+        pd.push_back(l4x+dx+dl4x*f); pd.push_back(l4y+dy4+dl4y*f+yoffset); pd.push_back(l4z+dl4z*f);
         pd.push_back(waist);
         data.push_back(pd);
         t+=dt;
@@ -190,7 +204,7 @@ bool BodyMover::circle(double r,double x,double y,double z) {
         pd.push_back(t);
         pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
         pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
-        pd.push_back(l3x+dx+dl3x*f); pd.push_back(l3y+dy+dl3y*f); pd.push_back(l3z+dl3z*f);
+        pd.push_back(l3x+dx+dl3x*f); pd.push_back(l3y+dy+dl3y*f+yoffset); pd.push_back(l3z+dl3z*f);
         pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
         pd.push_back(waist);
         data.push_back(pd);
@@ -302,32 +316,5 @@ bool BodyMover::load(const std::string &file)
 
     cout << "read '" << file << "' ok." << endl;
     fromTips(data);
-/*  All below copied into fromTips
-    //    // add last row to finish cycle
-    //data.push_back(data[0]);
-    //int nr=data.size();
-    //data[nr-1][0]=data[nr-2][0]+(data[nr-2][0]-data[nr-3][0]);
-
-    int nr=data.size();
-
-    // assume regular spacing of samples
-    double T = data[nr-1][0]-data[0][0] + (data[1][0]-data[0][0]);
-
-    map < float , Point > t2tips[4];
-    map < float , float > t2waist;
-
-    for (size_t r=0; r<data.size(); ++r) {
-      for (int el=0; el<4; ++el) {
-	float t=data[r][0];
-	t2tips[el][t]=Point(data[r][1+3*el],
-				     data[r][2+3*el],
-				     data[r][3+3*el]);
-	t2waist[t]=data[r][13];
-      }
-    }
-
-    legs.setup(T,body->legs,t2tips,simTime,simTime+T);
-    waist.setup(T,t2waist,simTime,simTime+T);
-    */ 
     return true;
 }
