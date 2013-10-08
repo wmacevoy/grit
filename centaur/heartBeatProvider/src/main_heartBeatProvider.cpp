@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 
 	while(!die)
 	{
-		rc = zmq_recv (rep, strTime, strlen(strTime) * sizeof(char), 0);
+		rc = zmq_recv (rep, strTime, sizeof(char), 0);
 		if(rc && verbose)
 		{
 			printf("Received request for time...\n");

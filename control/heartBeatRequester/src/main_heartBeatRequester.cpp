@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		if(verbose) printf("Sending time request...\n");
-		zmq_send (req, "time", 4 * sizeof(char), 0);
+		zmq_send (req, "t", sizeof(char), 0);
 		zmq_recv (req, strTime, 80, 0);
 		printf ("Time: %s\n", strTime);
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
