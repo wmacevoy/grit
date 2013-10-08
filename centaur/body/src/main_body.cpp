@@ -468,6 +468,8 @@ public:
       float radius;
       iss >> radius;
       mover->circle(radius,14.9,14.9,-14.665);
+//      mover->circle(radius,13.9,13.9,-19.665); // High Pose
+//      mover->circle(radius,11.9,13.9,-19.665);  // High Narrow Pose
       ostringstream oss;
       oss << "Circle " << radius << " :ok."; 
       answer(oss.str());

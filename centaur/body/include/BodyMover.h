@@ -17,6 +17,7 @@ class BodyMover
   NeckMover neck;
   ArmMover left,right;
   bool circle(double r,double x,double y,double z);
+  void logPosition(std::vector<std::vector <double> > data);
   void fromTips(std::vector<std::vector <double> > data);  
   void move(Body &body);
   bool load(const std::string &file);

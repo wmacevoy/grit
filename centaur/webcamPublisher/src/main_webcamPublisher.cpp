@@ -40,7 +40,7 @@ int main(int argc, char** argv)
 	if (verbose) cfg.show();
 
 	int index = cfg.num("webcam.provider.index", 1);
-	int sleep_time = cfg.num("webcam.provider.sleep_time", 500);
+	int sleep_time = cfg.num("webcam.provider.sleep_time", 50);
 
 	int hwm = 1;
 	int rc = 0;
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 	}
 
 	capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
-	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 120);
 
 	//Setup ZMQ
 	//tcp://*:9993

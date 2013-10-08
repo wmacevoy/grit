@@ -20,6 +20,18 @@ void BodyMover::move(Body &body)
   right.move(body.right);
 }
 
+void BodyMover::logPosition(vector<vector <double> > data) {
+    cout << "t,x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,w" << endl;
+    for (size_t r=0; r<data.size(); ++r) {
+      vector<double> values;
+      values=data[r];
+      for (size_t d=0;d<values.size();++d) {
+		 cout << values[d] << ",";
+      }
+      cout << endl;
+    }
+}
+
 void BodyMover::fromTips(vector<vector <double> > data) {
     int nr=data.size();
 
@@ -47,116 +59,146 @@ bool BodyMover::circle(double r,double x,double y,double z) {
   vector<vector<double>> data;
   double T = 10.0;
   double steps=T*10.0; // 4s in ten of a second steps;
-  double da=2.0*M_PI/steps;
-  double waist=0;
-  double toffset=0;
-  double lift=5.0;
-  double stepTime=1.0;
-  for(double a=0;a<2.0*M_PI;a+=da) {
-	double t=T*a/(2.0*M_PI)+toffset;
-    double l1x=-x; double l1y=y;  double l1z=z;  // default positions
-    double l2x=x;  double l2y=y;  double l2z=z;
-    double l3x=x;  double l3y=-y; double l3z=z;
-    double l4x=-x; double l4y=-y; double l4z=z;
+  double fullCircle=2.0*M_PI;
+  double da=fullCircle/steps;
+  double waist=0.0;
+  double dt=0.1;
+  double zAdder=10.0; // or zAdder
+  double xAdder=6.6-r*0.707;
+  double yAdder=6.6-r*0.707;
+  double stepTime=5.0;
+  double timeDivider=10.0;
+  bool l1=true;
+  bool l2=true;
+  bool l3=true;
+  bool l4=true;
+  double t=0.0;
+  double l1x=-x; double l1y=y;  double l1z=z;  // default positions
+  double l2x=x;  double l2y=y;  double l2z=z;
+  double l3x=x;  double l3y=-y; double l3z=z;
+  double l4x=-x; double l4y=-y; double l4z=z;
+  double dl1x=-xAdder; double dl1y=yAdder;  double dl1z=zAdder;  // default positions
+  double dl2x=xAdder;  double dl2y=yAdder;  double dl2z=zAdder;
+  double dl3x=xAdder;  double dl3y=-yAdder; double dl3z=zAdder;
+  double dl4x=-xAdder; double dl4y=-yAdder; double dl4z=zAdder;
+  for(double a=0;a<fullCircle;a+=da) {
     double dx=r*cos(a); double dy=r*sin(a); // offset of center of mass
     vector<double> p;
-    p.push_back(t+toffset);
+    p.push_back(t);
     p.push_back(l1x+dx); p.push_back(l1y+dy); p.push_back(l1z);
     p.push_back(l2x+dx); p.push_back(l2y+dy); p.push_back(l2z);
     p.push_back(l3x+dx); p.push_back(l3y+dy); p.push_back(l3z);
     p.push_back(l4x+dx); p.push_back(l4y+dy); p.push_back(l4z);
     p.push_back(waist);
     data.push_back(p);
-    if (fabs(a-M_PI/4.0)<0.1) {  // Leg 2 up
-      for (int i=0;i<10;i++) {
+    t+=dt;
+    if (fabs(a-M_PI/4.0)<da && l2) {  // Leg 2 up
+      l2=false;
+      for (int i=0;i<stepTime*timeDivider;i++) {
+	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
-        pu.push_back(t+((float)i)*stepTime/10.0+toffset);
+        pu.push_back(t);
         pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z);
-        pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z+lift);
+        pu.push_back(l2x+dx+dl2x*f); pu.push_back(l2y+dy+dl2y*f); pu.push_back(l2z+dl2z*f);
         pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
         pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z);
         pu.push_back(waist);
         data.push_back(pu);
+        t+=dt;
       }
-      for (int i=0;i<10;i++) {
+      for (int i=0;i<stepTime*timeDivider;i++) {
+	    double f=1.0-(float)i/(stepTime*timeDivider);
         vector<double> pd;
-        pd.push_back(t+1.0+((float)i)*stepTime/10.0+toffset);
+        pd.push_back(t);
         pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
-        pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
+        pd.push_back(l2x+dx+dl2x*f); pd.push_back(l2y+dy+dl2y*f); pd.push_back(l2z+dl2z*f);
         pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
         pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
         pd.push_back(waist);
         data.push_back(pd);
+        t+=dt;
       }
-	  toffset+=2.0*stepTime;
-	} else if (fabs(a-3.0*M_PI/4.0)<0.1) {  // Leg 1 up
-      for (int i=0;i<10;i++) {
+	} else if (fabs(a-3.0*M_PI/4.0)<da && l1) {  // Leg 1 up
+      l1=false;
+      for (int i=0;i<stepTime*timeDivider;i++) {
+	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
-        pu.push_back(t+((float)i)*stepTime/10.0+toffset);
-        pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z+lift);
+        pu.push_back(t);
+        pu.push_back(l1x+dx+dl1x*f); pu.push_back(l1y+dy+dl1y*f); pu.push_back(l1z+dl1z*f);
         pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z);
         pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
         pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z);
         pu.push_back(waist);
         data.push_back(pu);
+        t+=dt;
       }
-      for (int i=0;i<10;i++) {
+      for (int i=0;i<stepTime*timeDivider;i++) {
+	    double f=1.0-(float)i/(stepTime*timeDivider);
         vector<double> pd;
-        pd.push_back(t+1.0+((float)i)*stepTime/10.0+toffset);
-        pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
+        pd.push_back(t);
+        pd.push_back(l1x+dx+dl1x*f); pd.push_back(l1y+dy+dl1y*f); pd.push_back(l1z+dl1z*f);
         pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
         pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
         pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
         pd.push_back(waist);
         data.push_back(pd);
+        t+=dt;
 	  }
-	  toffset+=2.0*stepTime;
-	} else if (fabs(a-5.0*M_PI/4.0)<0.1) {  //  Leg 4 up
-      for (int i=0;i<10;i++) {
+	} else if (fabs(a-5.0*M_PI/4.0)<da && l4) {  //  Leg 4 up
+	  l4=false;
+      for (int i=0;i<stepTime*timeDivider;i++) {
+	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
-        pu.push_back(t+((float)i)*stepTime/10.0+toffset);
+        pu.push_back(t);
         pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z);
         pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z);
         pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z);
-        pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z+lift);
+        pu.push_back(l4x+dx+dl4x*f); pu.push_back(l4y+dy+dl4y*f); pu.push_back(l4z+dl4z*f);
         pu.push_back(waist);
         data.push_back(pu);
+        t+=dt;
 	  }
-      for (int i=0;i<10;i++) {
+      for (int i=0;i<stepTime*timeDivider;i++) {
+	    double f=1.0-(float)i/(stepTime*timeDivider);
         vector<double> pd;
-        pd.push_back(t+1.0+((float)i)*stepTime/10.0+toffset);
+        pd.push_back(t);
         pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
         pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
         pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
-        pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
+        pd.push_back(l4x+dx+dl4x*f); pd.push_back(l4y+dy+dl4y*f); pd.push_back(l4z+dl4z*f);
         pd.push_back(waist);
         data.push_back(pd);
+        t+=dt;
       }
-	  toffset+=2.0*stepTime;
-	} else if (fabs(a-7.0*M_PI/4.0) <0.1) {  // Leg3 up
-      for (int i=0;i<10;i++) {
+	} else if (fabs(a-7.0*M_PI/4.0)<da && l3) {  // Leg3 up
+	  l3=false;
+      for (int i=0;i<stepTime*timeDivider;i++) {
+	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
-        pu.push_back(t+((float)i)*stepTime/10.0+toffset);
+        pu.push_back(t);
         pu.push_back(l1x+dx); pu.push_back(l1y+dy); pu.push_back(l1z);
         pu.push_back(l2x+dx); pu.push_back(l2y+dy); pu.push_back(l2z);
-        pu.push_back(l3x+dx); pu.push_back(l3y+dy); pu.push_back(l3z+lift);
+        pu.push_back(l3x+dx+dl3x*f); pu.push_back(l3y+dy+dl3y*f); pu.push_back(l3z+dl3z*f);
         pu.push_back(l4x+dx); pu.push_back(l4y+dy); pu.push_back(l4z);
         pu.push_back(waist);
         data.push_back(pu);
-      }  
-      for (int i=0;i<10;i++) {
+        t+=dt;
+      }
+      for (int i=0;i<stepTime*timeDivider;i++) {
+	    double f=1.0-(float)i/(stepTime*timeDivider);
         vector<double> pd;
-        pd.push_back(t+1.0+((float)i)*stepTime/10.0+toffset);
+        pd.push_back(t);
         pd.push_back(l1x+dx); pd.push_back(l1y+dy); pd.push_back(l1z);
         pd.push_back(l2x+dx); pd.push_back(l2y+dy); pd.push_back(l2z);
-        pd.push_back(l3x+dx); pd.push_back(l3y+dy); pd.push_back(l3z);
+        pd.push_back(l3x+dx+dl3x*f); pd.push_back(l3y+dy+dl3y*f); pd.push_back(l3z+dl3z*f);
         pd.push_back(l4x+dx); pd.push_back(l4y+dy); pd.push_back(l4z);
         pd.push_back(waist);
         data.push_back(pd);
+        t+=dt;
 	  }
-	  toffset+=2.0*stepTime;
 	}
   }
+  logPosition(data);
   fromTips(data);
   return true;
 }
