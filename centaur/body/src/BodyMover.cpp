@@ -55,7 +55,7 @@ void BodyMover::fromTips(vector<vector <double> > data) {
     waist.setup(t2waist,simTime,simTime+T);	
 }
 
-bool BodyMover::circle(double r,double x,double y,double z) {
+bool BodyMover::circle(double r,double x,double y,double z,double yoffset,double zAdder) {
   vector<vector<double>> data;
   double T = 10.0;
   double steps=T*10.0; // 4s in ten of a second steps;
@@ -63,17 +63,15 @@ bool BodyMover::circle(double r,double x,double y,double z) {
   double da=fullCircle/steps;
   double waist=0.0;
   double dt=0.1;
-  double zAdder=10.0; // or zAdder
   double xAdder=6.6-r*0.707;
   double yAdder=6.6-r*0.707;
-  double stepTime=5.0;
+  double stepTime=2.0;
   double timeDivider=10.0;
   bool l1=true;
   bool l2=true;
   bool l3=true;
   bool l4=true;
   double t=0.0;
-  double yoffset=4.0;
   double l1x=-x; double l1y=y;  double l1z=z;  // default positions
   double l2x=x;  double l2y=y;  double l2z=z;
   double l3x=x;  double l3y=-y; double l3z=z;
@@ -82,18 +80,20 @@ bool BodyMover::circle(double r,double x,double y,double z) {
   double dl2x=xAdder;  double dl2y=yAdder;  double dl2z=zAdder;
   double dl3x=xAdder;  double dl3y=-yAdder; double dl3z=zAdder;
   double dl4x=-xAdder; double dl4y=-yAdder; double dl4z=zAdder;
+ // cout <<  "t,pl1,pl2,pl3,pl4" << endl;
   for(double a=0;a<fullCircle;a+=da) {
-	double p=a/fullCircle;
-	double pl1=p+7.0/8.0;
-	pl1 = pl1-floor(pl1);
-	double pl2=p+7.0/8.0+1.0/4.0;
-	pl2 = pl2-floor(pl2);
-	double pl3=p+7.0/8.0+2.0/4.0;
-	pl3 = pl3-floor(pl3);
-	double pl4=p+7.0/8.0+3.0/4.0;
-	pl4 = pl4-floor(pl4);
     double dx=r*cos(a); double dy=r*sin(a); // offset of center of mass
-    double dy1=dy+pl1*yoffset;
+	double phase=(1.0-a/fullCircle);
+	double pl2=phase+1.0/8.0;  // Leg 2 first
+	pl2 = pl2-floor(pl2);
+	double pl1=phase+1.0/8.0+1.0/4.0;  // Leg 1 1/4 phase later
+	pl1 = pl1-floor(pl1);
+	double pl4=phase+1.0/8.0+2.0/4.0;  // Leg 4 1/2 phase later
+	pl4 = pl4-floor(pl4);
+	double pl3=phase+1.0/8.0+3.0/4.0;  // Leg 3 3/4 phase later
+	pl3 = pl3-floor(pl3);
+//	cout << t << "," << pl1 << "," << pl2 << "," << pl3 << "," << pl4 << endl;
+    double dy1=dy+pl1*yoffset;  // y offset for leg moving forward in walk
     double dy2=dy+pl2*yoffset;
     double dy3=dy+pl3*yoffset;
     double dy4=dy+pl4*yoffset;

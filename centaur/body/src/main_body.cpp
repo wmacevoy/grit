@@ -464,14 +464,20 @@ public:
       iss >> part;
       enable(part,false);
     }
-    if (head == "Circle") {
-      float radius;
-      iss >> radius;
-      mover->circle(radius,14.9,14.9,-14.665);
-//      mover->circle(radius,13.9,13.9,-19.665); // High Pose
-//      mover->circle(radius,11.9,13.9,-19.665);  // High Narrow Pose
+    if (head == "HCircle") {
+      float radius,step;
+      iss >> radius >> step;
+      mover->circle(radius,13.9,13.9,-19.665,step,10);  // High Narrow Pose
       ostringstream oss;
-      oss << "Circle " << radius << " :ok."; 
+      oss << "HCircle r=" << radius << " step=" << step << " :ok."; 
+      answer(oss.str());
+    }
+    if (head == "Circle") {
+      float radius,step;
+      iss >> radius >> step;
+      mover->circle(radius,14.9,14.9,-14.665,step,10);
+      ostringstream oss;
+      oss << "Circle r=" << radius << " step=" << step << " :ok."; 
       answer(oss.str());
     }
     if (head == "report") {

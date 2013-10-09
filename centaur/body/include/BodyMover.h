@@ -16,7 +16,7 @@ class BodyMover
   ServoMover waist;
   NeckMover neck;
   ArmMover left,right;
-  bool circle(double r,double x,double y,double z);
+  bool circle(double r,double x,double y,double z,double stepsize,double stepheight);
   void logPosition(std::vector<std::vector <double> > data);
   void fromTips(std::vector<std::vector <double> > data);  
   void move(Body &body);
