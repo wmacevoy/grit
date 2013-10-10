@@ -2,8 +2,8 @@
 
 //Pin Setup
 int flexSensorPin[8] = { A0, A1, A2, A3, A4, A5, A6, A7 };
-int flexSetButtonPin1 = 10; //digital read button for setting flex constraints - left
-int flexSetButtonPin2 = 11; //digital read button for setting flex constraints - right
+int flexSetButtonPin1 = 4; //digital read button for setting flex constraints - left
+int flexSetButtonPin2 = 3; //digital read button for setting flex constraints - right
 int led1 = 7, led2 = 6; //led's turn on when calibrating
 // A0 = pin 0  Hand 1.1
 // A1 = pin 1  Hand 1.2
