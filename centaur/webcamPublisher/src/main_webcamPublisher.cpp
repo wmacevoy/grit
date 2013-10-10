@@ -52,6 +52,7 @@ int main(int argc, char** argv)
 	if(!capture.isOpened())
 	{
 		std::cout << "ERROR: capture is NULL \n";
+		capture.release();
 		return 1;
 	}
 
@@ -80,7 +81,7 @@ int main(int argc, char** argv)
 		cvtColor(frame, gray, CV_RGB2GRAY);
 		frame.reshape(0,1);
 		gray.reshape(0,1);
-		int8_t rv = zmq_recv(pub_mat, &CorG, sizeof(bool), 0);
+		int8_t rv = zmq_recv(rep_mat, &CorG, sizeof(bool), 0);
 		switch(CorG)
 		{
 		case 0:		
