@@ -11,6 +11,11 @@ bool verbose;
 volatile bool die;
 int rc;
 
+void subscribe(void* time, void* zmq_sub)
+{
+	int rc = zmq_recv(zmq_sub, time, 80 * sizeof(char), 0);
+}
+
 void quitproc(int param)
 {
 	printf("\nQuitting...\n");
@@ -29,12 +34,16 @@ int main(int argc, char** argv)
 	int sleep_time = (int)cfg.num("heartbeat.requester.sleep_time", 1000);
 
 	char strTime[80];
+	char strTime1[80];
+	time_t t;
+	struct tm timeinfo;
 	die = false;
 	rc = 0;
 
 	void* context = zmq_ctx_new ();
-	void* req = zmq_socket(context, ZMQ_REQ);
-	if(zmq_connect(req, address.c_str()) != 0)
+	void* sub = zmq_socket(context, ZMQ_SUB);
+	zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
+	if(zmq_connect(sub, address.c_str()) != 0)
 	{
 		printf("Error connecting zmq...");
 		die = true;
@@ -46,13 +55,17 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		if(verbose) printf("Sending time request...\n");
-		zmq_send (req, "t", sizeof(char), 0);
-		zmq_recv (req, strTime, 80, 0);
-		printf ("Time: %s\n", strTime);
+		t = time(0);
+		timeinfo = *localtime(&t);
+		strftime(strTime1, sizeof(strTime1), "%Y-%m-%d(%X)", &timeinfo);
+		
+		subscribe(strTime, sub);
+		
+		printf ("Control time: %s  Centaur time: %s\n", strTime1, strTime);
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
-	zmq_close(req);
+	zmq_close(sub);
 	zmq_ctx_destroy(context);
 	return 0;
 }
