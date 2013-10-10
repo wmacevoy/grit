@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));	
 	}
 
-	zmq_close(rep);
+	zmq_close(pub);
 	zmq_ctx_destroy(context);
 
 	return 0;
