@@ -13,15 +13,16 @@ using namespace cv;
 bool die = false;
 bool verbose = false;
 
-void publish_gray(Mat& gray, void* zmq_pub)
+void publish_mat(Mat& mat, void* zmq_pub)
 {
-	int rc = zmq_send(zmq_pub, gray.data, gray.total() * gray.elemSize(), ZMQ_DONTWAIT);
-	if(verbose) std::cout << "Sent: " << rc << std::endl;
-}
+	zmq_msg_t msg;
+	int rc = zmq_msg_init_size(&msg, mat.total() * mat.elemSize());
+	memcpy(zmq_msg_data(&msg), mat.data, mat.total() * mat.elemSize());
+	if(rc == 0)
+	{
+		int rc = zmq_sendmsg(zmq_pub, &msg, ZMQ_DONTWAIT);
+	}
 
-void publish_color(Mat& color, void* zmq_pub)
-{
-	int rc = zmq_send(zmq_pub, color.data, color.total() * color.elemSize(), ZMQ_DONTWAIT);
 	if(verbose) std::cout << "Sent: " << rc << std::endl;
 }
 
@@ -42,9 +43,8 @@ int main(int argc, char** argv)
 	int index = cfg.num("webcam.provider.index", 1);
 	int sleep_time = cfg.num("webcam.provider.sleep_time", 50);
 
-	int hwm = 1;
 	int rc = 0;
-	int rc2 = 0;
+	bool CorG = false;
 	Mat frame;
 	Mat gray;
 	
@@ -61,17 +61,11 @@ int main(int argc, char** argv)
 	//Setup ZMQ
 	//tcp://*:9993
 	void* context_mat = zmq_ctx_new ();
-	void* context_mat2 = zmq_ctx_new ();	
 
-	void* pub_mat = zmq_socket(context_mat, ZMQ_PUB);
-	void* pub_mat2 = zmq_socket(context_mat2, ZMQ_PUB);
-	rc = zmq_setsockopt(pub_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	rc2 = zmq_setsockopt(pub_mat2, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	assert(rc == 0 && rc2 == 0);
+	void* rep_mat = zmq_socket(context_mat, ZMQ_REP);
 
-	rc = zmq_bind(pub_mat, "tcp://*:9993");
-	rc2 = zmq_bind(pub_mat2, "tcp://*:9994");
-	assert(rc == 0 && rc2 == 0);
+	rc = zmq_bind(rep_mat, "tcp://*:9993");
+	assert(rc == 0);
 
 	signal(SIGINT, quitproc);
 	signal(SIGQUIT, quitproc);
@@ -84,15 +78,26 @@ int main(int argc, char** argv)
 	{
 		capture >> frame;
 		cvtColor(frame, gray, CV_RGB2GRAY);
-		frame.reshape(0,1);		
-		publish_color(frame, pub_mat);
-		publish_gray(gray, pub_mat2);
+		frame.reshape(0,1);
+		gray.reshape(0,1);
+		int8_t rv = zmq_recv(pub_mat, &CorG, sizeof(bool), 0);
+		switch(CorG)
+		{
+		case 0:		
+			publish_mat(frame, rep_mat);
+			break;
+
+		case 1:
+			publish_mat(gray, rep_mat);
+			break;
+		}
+
 		waitKey(sleep_time);
 	}
 
 	//Cleanup
 	capture.release();
-	zmq_close(pub_mat);
+	zmq_close(rep_mat);
 	zmq_ctx_destroy(context_mat);
 	return 0;
 }
