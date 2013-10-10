@@ -11,6 +11,11 @@ Configure cfg;
 bool verbose;
 volatile bool die;
 
+void publish(void* time, void* zmq_pub)
+{
+
+}
+
 void quitproc(int param)
 {
 	printf("\nQuitting...\n");
@@ -37,8 +42,8 @@ int main(int argc, char** argv)
 	die = false;	
 
 	void* context = zmq_ctx_new ();
-	void* rep = zmq_socket(context, ZMQ_REP);
-	if(zmq_bind(rep, "tcp://*:9800") != 0)
+	void* pub = zmq_socket(context, ZMQ_PUB);
+	if(zmq_bind(pub, "tcp://*:9800") != 0)
 	{
 		printf("Could not connect zmq...\n");
 		die = true;
@@ -49,16 +54,11 @@ int main(int argc, char** argv)
 
 	while(!die)
 	{
-		rc = zmq_recv (rep, strTime, sizeof(char), 0);
-		if(rc && verbose)
-		{
-			printf("Received request for time...\n");
-		}
 		t = time(0);
 		timeinfo = *localtime(&t);
 		strftime(strTime, sizeof(strTime), "%Y-%m-%d(%X)", &timeinfo);
 
-		zmq_send (rep, strTime, strlen(strTime) * sizeof(char), 0);
+		zmq_send (pub, strTime, strlen(strTime) * sizeof(char), ZMQ_DONTWAIT);
 
 		if(verbose){ printf ( "%s\n", strTime ); fflush(stdout);}
 
