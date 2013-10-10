@@ -77,7 +77,6 @@ int main(int argc, char** argv)
 	
 	int hwm = 1;
 	int rcc = 0;
-	int rcg = 0;
 	int rcl = 0;
 	int index = 0;
 	int sleep_time = sleep_time_gray;
@@ -91,11 +90,9 @@ int main(int argc, char** argv)
 	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
 	double fontScale = 0.75;
 	int thickness = 2;
-	std::string ip1 = "tcp://";
-	std::string ip2 = "tcp://";
 
-	ip1 += cfg.str("webcam.requester.address", "localhost");
-	ip2 += cfg.str("webcam.requester.address", "localhost");
+	std::string ip1 = cfg.str("webcam.requester.address", "localhost");
+	std::string ip2 = cfg.str("webcam.requester.address", "localhost");
 	
 	ip1 += ":9993";
 	ip2 += ":9997";
@@ -114,7 +111,7 @@ int main(int argc, char** argv)
 
 	rcc = zmq_connect(req_mat, ip1.c_str());
 	rcl = zmq_connect(sub_lidar, ip2.c_str());
-	assert(rcc == 0 && rcg == 0 && rcl == 0);	
+	assert(rcc == 0 && rcl == 0);	
 
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);
