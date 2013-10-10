@@ -11,11 +11,6 @@ Configure cfg;
 bool verbose;
 volatile bool die;
 
-void publish(void* time, void* zmq_pub)
-{
-
-}
-
 void quitproc(int param)
 {
 	printf("\nQuitting...\n");
