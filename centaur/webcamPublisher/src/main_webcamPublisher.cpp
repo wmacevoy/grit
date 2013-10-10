@@ -56,7 +56,7 @@ int main(int argc, char** argv)
 	}
 
 	capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
-	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 120);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 
 	//Setup ZMQ
 	//tcp://*:9993
