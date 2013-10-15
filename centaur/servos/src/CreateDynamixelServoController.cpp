@@ -50,7 +50,6 @@ struct DynamixelServo : Servo
   float maxTorque;
   bool verbose;
   uint8_t presentTemp;
-
   bool enabled;
   bool curveMode;
   double t[2];
@@ -128,7 +127,7 @@ struct DynamixelServo : Servo
     value = fabs(value);
     if (value < minSpeed) { value = minSpeed; }
     else if (value > maxSpeed) { value = maxSpeed; }
-    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07);
+    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*1.1;
     if (goalSpeed > 480) goalSpeed = 480;
   }
 
@@ -195,7 +194,7 @@ struct DynamixelServo : Servo
   {
     if (rxTempRate == 0 || rxTempTime >= now()) return;
 
-    int inp;
+    uint8_t inp;
     if (io.readByte(id,DXL_PRESENT_TEMP_BYTE,&inp)) {
       presentTemp = inp;
     } else {

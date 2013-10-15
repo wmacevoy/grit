@@ -30,13 +30,17 @@ void Body::temp_report(std::ostream &out, std::string part) const
   else if (part == "neck")
     {
     neck.upDown->temp_report(out);
+    out << ",";
     neck.leftRight->temp_report(out);
     }
   else if (part == "legs")
     for (int i = 0; i < 4; i++)
       {
 	legs.legs[i].knee->temp_report(out);
+	out << ",";
 	legs.legs[i].femur->temp_report(out);
+	out << ",";
 	legs.legs[i].hip->temp_report(out);
+	if (i != 3) out << ",";
       }
 }

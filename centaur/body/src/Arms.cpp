@@ -42,13 +42,21 @@ void Arm::report(std::ostream &out) const
 void Arm::temp_report(std::ostream &out) const
 {
   leftRight->temp_report(out);
+  out << ",";
   upDown->temp_report(out);
+  out << ",";
   bicep->temp_report(out);
+  out << ",";
   elbow->temp_report(out);
+  out << ",";
   forearm->temp_report(out);
+  out << ",";
   trigger->temp_report(out);
+  out << ",";
   middle->temp_report(out);
+  out << ",";
   ring->temp_report(out);
+  out << ",";
   thumb->temp_report(out);
 }
 

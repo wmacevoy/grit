@@ -62,6 +62,6 @@ struct DXLIO
   bool read(ssize_t size, unsigned char *data);
   bool writeWord(int id, int address, int value);
   bool readWord(int id, int address, int *value);
-  bool readByte(int id, int address, int *value);
+  bool readByte(int id, int address, uint8_t *value);
   ~DXLIO();
 };

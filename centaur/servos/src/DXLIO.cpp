@@ -324,12 +324,12 @@ bool DXLIO::readWord(int id, int address, int *value)
 #endif
 }
 
-bool DXLIO::readByte(int id, int address, int *value)
+bool DXLIO::readByte(int id, int address, uint8_t *value)
 {
 #if USE_DXL
-  int ans = dxl_read_byte(id,address);
+  uint8_t ans = dxl_read_byte(id,address);
   int result = dxl_get_result();
-  bool ok = (result == COMM_RXSUCCESS || result == COMM_RXTIMEOUT || result == COMM_RXCORRUPT);
+  bool ok = (result == COMM_RXSUCCESS);// || result == COMM_RXTIMEOUT || result == COMM_RXCORRUPT);
   if (ok) {
     if (value != 0) *value = ans;
     okSince = now();
@@ -337,7 +337,7 @@ bool DXLIO::readByte(int id, int address, int *value)
     cout << "DXLIO::readByte(" 
 	 << id << "," 
 	 << address << ")=" 
-	 << ans << ", result=" << result << endl;
+	 << (int)ans << ", result=" << result << endl;
     reopen();
   }
   //if (id == 31) cout << "USEFUL INFORMATION on 31, TEMP should be a temperature: " << (int) ans << endl;

@@ -258,11 +258,11 @@ public:
   void goHome() {
     load("home.csv");
     setWaist(0);
-    setLIO(-45);
-    setLUD(-45);
+    setLIO(-40);
+    setLUD(-40);
     setLElbow(40);
     setLBicep(-20);
-    setRIO(45);
+    setRIO(40);
     setRUD(40);
     setRElbow(-40);
     setRBicep(0);    
@@ -464,20 +464,40 @@ public:
       iss >> part;
       enable(part,false);
     }
-    if (head == "HCircle") {
-      float radius,step;
-      iss >> radius >> step;
-      mover->circle(radius,13.9,13.9,-19.665,step,10);  // High Narrow Pose
-      ostringstream oss;
-      oss << "HCircle r=" << radius << " step=" << step << " :ok."; 
+    if (head == "HStep") {
+      float radius,ystep,xstep;
+      iss >> radius >> xstep >> ystep;
+      if (fabs(radius)<6 && fabs(xstep)<6 && fabs(ystep)<6) {
+        mover->stepMove(radius,13.9,13.9,-19.665,xstep,ystep,8);  // High Narrow Pose
+        ostringstream oss;
+        oss << "HStep r=" << radius << " xstep=" << xstep << " ystep=" << xstep << " :ok."; 
+      } else {
+		oss << "HStep r=" << radius << " xstep=" << xstep << " ystep=" << xstep << " :NOT ok"; 
+	  }
       answer(oss.str());
     }
-    if (head == "Circle") {
-      float radius,step;
-      iss >> radius >> step;
-      mover->circle(radius,14.9,14.9,-14.665,step,10);
-      ostringstream oss;
-      oss << "Circle r=" << radius << " step=" << step << " :ok."; 
+    if (head == "DStep") {
+      float radius,ystep,xstep;
+      iss >> radius >> xstep >> ystep;
+      if (fabs(radius)<=6 && fabs(xstep)<=6 && fabs(ystep)<=6) {
+        mover->stepMove(radius,11.0,17.9,-14.665,xstep,ystep,8);
+        ostringstream oss;
+        oss << "DStep r=" << radius << " xstep=" << xstep << " ystep=" << ystep << " :ok."; 
+      } else {
+		oss << "DStep r=" << radius << " xstep=" << xstep << " ystep=" << xstep << " :NOT ok"; 
+	  }
+      answer(oss.str());
+    }
+    if (head == "Step") {
+      float radius,ystep,xstep;
+      iss >> radius >> xstep >> ystep;
+      if (fabs(radius)<=6 && fabs(xstep)<=6 && fabs(ystep)<=6) {
+        mover->stepMove(radius,14.9,14.9,-14.665,xstep,ystep,8);
+        ostringstream oss;
+        oss << "Step r=" << radius << " xstep=" << xstep << " ystep=" << ystep << " :ok."; 
+      } else {
+		oss << "Step r=" << radius << " xstep=" << xstep << " ystep=" << xstep << " :NOT ok"; 
+	  }
       answer(oss.str());
     }
     if (head == "report") {
@@ -715,7 +735,7 @@ public:
       string temp = "";
       iss >> temp;
       body->temp_report(oss, temp);
-      answer(oss.str());
+      answer("temp: " + oss.str());
       }
   }
 
