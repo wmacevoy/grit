@@ -55,7 +55,7 @@ void BodyMover::fromTips(vector<vector <double> > data) {
     waist.setup(t2waist,simTime,simTime+T);	
 }
 
-bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder) {
+bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right) {
   vector<vector<double>> data;
   double T = 10.0; // 10 is good
   double steps=T*4.0; // 8s in ten of a second steps;
@@ -106,10 +106,10 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
     double dx2=dx+pl2*xstep;
     double dx3=dx+pl3*xstep;
     double dx4=dx+pl4*xstep;
-    double dy1=dy+pl1*ystep;  // y offset for leg moving forward in walk
-    double dy2=dy+pl2*ystep;
-    double dy3=dy+pl3*ystep;
-    double dy4=dy+pl4*ystep;
+    double dy1=dy+pl1*ystep*left;  // y offset for leg moving forward in walk
+    double dy2=dy+pl2*ystep*right;
+    double dy3=dy+pl3*ystep*right;
+    double dy4=dy+pl4*ystep*left;
     vector<double> p;
     p.push_back(t);
     p.push_back(l1x+dx1); p.push_back(l1y+dy1); p.push_back(l1z);

@@ -465,10 +465,10 @@ public:
       enable(part,false);
     }
     if (head == "HStep") {
-      float radius,ystep,xstep;
+      float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
       iss >> radius >> xstep >> ystep;
       if (fabs(radius)<6 && fabs(xstep)<6 && fabs(ystep)<6) {
-        mover->stepMove(radius,13.9,13.9,-19.665,xstep,ystep,8);  // High Narrow Pose
+        mover->stepMove(radius,13.9,13.9,-19.665,xstep,ystep,8,1.0,1.0);  // High Narrow Pose
         ostringstream oss;
         oss << "HStep r=" << radius << " xstep=" << xstep << " ystep=" << xstep << " :ok."; 
       } else {
@@ -477,10 +477,10 @@ public:
       answer(oss.str());
     }
     if (head == "DStep") {
-      float radius,ystep,xstep;
-      iss >> radius >> xstep >> ystep;
+      float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
+      iss >> radius >> xstep >> ystep >> left >> right;
       if (fabs(radius)<=6 && fabs(xstep)<=6 && fabs(ystep)<=6) {
-        mover->stepMove(radius,11.0,17.9,-14.665,xstep,ystep,8);
+        mover->stepMove(radius,11.0,17.9,-14.665,xstep,ystep,8,1.0,1.0);
         ostringstream oss;
         oss << "DStep r=" << radius << " xstep=" << xstep << " ystep=" << ystep << " :ok."; 
       } else {
@@ -489,10 +489,10 @@ public:
       answer(oss.str());
     }
     if (head == "Step") {
-      float radius,ystep,xstep;
+      float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
       iss >> radius >> xstep >> ystep;
       if (fabs(radius)<=6 && fabs(xstep)<=6 && fabs(ystep)<=6) {
-        mover->stepMove(radius,14.9,14.9,-14.665,xstep,ystep,8);
+        mover->stepMove(radius,14.9,14.9,-14.665,xstep,ystep,8,left,right);
         ostringstream oss;
         oss << "Step r=" << radius << " xstep=" << xstep << " ystep=" << ystep << " :ok."; 
       } else {
