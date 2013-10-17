@@ -581,13 +581,13 @@ public:
       answer(oss.str());
     }
     if (head == "l") {  // left
-      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,.25,1.0);
+      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,0.25,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 l=0.25 r=1.0  :ok."; 
       answer(oss.str());
     }
     if (head == "r") {  // right
-      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,1.0,.25);
+      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,1.0,0.25);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 l=1.0 r=0.25 : ok."; 
       answer(oss.str());
@@ -598,7 +598,7 @@ public:
       oss << "Step r=4 xstep=0 ystep=2 :ok."; 
       answer(oss.str());
     }
-    if (head == "sr") {  // small reverse
+    if (head == "sb") {  // small backup
       mover->stepMove(4.0,14.9,14.9,-14.665,0,-2.0,8.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=-2 :ok."; 

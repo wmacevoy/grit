@@ -30,6 +30,15 @@ void LegGeometry::outputName(ostream &out) {
   out << name << endl;
 }
 float LegGeometry::robustACos(float cosvalue) {
+  if (cosvalue >= 1.0) {
+    return 0;
+  } else if (cosvalue <= -1.0) {
+    return M_PI;
+  } else {
+    return acos(cosvalue);
+  }
+
+#if 0
   float retval=0.0;
 //		cout <<"CosValue:"<<cosvalue<<endl;
   while (cosvalue > 1.0) {
@@ -43,6 +52,7 @@ float LegGeometry::robustACos(float cosvalue) {
   retval+=acos(cosvalue);
   //		cout <<"ACos:" << retval <<endl;
   return retval;
+#endif
 } 
 // Do not worry about the hip rotation
 void LegGeometry::compute2D(float x,float z,float &knee,float &femur) {
