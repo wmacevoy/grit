@@ -468,7 +468,7 @@ public:
       float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
       iss >> radius >> xstep >> ystep;
       if (fabs(radius)<6 && fabs(xstep)<6 && fabs(ystep)<6) {
-        mover->stepMove(radius,13.9,13.9,-19.665,xstep,ystep,8,1.0,1.0);  // High Narrow Pose
+        mover->stepMove(radius,13.9,13.9,-19.665,xstep,ystep,8,left,right);  // High Narrow Pose
         ostringstream oss;
         oss << "HStep r=" << radius << " xstep=" << xstep << " ystep=" << xstep << " :ok."; 
       } else {
@@ -480,7 +480,7 @@ public:
       float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
       iss >> radius >> xstep >> ystep >> left >> right;
       if (fabs(radius)<=6 && fabs(xstep)<=6 && fabs(ystep)<=6) {
-        mover->stepMove(radius,11.0,17.9,-14.665,xstep,ystep,8,1.0,1.0);
+        mover->stepMove(radius,11.0,17.9,-14.665,xstep,ystep,8,left,right);
         ostringstream oss;
         oss << "DStep r=" << radius << " xstep=" << xstep << " ystep=" << ystep << " :ok."; 
       } else {
@@ -574,16 +574,34 @@ public:
       oss << "played Gait3_0m script"; 
       answer(oss.str());
 	}
-    if (head == "r") {
-	  load("R15.csv");
+    if (head == "f") {  // forward
+      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,1.0,1.0);
       ostringstream oss;
-      oss << "played Gait2_3 script"; 
+      oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
-    }	
-    if (head == "f") {
-	  load("Gait2_3.csv");
+    }
+    if (head == "l") {  // left
+      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,.25,1.0);
       ostringstream oss;
-      oss << "played Gait2_3 script"; 
+      oss << "Step r=4 xstep=0 ystep=4 l=0.25 r=1.0  :ok."; 
+      answer(oss.str());
+    }
+    if (head == "r") {  // right
+      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,1.0,.25);
+      ostringstream oss;
+      oss << "Step r=4 xstep=0 ystep=4 l=1.0 r=0.25 : ok."; 
+      answer(oss.str());
+    }
+    if (head == "sf") {  // small forward
+      mover->stepMove(4.0,14.9,14.9,-14.665,0,2.0,8.0,1.0,1.0);
+      ostringstream oss;
+      oss << "Step r=4 xstep=0 ystep=2 :ok."; 
+      answer(oss.str());
+    }
+    if (head == "sr") {  // small reverse
+      mover->stepMove(4.0,14.9,14.9,-14.665,0,-2.0,8.0,1.0,1.0);
+      ostringstream oss;
+      oss << "Step r=4 xstep=0 ystep=-2 :ok."; 
       answer(oss.str());
     }
     if (head == "lwalk") {
