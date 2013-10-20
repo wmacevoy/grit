@@ -18,6 +18,8 @@ SPServoController servoController;
 SPBody body;
 SPBodyMover mover;
 
+SensorsMessage sensors;
+
 std::map < int , SPServo > servos;
 
 SPServo servo(std::string name)

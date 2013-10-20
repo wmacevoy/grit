@@ -40,13 +40,6 @@
 
 SPScript py;
 
-int mapFingerAngle(int angle){
-	angle=(-180+angle);
-	if (angle<-175) angle=-175;
-	if (angle>175) angle=175; 
-	return angle;
-}
-
 void subscribeH(void *zmq_sub, Hands* manos) 
 {
 	manos->clear();
@@ -102,6 +95,32 @@ public:
   void answer(ostringstream &oss)
   {
     answer(oss.str());
+  }
+
+  std::thread* sensorsThread;
+  std::atomic < bool > sensors_on;
+  void subscribeToSensors()
+  {
+    std::string address = cfg->str("sensors.requester.address");
+    
+    void* context = zmq_ctx_new();
+    void* zmq_sub = zmq_socket(context, ZMQ_SUB);
+    int hwm=1;
+    int rc;
+    rc = zmq_setsockopt(zmq_sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+    rc = zmq_setsockopt(zmq_sub, ZMQ_SUBSCRIBE, "", 0);
+
+    if (zmq_connect(zmq_sub, address.c_str()) != 0) {
+      printf("Error initializing 0mq...\n");
+      return;
+    }
+	
+    while(sensors_on.load()) {
+      zmq_recv(zmq_sub, &sensors, sizeof(SensorsMessage), 0);
+    }
+
+    zmq_close(zmq_sub);
+    zmq_ctx_destroy(context);
   }
 
   std::thread* neckThread;
@@ -345,6 +364,24 @@ public:
 	setWaist(10);
   }
 
+  void sensorsOn()
+  {
+     if(sensorsThread == 0) {
+       sensors_on.store(true);
+       sensorsThread = new std::thread(&BodyController::subscribeToSensors, this);
+     }
+  }
+
+  void sensorsOff()
+  {
+     if (sensorsThread != 0) {
+       sensors_on.store(false);
+       sensorsThread->join();
+       delete sensorsThread;
+       sensorsThread = 0;
+     }
+  }
+
   void neckOn()
   {
      if(neckThread == 0) {
@@ -480,12 +517,37 @@ public:
       float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
       iss >> radius >> xstep >> ystep >> left >> right;
       if (fabs(radius)<=6 && fabs(xstep)<=6 && fabs(ystep)<=6) {
-        mover->stepMove(radius,11.0,17.9,-14.665,xstep,ystep,8,left,right);
+        mover->stepMove(radius,12.0,17.25,-14.665,xstep,ystep,8,left,right);
         ostringstream oss;
         oss << "DStep r=" << radius << " xstep=" << xstep << " ystep=" << ystep << " :ok."; 
       } else {
 		oss << "DStep r=" << radius << " xstep=" << xstep << " ystep=" << xstep << " :NOT ok"; 
 	  }
+      answer(oss.str());
+    }
+    if (head == "df") {
+        mover->stepMove(4,12.0,17.25,-14.665,0,3,8,1.0,1.0);
+		oss << "DStep r=4 xstep=0 ystep=4 :ok"; 
+      answer(oss.str());
+    }
+    if (head == "dsf") {
+        mover->stepMove(4,12.0,17.25,-14.665,0,2,8,1.0,1.0);
+		oss << "DStep r=2 xstep=0 ystep=4 :ok"; 
+      answer(oss.str());
+    }
+    if (head == "dsb") {
+        mover->stepMove(4,12.0,17.25,-14.665,0,-2,8,1.0,1.0);
+		oss << "DStep r=2 xstep=0 ystep=4 :ok"; 
+      answer(oss.str());
+    }
+    if (head == "dl") {
+        mover->stepMove(4,12.0,17.25,-14.665,0,3,8,1.0,0.25);
+		oss << "DStep r=4 xstep=0 ystep=4 :ok"; 
+      answer(oss.str());
+    }
+    if (head == "dr") {
+        mover->stepMove(4,12.0,17.25,-14.665,0,3,8,0.25,1.0);
+		oss << "DStep r=4 xstep=0 ystep=4 :ok"; 
       answer(oss.str());
     }
     if (head == "Step") {
@@ -516,6 +578,18 @@ public:
 	 answer("my neck is off.");
       }
     }
+    if (head=="sensors") {
+      string value;
+      iss >> value;
+      if (value == "on") {
+         sensorsOn();
+	 answer("my sensors are on.");
+      } else if (value == "off") {
+	sensorsOff();
+	answer("my sensors are off.");
+      }
+    }
+
     if (head=="hands") {
       string value;
       iss >> value;
@@ -754,7 +828,32 @@ public:
       iss >> temp;
       body->temp_report(oss, temp);
       answer("temp: " + oss.str());
-      }
+    }
+    if (head == "sense") {
+      ostringstream out;
+      out << " a=[" 
+	  << sensors.a[0] << ","
+	  << sensors.a[1] << ","
+	  << sensors.a[2] << "]";
+      
+      out << " c=[" 
+	  << sensors.c[0] << ","
+	  << sensors.c[1] << ","
+	  << sensors.c[2] << "]";
+      
+      out << " g=[" 
+	  << sensors.g[0] << ","
+	  << sensors.g[1] << ","
+	  << sensors.g[2] << "]";
+      
+      out << " p=[" 
+	  << sensors.p[0] << ","
+	  << sensors.p[1] << ","
+	  << sensors.p[2] << ","
+	  << sensors.p[3] << "]";
+      
+      answer(out.str());
+    }
   }
 
   void update()
@@ -823,6 +922,8 @@ public:
     mover = shared_ptr < BodyMover > (new BodyMover());
     hands_on = false;
     handsThread = 0;
+    neckThread = 0;
+    sensorsThread = 0;
   }
 
   thread *goUpdate;
@@ -833,6 +934,7 @@ public:
       ZMQHub::start();
       goUpdate = new thread(&BodyController::update, this);
     }
+    sensorsOn();
   }
 
   void join()

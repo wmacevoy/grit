@@ -20,6 +20,7 @@ void BodyMover::move(Body &body)
   right.move(body.right);
 }
 
+#if 0
 class Sashay
 {
   enum { SASHAY_CENTER,
@@ -34,7 +35,7 @@ class Sashay
   double v; // velocity of movement
   double epsilon; // radius close enough
   int state;
-  bool ready
+  bool ready;
   void update(double dt)
   {
     switch(state) {
@@ -132,6 +133,8 @@ class Stepper
     close();
   }
 };
+
+#endif 
 
 void BodyMover::logPosition(vector<vector <double> > data) {
     cout << "t,x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,w" << endl;

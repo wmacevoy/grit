@@ -22,6 +22,7 @@
 #include "ServoController.h"
 #include "Body.h"
 #include "BodyMover.h"
+#include "SensorsMessage.h"
 
 extern bool verbose;
 extern double simTime;
@@ -33,5 +34,7 @@ extern SPServoController servoController;
 extern std::map < int , SPServo > servos;
 extern SPBody body;
 extern SPBodyMover mover;
+
+extern SensorsMessage sensors;
 
 extern SPServo servo(std::string name);
