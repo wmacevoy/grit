@@ -20,6 +20,119 @@ void BodyMover::move(Body &body)
   right.move(body.right);
 }
 
+class Sashay
+{
+  enum { SASHAY_CENTER,
+	 SASHAY_LIFT_LEG1,
+	 SASHAY_LIFT_LEG2,
+	 SASHAY_LIFT_LEG3,
+	 SASHAY_LIFT_LEG4 };
+	 
+  double x,y; // current offset
+  double x0,y0; // goal offset
+  double d0; // goal distance
+  double v; // velocity of movement
+  double epsilon; // radius close enough
+  int state;
+  bool ready
+  void update(double dt)
+  {
+    switch(state) {
+    case SASHAY_CENTER: { x0=0; y0=0; break; }
+    case SASHAY_LIFT_LEG1: { x0=d0, y0=-d0; break; }
+    case SASHAY_LIFT_LEG2: { x0=-d0; y0=-d0; break; }
+    case SASHAY_LIFT_LEG3: { x0=-d0; y0=d0; break; }
+    case SASHAY_LIFT_LEG4: { x0=d0; y0=-d0; break; }
+    }
+    double dx=x-x0;
+    double dy=y-y0;
+    double d=sqrt(dx*dx+dy*dy);
+    if (d > v*dt) {
+      d=v*dt/d;
+      dx=d*dx;
+      dy=d*dy;
+    };
+    x += dx;
+    y += dy;
+    dx=x-x0;
+    dy=y-y0;
+    d=sqrt(dx*dx+dy*dy);
+    ready = (d < r);
+  }
+};
+
+class Stepper
+{
+  int state;
+  int last_state;
+
+  bool ready;
+  enum { 
+    STEP_HOME,
+    STEP_FORWARD,
+    STEP_DOWN,
+    STEP_BACK,
+    STEP_UP
+  };
+  
+  float omega; // 1/turn radius 
+  float v[3]; // velocity
+
+  float p[3]; // tip coordinates
+  float p0[3]; // goal coordinates
+  float home[3]; // home coordinates
+
+  void update(double dt)
+  {
+    switch(state) {
+    case STEP_HOME: home(); break;
+    case STEP_FORWARD: forward(); break;
+    case STEP_DOWN: down(); break;
+    case STEP_BACK: back(); break;
+    case STEP_UP: up(); break;
+    }
+    last_state = state;
+  }
+
+  void home()
+  {
+    p0=home;
+    shift();
+  }
+
+  void up()
+  {
+    if (last_state != state) {
+      p0=p;
+      p0[2] += height;
+    }
+    shift();
+    close();
+  }
+
+  void down()
+  {
+    if (last_state != state) {
+      p0=p;
+      p0[2] -= 2*height;
+    }
+    shift();
+    ready = is_down;
+  }
+
+  void forward()
+  {
+    if (last_state != state) {
+      p0=p;
+      p0[0] += v[0];
+      p0[1] += v[1];
+      p0[2] += v[2];
+    }
+    shift();
+    close();
+  }
+};
+
 void BodyMover::logPosition(vector<vector <double> > data) {
     cout << "t,x1,y1,z1,x2,y2,z2,x3,y3,z3,x4,y4,z4,w" << endl;
     for (size_t r=0; r<data.size(); ++r) {
