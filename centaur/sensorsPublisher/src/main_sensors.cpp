@@ -20,7 +20,7 @@ using namespace std;
 
 Configure cfg;
 bool verbose;
-volatile int die = 0;
+volatile bool running = true;
 
 void *context=0;
 void *pub=0;
@@ -46,6 +46,14 @@ void write_close()
   }
 }
 
+void zmqerror()
+{
+  int en=zmq_errno();
+  cout << "ZMQ error " 
+       << zmq_strerror(en) 
+       << " (" << en << ")" << endl;
+}
+
 void write_open()
 {
   write_close();
@@ -55,12 +63,15 @@ void write_open()
   
   pub = zmq_socket(context,ZMQ_PUB);
   rc = zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-  
-  rc = zmq_bind(pub, cfg.str("sensors.provider.publish").c_str());
-  if (rc!=0) {
-    int en=zmq_errno();
-    std::cout << "TCP Error Number " << en << " " << zmq_strerror(en) << " for " << cfg.str("sensors.provider.publish") << std::endl;
+  if (rc != 0) {
+    zmqerror();
     write_close();
+  } else {
+    rc = zmq_bind(pub, cfg.str("sensors.provider.publish").c_str());
+    if (rc!=0) {
+      zmqerror();
+      write_close();
+    }
   }
 
   okWrite = now();
@@ -75,12 +86,38 @@ void write()
   if (pub != 0) {
     int rc = zmq_send(pub,&sensors, sizeof(SensorsMessage), ZMQ_DONTWAIT);
     if (rc!=0) {
-      int en=zmq_errno();
-      std::cout << "TCP Error Number " << en << " " << zmq_strerror(en) << std::endl;
     } else {
       okWrite = sensors.t;
     }
   }
+}
+
+void report()
+{
+  cout << "t=" << sensors.t;
+
+  cout << " a=[" 
+       << sensors.a[0] << ","
+       << sensors.a[1] << ","
+       << sensors.a[2] << "]";
+  
+  cout << " c=[" 
+       << sensors.c[0] << ","
+       << sensors.c[1] << ","
+       << sensors.c[2] << "]";
+  
+  cout << " g=[" 
+       << sensors.g[0] << ","
+       << sensors.g[1] << ","
+       << sensors.g[2] << "]";
+  
+  cout << " p=[" 
+       << sensors.p[0] << ","
+       << sensors.p[1] << ","
+       << sensors.p[2] << ","
+       << sensors.p[3] << "]";
+  
+  cout << endl;
 }
 
 void process(const std::string &line)
@@ -92,6 +129,7 @@ void process(const std::string &line)
   if (vals.size() == 17) {
     bool ok = true;
     int i = -1;
+
     ok = ok && (vals[++i] == "A");
     sensors.a[0]=atof(vals[++i].c_str());
     sensors.a[1]=atof(vals[++i].c_str());
@@ -107,7 +145,6 @@ void process(const std::string &line)
     sensors.g[1]=atof(vals[++i].c_str());
     sensors.g[2]=atof(vals[++i].c_str());
 
-
     ok = ok && (vals[++i] == "L");
     sensors.p[0]=atof(vals[++i].c_str());
     sensors.p[1]=atof(vals[++i].c_str());
@@ -115,30 +152,8 @@ void process(const std::string &line)
     sensors.p[3]=atof(vals[++i].c_str());
 
     if (ok) {
-      if (verbose) {
-	cout << "read: ";
-	cout << " a=[" 
-	     << sensors.a[0] << ","
-	     << sensors.a[1] << ","
-	     << sensors.a[2] << "]";
-
-	cout << " c=[" 
-	     << sensors.c[0] << ","
-	     << sensors.c[1] << ","
-	     << sensors.c[2] << "]";
-	
-	cout << " g=[" 
-	     << sensors.g[0] << ","
-	     << sensors.g[1] << ","
-	     << sensors.g[2] << "]";
-	
-	cout << " p=[" 
-	     << sensors.p[0] << ","
-	     << sensors.p[1] << ","
-	     << sensors.p[2] << ","
-	     << sensors.p[3] << "]";
-	
-	cout << endl;
+      if (verbose) { 
+	report();
       }
       okRead = sensors.t;
       write();
@@ -163,21 +178,42 @@ void process(ssize_t n, char *c)
   }
 }
 
- void read_close()
- {
-    if (fd >= 0) close(fd);
-    fd = -1;
- }
+void read_close()
+{
+  if (fd >= 0) close(fd);
+  fd = -1;
+}
 
- void read_open()
- {
-   read_close();
-   fd = open(cfg.str("sensors.provider.dev_path").c_str(),O_RDONLY);   
-   if (verbose) {
-     cout << "open(" << cfg.str("sensors.provider.dev_path") << ")=" << fd << endl;
-   }
-   okRead = now();
- }
+void read_open()
+{
+  read_close();
+  fd = open(cfg.str("sensors.provider.dev_path").c_str(),O_RDONLY|O_NONBLOCK);
+  if (verbose) {
+    cout << "open(" << cfg.str("sensors.provider.dev_path") << ")=" << fd << endl;
+  }
+  okRead = now();
+}
+
+ssize_t read_timeout(int fd, char *buffer, size_t n, size_t msTimeout)
+{
+  struct timespec ts;
+  ts.tv_sec = msTimeout/1000;
+  ts.tv_nsec = (msTimeout % 1000)*1000000;
+
+  fd_set set;
+  int rv;
+
+  FD_ZERO(&set);
+  FD_SET(fd, &set);
+
+  rv = pselect(fd + 1, &set, NULL, NULL, &ts, NULL);
+
+  if (rv > 0) {
+    return read(fd,buffer,n);
+  } else {
+    return 0;
+  }
+}
 
 void read()
 {
@@ -185,29 +221,16 @@ void read()
     read_open();
   }
 
-  timespec ts;
-  ts.tv_sec=int(readTimeout);
-  ts.tv_nsec = (readTimeout-ts.tv_sec)*1e9;
-
-  fd_set set;
-  int rv;
-
-  FD_ZERO(&set); /* clear the set */
-  FD_SET(fd, &set); /* add our file descriptor to the set */
-
-  rv = pselect(fd + 1, &set, NULL, NULL, &ts, NULL);
-  if (rv > 0) {
-    ssize_t n = read(fd,buffer,N);
-    if (n > 0) process(n,buffer);
-  }
+  ssize_t n = read_timeout(fd,buffer,N, 1000*readTimeout);
+  if (n > 0) process(n,buffer);
 }
 
 void quit(int sig)
 {
-  die = 1;
+  running = false;
 }
 
-int main(int argc, char** argv)
+void config(int argc, char** argv)
 {
   cfg.path("../../setup");
   cfg.args("sensors.provider.", argv);
@@ -215,16 +238,22 @@ int main(int argc, char** argv)
   verbose = cfg.flag("sensors.provider.verbose", false);
   if (verbose) cfg.show();
 
-  readTimeout = cfg.num("sensors.provider.readtimeout",0.25);
-  okReadTimeout = cfg.num("sensors.provider.okreadtimeout",1.0);
-  okWriteTimeout = cfg.num("sensors.provider.okwritetimeout",1.0);
-  
+  readTimeout = cfg.num("sensors.provider.readtimeout");
+  okReadTimeout = cfg.num("sensors.provider.okreadtimeout");
+  okWriteTimeout = cfg.num("sensors.provider.okwritetimeout");
+}
+
+int main(int argc, char** argv)
+{
+  config(argc,argv);
+
   signal(SIGINT, quit);
   signal(SIGQUIT, quit);
 
   context = zmq_ctx_new ();
-  
-  while(!die) { 
+
+
+  while(running) { 
     read();
   }
 
