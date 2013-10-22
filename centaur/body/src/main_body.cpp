@@ -274,6 +274,18 @@ public:
 	mover->right.forearm.setup(angle);
 //	mover->right.elbow.torque=0.75;
   }
+  void goDHome() {
+    load("doorhome.csv");
+    setWaist(0);
+    setLIO(-40);
+    setLUD(-40);
+    setLElbow(40);
+    setLBicep(-20);
+    setRIO(40);
+    setRUD(40);
+    setRElbow(-40);
+    setRBicep(0);    
+  }  
   void goHome() {
     load("home.csv");
     setWaist(0);
@@ -636,7 +648,12 @@ public:
       oss << "played Home script and more"; 
       answer(oss.str());
     }
-    if (head == "walk") {
+    if (head == "dhome") {
+	  goDHome();
+      ostringstream oss;
+      oss << "played DoorHome script and more"; 
+      answer(oss.str());
+    }    if (head == "walk") {
 	  load("Gait1_3.csv");
       ostringstream oss;
       oss << "played Gait1_3 script"; 
