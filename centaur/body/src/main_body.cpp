@@ -666,27 +666,27 @@ public:
       answer(oss.str());
 	}
     if (head == "flu") {  // Forward Front Lift Up front for brick
-      play("FLiftUpFront.csv");
+      load("FLiftUpFront.csv");
       answer("Front stepping on brick");
     }
     if (head == "fob") {  // Forward Front On Brick
-      play("FOnBrickFront.csv");
+      load("FOnBrickFront.csv");
       answer("Front on brick");
     }
     if (head == "fdd") {  // Forward Front Drop Down from brick
-      play("FDropDownFront.csv");
+      load("FDropDownFront.csv");
       answer("Front stepping off brick");
     }
     if (head == "blu") {  // Forward Back Lift Up front for brick
-      play("FLiftUpBack.csv");
+      load("FLiftUpBack.csv");
       answer("Back stepping on brick");
     }
     if (head == "bob") {  // Forward Back On Brick
-      play("FOnBrickFront.csv");
+      load("FOnBrickBack.csv");
       answer("Back on brick");
     }
     if (head == "bdd") {  // Forward Back Drop Down from brick
-      play("FDropDownBack.csv");
+      load("FDropDownBack.csv");
       answer("Back stepping off brick");
     }
     if (head == "f") {  // forward
