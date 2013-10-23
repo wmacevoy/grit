@@ -17,7 +17,7 @@ void ServoMover::move(Servo &servo)
     double myTime;
     if (simTime < simTime0) myTime = 0;
     else if (simTime < simTime1) myTime = simTime-simTime0;
-    else myTime= simTime1;
+    else myTime= simTime1-simTime0;
 
     if (at == angles.end() || at->first > myTime) {
       at = angles.begin();
