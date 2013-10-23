@@ -665,6 +665,30 @@ public:
       oss << "played Gait3_0m script"; 
       answer(oss.str());
 	}
+    if (head == "flu") {  // Forward Front Lift Up front for brick
+      play("FLiftUpFront.csv");
+      answer("Front stepping on brick");
+    }
+    if (head == "fob") {  // Forward Front On Brick
+      play("FOnBrickFront.csv");
+      answer("Front on brick");
+    }
+    if (head == "fdd") {  // Forward Front Drop Down from brick
+      play("FDropDownFront.csv");
+      answer("Front stepping off brick");
+    }
+    if (head == "blu") {  // Forward Back Lift Up front for brick
+      play("FLiftUpBack.csv");
+      answer("Back stepping on brick");
+    }
+    if (head == "bob") {  // Forward Back On Brick
+      play("FOnBrickFront.csv");
+      answer("Back on brick");
+    }
+    if (head == "bdd") {  // Forward Back Drop Down from brick
+      play("FDropDownBack.csv");
+      answer("Back stepping off brick");
+    }
     if (head == "f") {  // forward
       mover->stepMove(4.0,14.9,14.9,-16.665,0,3.0,9.0,1.0,1.0);
       ostringstream oss;
@@ -678,25 +702,25 @@ public:
       answer(oss.str());
     }
     if (head == "l") {  // left
-      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,0.25,1.0);
+      mover->stepMove(4.0,14.9,14.9,-16.665,0,3.0,9.0,0.25,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 l=0.25 r=1.0  :ok."; 
       answer(oss.str());
     }
     if (head == "r") {  // right
-      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,1.0,0.25);
+      mover->stepMove(4.0,14.9,14.9,-16.665,0,3.0,9.0,1.0,0.25);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 l=1.0 r=0.25 : ok."; 
       answer(oss.str());
     }
     if (head == "sf") {  // small forward
-      mover->stepMove(4.0,14.9,14.9,-14.665,0,2.0,8.0,1.0,1.0);
+      mover->stepMove(4.0,14.9,14.9,-16.665,0,1.5,9.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=2 :ok."; 
       answer(oss.str());
     }
     if (head == "sb") {  // small backup
-      mover->stepMove(4.0,14.9,14.9,-14.665,0,-2.0,8.0,1.0,1.0);
+      mover->stepMove(4.0,14.9,14.9,-16.665,0,-1.5,9.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=-2 :ok."; 
       answer(oss.str());
