@@ -666,7 +666,13 @@ public:
       answer(oss.str());
 	}
     if (head == "f") {  // forward
-      mover->stepMove(4.0,14.9,14.9,-14.665,0,4.0,8.0,1.0,1.0);
+      mover->stepMove(4.0,14.9,14.9,-16.665,0,3.0,9.0,1.0,1.0);
+      ostringstream oss;
+      oss << "Step r=4 xstep=0 ystep=4 :ok."; 
+      answer(oss.str());
+    }
+    if (head == "lf") {  // forward
+      mover->stepMove(4.0,14.9,14.9,-10.665,0,3.0,5.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
