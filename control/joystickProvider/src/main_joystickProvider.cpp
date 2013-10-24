@@ -19,6 +19,7 @@ void publish(joystick *j,void *zmq_pub)
 
 void quitproc(int param)
 {
+	std::cout << "\nQuitting..." << std::endl;
 	die = true;
 }
 
@@ -34,6 +35,7 @@ int main(int argc,char **argv)
 	SDL_Joystick *joystick;
 	int rc;
 	int hwm = 1;
+	int linger = 25;
 	void *context = zmq_ctx_new ();
 	void* pub;
 
@@ -50,6 +52,9 @@ int main(int argc,char **argv)
 		pub = zmq_socket(context, ZMQ_PUB);
 	
 		rc = zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+		assert(rc == 0);
+
+		rc = zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger));
 		assert(rc == 0);
 
 		rc = zmq_bind(pub, "tcp://*:5556");
@@ -119,11 +124,14 @@ int main(int argc,char **argv)
 		if(verbose) std::cout << "X1: " << jm.x1 << " Y1: " << jm.y1 << "X2: " << jm.x2 << " Y2: " << jm.y2 << " Button1: " << jm.button1 << " Button2: " << jm.button2 << std::endl;
 	}
 
-	std::cout << "\nQuitting..." << std::endl;
+	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(pub);
 	zmq_ctx_destroy(context);
+	std::cout << "--done!" << std::endl;
+	std::cout << "closing SDL..." << std::endl;
 	SDL_JoystickClose( joystick );
 	SDL_Quit();
+	std::cout << "--done!" << std::endl;
 
 	return 0;
 }

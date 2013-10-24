@@ -5,3 +5,5 @@
 	$(MAKE) -C gui $@
 	$(MAKE) -C joystickProvider $@ 
 	$(MAKE) -C leapPublisher $@
+	$(MAKE) -C heartBeatRequester $@
+
