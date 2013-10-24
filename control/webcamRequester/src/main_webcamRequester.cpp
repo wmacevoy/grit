@@ -195,12 +195,15 @@ int main(int argc, char** argv)
 		else if(c == 'q') die = true;
 	}
 
+	std::cout << "destroying window..." << std::endl;
 	destroyWindow(winName);
+	std::cout << "--done!" << std::endl;
+	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(req_mat);
 	zmq_close(sub_lidar);
 	zmq_ctx_destroy(context_mat);
 	zmq_ctx_destroy(context_lidar);
-	std::cout << "DONE!" << std::endl;
+	std::cout << "--done!" << std::endl;
 
 	return 0;
 }
