@@ -104,9 +104,10 @@ int main(int argc, char** argv)
 	
 	std::cout << "releasing capture..." << std::endl;
 	capture.release();
-	std::cout << "destroy zmq..." << std::endl;
+	std::cout << "--done!" << std::endl;
+	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(rep_mat);
 	zmq_ctx_destroy(context_mat);
-	std::cout << "DONE!" << std::endl;
+	std::cout << "--done!" << std::endl;
 	return 0;
 }
