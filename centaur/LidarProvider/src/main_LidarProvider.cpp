@@ -82,6 +82,7 @@ int main(int argc, char** argv)
 	assert(rcl == 0);
 
 	rcl = zmq_bind(pub_lidar, "tcp://*:9997");
+	assert(rcl == 0);
 
 	//Connect lidar
 	rcl = urg_connect(&urg, lidar_path.c_str(), 115200);
@@ -107,16 +108,16 @@ int main(int argc, char** argv)
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
-	if (verbose) printf("freeing memory for data array...\n");
+	printf("freeing memory for data array...\n");
 	free(lidar_data);
-	if (verbose) printf("--done\n");
-	if (verbose) printf("closing urg...\n");
+	printf("--done\n");
+	printf("closing urg...\n");
 	urg_disconnect(&urg);
-	if (verbose) printf("--done\n");
-	if (verbose) printf("closing and destroying zmq\n");
+	printf("--done\n");
+	printf("closing and destroying zmq\n");
 	zmq_close(pub_lidar);
 	zmq_ctx_destroy(context_lidar);
-	if (verbose) printf("-- done!\n");
+	printf("-- done!\n");
 
 	return 0;
 }
