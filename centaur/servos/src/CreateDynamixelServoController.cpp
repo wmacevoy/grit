@@ -480,13 +480,49 @@ struct DynamixelServoController : ServoController
     }
   }
 
+  void DynamixelServoController::iThread(void* d) {
+	bool dataNeeded;
+	int j, size = 34 * 2;
+	uint8_t msgArr[size];
+
+	void* context = zmq_ctx_new ();
+	void* rep_mat = zmq_socket(context, ZMQ_REP);
+	rc = zmq_bind(rep, "tcp://*:9001");
+
+	while(running) {
+		int rv = zmq_recv(rep, &dataNeeded, sizeof(bool), ZMQ_DONTWAIT);
+		j = 0;		
+
+		//Get temps and populate array
+		for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
+			msgArr[j++] = (uint8_t)i->first; //Servo ID
+			msgArr[j] = (uint8_t)i->second->temp(); //Servo temp
+		}
+
+		zmq_msg_t msg;
+		int rc = zmq_msg_init_size(&msg, size);
+		memcpy(zmq_msg_data(&msg), msgArr, size);
+		if(rc == 0)
+		{
+			int rc = zmq_sendmsg(rep, &msg, ZMQ_DONTWAIT);
+		}
+
+		if(verbose) std::cout << "Sent: " << rc << std::endl;
+	}
+
+	zmq_close(rep);
+	zmq_ctx_destroy(context);
+}
+
   std::thread *go;
+  std::thread *infoThread;
 
   void start()
   {
     if (!running) {
       running = true;
       go = new thread(&DynamixelServoController::update,this);
+      infoThread = new thread(&DynamixelServoController::iThread,this);
     }
   }
 
@@ -502,7 +538,9 @@ struct DynamixelServoController : ServoController
     if (running) {
       running = false;
       go->join();
+      infoThread->join;
       delete go;
+      delete infoThread;
    }
   }
 };
