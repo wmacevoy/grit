@@ -59,7 +59,7 @@ void mouseEvent(int evt, int x, int y, int flags, void* param)
 
 void quitproc(int param)
 {
-	std::cout << "Quitting..." << std::endl;
+	std::cout << "\nQuitting..." << std::endl;
 	die = true;
 }
 
@@ -76,6 +76,7 @@ int main(int argc, char** argv)
 	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
 	int hwm = 1;
+	int linger = 25;
 	int rcc = 0;
 	int rcl = 0;
 	int index = 0;
@@ -109,6 +110,9 @@ int main(int argc, char** argv)
 	rcl = zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0);
 	assert(rcl == 0);
 
+	rcl = zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger));
+	assert(rcl == 0);
+
 	rcc = zmq_connect(req_mat, ip1.c_str());
 	rcl = zmq_connect(sub_lidar, ip2.c_str());
 	assert(rcc == 0 && rcl == 0);	
@@ -135,9 +139,12 @@ int main(int argc, char** argv)
 			switch(CorG)
 			{
 			case false:
-				zmq_send(req_mat, &CorG, sizeof(bool), 0);
-				zmq_recvmsg(req_mat, &msg, 0);
-				memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+				zmq_send(req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
+				zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
+				if(zmq_msg_size(&msg) == color.total() * color.elemSize())
+				{
+					memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+				}
 				line(color, pt1, pt2, Scalar(0, 0, 0));
 				if(inside)
 				{	
@@ -145,15 +152,18 @@ int main(int argc, char** argv)
 					index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 					//index = 380 + mx;
 					text = convstr(lidar_data[index] * 0.00328084);
-					putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+					putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 					if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << "  sleep_time: " << sleep_time << std::endl;
 				}
 				imshow(winName, color);
 				break;
 			case true:
-				zmq_send (req_mat, &CorG, sizeof(bool), 0);
-				zmq_recvmsg(req_mat, &msg, 0);
-				memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+				zmq_send (req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
+				zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
+				if(zmq_msg_size(&msg) == gray.total() * gray.elemSize())
+				{
+					memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+				}
 				line(gray, pt1, pt2, Scalar(0, 0, 0));
 				if(inside)
 				{	
@@ -190,6 +200,7 @@ int main(int argc, char** argv)
 	zmq_close(sub_lidar);
 	zmq_ctx_destroy(context_mat);
 	zmq_ctx_destroy(context_lidar);
+	std::cout << "DONE!" << std::endl;
 
 	return 0;
 }
