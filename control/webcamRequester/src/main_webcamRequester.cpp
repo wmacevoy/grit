@@ -195,8 +195,10 @@ int main(int argc, char** argv)
 		else if(c == 'q') die = true;
 	}
 
-	std::cout << "destroying window..." << std::endl;
+	std::cout << "destroying window and freeing mat memory..." << std::endl;
 	destroyWindow(winName);
+	color.release();
+	gray.release();
 	std::cout << "--done!" << std::endl;
 	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(req_mat);
