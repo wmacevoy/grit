@@ -43,6 +43,7 @@ int main(int argc, char** argv)
 	int index = cfg.num("webcam.provider.index", 1);
 	int sleep_time = cfg.num("webcam.provider.sleep_time", 50);
 
+	int linger = 25;
 	int rc = 0;
 	bool CorG = false;
 	Mat frame;
@@ -64,6 +65,9 @@ int main(int argc, char** argv)
 	void* context_mat = zmq_ctx_new ();
 
 	void* rep_mat = zmq_socket(context_mat, ZMQ_REP);
+	
+	rc = zmq_setsockopt(rep_mat, ZMQ_LINGER, &linger, sizeof(linger));
+	assert(rc == 0);
 
 	rc = zmq_bind(rep_mat, "tcp://*:9993");
 	assert(rc == 0);
@@ -81,7 +85,7 @@ int main(int argc, char** argv)
 		cvtColor(frame, gray, CV_RGB2GRAY);
 		frame.reshape(0,1);
 		gray.reshape(0,1);
-		int8_t rv = zmq_recv(rep_mat, &CorG, sizeof(bool), 0);
+		int rv = zmq_recv(rep_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
 		switch(CorG)
 		{
 		case 0:		
@@ -97,8 +101,12 @@ int main(int argc, char** argv)
 	}
 
 	//Cleanup
+	
+	std::cout << "releasing capture..." << std::endl;
 	capture.release();
+	std::cout << "destroy zmq..." << std::endl;
 	zmq_close(rep_mat);
 	zmq_ctx_destroy(context_mat);
+	std::cout << "DONE!" << std::endl;
 	return 0;
 }
