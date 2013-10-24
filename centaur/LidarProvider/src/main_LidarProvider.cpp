@@ -72,7 +72,7 @@ int main(int argc, char** argv)
 	int hwm = 1;
 	int rcl = 0;
 
-	std::string lidar_path = cfg.str("lidar.provider.path", "/dev/ttyACM0").c_str();
+	std::string lidar_path = cfg.str("lidar.provider.path", "/dev/ttyACM0");
 	sleep_time = (int)cfg.num("lidar.provider.sleep_time", 1000);
 
 	//Initialize ZMQ and LIDAR connection
@@ -84,8 +84,8 @@ int main(int argc, char** argv)
 	rcl = zmq_bind(pub_lidar, "tcp://*:9997");
 
 	//Connect lidar
-	int ret = urg_connect(&urg, lidar_path.c_str(), 115200);
-	if (ret < 0) {
+	rcl = urg_connect(&urg, lidar_path.c_str(), 115200);
+	if (rcl < 0) {
 	  std::cout << "could not connect to " << lidar_path << std::endl;
 	  return 1;
 	}
@@ -108,21 +108,14 @@ int main(int argc, char** argv)
 	}
 
 	if (verbose) printf("freeing memory for data array...\n");
-
 	free(lidar_data);
-
 	if (verbose) printf("--done\n");
-	
 	if (verbose) printf("closing urg...\n");
-	
 	urg_disconnect(&urg);
-	
 	if (verbose) printf("--done\n");
 	if (verbose) printf("closing and destroying zmq\n");
-
 	zmq_close(pub_lidar);
 	zmq_ctx_destroy(context_lidar);
-
 	if (verbose) printf("-- done!\n");
 
 	return 0;
