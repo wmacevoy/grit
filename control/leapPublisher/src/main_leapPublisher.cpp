@@ -5,6 +5,7 @@
 #include <mutex>
 #include <zmq.h>
 #include <math.h>
+#include <assert.h>
 #include "leapStruct.h"
 #include "Configure.h"
 #include "Leap.h"
@@ -129,6 +130,7 @@ int main(int argc, char** argv)
 	sleep_time = (int)cfg.num("leap.provider.sleep_time", 400);
 
 	int hwm = 1;
+	int linger = 25;
 	int rc = 0;
 
 	handListener listener;
@@ -137,6 +139,10 @@ int main(int argc, char** argv)
 	void *context = zmq_ctx_new ();
 	void *pub = zmq_socket(context,ZMQ_PUB);
 	rc = zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+	assert(rc == 0);
+	
+	rc = zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger));
+	assert(rc == 0);
 	
 	rc = zmq_bind(pub, "tcp://*:9990");
 	if (rc!=0) {
