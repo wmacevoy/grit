@@ -102,8 +102,10 @@ int main(int argc, char** argv)
 
 	//Cleanup
 	
-	std::cout << "releasing capture..." << std::endl;
+	std::cout << "releasing capture and freeing mat memory..." << std::endl;
 	capture.release();
+	frame.release();
+	gray.release();
 	std::cout << "--done!" << std::endl;
 	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(rep_mat);
