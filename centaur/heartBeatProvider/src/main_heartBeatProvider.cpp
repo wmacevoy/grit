@@ -28,6 +28,7 @@ int main(int argc, char** argv)
 	int sleep_time = (int)cfg.num("heartbeat.provider.sleep_time", 1000);
 
 	int hwm = 1;
+	int linger = 25;
 	int rc = 0;
 
 	char strTime[80];
@@ -38,6 +39,8 @@ int main(int argc, char** argv)
 
 	void* context = zmq_ctx_new ();
 	void* pub = zmq_socket(context, ZMQ_PUB);
+	rc = zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger));
+	assert(rc == 0);
 	if(zmq_bind(pub, "tcp://*:9800") != 0)
 	{
 		printf("Could not connect zmq...\n");
@@ -60,8 +63,10 @@ int main(int argc, char** argv)
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));	
 	}
 
+	printf("closing and destroying zmq...\n");
 	zmq_close(pub);
 	zmq_ctx_destroy(context);
+	printf("--done!");
 
 	return 0;
 }

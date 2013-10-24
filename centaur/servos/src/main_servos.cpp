@@ -5,6 +5,8 @@
 #include <assert.h>
 #include <signal.h>
 #include <unistd.h>
+#include <thread>
+#include <chrono>
 
 #include "Configure.h"
 //#include "zmq.hpp"

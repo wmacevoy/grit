@@ -79,31 +79,38 @@ int main(int argc, char** argv)
 	if (verbose) printf("Publishing on tcp://*:9997\n");
 	while(!die)
 	{
-		if (urg_isConnected(&urg) < 0) 
+		if (urg_isConnected(&urg) == 0)
+		{
+			if(urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST) == 0)
+			{
+				if(urg_receiveData(&urg, lidar_data, sz_lidar_data) == 0)
+				{
+					if(verbose) printf("sending lidar data...\n");
+					int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
+					if(verbose && rc > 0) printf("sent lidat data!\n");
+					std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+				}
+				else
+				{	
+					std::cout << "failed urg_receiveData()" << std::endl;
+					die = true;
+					break;
+				}
+			}
+			else 
+			{
+				std::cout << "failed urg_requestData()" << std::endl;
+				die = true;
+				break;
+			}
+
+		}
+		else 
 		{
 			std::cout << "failed urg_isConnected()" << std::endl;
 			die = true;
 			break;
 		}
-
-		if(urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST) < 0) 
-		{
-			std::cout << "failed urg_requestData()" << std::endl;
-			die = true;
-			break;
-		}
-
-		if(urg_receiveData(&urg, lidar_data, sz_lidar_data) < 0)
-		{
-			std::cout << "failed urg_receiveData()" << std::endl;
-			die = true;
-			break;
-		}
-	
-		if(verbose) printf("waiting for lidar data...\n");
-		int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
-		if(verbose && rc > 0) printf("sent lidat data!\n");
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
 	printf("freeing memory for data array...\n");
