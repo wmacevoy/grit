@@ -38,14 +38,14 @@ void publish_lidar(void* data, void* zmq_pub)
 	ret = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
 	if (ret < 0) 
 	{
-		return;
+		urg_exit(&urg, "failed urg_requestData()");
 	}
 
 	ret = urg_receiveData(&urg, lidar_data, sz_lidar_data);;
 	if(verbose) printf("# n = %d\n", ret);
 	if (ret < 0)
 	{
-		return;
+		urg_exit(&urg, "failed urg_receiveData()");
 	}
 	
 	if(verbose) printf("waiting for lidar data...\n");
@@ -87,7 +87,7 @@ int main(int argc, char** argv)
 	//Connect lidar
 	rcl = urg_connect(&urg, lidar_path.c_str(), 115200);
 	if (rcl < 0) {
-	  std::cout << "could not connect to " << lidar_path << std::endl;
+	  urg_exit(&urg, "failed urg_connect()");
 	  return 1;
 	}
 
