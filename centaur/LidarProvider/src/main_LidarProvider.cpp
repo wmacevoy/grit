@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 	if (verbose) cfg.show();
 	
 	std::string lidar_path = cfg.str("lidar.provider.path", "/dev/ttyACM0");
-	int sleep_time = (int)cfg.num("lidar.provider.sleep_time", 1000);
+	int sleep_time = (int)cfg.num("lidar.provider.sleep_time", 200);
 
 	urg_t urg;
 	int hwm = 1;
