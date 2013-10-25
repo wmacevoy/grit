@@ -52,6 +52,7 @@ class MyFakeServo : public Servo
       float dt=(t < ct[1]) ? (t-ct[0]) : (ct[1]-ct[0]);
       float dt2=dt*dt;
       const float *c = dt <= 0 ? c0 : c1;
+      cout << t << "," << dt << ",";
       goalAngle = c[0]+c[1]*dt+c[2]*dt2/2.0;
       goalSpeed = c[1]+c[2]*dt;
     }
@@ -114,7 +115,7 @@ class MyFakeServo : public Servo
 
 double f(double t)
 {
-  return 100*sin(2*M_PI*t/5.0);
+  return fabs(sin(2*M_PI*t/5.0));
 }
 
 int main()
@@ -138,10 +139,10 @@ int main()
   simTime = 0;
   realTime = 0;
   simSpeed = 1.0;
-  servoMover.setup(T,path,0,T);
+  servoMover.setup(path,0,T);
 
   int m=8*n;
-  cout << "t" << "," << "a" << "," << "t1" << "," << "c0" << "," << "c1" << "," << "c2" << "," << "g" << endl;
+  cout << "t" << "," << "a" << "," << "t1-t" << "," << "c0" << "," << "c1" << "," << "c2" << "," << "g" << endl;
   for (int i=0; i<=m; ++i) {
     double t=T*float(i)/float(m);
     simTime = t;
@@ -155,7 +156,7 @@ int main()
     servoMover.move(*servo);
     servo->update();
     //    if (1 <= realTime && realTime <= 2) {
-      cout << realTime << "," << f(realTime) << "," << servo->ct[0] << "," << servo->c0[0] << "," << servo->c0[1] << "," << servo->c0[2] << "," << servo->goalAngle << endl;
+      cout << realTime << "," << f(realTime) << "," << servo->ct[1]-realTime << "," << servo->c0[0] << "," << servo->c0[1] << "," << servo->c0[2] << "," << servo->goalAngle << endl;
       //    }
   }
 
