@@ -173,18 +173,18 @@ void BodyMover::fromTips(vector<vector <double> > data) {
 
 bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right) {
   vector<vector<double>> data;
-  double T = 12.0; // 10 is good
+  double T = 6.0; // 10 is good
   double timeDivider=10.0;
   double steps=T*timeDivider; 
   double fullCircle=2.0*M_PI;
   double da=fullCircle/steps;
   double waist=2.0;
   double dt=0.1;
-//  double xAdder=6.6-radius*0.707;
-//  double yAdder=6.6-radius*0.707;
-  double xAdder=0.0; // Leg up and down not out.
-  double yAdder=0.0;
-  double stepTime=1.0;  // 2 is good 
+  double xAdder=6.6-radius*0.707;
+  double yAdder=6.6-radius*0.707;
+//  double xAdder=0.0; // Leg up and down not out.
+//  double yAdder=0.0;
+  double stepTime=2.0;  // 2 is good 
   bool l1=true;
   bool l2=true;
   bool l3=true;

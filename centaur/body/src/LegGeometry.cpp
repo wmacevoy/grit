@@ -13,9 +13,9 @@ void LegGeometry::setHipOffset(float newHipOffset) {
 }
 LegGeometry::LegGeometry() {
   hipOffset=0.0;
-  koffset=2.125;
-  ktibia=16.00;
-  l0=2.625; //inches
+  koffset=2.801;
+  ktibia=16.50;
+  l0=3.051; //inches
   l1=8.25;
   l2=sqrt(ktibia*ktibia+koffset*koffset);
   kangle=atan(koffset/ktibia)*ANGLE180/M_PI;
