@@ -2,10 +2,10 @@
 
 ArmMover::ArmMover()
 {
-  trigger.sharpCutoff=0;
-  middle.sharpCutoff=0;
-  ring.sharpCutoff=0;
-  thumb.sharpCutoff=0;
+  trigger.linearCutoff=0;
+  middle.linearCutoff=0;
+  ring.linearCutoff=0;
+  thumb.linearCutoff=0;
 }
 
 void ArmMover::move(Arm &arm)

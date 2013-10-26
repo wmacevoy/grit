@@ -3,17 +3,17 @@
 #include <map>
 #include <mutex>
 #include "Servo.h"
-#include "Curve.h"
 
 class ServoMover
 {
 public:
-  Curve curve;
-  std::mutex curveMutex;
-
+  std::mutex anglesMutex;
+  typedef std::map < float , float > Angles;
+  Angles angles;
+  Angles::iterator at;
   double simTime0,simTime1;
   float torque;
-  float sharpCutoff;
+  float linearCutoff;
 
   void move(Servo &servo);
   void setup(const std::map < float , float > &angles_,
