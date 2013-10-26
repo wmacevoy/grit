@@ -691,31 +691,31 @@ public:
       answer("Back stepping off brick");
     }
     if (head == "f") {  // forward
-      mover->stepMove(4.0,14.9,14.9,-16.665,0,3.0,9.0,1.0,1.0);
+      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,8.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
     }
     if (head == "lf") {  // forward
-      mover->stepMove(4.0,12.0,15.25,-10.665,0,5.0,5.0,1.0,1.0);
+      mover->stepMove(4.0,14.9,14.9,-9.915,0,3.,5.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
     }
     if (head == "l") {  // left
-      mover->stepMove(4.0,14.9,14.9,-16.665,0,3.0,9.0,0.25,1.0);
+      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,9.0,0.25,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 l=0.25 r=1.0  :ok."; 
       answer(oss.str());
     }
     if (head == "r") {  // right
-      mover->stepMove(4.0,14.9,14.9,-16.665,0,3.0,9.0,1.0,0.25);
+      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,9.0,1.0,0.25);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 l=1.0 r=0.25 : ok."; 
       answer(oss.str());
     }
     if (head == "sf") {  // small forward
-      mover->stepMove(4.0,14.9,14.9,-16.665,0,1.5,9.0,1.0,1.0);
+      mover->stepMove(4.0,14.9,14.9,-15.665,0,1.5,8.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=2 :ok."; 
       answer(oss.str());

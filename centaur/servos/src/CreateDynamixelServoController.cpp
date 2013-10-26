@@ -129,7 +129,7 @@ struct DynamixelServo : Servo
     value = fabs(value);
     if (value < minSpeed) { value = minSpeed; }
     else if (value > maxSpeed) { value = maxSpeed; }
-    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*5.0;
+    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*1.0;
     if (goalSpeed > 480) goalSpeed = 480;
   }
 
@@ -306,6 +306,8 @@ struct DynamixelServoController : ServoController
 	      float *c = (dt <= 0) ? servo->c0 : servo->c1;
 	      angle = c[0]+c[1]*dt+c[2]*dtsq/2.0;
 	      speed = c[1]+c[2]*dt;
+//	      angle = c[0]+c[1]*dt;
+//	      speed = c[1];
 	    }
 
 	    double dt1;
@@ -321,10 +323,10 @@ struct DynamixelServoController : ServoController
 	    {
 	      double dt1sq = dt1*dt1;
 	      float *c = (dt1 <= 0) ? servo->c0 : servo->c1;
-//	      angle1 = c[0]+c[1]*dt1+c[2]*dt1sq/2.0;
-//	      speed1 = c[1]+c[2]*dt1;
-	      angle1 = c[0];
-	      speed1 = c[1];
+	      angle1 = c[0]+c[1]*dt1+c[2]*dt1sq/2.0;
+	      speed1 = c[1]+c[2]*dt1;
+//	      angle = c[0]+c[1]*dt;
+//	      speed = c[1];
 	    }
 
 	    servo->angle0(angle1);
@@ -525,7 +527,7 @@ struct DynamixelServoController : ServoController
     if (!running) {
       running = true;
       go = new thread(&DynamixelServoController::update,this);
-      infoThread = new thread(&DynamixelServoController::iThread,this);
+  //    infoThread = new thread(&DynamixelServoController::iThread,this);
     }
   }
 

@@ -173,8 +173,9 @@ void BodyMover::fromTips(vector<vector <double> > data) {
 
 bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right) {
   vector<vector<double>> data;
-  double T = 6.0; // 10 is good
-  double steps=T*4.0; // 8s in ten of a second steps;
+  double T = 12.0; // 10 is good
+  double timeDivider=10.0;
+  double steps=T*timeDivider; 
   double fullCircle=2.0*M_PI;
   double da=fullCircle/steps;
   double waist=2.0;
@@ -184,7 +185,6 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   double xAdder=0.0; // Leg up and down not out.
   double yAdder=0.0;
   double stepTime=1.0;  // 2 is good 
-  double timeDivider=10.0;
   bool l1=true;
   bool l2=true;
   bool l3=true;
@@ -202,19 +202,21 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   double r=radius/2.0;
   double R=radius;
   double d=-1.0;
+
+	double pl2=1.0/8.0;  // Leg 2 first at 1/8 phase of circle
+	//pl2 = pl2-floor(pl2);
+	double pl1=1.0/8.0+1.0/4.0;  // Leg 1 1/4 phase later
+	//pl1 = pl1-floor(pl1);
+	double pl4=1.0/8.0+2.0/4.0;  // Leg 4 1/2 phase later
+	//pl4 = pl4-floor(pl4);
+	double pl3=1.0/8.0+3.0/4.0;  // Leg 3 3/4 phase later
+
   for(double a=0;a<fullCircle;a+=da) {
     double dx=radius*cos(a); double dy=radius*sin(a); // offset of center of mass
 //    double dx=(R-r)*cos(a)+d*cos(a*(R-r)/r);  // Ellispe to make hip swish more back and forth not side to side
 //    double dy=(R-r)*sin(a)-d*sin(a*(R-r)/r);
-	double phase=(1.0-a/fullCircle);
-	double pl2=phase+1.0/8.0;  // Leg 2 first at 1/8 phase of circle
-	pl2 = pl2-floor(pl2);
-	double pl1=phase+1.0/8.0+1.0/4.0;  // Leg 1 1/4 phase later
-	pl1 = pl1-floor(pl1);
-	double pl4=phase+1.0/8.0+2.0/4.0;  // Leg 4 1/2 phase later
-	pl4 = pl4-floor(pl4);
-	double pl3=phase+1.0/8.0+3.0/4.0;  // Leg 3 3/4 phase later
-	pl3 = pl3-floor(pl3);
+//	double phase=(1.0-a/fullCircle);
+	//pl3 = pl3-floor(pl3);
 	if (a<fullCircle/2) waist=-0.0;
 	else waist=0.0;
 //	cout << t << "," << pl1 << "," << pl2 << "," << pl3 << "," << pl4 << endl;
@@ -232,11 +234,13 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
     p.push_back(l2x+dx2); p.push_back(l2y+dy2); p.push_back(l2z);
     p.push_back(l3x+dx3); p.push_back(l3y+dy3); p.push_back(l3z);
     p.push_back(l4x+dx4); p.push_back(l4y+dy4); p.push_back(l4z);
-    p.push_back(waist);
+    p.push_back(waist); 
+    p.push_back(pl1); p.push_back(pl2); p.push_back(pl3); p.push_back(pl4);
     data.push_back(p);
     t+=dt;
-    if (fabs(a-M_PI/4.0)<da && l2) {  // Leg 2 up
+    if (pl2-da/fullCircle <= 0 && l2) {  // Leg 2 up
       l2=false;
+	  pl2=1.0;      
       for (int i=0;i<stepTime*timeDivider;i++) {
 	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
@@ -246,6 +250,7 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
         pu.push_back(l3x+dx3); pu.push_back(l3y+dy3); pu.push_back(l3z);
         pu.push_back(l4x+dx4); pu.push_back(l4y+dy4); pu.push_back(l4z);
         pu.push_back(waist);
+    pu.push_back(pl1); pu.push_back(pl2); pu.push_back(pl3); pu.push_back(pl4);
         data.push_back(pu);
         t+=dt;
       }
@@ -258,11 +263,13 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
         pd.push_back(l3x+dx3); pd.push_back(l3y+dy3); pd.push_back(l3z);
         pd.push_back(l4x+dx4); pd.push_back(l4y+dy4); pd.push_back(l4z);
         pd.push_back(waist);
+    pd.push_back(pl1); pd.push_back(pl2); pd.push_back(pl3); pd.push_back(pl4);
         data.push_back(pd);
         t+=dt;
       }
-	} else if (fabs(a-3.0*M_PI/4.0)<da && l1) {  // Leg 1 up
+	} else if (pl1-da/fullCircle <= 0 && l1) {  // Leg 1 up
       l1=false;
+	  pl1=1.0;      
       for (int i=0;i<stepTime*timeDivider;i++) {
 	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
@@ -272,6 +279,7 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
         pu.push_back(l3x+dx3); pu.push_back(l3y+dy3); pu.push_back(l3z);
         pu.push_back(l4x+dx4); pu.push_back(l4y+dy4); pu.push_back(l4z);
         pu.push_back(waist);
+    pu.push_back(pl1); pu.push_back(pl2); pu.push_back(pl3); pu.push_back(pl4);
         data.push_back(pu);
         t+=dt;
       }
@@ -284,11 +292,13 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
         pd.push_back(l3x+dx3); pd.push_back(l3y+dy3); pd.push_back(l3z);
         pd.push_back(l4x+dx4); pd.push_back(l4y+dy4); pd.push_back(l4z);
         pd.push_back(waist);
+    pd.push_back(pl1); pd.push_back(pl2); pd.push_back(pl3); pd.push_back(pl4);
         data.push_back(pd);
         t+=dt;
 	  }
-	} else if (fabs(a-5.0*M_PI/4.0)<da && l4) {  //  Leg 4 up
+	} else if (pl4-da/fullCircle <= 0 && l4) {  //  Leg 4 up
 	  l4=false;
+	  pl4=1.0;
       for (int i=0;i<stepTime*timeDivider;i++) {
 	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
@@ -298,6 +308,7 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
         pu.push_back(l3x+dx3); pu.push_back(l3y+dy3); pu.push_back(l3z);
         pu.push_back(l4x+dx4+dl4x*f); pu.push_back(l4y+dy4+dl4y*f); pu.push_back(l4z+dl4z*f);
         pu.push_back(waist);
+    pu.push_back(pl1); pu.push_back(pl2); pu.push_back(pl3); pu.push_back(pl4);
         data.push_back(pu);
         t+=dt;
 	  }
@@ -310,11 +321,13 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
         pd.push_back(l3x+dx3); pd.push_back(l3y+dy3); pd.push_back(l3z);
         pd.push_back(l4x+dx4+dl4x*f+left*xstep); pd.push_back(l4y+dy4+dl4y*f+left*ystep); pd.push_back(l4z+dl4z*f);
         pd.push_back(waist);
+    pd.push_back(pl1); pd.push_back(pl2); pd.push_back(pl3); pd.push_back(pl4);
         data.push_back(pd);
         t+=dt;
       }
-	} else if (fabs(a-7.0*M_PI/4.0)<da && l3) {  // Leg3 up
+	} else if (pl3-da/fullCircle <= 0 && l3) {  // Leg3 up
 	  l3=false;
+	  pl3=1.0;
       for (int i=0;i<stepTime*timeDivider;i++) {
 	    double f=(float)i/(stepTime*timeDivider);
         vector<double> pu;
@@ -324,6 +337,7 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
         pu.push_back(l3x+dx3+dl3x*f); pu.push_back(l3y+dy3+dl3y*f); pu.push_back(l3z+dl3z*f);
         pu.push_back(l4x+dx4); pu.push_back(l4y+dy4); pu.push_back(l4z);
         pu.push_back(waist);
+    pu.push_back(pl1); pu.push_back(pl2); pu.push_back(pl3); pu.push_back(pl4);
         data.push_back(pu);
         t+=dt;
       }
@@ -336,10 +350,17 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
         pd.push_back(l3x+dx3+dl3x*f+right*xstep); pd.push_back(l3y+dy3+dl3y*f+right*ystep); pd.push_back(l3z+dl3z*f);
         pd.push_back(l4x+dx4); pd.push_back(l4y+dy4); pd.push_back(l4z);
         pd.push_back(waist);
+    pd.push_back(pl1); pd.push_back(pl2); pd.push_back(pl3); pd.push_back(pl4);
         data.push_back(pd);
         t+=dt;
 	  }
+	  
 	}
+	double dp=da/fullCircle;
+	pl1 -= dp;
+	pl2 -= dp;
+	pl3 -= dp;
+	pl4 -= dp;	
   }
   logPosition(data);
   fromTips(data);

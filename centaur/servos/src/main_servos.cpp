@@ -151,7 +151,7 @@ public:
 	}
 	msg.send(socket);
       }
-      {
+/*      {
 	ZMQMessage msg(sizeof(ZMQServoMessage));
 	ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
 	
@@ -163,8 +163,8 @@ public:
 	  cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
 	}
 	msg.send(socket);
-      }
-    }
+      } */
+    } 
   }
 
   void report()
