@@ -1,8 +1,8 @@
 name,value
 control.ip,192.168.2.113
 centaur.ip,192.168.2.101
-legs.minspeed,25
-legs.maxspeed,300
+legs.minspeed,25,Degrees per second on the servo
+legs.maxspeed,300,Degrees per second on the servo 
 servos.verbose,false
 servos.type,real
 servos.deviceindex,1
