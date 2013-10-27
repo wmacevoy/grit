@@ -1,0 +1,42 @@
+// damped newton solver
+
+  $(target) void $(prefix)solve(
+    $(cuda_declare_args)
+    const $(type) globals[$(nglobals())],
+    $(type) *parameters,
+    $(type) *x
+  )
+  {
+    $(prefix)initialize($(cuda_args)globals,parameters,x);
+    // newton iteration
+    int steps=int(globals[$(global_index_of("steps"))]);
+    $(type) epsilon=globals[$(global_index_of("epsilon"))];
+    $(type) residual,new_residual;
+  
+    for (int step=0; step<steps; ++step) {
+      $(type) y[$(nvariables())];
+      $(type) dx[$(nvariables())];
+      $(type) dy[$(nequations()*nvariables())];
+      int iwork[$(nequations())];
+  
+      $(prefix)f($(cuda_args)globals,parameters,x,y);
+      residual = $(prefix)$(cudaprefix)norm($(nequations()),y);
+      $(prefix)df($(cuda_args)globals,parameters,x,dy);
+
+      $(prefix)$(cudaprefix)linear_solve($(nvariables()),iwork,dy,y,dx);
+      for (int k=0; k<$(nvariables()); ++k) { x[k] -= dx[k]; }
+
+      for (int damping=0; damping < steps; ++damping) {
+	    $(prefix)f($(cuda_args)globals,parameters,x,y);
+	    new_residual=$(prefix)$(cudaprefix)norm($(nequations()),y);
+	    if (new_residual < residual) break;
+	    for (int k=0; k<$(nvariables()); ++k) { dx[k] /= 2; }
+	    for (int k=0; k<$(nvariables()); ++k) { x[k] += dx[k] ; }
+      }
+      residual=new_residual;
+      if (residual <= epsilon) break;
+    }
+#!if (unchecked_parameter_index_of("residual") != -1) {
+    parameters[$(parameter_index_of("residual"))]=residual;
+#!  }
+  } // $(target) $(prefix)solve()

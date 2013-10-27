@@ -1,0 +1,11 @@
+HOSTNAME=$(shell hostname -s)
+PREPROCESS=../preprocess/bin/preprocess
+PREPREPROCESS=../prepreprocess/bin/prepreprocess
+BISON=bison
+FLEX=flex
+THIS=$(shell pwd | sed -e 's|.*/||')
+
+include ../build/make.cxx
+ifeq ($(findstring cuda,$(THIS)),cuda)
+  include ../build/make.cuda
+endif

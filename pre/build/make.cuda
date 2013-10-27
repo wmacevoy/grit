@@ -1,0 +1,22 @@
+CUDA_RT_ARGS=--cuda-args-begin -noprompt --cuda-args-end
+
+ifeq ($(HOSTNAME),silverton)
+  SDK=/Developer/GPU_Computing/C
+  NVCC=/usr/local/cuda/bin/nvcc
+  NVCFLAGS=--compiler-options $(shell echo "$(CXXFLAGS)"|sed -e 's/  */,/g') --device-emulation -arch sm_13 -I$(SDK)/common/inc
+  NVLFLAGS=--linker-options $(shell echo "$(LDFLAGS)"|sed -e 's/  */,/g') -L/usr/local/cuda/lib -L$(SDK)/lib -L$(SDK)/common/lib/darwin -lcudart -lcutil_i386
+endif
+
+ifeq ($(HOSTNAME),$(filter $(HOSTNAME),cssc sprout))
+  SDK=/usr/local/cuda/sdk
+  NVCC=/usr/local/cuda/bin/nvcc
+  NVCFLAGS=--compiler-options $(shell echo -n "$(CXXFLAGS)"|sed -e 's/  */,/g') -arch sm_13 -I$(SDK)/common/inc 
+  NVLFLAGS=--linker-options $(shell echo -n "$(LDFLAGS)"|sed -e 's/  */,/g') -L/usr/local/cuda/lib -L$(SDK)/lib -L$(SDK)/common/lib/linux -lcudart -lcutil
+endif
+
+ifeq ($(HOSTNAME),$(filter $(HOSTNAME),trinity))
+  SDK=/home/mace768/projects/stomp/sdk
+  NVCC=/usr/local/cuda/bin/nvcc
+  NVCFLAGS=--compiler-options $(shell echo -n "$(CXXFLAGS)"|sed -e 's/  */,/g') -arch sm_13 -I$(SDK)/common/inc 
+  NVLFLAGS=--linker-options $(shell echo -n "$(LDFLAGS)"|sed -e 's/  */,/g') -L/usr/local/cuda/lib -L$(SDK)/lib -L$(SDK)/common/lib/linux -lcudart -lcutil
+endif

@@ -1,0 +1,111 @@
+#!#include "linearalgebra.hpp"
+#!#include "preprocess.hpp"
+#!
+#!namespace preprocess {
+#!  std::string LinearAlgebra::flag(const std::string &name, const std::string defval)
+#!  {
+#!    std::map < std::string , std::string > :: iterator i = flags.find(name);
+#!    if (i != flags.end()) return i->second;
+#!    else return generator->flag(name,defval);
+#!  };
+#!
+#!  std::ostream& LinearAlgebra::o() {
+#!    return generator->o();
+#!  }
+#!
+#!  void LinearAlgebra::configure() {
+#!    ns=flag("namespace","");
+#!    target=flag("target","");
+#!    type=flag("type","double");
+#!    prefix=flag("prefix");
+#!  }
+#!
+#!  void LinearAlgebra::prototype_dist2(const std::string &end)
+#!  {
+$(target) $(type) $(prefix)dist2(int dim, const $(type) *x, const $(type) *y)$end
+#!  }
+#!
+#!  void LinearAlgebra::define_dist2()
+#!  {
+#!    prototype_dist2("");
+{
+  $(type) sum2=0;
+  for (int k=0; k<dim; ++k) {
+    $(type) dx=x[k]-y[k];
+    sum2 += dx*dx;
+  }
+  return sum2;
+} // dist2()
+#!  }
+#!
+#!  void LinearAlgebra::prototype_dist(const std::string &end)
+#!  {
+$(target) $(type) $(prefix)dist(int dim, const $(type) *x, const $(type) *y)$end
+#!  }
+#!
+#!  void LinearAlgebra::define_dist()
+#!  {
+#!    prototype_dist("");
+{
+  return sqrt($(prefix)dist2(dim,x,y));
+} // dist()
+#!  }
+#!
+#!  void LinearAlgebra::prototype_norm2(const std::string &end)
+#!  {
+$(target) $(type) $(prefix)norm2(int dim, const $(type) *x)$end
+#!  }
+#!
+#!  void LinearAlgebra::define_norm2()
+#!  {
+#!    prototype_norm2("");
+{
+  $(type) sum2=0;
+  for (int k=0; k<dim; ++k) {
+    $(type) dx=x[k];
+    sum2 += dx*dx;
+  }
+  return sum2;
+} // dist2()
+#!  }
+#!
+#!  void LinearAlgebra::prototype_norm(const std::string &end)
+#!  {
+$(target) $(type) $(prefix)norm(int dim, const $(type) *x)$end
+#!  }
+#!
+#!  void LinearAlgebra::define_norm()
+#!  {
+#!    prototype_norm("");
+{
+  return sqrt($(prefix)norm2(dim,x));
+} // dist()
+#!  }
+#!
+#!  void LinearAlgebra::prototype_linear_solve(const std::string &end)
+#!  {
+$(target) void $(prefix)linear_solve(int dim, float *A, float *b, float *x)$end
+#!  }
+#!
+#!  void LinearAlgebra::define_linear_solve()
+#!  {
+#!#include "../tmp/linear_solve.cpp"
+#!  }
+#!
+#!  void LinearAlgebra::prototype_all() {
+#!    prototype_dist2();
+#!    prototype_dist();
+#!    prototype_norm2();
+#!    prototype_norm();
+#!    prototype_linear_solve();
+#!  }
+#!
+#!  void LinearAlgebra::define_all() {
+#!    define_dist2();
+#!    define_dist();
+#!    define_norm2();
+#!    define_norm();
+#!    define_linear_solve();
+#!  }
+#!}
+#!

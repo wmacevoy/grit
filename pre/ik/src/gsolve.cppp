@@ -1,0 +1,49 @@
+#!#include <string>
+#!#include <iostream>
+#!#include <fstream>
+#!#include "mat.h"
+#!
+#!void gsolve(const std::string &name, const Vec &equations, 
+#!           const Vec &variables, const Vec &parameters) {
+#! std::ofstream out((std::string("ik_")+name+".ini").c_str());
+#'#
+#'# sample configuration file.
+#'#
+[flags]
+prefix="ik_$(name)" # prefix prepended to function and argument names
+file="ik_$(name)"    # path to output file (suffixes added by generators)
+precision="single" # can be "double" or "single"
+namespace="" # used by c++ generator 
+main="false" # if true, then a main() is defined by the c++ generator
+solver="damped_newton"
+[globals] # values shared among all cells
+t
+epsilon
+steps
+[parameters] # values specific to each cell
+#! for (Vec::const_iterator i=parameters.begin(); i != parameters.end(); ++i) {
+$(*i)
+#! }
+residual
+[variables]
+#! for (Vec::const_iterator i=variables.begin(); i != variables.end(); ++i) {
+$(*i)_
+#! }
+[initializers] # initial guess for solution of variables in terms of parameters/globals
+#! for (Vec::const_iterator i=variables.begin(); i != variables.end(); ++i) {
+$(*i)_=$(*i)
+#! }
+[equations] # system of equations variables should be a root of
+#! int count = 0; 
+#! for (Vec::const_iterator i=equations.begin(); i != equations.end(); ++i) {
+residual$count=$(*i)
+#!  ++count;
+#! }
+[updates] # how parameters are updated in terms of temp variables
+#! for (Vec::const_iterator i=variables.begin(); i != variables.end(); ++i) {
+$(*i)=$(*i)_
+#! }
+[tests]
+#
+[end]
+#!} // gsolve

@@ -1,0 +1,11 @@
+// empty solver (for data timing)
+
+  $(target) void $(prefix)solve(
+    $(cuda_declare_args)
+    const $(type) globals[$(nglobals())],
+    $(type) *parameters,
+    $(type) *x
+  )
+  {
+        parameters[$(parameter_index_of("residual"))]=1.0;
+  } // $(target) $(prefix)solve()

@@ -1,0 +1,12 @@
+dependencies :
+	true $(foreach DEP,$(DEPS),&& ( if [ "$(DEP)" != "$(THIS)" ] ; then $(MAKE) -C ../$(DEP) all; fi ) )
+
+clean :
+	/bin/rm -rf tmp/* bin/* lib/* *.linkinfo $(CLEAN)
+	find . -name 'core.*' -o -regex '.*\(~\|#\|\.o\)' -print0 | xargs -0 /bin/rm -rf
+
+depclean : clean
+	true $(foreach DEP,$(DEPS),&& ( if [ "$(DEP)" != "$(THIS)" ] ; then $(MAKE) -C ../$(DEP) depclean; fi ) )
+
+update :
+	svn update
