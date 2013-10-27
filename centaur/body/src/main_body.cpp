@@ -84,6 +84,8 @@ class BodyController : public ZMQHub
 {
 public:
   list < string > replies;
+  string last;
+  map < string , string > saved;
   mutex repliesMutex;
 
   void answer(const string &reply)
@@ -489,13 +491,50 @@ public:
     }
   }
 
-  void act(string &command)
+  void act(string command)
   {
+    if (command == "last") {
+      command=last;
+    } else {
+      last=command;
+    }
+
+    if (command.substr(0,3) == "do ") {
+      istringstream iss(command);
+      ostringstream oss;
+
+      string doword,as;
+      iss >> doword >> as;
+      
+      map<string,string>::iterator i = saved.find(as);
+      if (i != saved.end()) {
+	command = i->second;
+      } else {
+	oss << "don't know how to do " << as;
+	answer(oss.str());
+      }
+      return;
+    }
+
     istringstream iss(command);
     ostringstream oss;
 
     string head;
     iss >> head;
+
+
+
+    if (head == "save") {
+      string as;
+      string instruction;
+      iss >> as;
+      getline(iss,instruction);
+      saved[as]=instruction;
+      oss << "saved '" << instruction << "' as " << as;
+      answer(oss.str());
+    }
+    
+    
     if (head == "py") {
       StdCapture capture;
       capture.BeginCapture();
@@ -567,7 +606,7 @@ public:
       float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
       float xpos=14.185,ypos=14.9;
       iss >> radius  >> xpos >> ypos>> xstep >> ystep;
-      if (fabs(radius)<=6 && fabs(xstep)<=6 && fabs(ystep)<=6) {
+      if (fabs(radius)<=6 && fabs(xstep)<=12 && fabs(ystep)<=12) {
         mover->stepMove(radius,xpos,ypos,-14.665,xstep,ystep,8,left,right);
         ostringstream oss;
         oss << "Step r=" << radius << " xstep=" << xstep << " ystep=" << ystep << " :ok."; 

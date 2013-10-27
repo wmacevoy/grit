@@ -173,6 +173,8 @@ void BodyMover::fromTips(vector<vector <double> > data) {
 
 bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right) {
   vector<vector<double>> data;
+  x-=xstep/2.0;
+  y-=ystep/2.0;
   double T = 6.0; // 10 is good
   double timeDivider=10.0;
   double steps=T*timeDivider; 
