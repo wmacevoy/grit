@@ -499,21 +499,26 @@ public:
       last=command;
     }
 
-    if (command.substr(0,3) == "do ") {
+    { // just for "do" command...
       istringstream iss(command);
       ostringstream oss;
 
-      string doword,as;
-      iss >> doword >> as;
+      string head;
+      iss >> head;
+
+      if (head == "do ") {
+	string doword,as;
+	iss >> doword >> as;
       
-      map<string,string>::iterator i = saved.find(as);
-      if (i != saved.end()) {
-	command = i->second;
-      } else {
-	oss << "don't know how to do " << as;
-	answer(oss.str());
+	map<string,string>::iterator i = saved.find(as);
+	if (i != saved.end()) {
+	  command = i->second;
+	} else {
+	  oss << "don't know how to do " << as;
+	  answer(oss.str());
+	}
+	return;
       }
-      return;
     }
 
     istringstream iss(command);
@@ -732,14 +737,16 @@ public:
     }
     if (head == "f") {  // forward
 //      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,8.0,1.0,1.0);
-      mover->stepMove(5.0,15.0,12.0,-15.665,0.0,5.0,8.0,1.0,1.0);
+//      mover->stepMove(5.0,15.0,12.0,-15.665,0.0,5.0,8.0,1.0,1.0);
+      mover->stepMove(5.0,15.0,15.0,-15.665,0.0,6.0,8.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
     }
     if (head == "lf") {  // forward
 //      mover->stepMove(4.0,14.9,14.9,-9.915,0,3.,5.0,1.0,1.0);
-      mover->stepMove(5.0,15.0,12.0,-9.915,0.0,5.0,5.0,1.0,1.0);
+//      mover->stepMove(5.0,15.0,12.0,-9.915,0.0,5.0,5.0,1.0,1.0);
+      mover->stepMove(5.0,15.0,15.0,-9.915,0.0,6.0,5.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
@@ -1014,6 +1021,13 @@ public:
     handsThread = 0;
     neckThread = 0;
     sensorsThread = 0;
+
+    vector < vector < string > > csvSaved;
+    if (CSVRead("commands","save,do",csvSaved)) {
+      for (size_t i=0; i<csvSaved.size(); ++i) {
+	saved[csvSaved[i][0]]=csvSaved[i][1];
+      }
+    }
   }
 
   thread *goUpdate;

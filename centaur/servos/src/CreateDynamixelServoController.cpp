@@ -304,10 +304,10 @@ struct DynamixelServoController : ServoController
 	    {
 	      double dtsq = dt*dt;
 	      float *c = (dt <= 0) ? servo->c0 : servo->c1;
-	      angle = c[0]+c[1]*dt+c[2]*dtsq/2.0;
-	      speed = c[1]+c[2]*dt;
-//	      angle = c[0]+c[1]*dt;
-//	      speed = c[1];
+//	      angle = c[0]+c[1]*dt+c[2]*dtsq/2.0;
+//	      speed = c[1]+c[2]*dt;
+	      angle = c[0];
+	      speed = c[1];
 	    }
 
 	    double dt1;
@@ -323,10 +323,10 @@ struct DynamixelServoController : ServoController
 	    {
 	      double dt1sq = dt1*dt1;
 	      float *c = (dt1 <= 0) ? servo->c0 : servo->c1;
-	      angle1 = c[0]+c[1]*dt1+c[2]*dt1sq/2.0;
-	      speed1 = c[1]+c[2]*dt1;
-//	      angle = c[0]+c[1]*dt;
-//	      speed = c[1];
+//	      angle1 = c[0]+c[1]*dt1+c[2]*dt1sq/2.0;
+//	      speed1 = c[1]+c[2]*dt1;
+	      angle1 = c[0];
+	      speed1 = c[1];
 	    }
 
 	    servo->angle0(angle1);

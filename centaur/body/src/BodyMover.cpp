@@ -182,8 +182,8 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   double da=fullCircle/steps;
   double waist=2.0;
   double dt=0.1;
-  double xAdder=6.6-radius*0.707;
-  double yAdder=6.6-radius*0.707;
+  double xAdder=6.0-radius*0.707;
+  double yAdder=6.0-radius*0.707;
 //  double xAdder=0.0; // Leg up and down not out.
 //  double yAdder=0.0;
   double stepTime=2.0;  // 2 is good 
