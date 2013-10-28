@@ -5,6 +5,28 @@
 
 using namespace std;
 
+void LegMover::tape(const std::string &m_tape_)
+{
+  m_tape=m_tape_;
+  if (kneeMovers.find(m_tape) == kneeMovers.end()) {
+    kneeMovers[m_tape]=ServoMoverSP(new ServoMover());
+  }
+  if (femurMovers.find(m_tape) == femurMovers.end()) {
+    femurMovers[m_tape]=ServoMoverSP(new ServoMover());
+  }
+  if (hipMovers.find(m_tape) == hipMovers.end()) {
+    hipMovers[m_tape]==ServoMoverSP(new ServoMover());
+  }
+  kneeMover=kneeMovers[m_tape];
+  femurMover=femurMovers[m_tape];
+  hipMover=hipMovers[m_tape];
+}
+
+const std::string &LegMover::tape() const
+{
+  return m_tape;
+}
+
 void LegMover::state(int m_state_)
 {
   m_state = m_state_;
@@ -24,11 +46,15 @@ LegMover::LegMover(LegsMover *legs_, int number_)
   ostringstream oss;
   oss << "leg" << (number()+1) << ".touchpressure";
   touchPressure=cfg->num(oss.str());
+  kneeMover = ServoMoverSP(new ServoMover());
+  femurMover = ServoMoverSP(new ServoMover());
+  hipMover = ServoMoverSP(new ServoMover());
 }
+
 
 void LegMover::cautious(Leg &leg)
 {
-  if (simSpeed > 0 && femurMover.speed()/simSpeed < -5.0) {
+  if (simSpeed > 0 && femurMover->speed()/simSpeed < -5.0) {
     if (sensors.p[number()] < touchPressure) {
       simSpeed = 0;
       state(LEG_NORMAL);
@@ -39,9 +65,9 @@ void LegMover::cautious(Leg &leg)
 
 void LegMover::normal(Leg &leg)
 {
-  kneeMover.move(*leg.knee);
-  femurMover.move(*leg.femur);
-  hipMover.move(*leg.hip);
+  kneeMover->move(*leg.knee);
+  femurMover->move(*leg.femur);
+  hipMover->move(*leg.hip);
 }
 
 void LegMover::move(Leg &leg)  {
@@ -68,9 +94,9 @@ void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips,
     t2femur[t]=femur;
     t2hip[t]=hip;
   }
-  kneeMover.setup(t2knee,simTime0,simTime1);
-  femurMover.setup(t2femur,simTime0,simTime1);
-  hipMover.setup(t2hip,simTime0,simTime1);
+  kneeMover->setup(t2knee,simTime0,simTime1);
+  femurMover->setup(t2femur,simTime0,simTime1);
+  hipMover->setup(t2hip,simTime0,simTime1);
 
 }
 
@@ -81,14 +107,14 @@ void LegMover::setup(Leg &leg, Point p)
   float hip;
   leg.compute3D(p.x,p.y,p.z,knee,femur,hip);
 
-  kneeMover.setup(knee);
-  femurMover.setup(femur);
-  hipMover.setup(hip);
+  kneeMover->setup(knee);
+  femurMover->setup(femur);
+  hipMover->setup(hip);
 }
 
 void LegMover::torque(float t)
 {
-  femurMover.torque=t;
-  kneeMover.torque=t;
-  hipMover.torque=t;
+  femurMover->torque=t;
+  kneeMover->torque=t;
+  hipMover->torque=t;
 }

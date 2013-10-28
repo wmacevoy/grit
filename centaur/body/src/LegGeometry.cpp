@@ -84,3 +84,31 @@ void LegGeometry::compute3D(float x,float y,float z,float &knee,float &femur,flo
   compute2D(d-l0,z-zoffset,knee,femur);
   cout << "knee=" << knee << " femur=" << femur << " hip=" << hip << endl;
 }
+
+void LegGeometry::forward3D(float knee,float femur,float hip, float &x,float &y,float &z)
+{
+  float achasis = 0;
+  switch(number()) {
+  case LEG1: achasis = -45*(M_PI/180.0); break;
+  case LEG2: achasis =  45*(M_PI/180.0); break;
+  case LEG3: achasis = 135*(M_PI/180.0); break;
+  case LEG4: achasis =-135*(M_PI/180.0); break;
+  }
+  float aknee = M_PI/180.0*knee;
+  float afemur = M_PI/180.0*femur;
+  float ahip = M_PI/180.0*hip;
+
+  cout << "achasis=" << ((360.0/(2.0*M_PI))*achasis) << endl;
+  achasis = -achasis;
+
+  float dhip2femur=l0;
+  float dfemur2knee=l1;
+  float dyknee2tip=koffset;
+  float dzknee2tip=-ktibia;
+  float drchasis2hip=sqrt(lcx*lcx+lcy*lcy)/2.0;
+  float dzchasis2hip=zoffset;
+
+  x=cos(afemur)*(((-1.0))*cos(achasis)*sin(ahip)+((-1.0))*cos(ahip)*sin(achasis))*dfemur2knee+(cos(afemur)*cos(aknee)*(((-1.0))*cos(achasis)*sin(ahip)+((-1.0))*cos(ahip)*sin(achasis))+((-1.0))*sin(afemur)*sin(aknee)*(((-1.0))*cos(achasis)*sin(ahip)+((-1.0))*cos(ahip)*sin(achasis)))*dyknee2tip+(((-1.0))*cos(achasis)*sin(ahip)+((-1.0))*cos(ahip)*sin(achasis))*dhip2femur+(((-1.0))*cos(afemur)*sin(aknee)*(((-1.0))*cos(achasis)*sin(ahip)+((-1.0))*cos(ahip)*sin(achasis))+((-1.0))*cos(aknee)*sin(afemur)*(((-1.0))*cos(achasis)*sin(ahip)+((-1.0))*cos(ahip)*sin(achasis)))*dzknee2tip+((-1.0))*sin(achasis)*drchasis2hip;
+  y=cos(achasis)*drchasis2hip+cos(afemur)*(cos(achasis)*cos(ahip)+((-1.0))*sin(achasis)*sin(ahip))*dfemur2knee+(cos(achasis)*cos(ahip)+((-1.0))*sin(achasis)*sin(ahip))*dhip2femur+(cos(afemur)*cos(aknee)*(cos(achasis)*cos(ahip)+((-1.0))*sin(achasis)*sin(ahip))+((-1.0))*sin(afemur)*sin(aknee)*(cos(achasis)*cos(ahip)+((-1.0))*sin(achasis)*sin(ahip)))*dyknee2tip+(((-1.0))*cos(afemur)*sin(aknee)*(cos(achasis)*cos(ahip)+((-1.0))*sin(achasis)*sin(ahip))+((-1.0))*cos(aknee)*sin(afemur)*(cos(achasis)*cos(ahip)+((-1.0))*sin(achasis)*sin(ahip)))*dzknee2tip;
+  z=sin(afemur)*dfemur2knee+(cos(afemur)*cos(aknee)+((-1.0))*sin(afemur)*sin(aknee))*dzknee2tip+(cos(afemur)*sin(aknee)+cos(aknee)*sin(afemur))*dyknee2tip+dzchasis2hip;
+}

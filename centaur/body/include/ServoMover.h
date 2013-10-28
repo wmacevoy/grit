@@ -2,6 +2,7 @@
 
 #include <map>
 #include <mutex>
+#include <memory>
 #include "Servo.h"
 
 class ServoMover
@@ -24,3 +25,5 @@ public:
   void setup(float angle);
   ServoMover();
 };
+
+typedef std::shared_ptr < ServoMover > ServoMoverSP;

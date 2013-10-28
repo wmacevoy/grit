@@ -336,6 +336,36 @@ public:
   {
     return mover->play(file);
   }
+
+  void forward()
+  {
+      mover->stepMove(5.0,15.0,15.0,-15.115,0.0,6.0,8.0,1.0,.72);
+  }
+
+  void lowForward()
+  {
+      mover->stepMove(5.0,15.0,15.0,-9.415,0.0,3.0,5.5,1.0,.72);
+  }
+
+  void tape(const std::string &tape)
+  {
+    for (int i=0; i<4; ++i) mover->legs.legMovers[i]->tape(tape);
+  }
+
+  void setupBrickWalk()
+  {
+    float saveSimSpeed=simSpeed;
+    simTime=0;
+    simSpeed=0;
+    tape("home");
+    goHome();
+    tape("lf");
+    lowForward();
+    tape("f");
+    forward();
+    tape("home");
+    simSpeed=saveSimSpeed;
+  }
   
   void shake() {
 	setRBicep(-30);
@@ -559,6 +589,7 @@ public:
       capture.EndCapture();
       answer(capture.GetCapture());
     }
+    
     if (head == "enable") {
       string part;
       iss >> part;
@@ -788,6 +819,41 @@ public:
       load("bdd.csv");
       answer("Back stepping off brick");
     }
+    if (head == "tape") {
+      string part;
+      while (iss >> part) {
+	if (part.rfind('=') != string::npos) {
+	  size_t eq = part.rfind('=');
+	  string leg=part.substr(0,eq);
+	  string tape=part.substr(eq+1);
+	  if (leg == "leg1") {
+	    mover->legs.legMovers[LEG1]->tape(tape);
+	    oss << " leg1=" << tape;
+	  } else if (leg == "leg2") {
+	    mover->legs.legMovers[LEG2]->tape(tape);	    
+	    oss << " leg2=" << tape;
+	  } else if (leg == "leg3") {
+	    mover->legs.legMovers[LEG3]->tape(tape);
+	    oss << " leg3=" << tape;
+	  } else if (leg == "leg4") {
+	    mover->legs.legMovers[LEG4]->tape(tape);
+	    oss << " leg4=" << tape;
+	  }
+	} else {
+	  string leg=part;
+	  if (leg == "leg1") {
+	    oss << " leg1=" << mover->legs.legMovers[LEG1]->tape();
+	  } else if (leg == "leg2") {
+	    oss << " leg2=" << mover->legs.legMovers[LEG2]->tape();
+	  } else if (leg == "leg3") {
+	    oss << " leg3=" << mover->legs.legMovers[LEG3]->tape();
+	  } else if (leg == "leg4") {
+	    oss << " leg4=" << mover->legs.legMovers[LEG4]->tape();
+	  }
+	}
+      }
+      answer(oss.str());
+    }
     if (head == "cautious") {
       bool any=false;
       int number;
@@ -829,7 +895,7 @@ public:
     if (head == "f") {  // forward
 //      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,8.0,1.0,1.0);
 //      mover->stepMove(5.0,15.0,12.0,-15.665,0.0,5.0,8.0,1.0,1.0);
-      mover->stepMove(5.0,15.0,15.0,-15.115,0.0,6.0,8.0,1.0,.72);
+      forward();
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
@@ -837,7 +903,7 @@ public:
     if (head == "lf") {  // forward
 //      mover->stepMove(4.0,14.9,14.9,-9.915,0,3.,5.0,1.0,1.0);
 //      mover->stepMove(5.0,15.0,12.0,-9.915,0.0,5.0,5.0,1.0,1.0);
-      mover->stepMove(5.0,15.0,15.0,-9.415,0.0,3.0,5.5,1.0,.72);
+      lowForward();
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
