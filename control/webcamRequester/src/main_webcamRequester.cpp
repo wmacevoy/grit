@@ -178,6 +178,7 @@ int main(int argc, char** argv)
 				break;
 			}
 		}
+		zmq_msg_close(&msg);
 		char c = waitKey(sleep_time);
 		if(c == 't') 
 		{
