@@ -1,3 +1,3 @@
 #pragma once
 
-#define BODY_MESSAGE_MAXLEN 80
+#define BODY_MESSAGE_MAXLEN 4096
