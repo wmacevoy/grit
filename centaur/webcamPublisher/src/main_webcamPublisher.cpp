@@ -75,6 +75,7 @@ int main(int argc, char** argv)
 	assert(rc == 0);
 
 	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
 	
