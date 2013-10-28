@@ -65,6 +65,7 @@ int main(int argc,char **argv)
 	SDL_Event event;
 
 	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
 	while(!die)

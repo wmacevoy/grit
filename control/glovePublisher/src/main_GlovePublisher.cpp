@@ -64,6 +64,7 @@ int main(int argc, char** argv)
 	tcsetattr(fd,TCSANOW,&newtio);  
 	
 	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 	
 	while(!die)

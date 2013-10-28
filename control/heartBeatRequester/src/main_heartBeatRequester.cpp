@@ -54,6 +54,7 @@ int main(int argc, char** argv)
 	}
 
 	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
 	while(!die)
