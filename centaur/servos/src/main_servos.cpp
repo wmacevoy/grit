@@ -253,6 +253,7 @@ void run() {
 
   signal(SIGINT, SigIntHandler);
   signal(SIGTERM, SigIntHandler);
+  signal(SIGQUIT, SigIntHandler);
 
   if (fakeServoController) fakeServoController->start();
   if (realServoController) realServoController->start();

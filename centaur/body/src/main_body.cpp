@@ -1247,6 +1247,8 @@ void run()
   servoController->start();
   bodyController->start();
   signal(SIGINT, SigIntHandler);
+  signal(SIGTERM, SigIntHandler);
+  signal(SIGQUIT, SigIntHandler);
   bodyController->join();
   bodyController.reset();
   servoController.reset();
