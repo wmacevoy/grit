@@ -45,10 +45,13 @@ heartbeat.requester.address,"tcp://${centaur.ip}:9800"
 heartbeat.requester.verbose,"false"
 heartbeat.requester.sleep_time,"15"
 sensors.provider.publish,tcp://*:5506
-sensors.provider.verbose,"true"
+sensors.provider.verbose,"false"
 sensors.provider.okreadtimeout,5.0
 sensors.provider.okwritetimeout,5.0
 sensors.provider.readtimeout,1.0
-sensors.provider.verbose,"true"
 sensors.provider.dev_path,"/dev/ttyUSB0"
 sensors.requester.address,tcp://${centaur.ip}:5506
+leg1.touchpressure,750
+leg2.touchpressure,750
+leg3.touchpressure,750
+leg4.touchpressure,750
