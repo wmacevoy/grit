@@ -488,7 +488,7 @@ struct DynamixelServoController : ServoController
 
   void iThread() {
 	bool dataNeeded;
-	int rc, j, size = 34 * 2;
+	int rc, j, size = 34 * 2, sleep_time = 50;
 	uint8_t msgArr[size];
 
 	void* context = zmq_ctx_new ();
@@ -513,6 +513,9 @@ struct DynamixelServoController : ServoController
 		{
 			int rc = zmq_sendmsg(rep, &msg, ZMQ_DONTWAIT);
 		}
+		zmq_msg_close(&msg);
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
 	zmq_close(rep);
