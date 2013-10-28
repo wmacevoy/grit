@@ -91,8 +91,9 @@ public:
 
   void rx(ZMQSubscribeSocket &socket)
   {
-    ZMQMessage msg(&sensors,sizeof(SensorsMessage));
+    ZMQMessage msg;
     msg.recv(socket);
+    memcpy(&sensors,msg.data(),sizeof(SensorsMessage));
   }
 };
 
@@ -650,7 +651,6 @@ public:
     if (head=="sensors") {
       string value;
       iss >> value;
-      cout << "value = " << value << endl;
       if (value == "on") {
 	sensorsRx.start();
 	answer("my sensors are on.");
@@ -658,6 +658,25 @@ public:
 	sensorsRx.stop();
 	answer("my sensors are off.");
       }
+    }
+    if (head == "at") {
+      set<string> names = cfg->servoNames();
+
+      bool any=false;
+      string name;
+      while (iss >> name) {
+	set<string>::iterator i = names.find(name);
+	if (i != names.end()) {
+	  oss << " " <<  name << "=" << mover->getMover(name)->angle();
+	  any = true;
+	}
+      }
+      if (!any) {
+	for (set<string>::iterator i = names.begin(); i != names.end(); ++i) {
+	  oss << " " <<  *i << "=" << mover->getMover(*i)->angle();
+	}
+      }
+      answer(oss);
     }
 
     if (head=="hands") {
