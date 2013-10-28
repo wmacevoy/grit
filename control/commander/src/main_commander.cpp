@@ -36,7 +36,8 @@ public:
     ZMQMessage msg;
     msg.recv(socket);
     char *data = (char*) msg.data();
-    string reply(data+1,data[0]);
+    size_t size = *(uint16_t*)data;
+    string reply(data+2,size);
     cout << "\rreply: " << reply << endl << "?";
     cout.flush();
   }
