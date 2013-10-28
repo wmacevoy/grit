@@ -738,7 +738,7 @@ public:
     if (head == "f") {  // forward
 //      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,8.0,1.0,1.0);
 //      mover->stepMove(5.0,15.0,12.0,-15.665,0.0,5.0,8.0,1.0,1.0);
-      mover->stepMove(5.0,15.0,15.0,-15.665,0.0,6.0,8.0,1.0,1.0);
+      mover->stepMove(5.0,15.0,15.0,-15.115,0.0,6.0,8.0,1.0,.72);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
@@ -746,31 +746,31 @@ public:
     if (head == "lf") {  // forward
 //      mover->stepMove(4.0,14.9,14.9,-9.915,0,3.,5.0,1.0,1.0);
 //      mover->stepMove(5.0,15.0,12.0,-9.915,0.0,5.0,5.0,1.0,1.0);
-      mover->stepMove(5.0,15.0,15.0,-9.915,0.0,6.0,5.0,1.0,1.0);
+      mover->stepMove(5.0,15.0,15.0,-9.415,0.0,3.0,5.5,1.0,.72);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
     }
     if (head == "l") {  // left
-      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,9.0,0.25,1.0);
+      mover->stepMove(5.0,15,15,-15.115,0,3.,8.0,-.5,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 l=0.25 r=1.0  :ok."; 
       answer(oss.str());
     }
     if (head == "r") {  // right
-      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,9.0,1.0,0.25);
+      mover->stepMove(5.0,15,15,-15.115,0,3.,8.0,1.0,-.5);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=4 l=1.0 r=0.25 : ok."; 
       answer(oss.str());
     }
     if (head == "sf") {  // small forward
-      mover->stepMove(4.0,14.9,14.9,-15.665,0,1.5,8.0,1.0,1.0);
+      mover->stepMove(5.0,15,15,-15.115,0,3.0,8.0,1.0,.72);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=2 :ok."; 
       answer(oss.str());
     }
     if (head == "sb") {  // small backup
-      mover->stepMove(4.0,14.9,14.9,-16.665,0,-1.5,9.0,1.0,1.0);
+      mover->stepMove(4.0,15,15,-15.115,0,-2.0,8.0,1.0,1.0);
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=-2 :ok."; 
       answer(oss.str());
