@@ -1,5 +1,6 @@
 #include "BodyGlobals.h"
 #include "LegMover.h"
+#include "Lock.h"
 #include <assert.h>
 #include <sstream>
 
@@ -7,19 +8,27 @@ using namespace std;
 
 void LegMover::tape(const std::string &m_tape_)
 {
+  Lock lock(tapeMutex);
   m_tape=m_tape_;
   if (kneeMovers.find(m_tape) == kneeMovers.end()) {
+    cout << "new tape for knee." << endl;
     kneeMovers[m_tape]=ServoMoverSP(new ServoMover());
   }
   if (femurMovers.find(m_tape) == femurMovers.end()) {
+    cout << "new tape for femur." << endl;
     femurMovers[m_tape]=ServoMoverSP(new ServoMover());
   }
   if (hipMovers.find(m_tape) == hipMovers.end()) {
-    hipMovers[m_tape]==ServoMoverSP(new ServoMover());
+    cout << "new tape for hip." << endl;
+    hipMovers[m_tape]=ServoMoverSP(new ServoMover());
   }
   kneeMover=kneeMovers[m_tape];
   femurMover=femurMovers[m_tape];
   hipMover=hipMovers[m_tape];
+
+  cout << "kneeMover@" << (void*) &*kneeMover << endl;
+  cout << "femurMover@" << (void*) &*femurMover << endl;
+  cout << "hipMover@" << (void*) &*hipMover << endl;
 }
 
 const std::string &LegMover::tape() const
@@ -53,11 +62,14 @@ LegMover::LegMover(LegsMover *legs_, int number_)
 
 
 void LegMover::cautious(Leg &leg)
-{
-  if (simSpeed > 0 && femurMover->speed()/simSpeed < -5.0) {
-    if (sensors.p[number()] < touchPressure) {
-      simSpeed = 0;
-      state(LEG_NORMAL);
+{  
+  {
+    Lock lock(tapeMutex);
+    if (simSpeed > 0 && femurMover->speed()/simSpeed < -5.0) {
+      if (sensors.p[number()] < touchPressure) {
+	simSpeed = 0;
+	state(LEG_NORMAL);
+      }
     }
   }
   normal(leg);
@@ -65,6 +77,7 @@ void LegMover::cautious(Leg &leg)
 
 void LegMover::normal(Leg &leg)
 {
+  Lock lock(tapeMutex);
   kneeMover->move(*leg.knee);
   femurMover->move(*leg.femur);
   hipMover->move(*leg.hip);
@@ -79,6 +92,7 @@ void LegMover::move(Leg &leg)  {
 
 void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips,
 		     double simTime0, double simTime1) {
+  Lock lock(tapeMutex);
   std::map < float , float > t2knee,t2femur,t2hip;
   for (map < float , Point > :: const_iterator i = t2tips.begin();
        i != t2tips.end();
@@ -102,6 +116,8 @@ void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips,
 
 void LegMover::setup(Leg &leg, Point p)
 {
+  Lock lock(tapeMutex);
+
   float knee;
   float femur;
   float hip;
@@ -114,6 +130,7 @@ void LegMover::setup(Leg &leg, Point p)
 
 void LegMover::torque(float t)
 {
+  Lock lock(tapeMutex);
   femurMover->torque=t;
   kneeMover->torque=t;
   hipMover->torque=t;

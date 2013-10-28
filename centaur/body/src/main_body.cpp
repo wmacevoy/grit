@@ -826,29 +826,39 @@ public:
 	  size_t eq = part.rfind('=');
 	  string leg=part.substr(0,eq);
 	  string tape=part.substr(eq+1);
-	  if (leg == "leg1") {
+	  if (leg == "leg1" || leg=="1") {
 	    mover->legs.legMovers[LEG1]->tape(tape);
 	    oss << " leg1=" << tape;
-	  } else if (leg == "leg2") {
+	  } else if (leg == "leg2" || leg=="2") {
 	    mover->legs.legMovers[LEG2]->tape(tape);	    
 	    oss << " leg2=" << tape;
-	  } else if (leg == "leg3") {
+	  } else if (leg == "leg3" || leg=="3") {
 	    mover->legs.legMovers[LEG3]->tape(tape);
 	    oss << " leg3=" << tape;
-	  } else if (leg == "leg4") {
+	  } else if (leg == "leg4" || leg=="4") {
 	    mover->legs.legMovers[LEG4]->tape(tape);
 	    oss << " leg4=" << tape;
+	  } else if (leg == "legs") {
+	    for (int i=0; i<4; ++i) {
+	      oss << " leg" << (i+1) << "=" << tape;
+	      mover->legs.legMovers[i]->tape(tape);
+	    }
 	  }
 	} else {
 	  string leg=part;
-	  if (leg == "leg1") {
+	  if (leg == "leg1" || leg=="1") {
 	    oss << " leg1=" << mover->legs.legMovers[LEG1]->tape();
-	  } else if (leg == "leg2") {
+	  } else if (leg == "leg2" || leg=="2") {
 	    oss << " leg2=" << mover->legs.legMovers[LEG2]->tape();
-	  } else if (leg == "leg3") {
+	  } else if (leg == "leg3" || leg=="3") {
 	    oss << " leg3=" << mover->legs.legMovers[LEG3]->tape();
-	  } else if (leg == "leg4") {
+	  } else if (leg == "leg4" || leg=="4") {
 	    oss << " leg4=" << mover->legs.legMovers[LEG4]->tape();
+	  } else if (leg == "legs") {
+	    for (int i=0; i<4; ++i) {
+	      oss << " leg" << (i+1) << "=" 
+		  << mover->legs.legMovers[i]->tape();
+	    }
 	  }
 	}
       }

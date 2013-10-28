@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <mutex>
 #include "Point.h"
 #include "ServoMover.h"
 #include "Leg.h"
@@ -18,6 +19,7 @@ class LegMover : public LegGeometry
   std::map<std::string,ServoMoverSP> kneeMovers;
   std::map<std::string,ServoMoverSP> hipMovers;
   std::map<std::string,ServoMoverSP> femurMovers;
+  std::mutex tapeMutex;
  public:
   int touchPressure;
 
