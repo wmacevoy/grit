@@ -121,6 +121,7 @@ int main(int argc, char** argv)
 	assert(lidar_data != NULL);
 
 	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
 	//Line on screen needs to be calibrated with lidar
