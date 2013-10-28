@@ -659,16 +659,38 @@ public:
 	answer("my sensors are off.");
       }
     }
+    if (head == "touch") {
+      bool any=false;
+      int legNumber;
+      int touchPressure;
+      iss >> legNumber >> touchPressure;
+      if (1 <= legNumber && legNumber <=4 && 100 <= touchPressure && touchPressure <= 1024) {
+      mover->legs.legMovers[legNumber-1]->touchPressure=touchPressure;
+      oss << "set touch pressure to " << touchPressure << " on leg " << legNumber;
+      answer(oss.str());
+      }
+    }
     if (head == "at") {
       set<string> names = cfg->servoNames();
 
       bool any=false;
       string name;
       while (iss >> name) {
-	set<string>::iterator i = names.find(name);
-	if (i != names.end()) {
-	  oss << " " <<  name << "=" << mover->getMover(name)->angle();
-	  any = true;
+	any=true;
+	if (name.rfind('=') != string::npos) {
+	  size_t eq=name.rfind('=');
+	  double value=atof(name.substr(eq+1).c_str());
+	  name=name.substr(0,eq);
+	  set<string>::iterator i = names.find(name);
+	  if (i != names.end()) {
+	    mover->getMover(name)->setup(value);
+	    oss << " set " << name << "=" << value;
+	  }
+	} else {
+	  set<string>::iterator i = names.find(name);
+	  if (i != names.end()) {
+	    oss << " " <<  name << "=" << mover->getMover(name)->angle();
+	  }
 	}
       }
       if (!any) {
@@ -676,7 +698,7 @@ public:
 	  oss << " " <<  *i << "=" << mover->getMover(*i)->angle();
 	}
       }
-      answer(oss);
+      answer(oss.str());
     }
 
     if (head=="hands") {
@@ -1072,13 +1094,13 @@ public:
 
     while (!replies.empty()) {
       string &reply = *replies.begin();
-      uint8_t size = (reply.size() < BODY_MESSAGE_MAXLEN) ? 
+      uint16_t size = (reply.size() < BODY_MESSAGE_MAXLEN) ? 
 	reply.size() : BODY_MESSAGE_MAXLEN;
 
-      ZMQMessage msg(size+1);
+      ZMQMessage msg(size+2);
       char *data = (char *)msg.data();
-      data[0]=size;
-      memcpy(data+1,&reply[0],size);
+      *((uint16_t*)data)=size;
+      memcpy(data+2,&reply[0],size);
       msg.send(socket);
       replies.pop_back();
     }

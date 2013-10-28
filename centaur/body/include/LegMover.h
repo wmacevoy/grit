@@ -13,8 +13,8 @@ class LegMover : public LegGeometry
 {
  private:
   int m_state;
-  float phase;
  public:
+  int touchPressure;
 
   void state(int m_state_);
   int state() const;

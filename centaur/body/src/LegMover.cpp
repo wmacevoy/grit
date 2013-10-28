@@ -1,6 +1,7 @@
 #include "BodyGlobals.h"
 #include "LegMover.h"
 #include <assert.h>
+#include <sstream>
 
 using namespace std;
 
@@ -19,12 +20,16 @@ LegMover::LegMover(LegsMover *legs_, int number_)
   legs=legs_;
   number(number_);
   state(LEG_NORMAL);
+
+  ostringstream oss;
+  oss << "leg" << (number()+1) << ".touchpressure";
+  touchPressure=cfg->num(oss.str());
 }
 
 void LegMover::cautious(Leg &leg)
 {
-  if (simSpeed > 0 && femurMover.speed()/simSpeed > 10.0) {
-    if (sensors.p[number()] < 750.0) {
+  if (simSpeed > 0 && femurMover.speed()/simSpeed < -5.0) {
+    if (sensors.p[number()] < touchPressure) {
       simSpeed = 0;
       state(LEG_NORMAL);
     }
