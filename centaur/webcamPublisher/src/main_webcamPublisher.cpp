@@ -24,6 +24,8 @@ void publish_mat(Mat& mat, void* zmq_pub)
 	}
 
 	if(verbose) std::cout << "Sent: " << rc << std::endl;
+
+	zmq_msg_close(&msg);
 }
 
 void quitproc(int param)
