@@ -26,6 +26,7 @@ class Configure
  public:
   void path(const std::string &spath);
   void load(const std::string &file);
+  std::string pathfind(const std::string &file);
   void set(const std::string &name, const std::string &value);
   void args(const std::string &prefix, char **argv);
   std::string str(const std::string &name) const;

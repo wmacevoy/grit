@@ -34,7 +34,7 @@ setup()
     export PYTHONPATH="$lib:$PYTHONPATH"
   done
 
-  if [ "`uname -m`" = "x86_x64" ]
+  if [ "`uname -m`" = "x86_64" ]
   then
       LEAP_LIB=$MOJAVATON_DIR/libs/LeapSDK/lib/x64
   else

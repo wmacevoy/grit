@@ -6,12 +6,12 @@
 
 using namespace std;
 
-void ServoMover::move(Servo &servo)
+void ServoMover::curve(double t[2], float c0[3], float c1[3])
 {
   Lock lock(anglesMutex);
 
   double ts[3];
-  float p[3],c0[3],c1[3];
+  float p[3];
 
   if (angles.size() >= 2) {
     double myTime;
@@ -47,17 +47,62 @@ void ServoMover::move(Servo &servo)
     p[1]=samples[1]->second;
     p[2]=samples[2]->second;
     fit(ts,p,c0,c1,linearCutoff);
-    servo.curve(ts+1,c0,c1);
-    servo.torque(torque);
+    t[0]=ts[1];
+    t[1]=ts[2];
+  } else if (angles.size() == 2) {
+    Angles::iterator i[2];
+    i[0]=angles.begin();
+    i[1]=i[0]; i[1]++;
+
+    t[0]=i[0]->first;
+    t[1]=i[1]->first;
+    c0[0]=c1[0]=i[1]->second;
+    c0[1]=c1[1]=(i[1]->second-i[0]->second)/(t[1]-t[0]);
+    c0[2]=c1[2]=0;
   } else if (angles.size() == 1) {
-    servo.angle(angles.begin()->second);
-    servo.speed(200);
-    servo.torque(torque);
+    Angles::iterator i[1];
+    i[0]=angles.begin();
+    t[0]=i[0]->first;
+    t[1]=t[0]+1e6;
+    c0[0]=c1[0]=i[0]->second;
+    c0[1]=c1[1]=0;
+    c0[2]=c1[2]=0;
   } else {
-    servo.angle(0);
-    servo.speed(200);
-    servo.torque(torque);
+    t[0]=realTime;
+    t[1]=realTime+1e6;
+    c0[0]=c1[0]=0;
+    c0[1]=c1[1]=0;
+    c0[2]=c1[2]=0;
   }
+}
+
+void ServoMover::move(Servo &servo)
+{
+  double t[2];
+  float c0[3],c1[3];
+  curve(t,c0,c1);
+  servo.curve(t,c0,c1);
+  servo.torque(torque);
+}
+
+float ServoMover::speed()
+{
+  double t[2];
+  float c0[3],c1[3];
+  curve(t,c0,c1);
+  double t0=realTime;
+  float *c = (t0 <= t[0] ? c1 : c0);
+  return c[1]+(t0-t[0])*c[2];
+}
+
+float ServoMover::angle()
+{
+  double t[2];
+  float c0[3],c1[3];
+  curve(t,c0,c1);
+  double t0=realTime;
+  float *c = (t0 <= t[0] ? c1 : c0);
+  return c[0]+c[1]*(t0-t[0])+(c[2]/2.0)*pow(t0-t[0],2.0);
 }
 
 void ServoMover::setup(const map < float , float > &angles_,

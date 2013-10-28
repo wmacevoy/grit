@@ -11,10 +11,10 @@
 
 using namespace std;
 
-void Configure::load(const std::string &file)
+std::string Configure::pathfind(const std::string &file)
 {
   string name;
-  if (file.length() > 0 && file[0] == '/' && !!ifstream(file.c_str())) {
+  if (file.length() > 0 && !!ifstream(file.c_str())) {
     name = file;
   } else {
     for (Paths::iterator p = paths.begin(); p != paths.end(); ++p) {
@@ -27,7 +27,12 @@ void Configure::load(const std::string &file)
       name = "";
     }
   }
-  
+  return name;
+}
+
+void Configure::load(const std::string &file)
+{
+  string name = pathfind(file);
   vector < vector < string > > table;
   if (CSVRead(name,"name,value",table)) {
     for (size_t row=0; row < table.size(); ++row) {
@@ -182,11 +187,14 @@ void Configure::show(std::ostream &out) const
 
 void Configure::servos()
 {
-  servos(str("servos.map"));
+  string file = pathfind(str("servos.map"));
+  cout << "looking for servomap at '" << file << "'" << endl;
+  servos(file);
 }
 
 void Configure::servos(const std::string &file)
 {
+  
   string header;
   {
     ifstream ifs(file.c_str());

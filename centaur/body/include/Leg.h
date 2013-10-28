@@ -9,7 +9,7 @@ class Leg : public LegGeometry {
 public:
   std::shared_ptr < Servo >  knee,femur,hip;
   std::string name;
-  void init(std::string newName);
+  void init();
   void report();
   void temp_report();
 };

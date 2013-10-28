@@ -26,6 +26,7 @@
 
 #include "CreateZMQServoController.h"
 #include "ZMQHub.h"
+#include "ZMQRx.h"
 #include "CSVRead.h"
 #include "BodyMessage.h"
 #include "Lock.h"
@@ -80,6 +81,21 @@ void subscribeN(void* zmq_sub, joystick* j)
 
 using namespace std;
 
+class SensorsRx : public ZMQRx
+{
+public:
+  SensorsRx()
+  {
+    subscribers.push_back(cfg->str("sensors.requester.address"));
+  }
+
+  void rx(ZMQSubscribeSocket &socket)
+  {
+    ZMQMessage msg(&sensors,sizeof(SensorsMessage));
+    msg.recv(socket);
+  }
+};
+
 class BodyController : public ZMQHub
 {
 public:
@@ -87,6 +103,25 @@ public:
   string last;
   map < string , string > saved;
   mutex repliesMutex;
+
+  void includeSavedCommands(string file="commands")
+  {
+    vector < vector < string > > csvSaved;
+    if (CSVRead(file,"name,do",csvSaved)) {
+      for (size_t i=0; i<csvSaved.size(); ++i) {
+	saved[csvSaved[i][0]]=csvSaved[i][1];
+      }
+    }
+  }
+
+  void saveSavedCommands(string file="commands")
+  {
+    ofstream save(file);
+    save << "name,do" << endl;
+    for (map<string,string>::iterator i = saved.begin(); i != saved.end(); ++i) {
+      save << i->first << ",\"" << i->second << "\"" << endl;
+    }
+  }
 
   void answer(const string &reply)
   {
@@ -99,31 +134,7 @@ public:
     answer(oss.str());
   }
 
-  std::thread* sensorsThread;
-  std::atomic < bool > sensors_on;
-  void subscribeToSensors()
-  {
-    std::string address = cfg->str("sensors.requester.address");
-    
-    void* context = zmq_ctx_new();
-    void* zmq_sub = zmq_socket(context, ZMQ_SUB);
-    int hwm=1;
-    int rc;
-    rc = zmq_setsockopt(zmq_sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-    rc = zmq_setsockopt(zmq_sub, ZMQ_SUBSCRIBE, "", 0);
-
-    if (zmq_connect(zmq_sub, address.c_str()) != 0) {
-      printf("Error initializing 0mq...\n");
-      return;
-    }
-	
-    while(sensors_on.load()) {
-      zmq_recv(zmq_sub, &sensors, sizeof(SensorsMessage), 0);
-    }
-
-    zmq_close(zmq_sub);
-    zmq_ctx_destroy(context);
-  }
+  SensorsRx sensorsRx;
 
   std::thread* neckThread;
   std::atomic < bool > neck_on;
@@ -380,20 +391,13 @@ public:
 
   void sensorsOn()
   {
-     if(sensorsThread == 0) {
-       sensors_on.store(true);
-       sensorsThread = new std::thread(&BodyController::subscribeToSensors, this);
-     }
+    sensorsRx.start();
   }
 
   void sensorsOff()
   {
-     if (sensorsThread != 0) {
-       sensors_on.store(false);
-       sensorsThread->join();
-       delete sensorsThread;
-       sensorsThread = 0;
-     }
+    sensorsRx.stop();
+    sensorsRx.join();
   }
 
   void neckOn()
@@ -506,15 +510,16 @@ public:
       string head;
       iss >> head;
 
-      if (head == "do ") {
-	string doword,as;
-	iss >> doword >> as;
-      
-	map<string,string>::iterator i = saved.find(as);
+      if (head == "do") {
+	string name;
+	iss >> name;
+
+	map<string,string>::iterator i = saved.find(name);
 	if (i != saved.end()) {
 	  command = i->second;
+	  cout << "doing "  << command << endl;
 	} else {
-	  oss << "don't know how to do " << as;
+	  oss << "don't know how to do " << name;
 	  answer(oss.str());
 	}
 	return;
@@ -530,12 +535,18 @@ public:
 
 
     if (head == "save") {
-      string as;
+      string name;
+      iss >> name;
       string instruction;
-      iss >> as;
-      getline(iss,instruction);
-      saved[as]=instruction;
-      oss << "saved '" << instruction << "' as " << as;
+      string part;
+      while (iss >> part) {
+	if (instruction != "") {
+	  instruction.append(" ");
+	}
+	instruction.append(part);
+      }
+      saved[name]=instruction;
+      oss << "named '" << instruction << "' as " << name;
       answer(oss.str());
     }
     
@@ -639,11 +650,12 @@ public:
     if (head=="sensors") {
       string value;
       iss >> value;
+      cout << "value = " << value << endl;
       if (value == "on") {
-         sensorsOn();
-	 answer("my sensors are on.");
+	sensorsRx.start();
+	answer("my sensors are on.");
       } else if (value == "off") {
-	sensorsOff();
+	sensorsRx.stop();
 	answer("my sensors are off.");
       }
     }
@@ -734,6 +746,44 @@ public:
     if (head == "bdd") {  // Forward Back Drop Down from brick
       load("bdd.csv");
       answer("Back stepping off brick");
+    }
+    if (head == "cautious") {
+      bool any=false;
+      int number;
+      while (iss >> number) {
+	if (1 <= number && number <= 4) {
+	  mover->legs.legMovers[number-1]->state(LegMover::LEG_CAUTIOUS);
+	  if (!any) {
+	    oss << "cautious on leg(s)";
+	  }
+	  oss << " " << number;
+	  any=true;
+	}
+      }
+      if (!any) {
+	mover->legs.state(LegMover::LEG_CAUTIOUS);
+	oss << "cautious on all legs.";
+      }
+      answer(oss.str());
+    }
+    if (head == "normal") {
+      bool any=false;
+      int number;
+      while (iss >> number) {
+	if (1 <= number && number <= 4) {
+	  mover->legs.legMovers[number-1]->state(LegMover::LEG_NORMAL);
+	  if (!any) {
+	    oss << "normal on leg(s)";
+	  }
+	  oss << " " << number;
+	  any=true;
+	}
+      }
+      if (!any) {
+	mover->legs.state(LegMover::LEG_NORMAL);
+	oss << "normal on all legs.";
+      }
+      answer(oss.str());
     }
     if (head == "f") {  // forward
 //      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,8.0,1.0,1.0);
@@ -960,8 +1010,10 @@ public:
     double delta_bar=0;
     double delta2_bar=0;
     double max_delta=0;
+    int sleep_us = (1.0/cfg->num("body.servos.rate"))*1000000;
+
     while (running) {
-      usleep(int((1.0/MOVE_RATE)*1000000));
+      usleep(sleep_us);
       realTime = now();
       simTime += simSpeed*(realTime-lastRealTime);
       if (floor(realTime) != floor(lastRealTime)) {
@@ -1020,14 +1072,7 @@ public:
     hands_on = false;
     handsThread = 0;
     neckThread = 0;
-    sensorsThread = 0;
-
-    vector < vector < string > > csvSaved;
-    if (CSVRead("commands","save,do",csvSaved)) {
-      for (size_t i=0; i<csvSaved.size(); ++i) {
-	saved[csvSaved[i][0]]=csvSaved[i][1];
-      }
-    }
+    includeSavedCommands();
   }
 
   thread *goUpdate;
@@ -1055,8 +1100,9 @@ public:
   {
     stop();
     BodyController::join();
-  }
+    saveSavedCommands();
 
+  }
 };
 
 shared_ptr < BodyController > bodyController;
@@ -1068,7 +1114,7 @@ void SigIntHandler(int arg) {
 
 void run()
 {
-  servoController = shared_ptr<ServoController>(CreateZMQServoController(cfg->str("body.servos.publish"),cfg->str("body.servos.subscribers")));
+  servoController = shared_ptr<ServoController>(CreateZMQServoController(cfg->str("body.servos.publish"),cfg->str("body.servos.subscribers"),cfg->num("body.servos.rate")));
 
   body = shared_ptr <Body> (new Body());
   body->init();

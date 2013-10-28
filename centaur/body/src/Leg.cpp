@@ -1,10 +1,13 @@
 #include "BodyGlobals.h"
 #include "Leg.h"
+#include <sstream>
 
 using namespace std;
 
-void Leg::init(string newName) {
-  name=newName;
+void Leg::init() {
+  ostringstream oss;
+  oss << "LEG" << (number()+1);
+  name=oss.str();
   knee = servo(name + "_KNEE");
   femur = servo(name + "_FEMUR");
   hip = servo(name + "_HIP");

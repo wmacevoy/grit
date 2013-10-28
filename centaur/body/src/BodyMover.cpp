@@ -11,6 +11,11 @@
 
 using namespace std;
 
+BodyMover::BodyMover()
+  : legs(this)
+{
+}
+
 void BodyMover::move(Body &body)
 {
   legs.move(body.legs);
@@ -201,9 +206,9 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   double dl3x=xAdder;  double dl3y=-yAdder; double dl3z=zAdder;
   double dl4x=-xAdder; double dl4y=-yAdder; double dl4z=zAdder;
  // cout <<  "t,pl1,pl2,pl3,pl4" << endl;
-  double r=radius/2.0;
-  double R=radius;
-  double d=-1.0;
+  //  double r=radius/2.0;
+  //  double R=radius;
+  //  double d=-1.0;
 
 	double pl2=1.0/8.0;  // Leg 2 first at 1/8 phase of circle
 	//pl2 = pl2-floor(pl2);
@@ -391,21 +396,21 @@ ServoMover* BodyMover::getMover(const std::string &name)
   if (name == "RIGHTARM_RING") return &right.ring;
   if (name == "RIGHTARM_THUMB") return &right.thumb;
 
-  if (name == "LEG1_KNEE") return &legs.legMovers[LEG1].kneeMover;
-  if (name == "LEG1_FEMUR") return &legs.legMovers[LEG1].femurMover;
-  if (name == "LEG1_HIP") return &legs.legMovers[LEG1].hipMover;
+  if (name == "LEG1_KNEE") return &legs.legMovers[LEG1]->kneeMover;
+  if (name == "LEG1_FEMUR") return &legs.legMovers[LEG1]->femurMover;
+  if (name == "LEG1_HIP") return &legs.legMovers[LEG1]->hipMover;
 
-  if (name == "LEG2_KNEE") return &legs.legMovers[LEG2].kneeMover;
-  if (name == "LEG2_FEMUR") return &legs.legMovers[LEG2].femurMover;
-  if (name == "LEG2_HIP") return &legs.legMovers[LEG2].hipMover;
+  if (name == "LEG2_KNEE") return &legs.legMovers[LEG2]->kneeMover;
+  if (name == "LEG2_FEMUR") return &legs.legMovers[LEG2]->femurMover;
+  if (name == "LEG2_HIP") return &legs.legMovers[LEG2]->hipMover;
 
-  if (name == "LEG3_KNEE") return &legs.legMovers[LEG3].kneeMover;
-  if (name == "LEG3_FEMUR") return &legs.legMovers[LEG3].femurMover;
-  if (name == "LEG3_HIP") return &legs.legMovers[LEG3].hipMover;
+  if (name == "LEG3_KNEE") return &legs.legMovers[LEG3]->kneeMover;
+  if (name == "LEG3_FEMUR") return &legs.legMovers[LEG3]->femurMover;
+  if (name == "LEG3_HIP") return &legs.legMovers[LEG3]->hipMover;
 
-  if (name == "LEG4_KNEE") return &legs.legMovers[LEG4].kneeMover;
-  if (name == "LEG4_FEMUR") return &legs.legMovers[LEG4].femurMover;
-  if (name == "LEG4_HIP") return &legs.legMovers[LEG4].hipMover;
+  if (name == "LEG4_KNEE") return &legs.legMovers[LEG4]->kneeMover;
+  if (name == "LEG4_FEMUR") return &legs.legMovers[LEG4]->femurMover;
+  if (name == "LEG4_HIP") return &legs.legMovers[LEG4]->hipMover;
 
   if (name == "WAIST") return &waist;
 

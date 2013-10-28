@@ -1,11 +1,49 @@
+#include "BodyGlobals.h"
 #include "LegMover.h"
+#include <assert.h>
 
 using namespace std;
 
-void LegMover::move(Leg &leg)  {
+void LegMover::state(int m_state_)
+{
+  m_state = m_state_;
+}
+
+int LegMover::state() const
+{
+  return m_state;
+}
+
+LegMover::LegMover(LegsMover *legs_, int number_)
+{
+  legs=legs_;
+  number(number_);
+  state(LEG_NORMAL);
+}
+
+void LegMover::cautious(Leg &leg)
+{
+  if (simSpeed > 0 && femurMover.speed()/simSpeed > 10.0) {
+    if (sensors.p[number()] < 750.0) {
+      simSpeed = 0;
+      state(LEG_NORMAL);
+    }
+  }
+  normal(leg);
+}
+
+void LegMover::normal(Leg &leg)
+{
   kneeMover.move(*leg.knee);
   femurMover.move(*leg.femur);
   hipMover.move(*leg.hip);
+}
+
+void LegMover::move(Leg &leg)  {
+  switch(m_state) {
+  case LEG_CAUTIOUS: cautious(leg); break;
+  default: normal(leg); break;
+  }
 }
 
 void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips,

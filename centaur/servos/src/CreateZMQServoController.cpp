@@ -111,8 +111,9 @@ struct ZMQServoController : ServoController, ZMQHub
     }
   }
 
-  ZMQServoController(const std::string &me, const std::string &server) 
+  ZMQServoController(const std::string &me, const std::string &server,int rate_) 
   { 
+    rate=rate_;
     publish = me;
     subscribers.push_back(server);
   }
@@ -132,7 +133,7 @@ struct ZMQServoController : ServoController, ZMQHub
   }
 };
 
-ServoController* CreateZMQServoController(const std::string &me,const std::string &server)
+ServoController* CreateZMQServoController(const std::string &me,const std::string &server, int rate)
 {
-  return new ZMQServoController(me,server);
+  return new ZMQServoController(me,server,rate);
 }

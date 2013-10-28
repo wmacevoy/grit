@@ -5,7 +5,6 @@
 #include <atomic>
 
 
-#define MOVE_RATE 50.0
 #define ANGLE360 360.0
 #define ANGLE180 (ANGLE360/2.0)
 #define ANGLE90 (ANGLE180/2.0)

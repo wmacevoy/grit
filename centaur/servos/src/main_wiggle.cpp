@@ -134,7 +134,7 @@ int main(int argc, char **argv)
   }
   if (use_controller == "zmq") {
     cout << "zmq controller at " << me << " talking to " << server << endl;
-    controller = shared_ptr<ServoController>(CreateZMQServoController(me,server));    
+    controller = shared_ptr<ServoController>(CreateZMQServoController(me,server,10));    
   }
   if (use_controller == "dynamixel") {
     cout << "dynamixel controller device index " << deviceIndex << " baud number " << baudNum << endl;

@@ -11,7 +11,9 @@ void LegGeometry::setPosition(float newlcx,float newlcy) {
 void LegGeometry::setHipOffset(float newHipOffset) {
   hipOffset=newHipOffset;
 }
+
 LegGeometry::LegGeometry() {
+  m_number=0;
   hipOffset=0.0;
   koffset=2.801;
   ktibia=16.50;
@@ -23,12 +25,24 @@ LegGeometry::LegGeometry() {
   lcx=5.707; // distance from center of chassis to hip axis
   lcy=5.707; // distance from center of chassis to hip axis
 }
-void LegGeometry::setName(string newName) {
-  name=newName;
+
+int LegGeometry::number() const {
+  return m_number;
 }
-void LegGeometry::outputName(ostream &out) {
-  out << name << endl;
+
+void LegGeometry::number(int m_number_) {
+  m_number=m_number_;
 }
+
+void LegGeometry::name(const std::string &name_) {
+  m_name=name_;
+}
+
+const std::string &LegGeometry::name() const 
+{
+  return m_name;
+}
+
 float LegGeometry::robustACos(float cosvalue) {
   if (cosvalue >= 1.0) {
     return 0;
@@ -37,22 +51,6 @@ float LegGeometry::robustACos(float cosvalue) {
   } else {
     return acos(cosvalue);
   }
-
-#if 0
-  float retval=0.0;
-//		cout <<"CosValue:"<<cosvalue<<endl;
-  while (cosvalue > 1.0) {
-    cosvalue-=2.0;
-    retval+=M_PI/2.0;
-  }
-  while (cosvalue<-1.0) {
-    cosvalue+=2.0;
-    retval-=M_PI/2.0;
-  }
-  retval+=acos(cosvalue);
-  //		cout <<"ACos:" << retval <<endl;
-  return retval;
-#endif
 } 
 // Do not worry about the hip rotation
 void LegGeometry::compute2D(float x,float z,float &knee,float &femur) {
