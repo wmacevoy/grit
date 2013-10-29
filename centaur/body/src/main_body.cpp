@@ -626,31 +626,31 @@ public:
     }
     if (head == "df") {
 		//  Should be 2 inch step forward
-//        mover->stepMove(4,12.0,17.25,-14.665,0,4.0,6,1.0,1.0);
-        mover->stepMove(4,11,19,-15,0,4.0,6,1.0,1.0);
+        mover->stepMove(4,12.0,17.25,-14.665,0,4.0,6,1.0,1.0,true);
+//        mover->stepMove(4,12,17.25,-15,0,4.0,6,1.0,1.0);
 		oss << "DStep r=4 xstep=0 ystep=4 :ok"; 
       answer(oss.str());
     }
     if (head == "dsf") {
-//        mover->stepMove(4,12.0,17.25,-14.665,0,2.0,6,1.0,1.0);
-        mover->stepMove(4,11,19,-15,0,2.0,6,1.0,1.0);
+        mover->stepMove(4,12.0,17.25,-14.665,0,2.0,6,1.0,1.0,true);
+//        mover->stepMove(4,12,17.25,-15,0,2.0,6,1.0,1.0);
 		oss << "DStep r=2 xstep=0 ystep=4 :ok"; 
       answer(oss.str());
     }
     if (head == "dsb") {
-        mover->stepMove(4,11,19,-15,0,-2.0,6,1.0,1.0);
+        mover->stepMove(4,12,17.25,-15,0,-2.0,6,1.0,1.0,true);
 		oss << "DStep r=2 xstep=0 ystep=4 :ok"; 
       answer(oss.str());
     }
     if (head == "dr") {
-//        mover->stepMove(4,12.0,17.25,-14.665,0,4,6,1.0,.1);
-        mover->stepMove(4,11,19,-15,0,4,6,1.0,-.5);
+        mover->stepMove(4,12.0,17.25,-14.665,0,4,6,1.0,.1,true);
+//        mover->stepMove(4,12,17.25,-15,0,2,6,1.0,-1.0);
 		oss << "DStep r=4 xstep=0 ystep=4 :ok"; 
       answer(oss.str());
     }
     if (head == "dl") {
-//        mover->stepMove(4,12.0,17.25,-14.665,0,4,6,.1,1.0);
-        mover->stepMove(4,11,19,-15,0,4,6,-.5,1.0);
+        mover->stepMove(4,12.0,17.25,-14.665,0,4,6,.1,1.0,true);
+//        mover->stepMove(4,12,17.25,-15,0,2,6,-1.0,1.0);
 		oss << "DStep r=4 xstep=0 ystep=4 :ok"; 
       answer(oss.str());
     }

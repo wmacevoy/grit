@@ -248,6 +248,7 @@ int main(int argc, char** argv)
   config(argc,argv);
 
   signal(SIGINT, quit);
+  signal(SIGTERM, quit);
   signal(SIGQUIT, quit);
 
   context = zmq_ctx_new ();

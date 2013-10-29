@@ -19,7 +19,7 @@ class BodyMover
 
   BodyMover();
 
-  bool stepMove(double r,double x,double y,double z,double xstep,double ystep,double stepheight,double left,double right);
+  bool stepMove(double r,double x,double y,double z,double xstep,double ystep,double stepheight,double left,double right,bool narrow=false);
   void logPosition(std::vector<std::vector <double> > data);
   void fromTips(std::vector<std::vector <double> > data);  
   void move(Body &body);

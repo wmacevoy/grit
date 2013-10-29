@@ -176,10 +176,10 @@ void BodyMover::fromTips(vector<vector <double> > data) {
     waist.setup(t2waist,simTime,simTime+T);	
 }
 
-bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right) {
+bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow) {
   vector<vector<double>> data;
-  x-=xstep/2.0;
-  y-=ystep/2.0;
+//  x-=xstep/2.0;
+//  y-=ystep/2.0;
   double T = 6.0; // 10 is good
   double timeDivider=10.0;
   double steps=T*timeDivider; 
@@ -197,10 +197,18 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   bool l3=true;
   bool l4=true;
   double t=0.0;
-  double l1x=-x; double l1y=y;  double l1z=z;  // default positions
-  double l2x=x;  double l2y=y;  double l2z=z;
-  double l3x=x;  double l3y=-y; double l3z=z;
-  double l4x=-x; double l4y=-y; double l4z=z;
+//  double l1x=-x; double l1y=y;  double l1z=z;  // default positions
+//  double l2x=x;  double l2y=y;  double l2z=z;
+//  double l3x=x;  double l3y=-y; double l3z=z;
+//  double l4x=-x; double l4y=-y; double l4z=z;
+  double l1x=-x; double l1y=y-ystep/2.0;  double l1z=z;  // default positions
+  double l2x=x;  double l2y=y-ystep/2.0;  double l2z=z;
+  double l3x=x;  double l3y=-(y-ystep/2.0); double l3z=z;
+  double l4x=-x; double l4y=-(y-ystep/2.0); double l4z=z;
+  if (narrow) {
+    l3y-=ystep;	
+    l4y-=ystep;	
+  }  
   double dl1x=-xAdder; double dl1y=yAdder;  double dl1z=zAdder;  // default offset for up leg
   double dl2x=xAdder;  double dl2y=yAdder;  double dl2z=zAdder;
   double dl3x=xAdder;  double dl3y=-yAdder; double dl3z=zAdder;

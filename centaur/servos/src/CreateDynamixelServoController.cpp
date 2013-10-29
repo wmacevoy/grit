@@ -129,7 +129,7 @@ struct DynamixelServo : Servo
     value = fabs(value);
     if (value < minSpeed) { value = minSpeed; }
     else if (value > maxSpeed) { value = maxSpeed; }
-    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*1.0;
+    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*1.1;
     if (goalSpeed > 480) goalSpeed = 480;
   }
 
