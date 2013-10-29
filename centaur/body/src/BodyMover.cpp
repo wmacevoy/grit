@@ -435,13 +435,17 @@ bool BodyMover::play(const std::string &file)
   string header;
 
   { 
-    ifstream ifs(file.c_str()); 
+    ifstream ifs(file.c_str());
+    if (!ifs) { 
+      cout << "file '" << file << "' not found." << endl; 
+      return false; 
+    }
     getline(ifs,header);
     split(header,names);
   }
     
   if (!CSVRead(file,header,data)) {
-    cout << "CSVRead failed " << endl;
+    cout << "CSVRead of file '" << file << "' failed " << endl;
     return false;
   }
   

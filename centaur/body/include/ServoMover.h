@@ -5,16 +5,24 @@
 #include <memory>
 #include "Servo.h"
 
+#if USE_SERVO_LINEAR != 1
+#include "Curve.h"
+#endif
+
 class ServoMover
 {
 public:
-  std::mutex anglesMutex;
+  std::mutex access;
+#if USE_SERVO_LINEAR == 1
   typedef std::map < float , float > Angles;
   Angles angles;
   Angles::iterator at;
+#else
+  Curve angles;
+#endif
   double simTime0,simTime1;
   float torque;
-  float linearCutoff;
+  float sharpCutoff;
 
   void curve(double t[2],float c0[3],float c1[3]);
   float angle();

@@ -1,6 +1,7 @@
 #include <csignal>
 #include <signal.h>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <termio.h>
 #include <stdio.h>
@@ -1074,16 +1075,22 @@ public:
     }
     if (head == "time") {
       double value;
-      iss >> value;
-      simTime = value;
-      oss << "set time to " << value << ".";
+      if (iss >> value) {
+	simTime = value;
+	oss << "set simTime to " << value << ".";
+      } else {
+	oss << "simTime is " << setprecision(3) << fixed << simTime << " realTime is " << setprecision(3) << fixed << realTime << endl;
+      }
       answer(oss.str());
     }
     if (head == "speed") {
       double value;
-      iss >> value;
-      simSpeed = value;
-      oss << "set speed to " << value << ".";
+      if (iss >> value) {
+	simSpeed = value;
+	oss << "set speed to " << value << ".";
+      } else {
+	oss << "speed is " << simSpeed << endl;
+      }
       answer(oss.str());
     }
     if (head == "help") {

@@ -3,6 +3,8 @@
 #include <memory>
 #include <string>
 
+#define USE_SERVO_LINEAR 0
+
 class Servo
 {
 private:

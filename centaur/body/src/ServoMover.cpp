@@ -2,13 +2,30 @@
 #include "ServoMover.h"
 #include "Lock.h"
 #include "math.h"
+#if USE_SERVO_LINEAR == 1
 #include "fit.h"
+#endif
 
 using namespace std;
 
+#if USE_SERVO_LINEAR == 1
+void ServoMover::setup(const map < float , float > &angles_,
+		       double simTime0_, double simTime1_) {
+  if (verbose) {
+    for (Angles::const_iterator i=angles_.begin(); i!=angles_.end(); ++i) {
+      cout << "ServoMover@" << (void*) this << "[" << i->first << "]=" << i->second << endl;
+    }
+  }
+  Lock lock(access);
+  angles=angles_;
+  at=angles.begin();
+  simTime0=simTime0_;
+  simTime1=simTime1_;
+}
+
 void ServoMover::curve(double t[2], float c0[3], float c1[3])
 {
-  Lock lock(anglesMutex);
+  Lock lock(access);
 
   double ts[3];
   float p[3];
@@ -46,7 +63,7 @@ void ServoMover::curve(double t[2], float c0[3], float c1[3])
     p[0]=samples[0]->second;
     p[1]=samples[1]->second;
     p[2]=samples[2]->second;
-    fit(ts,p,c0,c1,linearCutoff);
+    fit(ts,p,c0,c1,sharpCutoff);
     t[0]=ts[1];
     t[1]=ts[2];
   } else if (angles.size() == 2) {
@@ -75,6 +92,55 @@ void ServoMover::curve(double t[2], float c0[3], float c1[3])
     c0[2]=c1[2]=0;
   }
 }
+#else 
+void ServoMover::setup(const map < float , float > &angles_,
+		       double simTime0_, double simTime1_) {
+  if (verbose) {
+    for (map<float,float>::const_iterator i=angles_.begin(); i!=angles_.end(); ++i) {
+      cout << "ServoMover@" << (void*) this << "[" << i->first << "]=" << i->second << endl;
+    }
+  }
+  Lock lock(access);
+  angles.setup(angles_);
+  angles.sharpen(sharpCutoff);
+  simTime0=simTime0_;
+  simTime1=simTime1_;
+}
+
+void ServoMover::curve(double t[2], float c0[3], float c1[3])
+{
+  float s;
+  if (simTime < simTime0) s = 0;
+  else if (simTime < simTime1) s = simTime-simTime0;
+  else s= simTime1-simTime0;
+
+  float ds,s0,s1,s2,s3;
+
+  {
+    Lock lock(access);
+
+    angles.expand(s,s0,s1,c0);
+    ds=s1-s0;
+    c0[0] += (c0[1]+c0[2]/2.0*ds)*ds;
+    c0[1] += c0[2]*ds;
+
+    angles.expand(fmax(s1+0.001,simTime1-simTime0),s2,s3,c1);
+    ds=s1-s2;
+    c1[0] += (c1[1]+c1[2]/2.0*ds)*ds;
+    c1[1] += c1[2]*ds;
+  }
+  
+  float lambda = (fabs(simSpeed) > 0.001) ? 1/simSpeed : 1000.0;
+  
+  c0[1] *= simSpeed;
+  c0[2] *= simSpeed*simSpeed;
+  c1[1] *= simSpeed;
+  c1[2] *= simSpeed*simSpeed;
+  
+  t[0]=lambda*(s1-s)+realTime;
+  t[1]=lambda*(s3-s)+realTime;
+}
+#endif
 
 void ServoMover::move(Servo &servo)
 {
@@ -105,20 +171,6 @@ float ServoMover::angle()
   return c[0]+c[1]*(t0-t[0])+(c[2]/2.0)*pow(t0-t[0],2.0);
 }
 
-void ServoMover::setup(const map < float , float > &angles_,
-		       double simTime0_, double simTime1_) {
-  if (verbose) {
-    for (Angles::const_iterator i=angles_.begin(); i!=angles_.end(); ++i) {
-      cout << "ServoMover@" << (void*) this << "[" << i->first << "]=" << i->second << endl;
-    }
-  }
-  Lock lock(anglesMutex);
-  angles=angles_;
-  at=angles.begin();
-  simTime0=simTime0_;
-  simTime1=simTime1_;
-}
-
 void ServoMover::setup(float angle)
 {
   map < float , float > angles;
@@ -133,5 +185,5 @@ ServoMover::ServoMover()
 {
   setup(0);
   torque=10;
-  linearCutoff=1.0;
+  sharpCutoff=1.0;
 }
