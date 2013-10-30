@@ -340,12 +340,12 @@ public:
 
   void forward()
   {
-      mover->stepMove(5.0,15.0,15.0,-15.115,0.0,6.0,8.0,1.0,.72);
+      mover->stepMove(5.0,15.0,15.0,-17.115+0.00,0.0,4.0,5.75+2.0,1.0,.72);
   }
 
   void lowForward()
   {
-      mover->stepMove(5.0,15.0,15.0,-9.415,0.0,3.0,5.75,1.0,.72);
+      mover->stepMove(5.0,15.0,15.0,-17.115+5.75,0.0,4.0,5.75+2.0,1.0,.72);
   }
 
   void tape(const std::string &tape)
@@ -1175,6 +1175,32 @@ public:
       mover->move(*body);
       lastRealTime = realTime;
       lastSimTime = simTime;
+
+#if 0
+      cout << " a=[" 
+	  << sensors.a[0] << ","
+	  << sensors.a[1] << ","
+	  << sensors.a[2] << "]";
+      
+      cout << " c=[" 
+	  << sensors.c[0] << ","
+	  << sensors.c[1] << ","
+	  << sensors.c[2] << "]";
+      
+      cout << " g=[" 
+	  << sensors.g[0] << ","
+	  << sensors.g[1] << ","
+	  << sensors.g[2] << "]";
+      
+      cout << " p=[" 
+	  << sensors.p[0] << ","
+	  << sensors.p[1] << ","
+	  << sensors.p[2] << ","
+	  << sensors.p[3] << "]";
+
+      cout << endl;
+#endif
+      
     }
   }
 

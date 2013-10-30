@@ -74,37 +74,37 @@ LegMover::LegMover(LegsMover *legs_, int number_)
 
 void LegMover::bricks(Leg &leg)
 {  
-  
   float femurAngle,femurSpeed;
-  float lift;
   int k0,k1;
+  float lift0,lift1;
 
   {
     Lock lock(tapeMutex);
     femurMover->at(&femurAngle,&femurSpeed);
-    
-    femurSpeed=(fabs(simSpeed) > 0.001) ? femurSpeed/simSpeed : 0.0;
-
     lifts->interval(simTime,k0,k1);
-    lift=lifts->knots[k1].y;
-
-    if (k0 != k1) {
-      if (lifts->knots[k0].y != 0 && lift == -1) {
-	check = CHECK_TAP;
-	if (tape() != "f") { tape("f"); }
-      }
+    lift0=lifts->knots[k0].y;
+    lift1=lifts->knots[k1].y;
+  }
+    
+  femurSpeed=(fabs(simSpeed) > 0.001) ? femurSpeed/simSpeed : 0.0;
+  
+  
+  if (k0 != k1) {
+    if (lift0 != 0 && lift1 == -1) {
+      check = CHECK_TAP;
+      if (tape() != "f") { tape("f"); }
     }
   }
 
   if (floor(realTime) != floor(lastRealTime)) {
-    cout << "leg " << number()+1 << " check state " << check << " femurAngle=" << femurAngle << " femurSpeed=" << femurSpeed << " pressure=" << sensors.p[number()] << " lift=" << lift << " k1=" << k1 << endl;
+    cout << "leg " << number()+1 << " check state " << check << " femurAngle=" << femurAngle << " femurSpeed=" << femurSpeed << " pressure=" << sensors.p[number()] << " lift=" << lift1 << " k1=" << k1 << endl;
   }
 
   switch(check) {
   case CHECK_NOTHING:
     break;
   case CHECK_TAP:
-    if (lift != -1) {
+    if (lift1 != -1) {
       check = CHECK_NOTHING;
     } else if (sensors.p[number()] < touchPressure) {
       cout << "leg " << number()+1 << " is tapped angle = " << femurAngle << endl;
@@ -155,7 +155,7 @@ void LegMover::tipping()
 
 void LegMover::normal(Leg &leg)
 {
-  tipping();
+  //  tipping();
   Lock lock(tapeMutex);
   kneeMover->move(*leg.knee);
   femurMover->move(*leg.femur);
