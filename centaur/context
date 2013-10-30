@@ -43,7 +43,7 @@ stop_app()
 {
   app=$1
 
-  term_tries=1
+  term_tries=2
   kill_tries=2
 
   for try in $(seq 1 $((term_tries+$kill_tries)))
@@ -174,12 +174,12 @@ commit()
 
 start()
 {
-    start_apps body servos sensors webcamPublisher LidarProvider
+    start_apps servos body sensors webcamPublisher LidarProvider
 }
 
 stop()
 {
-    stop_apps servos body sensors webcamPublisher LidarProvider
+    stop_apps body sensors webcamPublisher LidarProvider servos
 }
 
 commander()

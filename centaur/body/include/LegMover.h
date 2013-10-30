@@ -14,15 +14,19 @@ class LegsMover;
 class LegMover : public LegGeometry
 {
  private:
+  CurveSP lifts;
   int m_state;
+  enum { CHECK_NOTHING, CHECK_TAP };
+  int check;
   std::string m_tape;
   std::map<std::string,ServoMoverSP> kneeMovers;
   std::map<std::string,ServoMoverSP> hipMovers;
   std::map<std::string,ServoMoverSP> femurMovers;
+  std::map<std::string,CurveSP> liftsTapes;
   std::mutex tapeMutex;
  public:
   int touchPressure;
-
+  
   void state(int m_state_);
   int state() const;
 
@@ -30,18 +34,24 @@ class LegMover : public LegGeometry
   const std::string &tape() const;
 
   LegsMover *legs;
-  enum {LEG_NORMAL, LEG_CAUTIOUS};
+  enum {LEG_NORMAL, LEG_CAUTIOUS, LEG_BRICKS };
   LegMover(LegsMover *_legs, int number_);
   ServoMoverSP kneeMover;
   ServoMoverSP femurMover;
   ServoMoverSP hipMover;
 
+  void tipping();
   void cautious(Leg &leg);
+  void bricks(Leg &leg);
   void normal(Leg &leg);
   void move(Leg &leg);
 
+  void setup(Leg &leg, const std::map < float , std::pair < Point, int > > &t2tips,
+	     double simTime0=0, double simTime1=1e99);
+
   void setup(Leg &leg, const std::map < float , Point > &t2tips,
 	     double simTime0=0, double simTime1=1e99);
+
   void setup(Leg &leg, Point p);
   void torque(float t);
 };

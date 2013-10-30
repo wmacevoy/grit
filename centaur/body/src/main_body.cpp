@@ -345,7 +345,7 @@ public:
 
   void lowForward()
   {
-      mover->stepMove(5.0,15.0,15.0,-9.415,0.0,3.0,5.5,1.0,.72);
+      mover->stepMove(5.0,15.0,15.0,-9.415,0.0,3.0,5.75,1.0,.72);
   }
 
   void tape(const std::string &tape)
@@ -353,19 +353,20 @@ public:
     for (int i=0; i<4; ++i) mover->legs.legMovers[i]->tape(tape);
   }
 
-  void setupBrickWalk()
+  bool setupBricks()
   {
     float saveSimSpeed=simSpeed;
-    simTime=0;
     simSpeed=0;
-    tape("home");
-    goHome();
+    simTime=0;
+    lastSimTime=0;
     tape("lf");
     lowForward();
     tape("f");
     forward();
-    tape("home");
+    tape("new");
+    goHome();
     simSpeed=saveSimSpeed;
+    return true;
   }
   
   void shake() {
@@ -824,6 +825,30 @@ public:
       load("bdd.csv");
       answer("Back stepping off brick");
     }
+    if (head == "setupBricks") {
+      if (setupBricks()) {
+	answer("setupBricks ok");
+      }
+    }
+    if (head == "bricks") {
+      bool any=false;
+      int number;
+      while (iss >> number) {
+	if (1 <= number && number <= 4) {
+	  mover->legs.legMovers[number-1]->state(LegMover::LEG_BRICKS);
+	  if (!any) {
+	    oss << "bricks on leg(s)";
+	  }
+	  oss << " " << mover->legs.legMovers[number-1]->number()+1;
+	  any=true;
+	}
+      }
+      if (!any) {
+	mover->legs.state(LegMover::LEG_BRICKS);
+	oss << "bricks on all legs.";
+      }
+      answer(oss.str());
+    }
     if (head == "tape") {
       string part;
       while (iss >> part) {
@@ -1077,7 +1102,8 @@ public:
       double value;
       if (iss >> value) {
 	simTime = value;
-	oss << "set simTime to " << value << ".";
+	lastSimTime = value;
+	oss << "set simTime/lastSimTime to " << value << ".";
       } else {
 	oss << "simTime is " << setprecision(3) << fixed << simTime << " realTime is " << setprecision(3) << fixed << realTime << endl;
       }
@@ -1134,34 +1160,21 @@ public:
   void update()
   {
     double rho=0.01;
-    double lastRealTime=realTime;
     double delta_bar=0;
     double delta2_bar=0;
     double max_delta=0;
     int sleep_us = (1.0/cfg->num("body.servos.rate"))*1000000;
 
+    realTime = now();
+    lastRealTime=realTime;
+
     while (running) {
       usleep(sleep_us);
       realTime = now();
       simTime += simSpeed*(realTime-lastRealTime);
-      if (floor(realTime) != floor(lastRealTime)) {
-//	cout << "delta=" << delta_bar << " sigma=" << sqrt(delta2_bar - delta_bar*delta_bar) << " max=" << max_delta << endl;
-	max_delta=0;
-	cout << "body: realTime=" << realTime << " delta=" << now()-realTime << endl;
-      }
-      lastRealTime = realTime;
       mover->move(*body);
-      double delta = now()-realTime;
-      delta_bar = (1-rho)*delta_bar + rho*delta;
-      delta2_bar = (1-rho)*delta2_bar + rho*delta*delta;
-      if (delta > max_delta) max_delta=delta;
-
-      if (delta > delta_bar + 3*sqrt(delta2_bar - delta_bar*delta_bar)) {
-	cout << "slow at simTime = " << simTime << " realTime=" << realTime << endl;
-      }
-      if (floor(realTime) != floor(lastRealTime)) {
-
-      }
+      lastRealTime = realTime;
+      lastSimTime = simTime;
     }
   }
 

@@ -151,24 +151,31 @@ void ServoMover::move(Servo &servo)
   servo.torque(torque);
 }
 
-float ServoMover::speed()
+void ServoMover::at(float *angle, float *speed)
 {
   double t[2];
   float c0[3],c1[3];
   curve(t,c0,c1);
-  double t0=realTime;
-  float *c = (t0 <= t[0] ? c1 : c0);
-  return c[1]+(t0-t[0])*c[2];
+  double dt=realTime-t[0];
+  double dt2=dt*dt;
+  float *c = (dt <= 0) ? c0 : c1;
+  if (angle != 0) *angle = c[0]+c[1]*dt+(c[2]/2.0)*dt2;
+  if (speed != 0) *speed = c[1]+c[2]*dt;
 }
+
+float ServoMover::speed()
+{
+  float speed0;
+  at(0,&speed0);
+  return speed0;
+}
+
 
 float ServoMover::angle()
 {
-  double t[2];
-  float c0[3],c1[3];
-  curve(t,c0,c1);
-  double t0=realTime;
-  float *c = (t0 <= t[0] ? c1 : c0);
-  return c[0]+c[1]*(t0-t[0])+(c[2]/2.0)*pow(t0-t[0],2.0);
+  float angle0;
+  at(&angle0,0);
+  return angle0;
 }
 
 void ServoMover::setup(float angle)

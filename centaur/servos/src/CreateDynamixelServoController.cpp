@@ -31,6 +31,7 @@
 #include "DXLIO.h"
 
 #define USE_TORQUE_ENABLED 1
+#define SPEED_FACTOR 1.0
 
 using namespace std;
 
@@ -129,7 +130,7 @@ struct DynamixelServo : Servo
     value = fabs(value);
     if (value < minSpeed) { value = minSpeed; }
     else if (value > maxSpeed) { value = maxSpeed; }
-    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*1.1;
+    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*SPEED_FACTOR;
     if (goalSpeed > 480) goalSpeed = 480;
   }
 

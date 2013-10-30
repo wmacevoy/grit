@@ -8,8 +8,10 @@ using namespace std;
 bool verbose;
 
 double simTime;
+double lastSimTime;
 double simSpeed;
 double realTime;
+double lastRealTime;
 
 std::shared_ptr < Configure > cfg;
 
