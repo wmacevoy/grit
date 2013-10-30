@@ -36,8 +36,12 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("lidar.provider.verbose", false);
 	if (verbose) cfg.show();
 	
-	std::string lidar_path = cfg.str("lidar.provider.path", "/dev/ttyACM0");
-	int sleep_time = (int)cfg.num("lidar.provider.sleep_time", 200);
+	std::string lidar_path = cfg.str("lidar.provider.path");
+	int sleep_time = (int)cfg.num("lidar.provider.sleep_time");
+
+	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
+	signal(SIGQUIT, quitproc);
 
 	urg_t urg;
 	int hwm = 1;
@@ -73,18 +77,14 @@ int main(int argc, char** argv)
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);
 
-	signal(SIGINT, quitproc);
-	signal(SIGTERM, quitproc);
-	signal(SIGQUIT, quitproc);
-
 	if (verbose) printf("Publishing on tcp://*:9997\n");
 	while(!die)
 	{
-		if (urg_isConnected(&urg) == 0)
+		if ((rcl = urg_isConnected(&urg)) == 0)
 		{
-			if(urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST) == 0)
+			if((rcl = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST)) == 0)
 			{
-				if(urg_receiveData(&urg, lidar_data, sz_lidar_data) == 0)
+				if((rcl = urg_receiveData(&urg, lidar_data, sz_lidar_data)) == 0)
 				{
 					if(verbose) printf("sending lidar data...\n");
 					int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
@@ -93,24 +93,21 @@ int main(int argc, char** argv)
 				}
 				else
 				{	
-					std::cout << "failed urg_receiveData()" << std::endl;
+					std::cout << "failed urg_receiveData() with value: " << rcl << std::endl;
 					die = true;
-					break;
 				}
 			}
 			else 
 			{
-				std::cout << "failed urg_requestData()" << std::endl;
+				std::cout << "failed urg_requestData() with value: " << rcl << std::endl;
 				die = true;
-				break;
 			}
 
 		}
 		else 
 		{
-			std::cout << "failed urg_isConnected()" << std::endl;
+			std::cout << "failed urg_isConnected() with value: "<< rcl << std::endl;
 			die = true;
-			break;
 		}
 	}
 
