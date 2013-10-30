@@ -1,9 +1,9 @@
 name,id,device,rxtemprate,rxpositionrate,scale,offset,mintorque,maxtorque,minspeed,maxspeed,minangle,maxangle
 LEG1_KNEE,11,${servos.type},0.0167,0.0167,3.6875,0,1,1,${legs.minspeed},${legs.maxspeed},-175,175
-LEG1_FEMUR,12,${servos.type},0.0167,0.0167,-3.6875,+5,1,1,${legs.minspeed},${legs.maxspeed},-175,175
+LEG1_FEMUR,12,${servos.type},0.0167,0.0167,-3.6875,0,1,1,${legs.minspeed},${legs.maxspeed},-175,175
 LEG1_HIP,13,${servos.type},0.0167,0.0167,1,0,1,1,${legs.minspeed},${legs.maxspeed},-175,175
 LEG2_KNEE,21,${servos.type},0.0167,0.0167,-3.6875,0,1,1,${legs.minspeed},${legs.maxspeed},-175,175
-LEG2_FEMUR,22,${servos.type},0.0167,0.0167,3.6875,-8,1,1,${legs.minspeed},${legs.maxspeed},-175,175
+LEG2_FEMUR,22,${servos.type},0.0167,0.0167,3.6875,-2,1,1,${legs.minspeed},${legs.maxspeed},-175,175
 LEG2_HIP,23,${servos.type},0.0167,0.0167,1,0,1,1,${legs.minspeed},${legs.maxspeed},-175,175
 LEG3_KNEE,31,${servos.type},0.0167,0.0167,-3.6875,0,1,1,${legs.minspeed},${legs.maxspeed},-175,175
 LEG3_FEMUR,32,${servos.type},0.0167,0.0167,3.6875,0,1,1,${legs.minspeed},${legs.maxspeed},-175,175
