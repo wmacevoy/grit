@@ -109,6 +109,34 @@ void Curve::sharpen(float cutoff)
   }
 }
 
+void Curve::interval(float x, int &k0, int &k1)
+{
+  if (n <= 1) {
+    k0=0;
+    k1=0;
+  } else {
+    float xmin=knots[0].x;
+    float xmax=knots[n-1].x;
+    double t=(x-xmin)/(xmax-xmin);
+    
+    if (t <= 0) {
+      k0=0;
+      k1=1;
+    } else if (t >= 1) {
+      k0=n-1;
+      k1=n-1;
+    } else {
+      ssize_t i = t*n;
+      if (i >= n) i=n-1;
+      if (i < 0)  i=0;
+      k0=at[i];
+      while (k0 > 0 && knots[k0].x >= x) --k0;
+      k1=k0;
+      if (k1 < n-1) ++k1;
+    }
+  }
+}
+
 void Curve::expand(float x, float &x0, float &x1, float c[3])
 {
   if (n == 0) {

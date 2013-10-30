@@ -56,7 +56,7 @@ void ZMQRx::rxLoop()
   }
   
   while (running) {
-    if (zmq_poll(&items[0],items.size(),int(1.0*1000)) <= 0) continue;
+    if (zmq_poll(&items[0],items.size(),int(0.25*1000)) <= 0) continue;
     if (!running) break;
     for (size_t i=0; i != sockets.size(); ++i) {
       if ((items[i].revents & ZMQ_POLLIN) != 0) {

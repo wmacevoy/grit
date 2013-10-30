@@ -26,5 +26,8 @@ class Curve
 
   // explicit x->(y,sharp) map
   void setup(const std::map < float , std::pair<float,bool> > &points);
+  void interval(float x, int &k0, int &k1);
   void expand(float x,float &x0, float &x1,float c[3]);
 };  
+
+typedef std::shared_ptr < Curve > CurveSP;
