@@ -31,7 +31,7 @@
 #include "DXLIO.h"
 
 #define USE_TORQUE_ENABLED 1
-#define SPEED_FACTOR 1.0
+#define SPEED_FACTOR 1.1
 
 using namespace std;
 
@@ -101,7 +101,7 @@ struct DynamixelServo : Servo
     c1[1]=c1_[1];
     c1[2]=c1_[2];
 
-    if (verbose) cout << "dynamixel curve" << " servo=" << id << " t=[" << t[0] << "," << t[1] << "] c0=[" << c0[0] << "," << c0[1] << "," << c0[2] << "]" << " c1=[" << c1[0] << "," << c1[1] << "," << c1[2] << "]"  << endl;
+//    if (verbose) cout << "dynamixel curve" << " servo=" << id << " t=[" << t[0] << "," << t[1] << "] c0=[" << c0[0] << "," << c0[1] << "," << c0[2] << "]" << " c1=[" << c1[0] << "," << c1[1] << "," << c1[2] << "]"  << endl;
   }
 
   float angle() const { 

@@ -192,7 +192,7 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   double steps=T*timeDivider; 
   double fullCircle=2.0*M_PI;
   double da=fullCircle/steps;
-  double waist=2.0;
+  double waist=-2.0;
   double dt=0.1;
 //  double xAdder=6.6-radius*0.707;
 //  double yAdder=6.6-radius*0.707;
