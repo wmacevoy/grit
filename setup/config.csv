@@ -3,7 +3,7 @@ control.ip,192.168.2.113
 centaur.ip,192.168.2.101
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
-servos.verbose,false
+servos.verbose,true
 servos.type,real
 servos.deviceindex,1
 servos.baudnum,34
