@@ -16,7 +16,7 @@ class LegMover : public LegGeometry
  private:
   CurveSP lifts;
   int m_state;
-  enum { CHECK_NOTHING, CHECK_TAP };
+  enum { CHECK_NOTHING, CHECK_TAP, CHECK_PRESSURE };
   int check;
   std::string m_tape;
   std::map<std::string,ServoMoverSP> kneeMovers;

@@ -338,14 +338,24 @@ public:
     return mover->play(file);
   }
 
-  void forward()
+  void forward(int repeat=1)
   {
-      mover->stepMove(5.0,15.0,15.0,-17.115+0.00,0.0,4.0,5.75+2.0,1.0,.72);
+      mover->stepMove(4.0,15.0,15.0,-17.115+0.00,0.0,5.0,5.75+2.0,1.0,.72,false,repeat);
+  }
+
+  void forwardFast(int repeat=1)
+  {
+      mover->stepMove(5.0,15.0,15.0,-17.115+0.00,0.0,4.0,5.75+2.0,1.0,.72,false,repeat);
+  }
+  
+  void smallForward()
+  {
+      mover->stepMove(4.0,15.0,15.0,-17.115+0.00,0.0,2.0,5.75+2.0,1.0,.72);
   }
 
   void lowForward()
   {
-      mover->stepMove(5.0,15.0,15.0,-17.115+5.75,0.0,4.0,5.75+2.0,1.0,.72);
+      mover->stepMove(4.0,15.0,15.0,-17.115+5.75,0.0,5.0,5.75/*+2.0*/,1.0,.72);
   }
 
   void tape(const std::string &tape)
@@ -361,6 +371,8 @@ public:
     lastSimTime=0;
     tape("lf");
     lowForward();
+    tape("sf");
+    smallForward();
     tape("f");
     forward();
     tape("new");
@@ -802,29 +814,73 @@ public:
       answer(oss.str());
 	}
     if (head == "flu") {  // Forward Front Lift Up front for brick
-      load("flu.csv");
+      simSpeed = 0.0;
+      simTime = 0.0;
+	  lastSimTime = 0.0;
+      mover->legs.legMovers[0]->tape("f");
+      mover->legs.legMovers[1]->tape("f");
+      mover->legs.legMovers[2]->tape("f");
+      mover->legs.legMovers[3]->tape("f");
+      mover->legs.legMovers[0]->state(LegMover::LEG_BRICKS);
+      mover->legs.legMovers[1]->state(LegMover::LEG_BRICKS);
+   	  mover->legs.legMovers[2]->state(LegMover::LEG_NORMAL);
+   	  mover->legs.legMovers[3]->state(LegMover::LEG_NORMAL);
+      simSpeed = 0.5;
       answer("Front stepping on brick");
     }
-    if (head == "fob") {  // Forward Front On Brick
+/*    if (head == "fob") {  // Forward Front On Brick
       load("fob.csv");
       answer("Front on brick");
-    }
+    } */
     if (head == "fdd") {  // Forward Front Drop Down from brick
-      load("fdd.csv");
+      simSpeed = 0.0;
+      simTime = 0.0;
+	  lastSimTime = 0.0;
+      mover->legs.legMovers[0]->tape("f");
+      mover->legs.legMovers[1]->tape("f");
+      mover->legs.legMovers[2]->tape("f");
+      mover->legs.legMovers[3]->tape("f");
+   	  mover->legs.legMovers[0]->state(LegMover::LEG_NORMAL);
+   	  mover->legs.legMovers[1]->state(LegMover::LEG_NORMAL);
+   	  mover->legs.legMovers[2]->state(LegMover::LEG_NORMAL);
+   	  mover->legs.legMovers[3]->state(LegMover::LEG_NORMAL);
+      simSpeed = 0.5;
       answer("Front stepping off brick");
     }
     if (head == "blu") {  // Forward Back Lift Up front for brick
-      load("blu.csv");
+      simSpeed = 0.0;
+      simTime = 0.0;
+	  lastSimTime = 0.0;
+      mover->legs.legMovers[0]->tape("f");
+      mover->legs.legMovers[1]->tape("f");
+      mover->legs.legMovers[2]->tape("f");
+      mover->legs.legMovers[3]->tape("f");
+   	  mover->legs.legMovers[0]->state(LegMover::LEG_NORMAL);
+   	  mover->legs.legMovers[1]->state(LegMover::LEG_NORMAL);
+      mover->legs.legMovers[2]->state(LegMover::LEG_BRICKS);
+      mover->legs.legMovers[3]->state(LegMover::LEG_BRICKS);
+      simSpeed = 0.5;
       answer("Back stepping on brick");
     }
-    if (head == "bob") {  // Forward Back On Brick
+/*    if (head == "bob") {  // Forward Back On Brick
       load("bob.csv");
       answer("Back on brick");
-    }
+    } */
     if (head == "bdd") {  // Forward Back Drop Down from brick
-      load("bdd.csv");
+      simSpeed = 0.0;
+      simTime = 0.0;
+	  lastSimTime = 0.0;
+      mover->legs.legMovers[0]->tape("f");
+      mover->legs.legMovers[1]->tape("f");
+      mover->legs.legMovers[2]->tape("f");
+      mover->legs.legMovers[3]->tape("f");
+   	  mover->legs.legMovers[0]->state(LegMover::LEG_NORMAL);
+   	  mover->legs.legMovers[1]->state(LegMover::LEG_NORMAL);
+      mover->legs.legMovers[2]->state(LegMover::LEG_NORMAL);
+      mover->legs.legMovers[3]->state(LegMover::LEG_NORMAL);
+      simSpeed = 0.5;
       answer("Back stepping off brick");
-    }
+    } 
     if (head == "setupBricks") {
       if (setupBricks()) {
 	answer("setupBricks ok");
@@ -940,6 +996,14 @@ public:
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
     }
+    if (head == "f4") {  // forward
+//      mover->stepMove(4.0,14.9,14.9,-15.665,0,3.,8.0,1.0,1.0);
+//      mover->stepMove(5.0,15.0,12.0,-15.665,0.0,5.0,8.0,1.0,1.0);
+      forwardFast(4);
+      ostringstream oss;
+      oss << "Step r=4 xstep=0 ystep=4 :ok."; 
+      answer(oss.str());
+    }
     if (head == "lf") {  // forward
 //      mover->stepMove(4.0,14.9,14.9,-9.915,0,3.,5.0,1.0,1.0);
 //      mover->stepMove(5.0,15.0,12.0,-9.915,0.0,5.0,5.0,1.0,1.0);
@@ -961,7 +1025,7 @@ public:
       answer(oss.str());
     }
     if (head == "sf") {  // small forward
-      mover->stepMove(5.0,15,15,-15.115,0,3.0,8.0,1.0,.72);
+      smallForward();
       ostringstream oss;
       oss << "Step r=4 xstep=0 ystep=2 :ok."; 
       answer(oss.str());
@@ -1066,7 +1130,7 @@ public:
       oss << "headPitch " << angle << " :ok."; 
       answer(oss.str());
     }
-    if (head == "headYaw") {
+    if (head == "headYaw" || head == "hy") {
       float angle;
       iss >> angle;
     ostringstream oss;

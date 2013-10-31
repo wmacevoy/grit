@@ -90,9 +90,9 @@ void LegMover::bricks(Leg &leg)
   
   
   if (k0 != k1) {
-    if (lift0 != 0 && lift1 == -1) {
+    if (lift0 == 1 && lift1 == -1) {
       check = CHECK_TAP;
-      if (tape() != "f") { tape("f"); }
+//      if (tape() != "f") { tape("f"); }
     }
   }
 
@@ -104,13 +104,33 @@ void LegMover::bricks(Leg &leg)
   case CHECK_NOTHING:
     break;
   case CHECK_TAP:
-    if (lift1 != -1) {
+    if (lift1 > 0) {
       check = CHECK_NOTHING;
     } else if (sensors.p[number()] < touchPressure) {
       cout << "leg " << number()+1 << " is tapped angle = " << femurAngle << endl;
       if (tape() != "lf") tape("lf");
       check = CHECK_NOTHING;
     }
+     if (k0 != k1) {
+      if (lift0 == -2) {
+	   check=CHECK_PRESSURE;
+       std::cout << "Checking Pressure leg: " << number() + 1 << std::endl; 
+      }
+    }
+    break;
+   case CHECK_PRESSURE: {
+	   if (sensors.p[number()] < touchPressure) {
+	     check=CHECK_NOTHING;
+	     break;
+	   }
+	   if (lift0 == 0 && lift1==0) {
+          if (tape() != "f") { 
+			  tape("f");
+			  simSpeed=0;    
+              std::cout << "Stepped Off Bricks leg: " << number() + 1 << std::endl; 
+	      } 
+       }
+    } 
   }
 
   normal(leg);
