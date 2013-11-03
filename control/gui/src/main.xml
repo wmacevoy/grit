@@ -206,8 +206,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">80</property>
-                    <property name="y">216</property>
+                    <property name="x">83</property>
+                    <property name="y">188</property>
                   </packing>
                 </child>
                 <child>

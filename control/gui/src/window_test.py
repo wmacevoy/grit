@@ -76,8 +76,10 @@ class Base:
                 sev = 0
             elif int(servos_dict[servo]) > 45:
                 sev = 1
-            else:
+            elif int(servos_dict[servo]) > 0:
                 sev = 2
+            else:
+                sev = 3
             try:
                 self.color_btn[int(servo)].set_color(gtk.gdk.color_parse(self.colors[sev]))
             except:
@@ -97,7 +99,7 @@ class Base:
         builder = gtk.Builder()
         builder.add_from_file("main.xml") 
         self.servos_dict = {}
-        self.colors = ['#FF0000','#F9FF00', '#0CFF00']
+        self.colors = ['#FF0000','#F9FF00', '#0CFF00', '#0']
 
         self.window = builder.get_object("winStatus")
         self.btnTemps = builder.get_object("btnTemps")
