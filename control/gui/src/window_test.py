@@ -49,11 +49,12 @@ class Base:
         sub.connect("tcp://192.168.2.101: %s" % (port))
 
         for i in range(0,1):
-            print "receiving msg..\n"
+            print "Receiving msg..\n"
             sensors = sub.recv()
-            for j in range(0,56,4):
-                newSensors = struct.unpack("<l",sensors[j:j+4])
-                print newSensors
+            #for j in range(0,56,4):
+            newSensors = struct.unpack("<14i",sensors)#sensors[j:j+4])
+            listSensors = list(newSensors)
+            print listSensors
 
     #kills the process when window is closed
     def destroy(self,widget):
