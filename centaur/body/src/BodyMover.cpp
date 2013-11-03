@@ -408,6 +408,70 @@ vector<vector<double> > BodyMover::createMove(double radius,double x,double y,do
   return data;
 }
 
+double lift(double elevation,double height,double angle) {
+  return elevation+height*sin(angle*2.0);
+}
+
+double circulateX(double position,double radius,double angle) {
+  return position+radius*cos(angle);
+}
+ 
+double circulateY(double position,double radius,double angle) {
+  return position+radius*sin(angle);
+}
+
+double step(double distance,double angle) {
+   
+}
+
+double legDirection(double angle) {
+  if (M_PI_4<angle && angle<M_PI_2) return 1.0;
+  else if (M_PI_2<angle && angle<3*M_PI_4) return -1.0;
+  else return 0.0; 
+}
+ 
+vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double z,double xstep,double ystep,double zstep,double left,double right,bool narrow,int repeat) {
+  vector<vector<double>> data;
+  double T =10.0; 
+  double timeDivider=10.0;
+  double steps=T*timeDivider; 
+  double fullCircle=2.0*M_PI;
+  double da=fullCircle/steps;
+  double waist=0.0;
+  double dt=0.1;
+  double t=0.0;
+  for (int q=0;q<repeat;q++) {
+    for(double a=0;a<fullCircle;a+=da) {
+	  float l1a=a;
+	  float l2a=a+M_PI_2;
+	  float l3a=a+M_PI;
+	  float l4a=a+3*M_PI_2;
+      vector<double> p;
+      p.push_back(t);
+      p.push_back(circulateX(-x,radius,a)); p.push_back(circulateY(y,radius,a)); p.push_back(lift(z,zstep,a+M_PI_2));
+      p.push_back(circulateX(x,radius,a));  p.push_back(circulateY(y,radius,a)); p.push_back(lift(z,zstep,a));
+      p.push_back(circulateX(x,radius,a));  p.push_back(circulateY(-y,radius,a)); p.push_back(lift(z,zstep,a+M_PI_2));
+      p.push_back(circulateX(-x,radius,a)); p.push_back(circulateY(-y,radius,a)); p.push_back(lift(z,zstep,a));
+      p.push_back(waist); 
+      p.push_back(legDirection(l1a)); 
+      p.push_back(legDirection(l2a)); 
+      p.push_back(legDirection(l3a)); 
+      p.push_back(legDirection(l4a));
+      data.push_back(p);
+      t+=dt;
+	}
+  }
+  return data;
+}
+
+bool BodyMover::bStep(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {
+  vector<vector<double > > f;
+  f=bMove(radius,x,y,z,xstep,ystep,zAdder,left,right,narrow,repeat);
+  logPosition(f);
+  fromTips(f);
+  return true;  
+}
+
 bool BodyMover::blended(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {
   vector<vector<double > > f;
   f=createMove(radius,x,y,z,xstep,ystep,zAdder,left,right,narrow,repeat);
