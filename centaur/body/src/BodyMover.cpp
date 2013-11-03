@@ -183,7 +183,7 @@ void BodyMover::fromTips(vector<vector <double> > data) {
     waist.setup(t2waist,simTime,simTime+T);	
 }
 
-bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {
+vector<vector<double> > BodyMover::createMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {
   vector<vector<double>> data;
 //  x-=xstep/2.0;
 //  y-=ystep/2.0;
@@ -405,6 +405,41 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
 	pl4 -= dp;	
   }
   }
+  return data;
+}
+
+bool BodyMover::blended(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {
+  vector<vector<double > > f;
+  f=createMove(radius,x,y,z,xstep,ystep,zAdder,left,right,narrow,repeat);
+  vector<vector<double > > lf;
+  lf=createMove(radius,x,y,z,xstep,ystep,zAdder-5.75,left,right,narrow,repeat);
+  for (int i=0;i<4;i++) {
+	for (int t=0;t<lf.size();t++) {
+	  int t2=t;
+	  while (t2<lf.size() && lf[t2][14+i]<0) {
+		  t2++; // find the time for the end of the step down
+	  }
+      if (lf[t][14+i]<0) {
+        if (f[t][3+3*i]-5.75>z) {  // coming down and higher than z
+          lf[t][1+3*i]=lf[t2][1+3*i]; // x and y are end x and y
+          lf[t][2+3*i]=lf[t2][2+3*i];
+          lf[t][3+3*i]=f[t][3+3*i]-5.75;
+	    } else {
+          lf[t][1+3*i]=lf[t2][1+3*i];
+          lf[t][2+3*i]=lf[t2][2+3*i];
+          lf[t][3+3*i]=z;
+	    }
+      }
+    }
+  }
+  logPosition(lf);
+  fromTips(lf);
+  return true;
+}
+
+bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {
+  vector<vector<double>> data;
+  data=createMove(radius,x,y,z,xstep,ystep,zAdder,left,right,narrow,repeat);
   logPosition(data);
   fromTips(data);
   return true;

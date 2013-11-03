@@ -340,12 +340,12 @@ public:
 
   void forward(int repeat=1)
   {
-      mover->stepMove(4.0,15.0,15.0,-17.115+0.00,0.0,5.0,5.75+2.0,1.0,.72,false,repeat);
+      mover->stepMove(4.0,15.0,15.0,-17.115+0.00,0.0,5.0,5.75+3.0,1.0,.72,false,repeat);
   }
 
   void forwardFast(int repeat=1)
   {
-      mover->stepMove(5.0,15.0,15.0,-17.115+0.00,0.0,4.0,5.75+2.0,1.0,.72,false,repeat);
+      mover->stepMove(5.0,15.0,15.0,-17.115+0.00,0.0,4.0,5.75+3.0,1.0,.72,false,repeat);
   }
   
   void smallForward()
@@ -355,7 +355,7 @@ public:
 
   void lowForward()
   {
-      mover->stepMove(4.0,15.0,15.0,-17.115+5.75,0.0,5.0,5.75/*+2.0*/,1.0,.72);
+      mover->blended(4.0,15.0,15.0,-17.115+5.75,0.0,5.0,5.75+3.0,1.0,.72);
   }
 
   void tape(const std::string &tape)
