@@ -507,20 +507,22 @@ struct DynamixelServoController : ServoController
 		int rv = zmq_recv(rep, &dataNeeded, sizeof(bool), ZMQ_DONTWAIT);
 		j = 0;		
 
+		if(dataNeeded) {
 		//Get temps and populate array
-		for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
-			msgArr[j++] = (uint8_t)i->first; //Servo ID
-			msgArr[j] = (uint8_t)i->second->temp(); //Servo temp
-		}
+			for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
+				msgArr[j++] = (uint8_t)i->first; //Servo ID
+				msgArr[j] = (uint8_t)i->second->temp(); //Servo temp
+			}
 
-		zmq_msg_t msg;
-		int rc = zmq_msg_init_size(&msg, size);
-		memcpy(zmq_msg_data(&msg), msgArr, size);
-		if(rc == 0)
-		{
-			int rc = zmq_sendmsg(rep, &msg, ZMQ_DONTWAIT);
+			zmq_msg_t msg;
+			int rc = zmq_msg_init_size(&msg, size);
+			memcpy(zmq_msg_data(&msg), msgArr, size);
+			if(rc == 0)
+			{
+				int rc = zmq_sendmsg(rep, &msg, ZMQ_DONTWAIT);
+			}
+			zmq_msg_close(&msg);
 		}
-		zmq_msg_close(&msg);
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}

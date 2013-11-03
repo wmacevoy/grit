@@ -36,7 +36,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("lidar.provider.verbose", false);
 	if (verbose) cfg.show();
 	
-	std::string lidar_path = cfg.str("lidar.provider.path");
+	std::string lidar_path = cfg.str("lidar.provider.dev_path");
 	int sleep_time = (int)cfg.num("lidar.provider.sleep_time");
 
 	signal(SIGINT, quitproc);
@@ -47,6 +47,7 @@ int main(int argc, char** argv)
 	int hwm = 1;
 	int linger = 25;
 	int rcl = 0, ret;
+	int retry = 0;
 	int64_t* lidar_data = NULL;
 	
 	std::string msg = "";
@@ -65,7 +66,7 @@ int main(int argc, char** argv)
 
 	//Connect lidar
 	rcl = urg_connect(&urg, lidar_path.c_str(), 115200);
-	if (rcl < 0) {
+	if (rcl != 0) {
 	  std::cout << "failed urg_connect()" << std::endl;
 	  return 1;
 	}
@@ -89,7 +90,6 @@ int main(int argc, char** argv)
 					if(verbose) printf("sending lidar data...\n");
 					int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
 					if(verbose && rc > 0) printf("sent lidat data!\n");
-					std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 				}
 				else
 				{	
@@ -107,8 +107,13 @@ int main(int argc, char** argv)
 		else 
 		{
 			std::cout << "failed urg_isConnected() with value: "<< rcl << std::endl;
-			die = true;
+			++retry;
+			if(retry >= 25) {				
+				die = true;
+			}
 		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
 	printf("freeing memory for data array...\n");
