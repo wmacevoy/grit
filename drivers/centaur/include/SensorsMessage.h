@@ -3,16 +3,16 @@
 class SensorsMessage
 {
  public:
-  double t;
+  int32_t t;
   // x,y,z
-  float a[3];
+  int32_t a[3];
 
   // x,y,z
-  float c[3];
+  int32_t c[3];
 
   // wx, wy, wz
-  float g[3];
+  int32_t g[3];
 
   // leg1,..,leg4
-  float p[4];
+  int32_t p[4];
 };
