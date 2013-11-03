@@ -158,7 +158,7 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		publish(&leapD, pub);
-		std::this_thread::sleep_for(std::chrono::microseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
 	controller.removeListener(listener);
