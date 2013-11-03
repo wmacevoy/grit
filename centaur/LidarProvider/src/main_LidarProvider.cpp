@@ -20,7 +20,6 @@ bool verbose;
 volatile int die = 0;
 
 int sz_lidar_data;
-int sz_lidar_data_max;
 
 void quitproc(int param)
 {
@@ -36,7 +35,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("lidar.provider.verbose", false);
 	if (verbose) cfg.show();
 	
-	std::string lidar_path = cfg.str("lidar.provider.dev_path");
+	std::string lidar_path = cfg.str("lidar.provider.dev_path").c_str();
 	int sleep_time = (int)cfg.num("lidar.provider.sleep_time");
 
 	signal(SIGINT, quitproc);
@@ -46,11 +45,9 @@ int main(int argc, char** argv)
 	urg_t urg;
 	int hwm = 1;
 	int linger = 25;
-	int rcl = 0, ret;
+	int rcl = 0;
 	int retry = 0;
 	int64_t* lidar_data = NULL;
-	
-	std::string msg = "";
 
 	//Initialize ZMQ and LIDAR connection
 	void* context_lidar = zmq_ctx_new ();
@@ -66,7 +63,7 @@ int main(int argc, char** argv)
 
 	//Connect lidar
 	rcl = urg_connect(&urg, lidar_path.c_str(), 115200);
-	if (rcl != 0) {
+	if (rcl < 0) {
 	  std::cout << "failed urg_connect()" << std::endl;
 	  return 1;
 	}
