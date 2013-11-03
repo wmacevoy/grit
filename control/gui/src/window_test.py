@@ -23,8 +23,9 @@ class Base:
         self.greenIcon.hide()
         self.redIcon.set_from_file(redLight)
         self.redIcon.hide()
-
-    def requestZMQ(self,widget):
+    
+    #Request temp from ZMQ_REQ
+    def temp_REQ():
         context = zmq.Context()
         port = '9001'
 
@@ -35,12 +36,11 @@ class Base:
             message = ctypes.c_uint32(1)
             req.send(message)
             receive_msg = req.recv()
-            print map(ord,receive_msg)
-            
-    def getInt(x):
-        return x
+            temp = map(ord,receive_msg)
+        return temp
 
-    def sensor(self,widget):
+    #Subscribe sensor from ZMQ_PUB
+    def sensor_SUB():
         context = zmq.Context()
         port = '5506'
         
@@ -52,60 +52,45 @@ class Base:
             print "Receiving msg..\n"
             sensors = sub.recv()
             #for j in range(0,56,4):
-            newSensors = struct.unpack("<14i",sensors)#sensors[j:j+4])
-            listSensors = list(newSensors)
-            print listSensors
+            new_Sensors = struct.unpack("<14i",sensors)#sensors[j:j+4])
+            list_Sensors = list(new_Sensors)
+        return list_Sensors
+
+    def temp_Check():
+        temp = temp_REQ()
+        print temp
 
     #kills the process when window is closed
     def destroy(self,widget):
         print "Window terminated"
         gtk.main_quit()
-
-    def temp_check(self,widget):
-        new_array = pyzeromqSub.doStuff(array)
-        for i in new_array:
-            print i
-            if num >= 80:
-                self.redIcon.show()
-                self.greenIcon.hide()
-            else:
-                self.greenIcon.show()
-                self.redIcon.hide()   
-        time.sleep(2)
-
+        
+    #Creates the window GUI
     def win(self):
         self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
         self.window.connect("destroy", lambda q: gtk.main_quit())
-        self.window.resize(150,730)
-        self.window.set_title("Mojavaton Project")
+        self.window.resize(250,400)
+        self.window.set_title("Temperature & Sensors")
         self.window.set_position(gtk.WIN_POS_CENTER)
         
-        #buttons 1-4
+        #buttons 1-3
         self.button1 = gtk.Button("Close")
         self.button1.connect("clicked",self.destroy)
         self.button2 = gtk.Button("Sensor")
-        self.button2.connect("clicked",self.sensor)
-        self.button3 = gtk.Button("Temperature")
-        self.button3.connect("clicked",self.requestZMQ)
-        
+        self.button2.connect("clicked",self.sensor_SUB)
+                
         #labels 1-4
-        self.label1 = gtk.Label(" ")
-        self.label2 = gtk.Label("This is where the temp goes")
-        self.label3 = gtk.Label("This is label 3")
-        self.label4 = gtk.Label(" ")
+        self.label1 = gtk.Label("Label 1")
         
+        #lights
         self.redIcon = gtk.Image()
         self.greenIcon = gtk.Image()
         self.greenIcon.set_pixel_size(20)
 
-        #self.greenIcon.set_from_file('/home/mojavaton/Downloads/icon_green_light.png')
-
         fixed = gtk.Fixed()
         fixed.put(self.button1, 123,10)
         fixed.put(self.button2, 300,10)
-        fixed.put(self.button3, 10,10)
-        fixed.put(self.label2, 10, 40)
-        fixed.put(self.label3, 10, 80)
+        fixed.put(self.label1, 10, 40)
         fixed.put(self.greenIcon, 400, 60)
         fixed.put(self.redIcon, 400, 60)
 
@@ -116,5 +101,6 @@ class Base:
         gtk.main()
 
 if __name__ == "__main__":
-    base = Base()
-    base.main()
+   # base = Base()
+   # base.main()
+    temp_Check()
