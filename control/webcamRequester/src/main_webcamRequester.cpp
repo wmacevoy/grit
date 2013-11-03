@@ -46,7 +46,7 @@ void mouseEvent(int evt, int x, int y, int flags, void* param)
 {
 	if(evt == CV_EVENT_MOUSEMOVE)
 	{
-		if(x >=0 && x <= 320 && y >= 45 && y <= 65)
+		if(x >=0 && x <= 320 && y >= 100 && y <= 110)
 		{
 			mx = x;
 			my = y;
@@ -125,8 +125,8 @@ int main(int argc, char** argv)
 	signal(SIGQUIT, quitproc);
 
 	//Line on screen needs to be calibrated with lidar
-	Point pt1(0, 55);
-	Point pt2(320, 55);
+	Point pt1(0, 105);
+	Point pt2(320, 105);
 	Point textOrg(1, 30);
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
