@@ -17,26 +17,20 @@ redLight = "/home/mojavaton/Downloads/icon_red_light.png"
 greenLight = "/home/mojavaton/Downloads/icon_green_light.png"
 
 class Base:
-    def __init__(self):
-        self.win()
-        self.greenIcon.set_from_file(greenLight)
-        self.greenIcon.hide()
-        self.redIcon.set_from_file(redLight)
-        self.redIcon.hide()
-    
     #Request temp from ZMQ_REQ
-    def temp_REQ():
+    def temp_REQ(self):
         context = zmq.Context()
         port = '9001'
 
         req = context.socket(zmq.REQ)
         req.connect("tcp://192.168.2.101: %s" % (port))
         
+        temp = []
         for i in range(0,2):
             message = ctypes.c_uint32(1)
             req.send(message)
             receive_msg = req.recv()
-            temp = map(ord,receive_msg)
+            temp.append(map(ord,receive_msg))
         return temp
 
     #Subscribe sensor from ZMQ_PUB
@@ -58,49 +52,77 @@ class Base:
 
     def temp_Check():
         temp = temp_REQ()
-        print temp
+        return temp
 
     #kills the process when window is closed
     def destroy(self,widget):
         print "Window terminated"
         gtk.main_quit()
         
-    #Creates the window GUI
-    def win(self):
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.connect("destroy", lambda q: gtk.main_quit())
-        self.window.resize(250,400)
-        self.window.set_title("Temperature & Sensors")
-        self.window.set_position(gtk.WIN_POS_CENTER)
+    def temp_check(self,widget):
+        servos_dict = {}
+        servos = []
+
+        temps = self.temp_REQ()
+        for item in temps:
+            for (i, x) in enumerate(item):
+                if i%2==0:
+                    servos_dict[x] = item[i+1]
+                    servos.append(x)
+        print servos_dict
+        for servo in servos:
+            sev = 0
+            if int(servos_dict[servo]) > 65:
+                sev = 0
+            elif int(servos_dict[servo]) > 45:
+                sev = 1
+            else:
+                sev = 2
+            try:
+                self.color_btn[int(servo)].set_color(gtk.gdk.color_parse(self.colors[sev]))
+            except:
+                print "not defined %d" % int(servo)
+            else:
+                print "defined %d" % int(servo)
+
+    def focus_received(self,widget,data=None):
+        self.focused=widget
+        #print(widget.get_name())
+
+    def quit(self,widget):
+        print("QUIT")
+        gtk.main_quit()
+
+    def __init__(self):
+        builder = gtk.Builder()
+        builder.add_from_file("main.xml") 
+        self.servos_dict = {}
+        self.colors = ['#FF0000','#F9FF00', '#0CFF00']
+
+        self.window = builder.get_object("winStatus")
+        self.btnTemps = builder.get_object("btnTemps")
+        self.btnPressures = builder.get_object("btnPressures")
+        self.back = builder.get_object("picBack")
+        #self.back.lower()
+        #self.parts = builder.get_object("viewParts")
+        #self.data = builder.get_object("viewData")
+        self.color_btn = [0]*200
+        for i in range(0,200):
+            self.color_btn[i] = builder.get_object("sig"+str(i))
+       # self. = builder.get_object("entry1")
+        #self.entry2 = builder.get_object("entry2")
+        #self.label1 = builder.get_object("label1")
+        #self.about  = builder.get_object("aboutdialog1")
         
-        #buttons 1-3
-        self.button1 = gtk.Button("Close")
-        self.button1.connect("clicked",self.destroy)
-        self.button2 = gtk.Button("Sensor")
-        self.button2.connect("clicked",self.sensor_SUB)
-                
-        #labels 1-4
-        self.label1 = gtk.Label("Label 1")
-        
-        #lights
-        self.redIcon = gtk.Image()
-        self.greenIcon = gtk.Image()
-        self.greenIcon.set_pixel_size(20)
-
-        fixed = gtk.Fixed()
-        fixed.put(self.button1, 123,10)
-        fixed.put(self.button2, 300,10)
-        fixed.put(self.label1, 10, 40)
-        fixed.put(self.greenIcon, 400, 60)
-        fixed.put(self.redIcon, 400, 60)
-
-        self.window.add(fixed)
-        self.window.show_all()
-
-    def main(self):
-        gtk.main()
+        builder.connect_signals(self)
+        self.btnTemps.connect("focus-in-event", self.focus_received)
+        self.btnPressures.connect("focus-in-event", self.focus_received)
+        #self.parts.connect("focus-in-event", self.focus_received)
+      #  self.data.connect("focus-in-event", self.focus_received)
+        #self.entry2.connect("focus-in-event", self.focus_received)
+        self.focused=self.btnTemps
 
 if __name__ == "__main__":
-   # base = Base()
-   # base.main()
-    temp_Check()
+    base = Base()
+    base.window.show()
+    gtk.main()
