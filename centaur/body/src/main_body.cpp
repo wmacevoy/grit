@@ -360,7 +360,7 @@ public:
   
   void balancedForward()
   {
-      mover->bStep(2.0,15.0,15.0,-15.115,0.0,1.0,1.0,1.0,1.0,false,4);
+      mover->bStep(2.0,11.5,14.5,-20.00,0.0,1.0,1.0,1.0,1.0,false,4);
   }
 
   void tape(const std::string &tape)
