@@ -30,7 +30,7 @@
             <property name="can_focus">False</property>
             <child>
               <object class="GtkFixed" id="fixed1">
-                <property name="width_request">200</property>
+                <property name="width_request">300</property>
                 <property name="height_request">392</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -44,8 +44,8 @@
                     <property name="pixbuf">robot.png</property>
                   </object>
                   <packing>
-                    <property name="x">7</property>
-                    <property name="y">32</property>
+                    <property name="x">19</property>
+                    <property name="y">56</property>
                   </packing>
                 </child>
                 <child>
@@ -63,8 +63,8 @@
                     <signal name="leave" handler="end_hover" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="x">165</property>
-                    <property name="y">274</property>
+                    <property name="x">184</property>
+                    <property name="y">287</property>
                   </packing>
                 </child>
                 <child>
@@ -80,8 +80,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">147</property>
-                    <property name="y">241</property>
+                    <property name="x">170</property>
+                    <property name="y">252</property>
                   </packing>
                 </child>
                 <child>
@@ -98,8 +98,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">148</property>
-                    <property name="y">218</property>
+                    <property name="x">154</property>
+                    <property name="y">239</property>
                   </packing>
                 </child>
                 <child>
@@ -116,8 +116,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">99</property>
-                    <property name="y">260</property>
+                    <property name="x">54</property>
+                    <property name="y">288</property>
                   </packing>
                 </child>
                 <child>
@@ -134,8 +134,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">105</property>
-                    <property name="y">224</property>
+                    <property name="x">79</property>
+                    <property name="y">253</property>
                   </packing>
                 </child>
                 <child>
@@ -152,8 +152,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">248</property>
-                    <property name="y">268</property>
+                    <property name="x">216</property>
+                    <property name="y">255</property>
                   </packing>
                 </child>
                 <child>
@@ -170,8 +170,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">211</property>
-                    <property name="y">248</property>
+                    <property name="x">182</property>
+                    <property name="y">220</property>
                   </packing>
                 </child>
                 <child>
@@ -188,8 +188,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">187</property>
-                    <property name="y">216</property>
+                    <property name="x">171</property>
+                    <property name="y">210</property>
                   </packing>
                 </child>
                 <child>
@@ -206,8 +206,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">83</property>
-                    <property name="y">188</property>
+                    <property name="x">82</property>
+                    <property name="y">214</property>
                   </packing>
                 </child>
                 <child>
@@ -224,8 +224,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">45</property>
-                    <property name="y">216</property>
+                    <property name="x">72</property>
+                    <property name="y">225</property>
                   </packing>
                 </child>
                 <child>
@@ -242,8 +242,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">19</property>
-                    <property name="y">154</property>
+                    <property name="x">41</property>
+                    <property name="y">158</property>
                   </packing>
                 </child>
                 <child>
@@ -260,8 +260,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">79</property>
-                    <property name="y">92</property>
+                    <property name="x">71</property>
+                    <property name="y">93</property>
                   </packing>
                 </child>
                 <child>
@@ -278,8 +278,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">124</property>
-                    <property name="y">206</property>
+                    <property name="x">93</property>
+                    <property name="y">242</property>
                   </packing>
                 </child>
                 <child>
@@ -296,8 +296,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">43</property>
-                    <property name="y">266</property>
+                    <property name="x">32</property>
+                    <property name="y">252</property>
                   </packing>
                 </child>
                 <child>
@@ -314,8 +314,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">50</property>
-                    <property name="y">118</property>
+                    <property name="x">72</property>
+                    <property name="y">115</property>
                   </packing>
                 </child>
                 <child>
@@ -332,8 +332,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">45</property>
-                    <property name="y">156</property>
+                    <property name="x">24</property>
+                    <property name="y">214</property>
                   </packing>
                 </child>
                 <child>
@@ -456,8 +456,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">248</property>
-                    <property name="y">159</property>
+                    <property name="x">239</property>
+                    <property name="y">219</property>
                   </packing>
                 </child>
                 <child>
@@ -560,8 +560,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">261</property>
-                    <property name="y">136</property>
+                    <property name="x">223</property>
+                    <property name="y">170</property>
                   </packing>
                 </child>
                 <child>
@@ -578,8 +578,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">229</property>
-                    <property name="y">117</property>
+                    <property name="x">199</property>
+                    <property name="y">116</property>
                   </packing>
                 </child>
                 <child>
@@ -596,8 +596,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">124</property>
-                    <property name="y">30</property>
+                    <property name="x">132</property>
+                    <property name="y">76</property>
                   </packing>
                 </child>
                 <child>
@@ -614,8 +614,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">116</property>
-                    <property name="y">170</property>
+                    <property name="x">129</property>
+                    <property name="y">210</property>
                   </packing>
                 </child>
                 <child>
@@ -632,7 +632,21 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">98</property>
+                    <property name="x">132</property>
+                    <property name="y">56</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="lblTemp">
+                    <property name="width_request">100</property>
+                    <property name="height_request">20</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Temperatures
+</property>
+                  </object>
+                  <packing>
+                    <property name="x">91</property>
                     <property name="y">36</property>
                   </packing>
                 </child>
@@ -645,9 +659,141 @@
             </child>
             <child>
               <object class="GtkFixed" id="fixed2">
-                <property name="width_request">50</property>
+                <property name="width_request">175</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <child>
+                  <object class="GtkColorButton" id="sigL1">
+                    <property name="width_request">25</property>
+                    <property name="height_request">25</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">True</property>
+                    <property name="relief">none</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="color">#000000000000</property>
+                  </object>
+                  <packing>
+                    <property name="x">113</property>
+                    <property name="y">77</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkColorButton" id="sigL3">
+                    <property name="width_request">25</property>
+                    <property name="height_request">25</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">True</property>
+                    <property name="relief">none</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="color">#000000000000</property>
+                  </object>
+                  <packing>
+                    <property name="x">116</property>
+                    <property name="y">141</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkColorButton" id="sigL2">
+                    <property name="width_request">25</property>
+                    <property name="height_request">25</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">True</property>
+                    <property name="relief">none</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="color">#000000000000</property>
+                  </object>
+                  <packing>
+                    <property name="x">40</property>
+                    <property name="y">74</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkColorButton" id="sigL4">
+                    <property name="width_request">25</property>
+                    <property name="height_request">25</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">True</property>
+                    <property name="relief">none</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="color">#000000000000</property>
+                  </object>
+                  <packing>
+                    <property name="x">41</property>
+                    <property name="y">135</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkImage" id="image1">
+                    <property name="width_request">100</property>
+                    <property name="height_request">80</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="stock">gtk-go-up</property>
+                  </object>
+                  <packing>
+                    <property name="x">39</property>
+                    <property name="y">26</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="btnPressures1">
+                    <property name="label" translatable="yes">Pressures</property>
+                    <property name="width_request">70</property>
+                    <property name="height_request">32</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="press_check" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="x">67</property>
+                    <property name="y">216</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="btnTemps1">
+                    <property name="label" translatable="yes">Temps</property>
+                    <property name="width_request">70</property>
+                    <property name="height_request">32</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <signal name="clicked" handler="temp_check" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="x">67</property>
+                    <property name="y">258</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="btnBottom1">
+                    <property name="label">gtk-stop</property>
+                    <property name="width_request">70</property>
+                    <property name="height_request">32</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_stock">True</property>
+                    <property name="image_position">right</property>
+                    <signal name="clicked" handler="quit" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="x">67</property>
+                    <property name="y">300</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -657,8 +803,6 @@
             </child>
             <child>
               <object class="GtkVButtonBox" id="navBox">
-                <property name="width_request">80</property>
-                <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
                   <placeholder/>

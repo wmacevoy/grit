@@ -58,6 +58,10 @@ class Base:
     def destroy(self,widget):
         print "Window terminated"
         gtk.main_quit()
+
+    def press_check(self,widget):
+        leg_dict = {}
+        pressures = []
         
     def temp_check(self,widget):
         servos_dict = {}
@@ -99,7 +103,7 @@ class Base:
         builder = gtk.Builder()
         builder.add_from_file("main.xml") 
         self.servos_dict = {}
-        self.colors = ['#FF0000','#F9FF00', '#0CFF00', '#0']
+        self.colors = ['#FF0000','#F9FF00', '#0CFF00', '#000000']
 
         self.window = builder.get_object("winStatus")
         self.btnTemps = builder.get_object("btnTemps")
@@ -111,6 +115,9 @@ class Base:
         self.color_btn = [0]*200
         for i in range(0,200):
             self.color_btn[i] = builder.get_object("sig"+str(i))
+        self.pressure_btn = [0]*5
+        for i in range(1,5):
+            self.pressure_btn[i] = builder.get_object("sigL"+str(i))
        # self. = builder.get_object("entry1")
         #self.entry2 = builder.get_object("entry2")
         #self.label1 = builder.get_object("label1")
