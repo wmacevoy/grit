@@ -15,17 +15,17 @@ using namespace Leap;
 Configure cfg;
 bool verbose;
 volatile int die = 0;
-int sleep_time = 100000;
+int sleep_time = 100;
 std::mutex locker;
 leapData leapD;
 
 void publish(leapData* data, void* zmq_pub)
 {
-  //if(verbose) std::cout << "Sending leap data..." << std::endl;
+  	if(verbose) std::cout << "Sending leap data..." << std::endl;
 	locker.lock();
 	int rc = zmq_send(zmq_pub, data, sizeof(leapData), ZMQ_DONTWAIT);
 	locker.unlock();
-	//if(verbose && rc > 0) std::cout << "Leap data sent!" << std::endl;
+	if(verbose && rc > 0) std::cout << "Leap data sent!" << std::endl;
 }
 
 class handListener : public Listener
@@ -74,37 +74,40 @@ void handListener::onFrame(const Controller& controller)
 		locker.lock();
 		
 		//This is a possible solution to keep the hands appropriately distinguished.  
+		if(hand0.palmPosition()[0] < 0)
+		{
 			leapD.lx = hand0.palmPosition()[0]; leapD.ly = hand0.palmPosition()[1]; leapD.lz = hand0.palmPosition()[2];
+			leapD.lnormal1 = hand0.palmNormal()[0]; leapD.lnormal2 = hand0.palmNormal()[1]; leapD.lnormal3 = hand0.palmNormal()[2];
 			leapD.lroll = hand0.palmNormal().roll() * 180.0 / M_PI;
 			leapD.lpitch = hand0.palmNormal().pitch()  * 180.0 / M_PI;
 			leapD.lyaw = hand0.palmNormal().yaw() * 180.0 / M_PI;
 			
-		if(hand0.palmPosition()[0] < 0)
-		{
-			leapD.lx = hand0.palmPosition()[0]; leapD.ly = hand0.palmPosition()[1]; leapD.lz = hand0.palmPosition()[2];
-			leapD.lroll = hand0.palmNormal().roll() * 180.0 / M_PI;
-			leapD.lpitch = hand0.palmNormal().pitch()  * 180.0 / M_PI;
-			
 			if(hand1.isValid())
 			{
 					leapD.rx = hand1.palmPosition()[0]; leapD.ry = hand1.palmPosition()[1]; leapD.rz = hand1.palmPosition()[2];
+					leapD.rnormal1 = hand1.palmNormal()[0]; leapD.rnormal2 = hand1.palmNormal()[1]; leapD.rnormal3 = hand1.palmNormal()[2];
 					leapD.rroll = hand1.palmNormal().roll() * 180.0 / M_PI;
 					leapD.rpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
+					leapD.ryaw = hand1.palmNormal().yaw() * 180.0 / M_PI;			
 			}
 		}
 		else if(hand0.palmPosition()[0] > 0)
 		{
 			leapD.rx = hand0.palmPosition()[0]; leapD.ry = hand0.palmPosition()[1]; leapD.rz = hand0.palmPosition()[2];
+			leapD.rnormal1 = hand0.palmNormal()[0]; leapD.rnormal2 = hand0.palmNormal()[1]; leapD.rnormal3 = hand0.palmNormal()[2];
 			leapD.rroll = hand0.palmNormal().roll() * 180.0 / M_PI;
 			leapD.rpitch = hand0.palmNormal().pitch()  * 180.0 / M_PI;
+			leapD.ryaw = hand0.palmNormal().yaw() * 180.0 / M_PI;
 
 			if(hand1.isValid())
 			{
 				leapD.lx = hand1.palmPosition()[0]; leapD.ly = hand1.palmPosition()[1]; leapD.lz = hand1.palmPosition()[2];
+				leapD.lnormal1 = hand1.palmNormal()[0]; leapD.lnormal2 = hand1.palmNormal()[1]; leapD.lnormal3 = hand1.palmNormal()[2];
 				leapD.lroll = hand1.palmNormal().roll() * 180.0 / M_PI;
 				leapD.lpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
+				leapD.lyaw = hand1.palmNormal().yaw() * 180.0 / M_PI;
 			}
-			}
+		}
 	  
 		locker.unlock();
 
@@ -113,9 +116,7 @@ void handListener::onFrame(const Controller& controller)
 	}	
 }
 
-void quitproc(int sig)
-{
-	printf("\nQuitting...\n");
+void quitproc(int sig) {
 	die = 1;
 }
 
@@ -161,9 +162,14 @@ int main(int argc, char** argv)
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
+	std::cout << std::endl << "Quitting..." << std::endl;
+	std::cout << "removing listenter..." << std::endl;
 	controller.removeListener(listener);
+	std::cout << "--done!" << std::endl;
+	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(pub);
 	zmq_ctx_destroy(context);
+	std::cout << "--done!" << std::endl;
 
 	return 0;
 }
