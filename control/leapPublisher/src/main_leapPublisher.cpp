@@ -74,6 +74,7 @@ void handListener::onFrame(const Controller& controller)
 		locker.lock();
 		
 		//This is a possible solution to keep the hands appropriately distinguished.  
+		//The X positions of the hands are checked.  x < 0 is left hand. x > 0 is the right hand :)
 		if(hand0.palmPosition()[0] < 0)
 		{
 			leapD.lx = hand0.palmPosition()[0]; leapD.ly = hand0.palmPosition()[1]; leapD.lz = hand0.palmPosition()[2];
