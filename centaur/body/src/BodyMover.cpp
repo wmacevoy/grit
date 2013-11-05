@@ -495,19 +495,19 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
       { // leg 1
         p.push_back(circulateX(-x,radius,a)+stepX(step,l1d,l1a)); 
         p.push_back(circulateY(y,radius,a) +stepY(step,l1d,l1a)); 
-        p.push_back(lift(z,1.0,a+M_PI_2)+raise(zstep,l1a));
+        p.push_back(lift(z,1.5,a+M_PI_2)+raise(zstep,l1a));
       } { // leg 2
         p.push_back(circulateX(x,radius,a) +stepX(step,l2d,l2a)); 
         p.push_back(circulateY(y,radius,a) +stepY(step,l2d,l2a)); 
-        p.push_back(lift(z,1.0,a)       +raise(zstep,l2a));
+        p.push_back(lift(z,1.5,a)       +raise(zstep,l2a));
       } { // leg 3 
         p.push_back(circulateX(x,radius,a) +stepX(step,l3d,l3a)); 
         p.push_back(circulateY(-y,radius,a)+stepY(step,l3d,l3a)); 
-        p.push_back(lift(z,1.0,a+M_PI_2)+raise(zstep,l3a));
+        p.push_back(lift(z,1.5,a+M_PI_2)+raise(zstep,l3a));
       } { // leg 4
         p.push_back(circulateX(-x,radius,a)+stepX(step,l4d,l4a)); 
         p.push_back(circulateY(-y,radius,a)+stepY(step,l4d,l4a)); 
-        p.push_back(lift(z,1.0,a)       +raise(zstep,l4a));
+        p.push_back(lift(z,1.5,a)       +raise(zstep,l4a));
       }         
       p.push_back(waist); 
       p.push_back(legDirection(l1a)); 

@@ -360,7 +360,12 @@ public:
   
   void balancedForward()
   {
-      mover->bStep(2.0,12.5,14.5,-20.00,0.5,90.0,12.0,4);
+      mover->bStep(2.5,12.5,14.5,-20.00,0.5,90.0,12.0,4);
+  }
+  
+  void balancedLowForward()
+  {
+      mover->bStep(2.5,12.5,14.5,-10.00,0.5,90.0,0.0,4);
   }
 
   void tape(const std::string &tape)
@@ -1020,7 +1025,13 @@ public:
     if (head == "bf") {  // forward
       balancedForward();
       ostringstream oss;
-      oss << "Step Balanced r=4 xstep=0 ystep=4 :ok."; 
+      oss << "Step Balanced r=2 zstep=12:ok."; 
+      answer(oss.str());
+    }
+    if (head == "blf") {  // forward
+      balancedLowForward();
+      ostringstream oss;
+      oss << "Step Balanced Low r=2 zStep=1 :ok."; 
       answer(oss.str());
     }
     if (head == "l") {  // left
