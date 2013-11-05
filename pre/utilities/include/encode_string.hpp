@@ -31,8 +31,8 @@ namespace utilities {
 	//   with the following encoding conventions
 	//
 	//   " becomes \"
-	//   \ becomes \\
-    //   <newline> becomes \n
+	//   "\" becomes "\\"
+        //   <newline> becomes \n
 	//   <carriage return> becomes \r
 	//   <tab>  becomes \t
 	//

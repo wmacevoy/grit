@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     // note these adjustments have to be made after a configuration 
     // is loaded.
     //
-    if (arg.find("=") != -1) {
+    if (arg.find("=") != string::npos) {
       string name=arg.substr(0,arg.find("="));
       string value=arg.substr(arg.find("=")+1);
       configuration.flags[name]=value;

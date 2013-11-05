@@ -60,7 +60,8 @@ int main()
     // parse errors throw a syntax exception:
     //
     try {
-      Expression *q=parse("x+1/2"); // division is not supported.
+      Expression *q = parse("x+1**2");
+      delete q;
     } catch (Expression::UnsupportedSyntax &exception) {
       cout << "exception: " << exception.message << endl;
     }

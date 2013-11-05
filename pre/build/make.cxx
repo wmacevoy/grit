@@ -2,7 +2,7 @@ CXX=g++
 # 
 # debugging options
 #
-CXXFLAGS=-g -fPIC
+CXXFLAGS=-g -fPIC -std=c++0x
 
 # 
 # optimized options
