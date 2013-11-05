@@ -408,31 +408,71 @@ vector<vector<double> > BodyMover::createMove(double radius,double x,double y,do
   return data;
 }
 
+/* The natural lift by shift body away from the leg being lifted */
 double lift(double elevation,double height,double angle) {
   return elevation+height*sin(angle*2.0);
 }
 
+/* Extra movement to raise the leg higher than natural */
+double raise(double elevation,double angle) {
+  double h=0.0;
+  double pi_8=M_PI_4/2.0;
+  while (angle>2*M_PI) 
+    angle-=2.0*M_PI; // wrap around
+  while (angle<0) 
+    angle+=2.0*M_PI;
+  if (5.0*pi_8<angle && angle<7.0*pi_8)  // pi/4 range 
+    h=sin(4.0*(angle-5.0*pi_8))*elevation; // map to 0 to pi
+  return h;
+}
+
+/* Circulation of the center of gravity in the x direction */
 double circulateX(double position,double radius,double angle) {
   return position+radius*cos(angle);
 }
  
+/* Circulation of the center of gravity in the y direction */
 double circulateY(double position,double radius,double angle) {
   return position+radius*sin(angle);
 }
 
-double step(double distance,double angle) {
-   
+/* The function that steps forward with the leg naturally comes up */
+double stepX(double dist,double direction,double angle) {
+  double xstep=cos(direction)*dist; // Effective step size in x
+  while (angle>2.0*M_PI) 
+    angle-=2.0*M_PI; // wrap around
+  while (angle<0) 
+    angle+=2.0*M_PI;
+  angle-=3.0*M_PI_4; // Subtract off center of raise angle
+  if (angle<0.0) angle+=2.0*M_PI;  // Add circle if negative
+  // Angle should between 0 and 2Pi. 
+  return xstep*(1.0-angle/2.0*M_PI);
+}
+
+/* The function that steps forward with the leg naturally comes up */
+double stepY(double dist,double direction,double angle) {
+  double ystep=sin(direction)*dist;  // Effective step size in y
+  while (angle>2.0*M_PI) 
+    angle-=2.0*M_PI; // wrap around
+  while (angle<0) 
+    angle+=2.0*M_PI;
+  angle-=3.0*M_PI_4; // Subtract off center of raise angle
+  if (angle<0.0) angle+=2.0*M_PI;  // Add circle if negative
+  // Angle should between 0 and 2Pi. 
+  return ystep*(1.0-angle/2.0*M_PI);
 }
 
 double legDirection(double angle) {
-  if (M_PI_4<angle && angle<M_PI_2) return 1.0;
-  else if (M_PI_2<angle && angle<3*M_PI_4) return -1.0;
+  double pi_8=M_PI_4/2.0;
+  if (5.0*pi_8<angle && angle<3.0*M_PI_4) return 1.0;
+  else if (3.0*M_PI_4<angle && angle<7.0*pi_8) return -1.0;
   else return 0.0; 
 }
  
-vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double z,double xstep,double ystep,double zstep,double left,double right,bool narrow,int repeat) {
+vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double z,double step,double direction,double zstep,int repeat) {
   vector<vector<double>> data;
-  double T =10.0; 
+  direction=(direction*M_PI)/180.0;
+  double T =20.0; 
   double timeDivider=10.0;
   double steps=T*timeDivider; 
   double fullCircle=2.0*M_PI;
@@ -440,6 +480,10 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
   double waist=0.0;
   double dt=0.1;
   double t=0.0;
+  double l1d=direction; // All same direction is a translation
+  double l2d=direction;
+  double l3d=direction;
+  double l4d=direction;
   for (int q=0;q<repeat;q++) {
     for(double a=0;a<fullCircle;a+=da) {
 	  float l1a=a;
@@ -448,10 +492,23 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
 	  float l4a=a+3*M_PI_2;
       vector<double> p;
       p.push_back(t);
-      p.push_back(circulateX(-x,radius,a)); p.push_back(circulateY(y,radius,a)); p.push_back(lift(z,zstep,a+M_PI_2));
-      p.push_back(circulateX(x,radius,a));  p.push_back(circulateY(y,radius,a)); p.push_back(lift(z,zstep,a));
-      p.push_back(circulateX(x,radius,a));  p.push_back(circulateY(-y,radius,a)); p.push_back(lift(z,zstep,a+M_PI_2));
-      p.push_back(circulateX(-x,radius,a)); p.push_back(circulateY(-y,radius,a)); p.push_back(lift(z,zstep,a));
+      { // leg 1
+        p.push_back(circulateX(-x,radius,a)+stepX(step,l1d,l1a)); 
+        p.push_back(circulateY(y,radius,a) +stepY(step,l1d,l1a)); 
+        p.push_back(lift(z,1.0,a+M_PI_2)+raise(zstep,l1a));
+      } { // leg 2
+        p.push_back(circulateX(x,radius,a) +stepX(step,l2d,l2a)); 
+        p.push_back(circulateY(y,radius,a) +stepY(step,l2d,l2a)); 
+        p.push_back(lift(z,1.0,a)       +raise(zstep,l2a));
+      } { // leg 3 
+        p.push_back(circulateX(x,radius,a) +stepX(step,l3d,l3a)); 
+        p.push_back(circulateY(-y,radius,a)+stepY(step,l3d,l3a)); 
+        p.push_back(lift(z,1.0,a+M_PI_2)+raise(zstep,l3a));
+      } { // leg 4
+        p.push_back(circulateX(-x,radius,a)+stepX(step,l4d,l4a)); 
+        p.push_back(circulateY(-y,radius,a)+stepY(step,l4d,l4a)); 
+        p.push_back(lift(z,1.0,a)       +raise(zstep,l4a));
+      }         
       p.push_back(waist); 
       p.push_back(legDirection(l1a)); 
       p.push_back(legDirection(l2a)); 
@@ -464,9 +521,9 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
   return data;
 }
 
-bool BodyMover::bStep(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {
+bool BodyMover::bStep(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat) {
   vector<vector<double > > f;
-  f=bMove(radius,x,y,z,xstep,ystep,zAdder,left,right,narrow,repeat);
+  f=bMove(radius,x,y,z,step,direction,zStep,repeat);
   logPosition(f);
   fromTips(f);
   return true;  
