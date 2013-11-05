@@ -1,4 +1,4 @@
-all : libs
+all : libs progs
 
 DEPS=
 
