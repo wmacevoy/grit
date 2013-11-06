@@ -1,8 +1,12 @@
+#include "coptgen.hpp"
 #include "mat.h"
 #include "gsolve.h"
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <memory>
 #include <set>
+#include <string.h>
 
 using namespace std;
 
@@ -92,10 +96,13 @@ Vec parameters(const Vec &eq, const Vec &x)
 void gsolve_fk_arm(string side)
 {
   Mat pose=arm(side);
-  string root=string("fk_")+side+"arm";
+  string dir=string("../ik");
+  string hfile=dir + "/include/fk_" + side + "arm.h";
+  string cppfile=dir + "/src/fk_" + side + "arm.cpp";
 
   {
-    ofstream out((string("../" + root + "/include/" + root+"hpp").c_str());
+    cout << "generating '" << hfile << "'" << endl;
+    ofstream out(hfile.c_str());
     out << "#pragma once" << endl;
     out << "void fk_" << side << "palm(" << endl;
     out << "float shoulderio," << endl;
@@ -107,7 +114,8 @@ void gsolve_fk_arm(string side)
     out << ");" << endl;
   }
   {
-    ofstream out((string("fk_")+side+"arm.cpp").c_str());
+    cout << "generating '" << cppfile << "'" << endl;
+    ofstream out(cppfile.c_str());
     out << "#include <math.h>" << endl;
     out << "#include \"fk_" << side << "arm.hpp\"" << endl;
 
@@ -120,21 +128,22 @@ void gsolve_fk_arm(string side)
     out << "float forearm," << endl;
     out << "float pose[4][4]" << endl;
     out << ")" << endl;
+    out << "{" << endl;
 
-    COptGen coptgen;
+    symbolic::COptGen coptgen;
     coptgen.type = "float";
     coptgen.format = &symbolic::format_c_single;
 
-    coptgen.assign("shoulderio",var("angles[0]"));
-    coptgen.assign("shoulderud",var("angles[1]"));
-    coptgen.assign("bicep",var("angles[2]"));
-    coptgen.assign("elbow",var("angles[3]"));
-    coptgen.assign("forearm",var("angles[4]"));
+    coptgen.assign("shoulderio",&*var("angles[0]"));
+    coptgen.assign("shoulderud",&*var("angles[1]"));
+    coptgen.assign("bicep",&*var("angles[2]"));
+    coptgen.assign("elbow",&*var("angles[3]"));
+    coptgen.assign("forearm",&*var("angles[4]"));
     for (int r=0; r<4; ++r) {
       for (int c=0; c<4; ++c) {
 	ostringstream oss;
 	oss << "pose[" << r << "][" << c << "]";
-	coptgen.assign(oss.str(),pose[r][c]);
+	coptgen.assign(oss.str(),&*pose[r][c]);
       }
     }
     coptgen.print(out);
@@ -146,6 +155,10 @@ void gsolve_fk_arm(string side)
 
 void gsolve_ik_arm(string side)
 {
+  Mat pose=arm(side);
+  string dir=string("tmp");
+  string inifile=dir + "/ik_" + side + "arm.ini";
+
   Vec p=vec(var("px"),var("py"),var("pz"));
   Vec n=vec(var("nx"),var("ny"),var("nz"));
 
@@ -205,7 +218,8 @@ void gsolve_ik_arm(string side)
     eq[i]=E(substitute(bar,&*eq[i]));
   }
 
-  gsolve(side+"arm",eq,x,parms);
+  ofstream out(inifile.c_str());
+  gsolve(out,side+"arm",eq,x,parms);
 }
 
 void gsolve_leg()
@@ -257,15 +271,31 @@ void gsolve_leg()
     eq[i]=E(substitute(bar,&*eq[i]));
   }
 
-  gsolve("leg",eq,x,p);
+  ofstream out("tmp/ik_leg.ini");
+  gsolve(out,"leg",eq,x,p);
 }
 
 
 int main(int argc, char *argv[])
 {
-  gsolve_leg();
-  gsolve_fk_arm("left");
-  gsolve_ik_arm("left");
-  gsolve_fk_arm("right");
-  gsolve_ik_arm("right");
+  for (int argi=1; argi < argc; ++argi) {
+    if (strcmp(argv[argi],"leftarm")==0) {
+      gsolve_fk_arm("left");      
+      gsolve_ik_arm("left");
+      continue;
+    }
+    if (strcmp(argv[argi],"rightarm")==0) {
+      gsolve_fk_arm("right");      
+      gsolve_ik_arm("right");
+      continue;
+    }
+    if (strcmp(argv[argi],"leg")==0) {
+      gsolve_leg();
+      continue;
+    }
+    cout << "unknown argument '" << argv[argi] << "'" << endl;
+  }
+
+  return 0;
+
 }

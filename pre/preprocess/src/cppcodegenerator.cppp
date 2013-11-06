@@ -37,7 +37,7 @@
 #!      mode |= SOURCE;
 #!    }
 #!
-#!    if (endswith(file,".hpp")) {
+#!    if (endswith(file,".hpp") || endswith(file,".h")) {
 #!      mode |= HEADER;
 #!    }
 #!
@@ -502,7 +502,7 @@ int main(int argc, const char *argv[])$(end)
 #!  void generate_header()
 #!  {
 #!    string file_hpp=file;
-#!    if (!endswith(file,".hpp")) {
+#!    if (!endswith(file,".hpp") && !endswith(file,".h")) {
 #!      file_hpp += ".hpp";
 #!    }
 #!    ofstream outfile(file_hpp.c_str());
