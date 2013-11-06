@@ -1,6 +1,7 @@
 #include "coptgen.hpp"
 #include "mat.h"
 #include "gsolve.h"
+#include "toupper.hpp"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -43,6 +44,7 @@ Mat leg()
 
 Mat arm(string side)
 {
+  string SIDE=utilities::toupper(side);
   E sigma = num((side == "left") ? -1 : 1);
   
   Mat m = eye(4,4);
@@ -53,11 +55,11 @@ Mat arm(string side)
   E dshoulderio2ud=num(3.0+5.0/8.0);
   E dshoulderud2elbow=num(9.0);
   E delbow2palm=num(15.0);
-  E shoulderio=var("shoulderio");
-  E shoulderud=var("shoulderud");
-  E bicep=var("bicep");
-  E elbow=var("elbow");
-  E forearm=var("forearm");
+  E shoulderio=(pi/num(180))*var(SIDE+"_SHOULDER_IO");
+  E shoulderud=(pi/num(180))*var(SIDE+"_SHOULDER_UD");
+  E bicep=(pi/num(180))*var(SIDE+"_BICEP_ROTATE");
+  E elbow=(pi/num(180))*var(SIDE+"_ELBOW");
+  E forearm=(pi/num(180))*var(SIDE+"_FOREARM_ROTATE");
 
   m=m*translate(vec(sigma*dxneck2shoulder,dyneck2shoulder,num(0)));
   m=m*rotate(o,ez,cos(shoulderio),-sin(shoulderio));
@@ -95,6 +97,8 @@ Vec parameters(const Vec &eq, const Vec &x)
 
 void gsolve_fk_arm(string side)
 {
+  string SIDE=utilities::toupper(side);
+
   Mat pose=arm(side);
   string dir=string("../../drivers/ik");
   string hfile=dir + "/include/fk_" + side + "arm.h";
@@ -104,12 +108,12 @@ void gsolve_fk_arm(string side)
     cout << "generating '" << hfile << "'" << endl;
     ofstream out(hfile.c_str());
     out << "#pragma once" << endl;
-    out << "void fk_" << side << "palm(" << endl;
-    out << "float shoulderio," << endl;
-    out << "float shoulderud," << endl;
-    out << "float bicep," << endl;
-    out << "float elbow," << endl;
-    out << "float forearm," << endl;
+    out << "void fk_" << side << "arm(" << endl;
+    out << "float " << SIDE << "_SHOULDER_IO," << endl;
+    out << "float " << SIDE << "_SHOULDER_UD," << endl;
+    out << "float " << SIDE << "_BICEP_ROTATE," << endl;
+    out << "float " << SIDE << "_ELBOW," << endl;
+    out << "float " << SIDE << "_FOREARM_ROTATE," << endl;
     out << "float pose[4][4]" << endl;
     out << ");" << endl;
   }
@@ -117,15 +121,15 @@ void gsolve_fk_arm(string side)
     cout << "generating '" << cppfile << "'" << endl;
     ofstream out(cppfile.c_str());
     out << "#include <math.h>" << endl;
-    out << "#include \"fk_" << side << "arm.hpp\"" << endl;
+    out << "#include \"fk_" << side << "arm.h\"" << endl;
 
     out << endl;
-    out << "void fk_" << side << "palm(" << endl;
-    out << "float shoulderio," << endl;
-    out << "float shoulderud," << endl;
-    out << "float bicep," << endl;
-    out << "float elbow," << endl;
-    out << "float forearm," << endl;
+    out << "void fk_" << side << "arm(" << endl;
+    out << "float " << SIDE << "_SHOULDER_IO," << endl;
+    out << "float " << SIDE << "_SHOULDER_UD," << endl;
+    out << "float " << SIDE << "_BICEP_ROTATE," << endl;
+    out << "float " << SIDE << "_ELBOW," << endl;
+    out << "float " << SIDE << "_FOREARM_ROTATE," << endl;
     out << "float pose[4][4]" << endl;
     out << ")" << endl;
     out << "{" << endl;
@@ -134,11 +138,12 @@ void gsolve_fk_arm(string side)
     coptgen.type = "float";
     coptgen.format = &symbolic::format_c_single;
 
-    coptgen.assign("shoulderio",&*var("angles[0]"));
-    coptgen.assign("shoulderud",&*var("angles[1]"));
-    coptgen.assign("bicep",&*var("angles[2]"));
-    coptgen.assign("elbow",&*var("angles[3]"));
-    coptgen.assign("forearm",&*var("angles[4]"));
+    //    coptgen.assign("shoulderio",&*var("angles[0]"));
+    //    coptgen.assign("shoulderud",&*var("angles[1]"));
+    //    coptgen.assign("bicep",&*var("angles[2]"));
+    //    coptgen.assign("elbow",&*var("angles[3]"));
+    //    coptgen.assign("forearm",&*var("angles[4]"));
+
     for (int r=0; r<4; ++r) {
       for (int c=0; c<4; ++c) {
 	ostringstream oss;
@@ -155,6 +160,7 @@ void gsolve_fk_arm(string side)
 
 void gsolve_ik_arm(string side)
 {
+  string SIDE=utilities::toupper(side);
   Mat pose=arm(side);
   string dir=string("tmp");
   string inifile=dir + "/ik_" + side + "arm.ini";
@@ -175,11 +181,11 @@ void gsolve_ik_arm(string side)
   eq.push_back(rz[0][0]-n[0]);
   eq.push_back(rz[1][0]-n[1]);
 
-  E shoulderio=var("shoulderio");
-  E shoulderud=var("shoulderud");
-  E bicep=var("bicep");
-  E elbow=var("elbow");
-  E forearm=var("forearm");
+  E shoulderio=var(SIDE+"_SHOULDER_IO");
+  E shoulderud=var(SIDE+"_SHOULDER_UD");
+  E bicep=var(SIDE+"_BICEP_ROTATE");
+  E elbow=var(SIDE+"_ELBOW");
+  E forearm=var(SIDE+"_FOREARM_ROTATE");
 
   x.push_back(shoulderio);
   x.push_back(shoulderud);
