@@ -96,7 +96,7 @@ Vec parameters(const Vec &eq, const Vec &x)
 void gsolve_fk_arm(string side)
 {
   Mat pose=arm(side);
-  string dir=string("../ik");
+  string dir=string("../../drivers/ik");
   string hfile=dir + "/include/fk_" + side + "arm.h";
   string cppfile=dir + "/src/fk_" + side + "arm.cpp";
 

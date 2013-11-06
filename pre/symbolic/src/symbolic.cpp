@@ -164,6 +164,7 @@ namespace symbolic
 	return 0;
       }
     }
+    assert(false);
   }
 
   static bool less(const Expression *a, const Expression *b)

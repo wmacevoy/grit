@@ -1,18 +1,21 @@
 all : libs progs iks
 
+IK=../../drivers/ik
+IK_MAKE=$(IK)/src/ik_leg.cpp $(IK)/src/ik_leftarm.cpp $(IK)/src/ik_rightarm.cpp $(IK)/include/ik_leg.h $(IK)/include/ik_leftarm.h $(IK)/include/ik_rightarm.h
+
 CPPP_PREFIX="out"
-CLEAN_ALSO=../ik_leftarm/ik_leftarm.ini ../ik_rightarm/ik_rightarm.ini ../ik_leg/ik_leg.ini
+CLEAN_ALSO=$(IK_MAKE)
 DEPS=utilities prepreprocess symbolic preprocess mat
 
-iks : ../ik/src/ik_leftarm.cpp ../ik/src/ik_rightarm.cpp ../ik/src/ik_leg.cpp ../ik/include/ik_leftarm.h ../ik/include/ik_rightarm.h ../ik/include/ik_leg.h
+iks : $(IK_MAKE)
 
-tmp/ik_%.ini : bin/gik
+tmp/ik_%.ini $(IK)/src/fk_%.cpp $(IK)/include/fk_%.h : bin/gik
 	../context bin/gik $*
 
-../ik/src/ik_%.cpp : tmp/ik_%.ini ../preprocess/bin/preprocess
+$(IK)/src/ik_%.cpp : tmp/ik_%.ini ../preprocess/bin/preprocess
 	../context ../preprocess/bin/preprocess $< file=$@ c++
 
-../ik/include/ik_%.h : tmp/ik_%.ini ../preprocess/bin/preprocess
+$(IK)/include/ik_%.h : tmp/ik_%.ini ../preprocess/bin/preprocess
 	../context ../preprocess/bin/preprocess $< file=$@ c++
 
 include ../rules.mk
