@@ -86,6 +86,14 @@ namespace symbolic
       NaturalLog *log_e = (NaturalLog *) e;
       Expression *arg_e = eval(log_e->arg);
       return newtmp(new NaturalLog(arg_e));
+    } else if (typeid(*e) == typeid(Cos)) {
+      Cos *cos_e = (Cos *) e;
+      Expression *arg_e = eval(cos_e->arg);
+      return newtmp(new Cos(arg_e));
+    } else if (typeid(*e) == typeid(Sin)) {
+      Sin *sin_e = (Sin *) e;
+      Expression *arg_e = eval(sin_e->arg);
+      return newtmp(new Sin(arg_e));
     } else if (typeid(*e) == typeid(Product)) {
       Product *prod_e = (Product *) e;
       Product *prod = new Product();

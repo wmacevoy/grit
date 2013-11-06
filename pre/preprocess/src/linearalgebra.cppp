@@ -89,7 +89,7 @@ $(target) void $(prefix)linear_solve(int dim, float *A, float *b, float *x)$end
 #!
 #!  void LinearAlgebra::define_linear_solve()
 #!  {
-#!#include "../tmp/linear_solve.cpp"
+#!#include "../tmp/linear_solve.hpp"
 #!  }
 #!
 #!  void LinearAlgebra::prototype_all() {

@@ -365,13 +365,13 @@ __device__ void $(prefix)solve(
 #!    string cuda_declare_args="int chunk,int cell,";
 #!    string cuda_args="chunk,cell,";
 #!    if (solver=="newton") {
-#!#include "../tmp/solve_newton.cpp"
+#!#include "solve_newton.hpp"
 #!    }
 #!    if (solver=="damped_newton") {
-#!#include "../tmp/solve_damped_newton.cpp"
+#!#include "solve_damped_newton.hpp"
 #!    }
 #!    if (solver=="empty") {
-#!#include "../tmp/solve_empty.cpp"
+#!#include "solve_empty.hpp"
 #!    }
 #!  }
 #!
