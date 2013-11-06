@@ -77,6 +77,7 @@ void subscribeF(void *zmq_sub, leapData *leapItem)
 
 void subscribeN(void* zmq_sub, joystick* j)
 {
+	j->clear();
 	int rc = zmq_recv(zmq_sub, j, sizeof(joystick), ZMQ_DONTWAIT);
 }
 
@@ -155,7 +156,7 @@ public:
 
 	if (zmq_connect(sub, address.c_str()) != 0)
 	{
-		printf("Error initializing 0mq...\n");
+		printf("Error initializing 0mq NECK...\n");
 		return;
 	}
 	
@@ -167,13 +168,13 @@ public:
 		subscribeN(sub, &jm);
 		currentUpDown = currentUpDown + (deltat)*(float(jm.y2)/32.0)*(15.0);
 		currentLeftRight = currentLeftRight + (deltat)*(float(jm.x2)/32.0)*(15.0);
-		if(currentUpDown < -33) currentUpDown = -33;
-		else if(currentUpDown > 33) currentUpDown = 33;
-		if(currentLeftRight < -33) currentLeftRight = -33;
-		else if(currentLeftRight > 33) currentLeftRight = 33;
+		if(currentUpDown < -65) currentUpDown = -65;
+		else if(currentUpDown > 65) currentUpDown = 65;
+		if(currentLeftRight < -175) currentLeftRight = -175;
+		else if(currentLeftRight > 175) currentLeftRight = 175;
 		mover->neck.upDown.setup(currentUpDown);
 		mover->neck.leftRight.setup(currentLeftRight);
-		std::this_thread::sleep_for(std::chrono::microseconds(25));
+		std::this_thread::sleep_for(std::chrono::milliseconds(25));
 	}  
 
 	zmq_close(sub);
@@ -184,16 +185,18 @@ public:
   std::atomic < bool > hands_on;
   void subscribeToHands() {	//Hands thread function
 	int rc;
+	int hwm = 1;
 	Hands manos;
 	std::string address = cfg->str("body.commander.glovesAddress", "tcp://192.168.2.113:6689");
 	
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
+	rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	
 	if (zmq_connect(sub, address.c_str()) != 0)
 	{
-		printf("Error initializing 0mq...\n");
+		printf("Error initializing 0mq HANDS...\n");
 		return;
 	}
 	
@@ -210,7 +213,7 @@ public:
 			mover->right.ring.setup(manos.rring);
 			mover->right.thumb.setup(manos.rthumb);
 //			cout << "adjusted hands (rthumb=" << manos.rthumb << ")." << endl;
-			std::this_thread::sleep_for(std::chrono::microseconds(25));
+			std::this_thread::sleep_for(std::chrono::milliseconds(25));
 	}	
 //	cout << "ending hands control." << endl;	
 	zmq_close(sub);
@@ -222,11 +225,13 @@ public:
   std::atomic < bool > forearms_on;
   void subscribeToForearms() {	//Forearms thread function
     int rc;
+    int hwm = 1;
     leapData leap;
     std::string address = cfg->str("body.commander.leapAddress", "tcp://192.168.2.113:9990");	
 
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
+	rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	if (zmq_connect(sub, address.c_str()) != 0)
 	{
@@ -241,7 +246,7 @@ public:
 			//mover->right.forearm.setup(leap.rroll);
 			mover->left.elbow.setup(leap.lpitch);
 			//mover->right.elbow.setup(leap.rpitch);
-			std::this_thread::sleep_for(std::chrono::microseconds(25));
+			std::this_thread::sleep_for(std::chrono::milliseconds(25));
 	}	
 //	cout << "ending forearm control." << endl;	
 	zmq_close(sub);
