@@ -1,7 +1,7 @@
 all : libs progs iks
 
 IK=../../drivers/ik
-IK_MAKE=$(IK)/src/ik_leg.cpp $(IK)/src/ik_leftarm.cpp $(IK)/src/ik_rightarm.cpp $(IK)/include/ik_leg.h $(IK)/include/ik_leftarm.h $(IK)/include/ik_rightarm.h
+IK_MAKE=$(IK)/ik_leg.ini $(IK)/ik_leftarm.ini $(IK)/ik_rightarm.ini $(IK)/src/ik_leg.cpp $(IK)/src/ik_leftarm.cpp $(IK)/src/ik_rightarm.cpp $(IK)/include/ik_leg.h $(IK)/include/ik_leftarm.h $(IK)/include/ik_rightarm.h $(IK)/ik_leg.sci $(IK)/ik_leftarm.sci $(IK)/ik_rightarm.sci
 
 CPPP_PREFIX="out"
 CLEAN_ALSO=$(IK_MAKE)
@@ -9,13 +9,17 @@ DEPS=utilities prepreprocess symbolic preprocess mat
 
 iks : $(IK_MAKE)
 
-tmp/ik_%.ini $(IK)/src/fk_%.cpp $(IK)/include/fk_%.h : bin/gik
+$(IK)/ik_%.ini $(IK)/src/fk_%.cpp $(IK)/include/fk_%.h : bin/gik
 	../context bin/gik $*
 
-$(IK)/src/ik_%.cpp : tmp/ik_%.ini ../preprocess/bin/preprocess
+$(IK)/ik_%.sci : $(IK)/ik_%.ini ../preprocess/bin/preprocess
+	../context ../preprocess/bin/preprocess $< file=$@ scilab
+
+$(IK)/src/ik_%.cpp : $(IK)/ik_%.ini ../preprocess/bin/preprocess
 	../context ../preprocess/bin/preprocess $< file=$@ c++
 
-$(IK)/include/ik_%.h : tmp/ik_%.ini ../preprocess/bin/preprocess
+
+$(IK)/include/ik_%.h : $(IK)/ik_%.ini ../preprocess/bin/preprocess
 	../context ../preprocess/bin/preprocess $< file=$@ c++
 
 include ../rules.mk

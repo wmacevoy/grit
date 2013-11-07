@@ -162,7 +162,7 @@ void gsolve_ik_arm(string side)
 {
   string SIDE=utilities::toupper(side);
   Mat pose=arm(side);
-  string dir=string("tmp");
+  string dir=string("../../drivers/ik");
   string inifile=dir + "/ik_" + side + "arm.ini";
 
   Vec p=vec(var("px"),var("py"),var("pz"));
@@ -224,6 +224,7 @@ void gsolve_ik_arm(string side)
     eq[i]=E(substitute(bar,&*eq[i]));
   }
 
+  cout << "generating '" << inifile << "'" << endl;
   ofstream out(inifile.c_str());
   gsolve(out,side+"arm",eq,x,parms);
 }
@@ -277,7 +278,9 @@ void gsolve_leg()
     eq[i]=E(substitute(bar,&*eq[i]));
   }
 
-  ofstream out("tmp/ik_leg.ini");
+  string ini="../../drivers/ik/ik_leg.ini";
+  cout << "generating '" << ini << "'" << endl;
+  ofstream out(ini.c_str());
   gsolve(out,"leg",eq,x,p);
 }
 
