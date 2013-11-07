@@ -55,11 +55,11 @@ Mat arm(string side)
   E dshoulderio2ud=num(3.0+5.0/8.0);
   E dshoulderud2elbow=num(9.0);
   E delbow2palm=num(15.0);
-  E shoulderio=(pi/num(180))*var(SIDE+"_SHOULDER_IO");
-  E shoulderud=(pi/num(180))*var(SIDE+"_SHOULDER_UD");
-  E bicep=(pi/num(180))*var(SIDE+"_BICEP_ROTATE");
-  E elbow=(pi/num(180))*var(SIDE+"_ELBOW");
-  E forearm=(pi/num(180))*var(SIDE+"_FOREARM_ROTATE");
+  E shoulderio=(pi/num(180))*var(SIDE+"ARM_SHOULDER_IO");
+  E shoulderud=(pi/num(180))*var(SIDE+"ARM_SHOULDER_UD");
+  E bicep=(pi/num(180))*var(SIDE+"ARM_BICEP_ROTATE");
+  E elbow=(pi/num(180))*var(SIDE+"ARM_ELBOW");
+  E forearm=(pi/num(180))*var(SIDE+"ARM_FOREARM_ROTATE");
 
   m=m*translate(vec(sigma*dxneck2shoulder,dyneck2shoulder,num(0)));
   m=m*rotate(o,ez,cos(shoulderio),-sin(shoulderio));
@@ -109,11 +109,11 @@ void gsolve_fk_arm(string side)
     ofstream out(hfile.c_str());
     out << "#pragma once" << endl;
     out << "void fk_" << side << "arm(" << endl;
-    out << "float " << SIDE << "_SHOULDER_IO," << endl;
-    out << "float " << SIDE << "_SHOULDER_UD," << endl;
-    out << "float " << SIDE << "_BICEP_ROTATE," << endl;
-    out << "float " << SIDE << "_ELBOW," << endl;
-    out << "float " << SIDE << "_FOREARM_ROTATE," << endl;
+    out << "float " << SIDE << "ARM_SHOULDER_IO," << endl;
+    out << "float " << SIDE << "ARM_SHOULDER_UD," << endl;
+    out << "float " << SIDE << "ARM_BICEP_ROTATE," << endl;
+    out << "float " << SIDE << "ARM_ELBOW," << endl;
+    out << "float " << SIDE << "ARM_FOREARM_ROTATE," << endl;
     out << "float pose[4][4]" << endl;
     out << ");" << endl;
   }
