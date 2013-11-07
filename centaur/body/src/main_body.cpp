@@ -78,7 +78,7 @@ void subscribeF(void *zmq_sub, leapData *leapItem)
 void subscribeN(void* zmq_sub, joystick* j)
 {
 	j->clear();
-	int rc = zmq_recv(zmq_sub, j, sizeof(joystick), ZMQ_DONTWAIT);
+	int rc = zmq_recv(zmq_sub, j, sizeof(joystick), 0);
 }
 
 using namespace std;
@@ -151,7 +151,7 @@ public:
 
 	void* context = zmq_ctx_new();
 	void* sub = zmq_socket(context, ZMQ_SUB);
-	rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	//rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 
 	if (zmq_connect(sub, address.c_str()) != 0)
@@ -174,7 +174,7 @@ public:
 		else if(currentLeftRight > 175) currentLeftRight = 175;
 		mover->neck.upDown.setup(currentUpDown);
 		mover->neck.leftRight.setup(currentLeftRight);
-		std::this_thread::sleep_for(std::chrono::milliseconds(25));
+		std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}  
 
 	zmq_close(sub);
@@ -191,7 +191,7 @@ public:
 	
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
-	rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	//rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	
 	if (zmq_connect(sub, address.c_str()) != 0)
@@ -213,7 +213,7 @@ public:
 			mover->right.ring.setup(manos.rring);
 			mover->right.thumb.setup(manos.rthumb);
 //			cout << "adjusted hands (rthumb=" << manos.rthumb << ")." << endl;
-			std::this_thread::sleep_for(std::chrono::milliseconds(25));
+			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
 //	cout << "ending hands control." << endl;	
 	zmq_close(sub);
@@ -231,7 +231,7 @@ public:
 
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
-	rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	//rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
 	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	if (zmq_connect(sub, address.c_str()) != 0)
 	{
@@ -246,7 +246,7 @@ public:
 			//mover->right.forearm.setup(leap.rroll);
 			mover->left.elbow.setup(leap.lpitch);
 			//mover->right.elbow.setup(leap.rpitch);
-			std::this_thread::sleep_for(std::chrono::milliseconds(25));
+			std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}	
 //	cout << "ending forearm control." << endl;	
 	zmq_close(sub);
@@ -394,6 +394,44 @@ public:
     goHome();
     simSpeed=saveSimSpeed;
     return true;
+  }
+
+  void positionHand() {
+    //Lift arm and place over handle
+    setLElbow(-40);
+    sleep(4);
+    setLUD(35);
+    setLBicep(0);
+    setLIO(30);
+    setLForearm(42);
+    sleep(7);
+    setLUD(10);
+    setLElbow(-10);
+  }
+
+  void handDown() {
+    //Push handle down
+    setLUD(3);
+    setLElbow(0);
+    sleep(5);
+    //Push door open
+    setLElbow(15);
+    sleep(1);
+    setLUD(20);
+    sleep(5);
+  }
+
+  void retractArm() {
+    //Position arm in to be ready to move from door
+    setLUD(30);
+    setLElbow(-35);
+    sleep(2);
+    //Put arm back near home
+    setLIO(-40);
+    sleep(3);
+    setLUD(-40);
+    setLElbow(0);
+    setLForearm(0);
   }
   
   void shake() {
@@ -628,6 +666,18 @@ public:
       string part;
       iss >> part;
       enable(part,false);
+    }
+    if (head == "ph") {
+      positionHand();
+      answer("Pushing door open...");
+    }
+    if (head == "hd") {
+      handDown();
+      answer("Pushing handle down...");
+    }
+    if (head == "ra") {
+      retractArm();
+      answer("Retracting arm...");
     }
     if (head == "HStep") {
       float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;

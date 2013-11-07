@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("lidar.provider.verbose", false);
 	if (verbose) cfg.show();
 	
-	std::string lidar_path = cfg.str("lidar.provider.dev_path");
+	std::string lidar_path = cfg.str("lidar.provider.dev_path").c_str();
 	int sleep_time = (int)cfg.num("lidar.provider.sleep_time");
 
 	signal(SIGINT, quitproc);
