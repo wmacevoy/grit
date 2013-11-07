@@ -164,8 +164,9 @@ void gsolve_ik_arm(string side)
   string dir=string("../../drivers/ik");
   string inifile=dir + "/ik_" + side + "arm.ini";
 
-  Vec p=vec(var("px"),var("py"),var("pz"));
-  Vec n=vec(var("nx"),var("ny"),var("nz"));
+  Vec p=vec(var(side+"px"),var(side+"py"),var(side+"pz"));
+  E roll = var(side+"roll");
+  E yaw = var(side+"yaw");
 
   Mat pose=arm(side);
 
@@ -174,8 +175,8 @@ void gsolve_ik_arm(string side)
   eq.push_back(pose[0][3]-p[0]);
   eq.push_back(pose[1][3]-p[1]);
   eq.push_back(pose[2][3]-p[2]);
-  eq.push_back(pose[0][2]-n[0]);
-  eq.push_back(pose[1][2]-n[1]);
+  eq.push_back(pose[0][2]-sin(roll));
+  eq.push_back(pose[0][1]-sin(yaw));
 
   E shoulderio=var(SIDE+"ARM_SHOULDER_IO");
   E shoulderud=var(SIDE+"ARM_SHOULDER_UD");
