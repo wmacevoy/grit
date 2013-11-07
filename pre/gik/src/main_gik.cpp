@@ -55,11 +55,11 @@ Mat arm(string side)
   E dshoulderio2ud=num(3.0+5.0/8.0);
   E dshoulderud2elbow=num(9.0);
   E delbow2palm=num(15.0);
-  E shoulderio=(pi/num(180))*var(SIDE+"ARM_SHOULDER_IO");
-  E shoulderud=(pi/num(180))*var(SIDE+"ARM_SHOULDER_UD");
+  E shoulderio=(pi/num(180))*(var(SIDE+"ARM_SHOULDER_IO")-num(45));
+  E shoulderud=(pi/num(180))*(var(SIDE+"ARM_SHOULDER_UD")-num(45))*sigma;
   E bicep=(pi/num(180))*var(SIDE+"ARM_BICEP_ROTATE");
-  E elbow=(pi/num(180))*var(SIDE+"ARM_ELBOW");
-  E forearm=(pi/num(180))*var(SIDE+"ARM_FOREARM_ROTATE");
+  E elbow=(pi/num(180))*(var(SIDE+"ARM_ELBOW")-num(45))*(-sigma);
+  E forearm=(pi/num(180))*(var(SIDE+"ARM_FOREARM_ROTATE")+num(30));
 
   m=m*translate(vec(sigma*dxneck2shoulder,dyneck2shoulder,num(0)));
   m=m*rotate(o,ez,cos(shoulderio),-sin(shoulderio));
@@ -125,11 +125,11 @@ void gsolve_fk_arm(string side)
 
     out << endl;
     out << "void fk_" << side << "arm(" << endl;
-    out << "float " << SIDE << "_SHOULDER_IO," << endl;
-    out << "float " << SIDE << "_SHOULDER_UD," << endl;
-    out << "float " << SIDE << "_BICEP_ROTATE," << endl;
-    out << "float " << SIDE << "_ELBOW," << endl;
-    out << "float " << SIDE << "_FOREARM_ROTATE," << endl;
+    out << "float " << SIDE << "ARM_SHOULDER_IO," << endl;
+    out << "float " << SIDE << "ARM_SHOULDER_UD," << endl;
+    out << "float " << SIDE << "ARM_BICEP_ROTATE," << endl;
+    out << "float " << SIDE << "ARM_ELBOW," << endl;
+    out << "float " << SIDE << "ARM_FOREARM_ROTATE," << endl;
     out << "float pose[4][4]" << endl;
     out << ")" << endl;
     out << "{" << endl;
@@ -174,14 +174,14 @@ void gsolve_ik_arm(string side)
   eq.push_back(pose[0][3]-p[0]);
   eq.push_back(pose[1][3]-p[1]);
   eq.push_back(pose[2][3]-p[2]);
-  eq.push_back(-pose[0][2]-n[0]);
-  eq.push_back(-pose[1][2]-n[1]);
+  eq.push_back(pose[0][2]-n[0]);
+  eq.push_back(pose[1][2]-n[1]);
 
-  E shoulderio=var(SIDE+"_SHOULDER_IO");
-  E shoulderud=var(SIDE+"_SHOULDER_UD");
-  E bicep=var(SIDE+"_BICEP_ROTATE");
-  E elbow=var(SIDE+"_ELBOW");
-  E forearm=var(SIDE+"_FOREARM_ROTATE");
+  E shoulderio=var(SIDE+"ARM_SHOULDER_IO");
+  E shoulderud=var(SIDE+"ARM_SHOULDER_UD");
+  E bicep=var(SIDE+"ARM_BICEP_ROTATE");
+  E elbow=var(SIDE+"ARM_ELBOW");
+  E forearm=var(SIDE+"ARM_FOREARM_ROTATE");
 
   x.push_back(shoulderio);
   x.push_back(shoulderud);
