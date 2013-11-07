@@ -6,8 +6,8 @@
 enum { ik_leftarmglobal_count=2 };
 extern const char *ik_leftarmglobal_names[2];
 
-enum { ik_leftarmparameter_count=16 };
-extern const char *ik_leftarmparameter_names[16];
+enum { ik_leftarmparameter_count=11 };
+extern const char *ik_leftarmparameter_names[11];
 
 enum { ik_leftarmvariable_count=5 };
 extern const char *ik_leftarmvariable_names[5];
@@ -20,16 +20,11 @@ const char *ik_leftarmglobal_names[]={
 };
 
 const char *ik_leftarmparameter_names[]={
-  "LEFT_SHOULDER_IO",
-  "LEFT_SHOULDER_UD",
-  "LEFT_BICEP_ROTATE",
-  "LEFT_ELBOW",
-  "LEFT_FOREARM_ROTATE",
+  "LEFTARM_SHOULDER_IO",
+  "LEFTARM_SHOULDER_UD",
   "LEFTARM_BICEP_ROTATE",
   "LEFTARM_ELBOW",
   "LEFTARM_FOREARM_ROTATE",
-  "LEFTARM_SHOULDER_IO",
-  "LEFTARM_SHOULDER_UD",
   "nx",
   "ny",
   "px",
@@ -39,11 +34,11 @@ const char *ik_leftarmparameter_names[]={
 };
 
 const char *ik_leftarmvariable_names[]={
-  "LEFT_SHOULDER_IO_",
-  "LEFT_SHOULDER_UD_",
-  "LEFT_BICEP_ROTATE_",
-  "LEFT_ELBOW_",
-  "LEFT_FOREARM_ROTATE_"
+  "LEFTARM_SHOULDER_IO_",
+  "LEFTARM_SHOULDER_UD_",
+  "LEFTARM_BICEP_ROTATE_",
+  "LEFTARM_ELBOW_",
+  "LEFTARM_FOREARM_ROTATE_"
 };
 
 const char *ik_leftarmequation_names[]={
@@ -199,24 +194,24 @@ public:
 }
 void ik_leftarmf(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[16],
+  const float ik_leftarmparameters[11],
   const float ik_leftarmx[5],
   float ik_leftarmy[5]
 );
 void ik_leftarmdf(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[16],
+  const float ik_leftarmparameters[11],
   const float ik_leftarmx[5],
   float ik_leftarmdy[25]
 );
 void ik_leftarminitialize(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[16],
+  const float ik_leftarmparameters[11],
   float ik_leftarmx[5]
 );
 void ik_leftarmupdate(
   const float ik_leftarmglobals[2],
-  float ik_leftarmparameters[16]
+  float ik_leftarmparameters[11]
 );
 // damped newton solver
 
@@ -256,12 +251,12 @@ void ik_leftarmupdate(
       residual=new_residual;
       if (residual <= epsilon) break;
     }
-    parameters[15]=residual;
+    parameters[10]=residual;
   } //  ik_leftarmsolve()
 typedef struct {
   const char *ik_leftarmname;
   float ik_leftarmglobals[2];
-  float ik_leftarmparameters[16];
+  float ik_leftarmparameters[11];
   float ik_leftarmx[5];
 } ik_leftarmtest_data_t;
 
@@ -324,7 +319,7 @@ void ik_leftarmtests(const std::string &ik_leftarmname)
 typedef struct {
   const char *ik_leftarmname;
   float ik_leftarmglobals[2];
-  float ik_leftarmparameters[16];
+  float ik_leftarmparameters[11];
 } ik_leftarmrun_data_t;
 
 ik_leftarmrun_data_t ik_leftarmrun_data[] = {
@@ -362,29 +357,24 @@ void ik_leftarmruns(const std::string &ik_leftarmname)
 #define steps ik_leftarmglobals[1]
 
 // parameter aliases
-#define LEFT_SHOULDER_IO ik_leftarmparameters[0]
-#define LEFT_SHOULDER_UD ik_leftarmparameters[1]
-#define LEFT_BICEP_ROTATE ik_leftarmparameters[2]
-#define LEFT_ELBOW ik_leftarmparameters[3]
-#define LEFT_FOREARM_ROTATE ik_leftarmparameters[4]
-#define LEFTARM_BICEP_ROTATE ik_leftarmparameters[5]
-#define LEFTARM_ELBOW ik_leftarmparameters[6]
-#define LEFTARM_FOREARM_ROTATE ik_leftarmparameters[7]
-#define LEFTARM_SHOULDER_IO ik_leftarmparameters[8]
-#define LEFTARM_SHOULDER_UD ik_leftarmparameters[9]
-#define nx ik_leftarmparameters[10]
-#define ny ik_leftarmparameters[11]
-#define px ik_leftarmparameters[12]
-#define py ik_leftarmparameters[13]
-#define pz ik_leftarmparameters[14]
-#define residual ik_leftarmparameters[15]
+#define LEFTARM_SHOULDER_IO ik_leftarmparameters[0]
+#define LEFTARM_SHOULDER_UD ik_leftarmparameters[1]
+#define LEFTARM_BICEP_ROTATE ik_leftarmparameters[2]
+#define LEFTARM_ELBOW ik_leftarmparameters[3]
+#define LEFTARM_FOREARM_ROTATE ik_leftarmparameters[4]
+#define nx ik_leftarmparameters[5]
+#define ny ik_leftarmparameters[6]
+#define px ik_leftarmparameters[7]
+#define py ik_leftarmparameters[8]
+#define pz ik_leftarmparameters[9]
+#define residual ik_leftarmparameters[10]
 
 // variable aliases
-#define LEFT_SHOULDER_IO_ ik_leftarmx[0]
-#define LEFT_SHOULDER_UD_ ik_leftarmx[1]
-#define LEFT_BICEP_ROTATE_ ik_leftarmx[2]
-#define LEFT_ELBOW_ ik_leftarmx[3]
-#define LEFT_FOREARM_ROTATE_ ik_leftarmx[4]
+#define LEFTARM_SHOULDER_IO_ ik_leftarmx[0]
+#define LEFTARM_SHOULDER_UD_ ik_leftarmx[1]
+#define LEFTARM_BICEP_ROTATE_ ik_leftarmx[2]
+#define LEFTARM_ELBOW_ ik_leftarmx[3]
+#define LEFTARM_FOREARM_ROTATE_ ik_leftarmx[4]
 
 // residual aliases
 #define residual0 ik_leftarmy[0]
@@ -394,73 +384,73 @@ void ik_leftarmruns(const std::string &ik_leftarmname)
 #define residual4 ik_leftarmy[4]
 
 // jacobian aliases (fortran order)
-#define dresidual0_dLEFT_SHOULDER_IO_ ik_leftarmdy[0]
-#define dresidual0_dLEFT_SHOULDER_UD_ ik_leftarmdy[5]
-#define dresidual0_dLEFT_BICEP_ROTATE_ ik_leftarmdy[10]
-#define dresidual0_dLEFT_ELBOW_ ik_leftarmdy[15]
-#define dresidual0_dLEFT_FOREARM_ROTATE_ ik_leftarmdy[20]
-#define dresidual1_dLEFT_SHOULDER_IO_ ik_leftarmdy[1]
-#define dresidual1_dLEFT_SHOULDER_UD_ ik_leftarmdy[6]
-#define dresidual1_dLEFT_BICEP_ROTATE_ ik_leftarmdy[11]
-#define dresidual1_dLEFT_ELBOW_ ik_leftarmdy[16]
-#define dresidual1_dLEFT_FOREARM_ROTATE_ ik_leftarmdy[21]
-#define dresidual2_dLEFT_SHOULDER_IO_ ik_leftarmdy[2]
-#define dresidual2_dLEFT_SHOULDER_UD_ ik_leftarmdy[7]
-#define dresidual2_dLEFT_BICEP_ROTATE_ ik_leftarmdy[12]
-#define dresidual2_dLEFT_ELBOW_ ik_leftarmdy[17]
-#define dresidual2_dLEFT_FOREARM_ROTATE_ ik_leftarmdy[22]
-#define dresidual3_dLEFT_SHOULDER_IO_ ik_leftarmdy[3]
-#define dresidual3_dLEFT_SHOULDER_UD_ ik_leftarmdy[8]
-#define dresidual3_dLEFT_BICEP_ROTATE_ ik_leftarmdy[13]
-#define dresidual3_dLEFT_ELBOW_ ik_leftarmdy[18]
-#define dresidual3_dLEFT_FOREARM_ROTATE_ ik_leftarmdy[23]
-#define dresidual4_dLEFT_SHOULDER_IO_ ik_leftarmdy[4]
-#define dresidual4_dLEFT_SHOULDER_UD_ ik_leftarmdy[9]
-#define dresidual4_dLEFT_BICEP_ROTATE_ ik_leftarmdy[14]
-#define dresidual4_dLEFT_ELBOW_ ik_leftarmdy[19]
-#define dresidual4_dLEFT_FOREARM_ROTATE_ ik_leftarmdy[24]
+#define dresidual0_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[0]
+#define dresidual0_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[5]
+#define dresidual0_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[10]
+#define dresidual0_dLEFTARM_ELBOW_ ik_leftarmdy[15]
+#define dresidual0_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[20]
+#define dresidual1_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[1]
+#define dresidual1_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[6]
+#define dresidual1_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[11]
+#define dresidual1_dLEFTARM_ELBOW_ ik_leftarmdy[16]
+#define dresidual1_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[21]
+#define dresidual2_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[2]
+#define dresidual2_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[7]
+#define dresidual2_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[12]
+#define dresidual2_dLEFTARM_ELBOW_ ik_leftarmdy[17]
+#define dresidual2_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[22]
+#define dresidual3_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[3]
+#define dresidual3_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[8]
+#define dresidual3_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[13]
+#define dresidual3_dLEFTARM_ELBOW_ ik_leftarmdy[18]
+#define dresidual3_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[23]
+#define dresidual4_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[4]
+#define dresidual4_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[9]
+#define dresidual4_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[14]
+#define dresidual4_dLEFTARM_ELBOW_ ik_leftarmdy[19]
+#define dresidual4_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[24]
 
 void ik_leftarminitialize(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[16],
+  const float ik_leftarmparameters[11],
   float ik_leftarmx[5]
 )
 {
   // initialize unknowns from parameters
-  // LEFT_SHOULDER_IO_=LEFT_SHOULDER_IO;
-  LEFT_SHOULDER_IO_=LEFT_SHOULDER_IO;
-  // LEFT_SHOULDER_UD_=LEFT_SHOULDER_UD;
-  LEFT_SHOULDER_UD_=LEFT_SHOULDER_UD;
-  // LEFT_BICEP_ROTATE_=LEFT_BICEP_ROTATE;
-  LEFT_BICEP_ROTATE_=LEFT_BICEP_ROTATE;
-  // LEFT_ELBOW_=LEFT_ELBOW;
-  LEFT_ELBOW_=LEFT_ELBOW;
-  // LEFT_FOREARM_ROTATE_=LEFT_FOREARM_ROTATE;
-  LEFT_FOREARM_ROTATE_=LEFT_FOREARM_ROTATE;
+  // LEFTARM_SHOULDER_IO_=LEFTARM_SHOULDER_IO;
+  LEFTARM_SHOULDER_IO_=LEFTARM_SHOULDER_IO;
+  // LEFTARM_SHOULDER_UD_=LEFTARM_SHOULDER_UD;
+  LEFTARM_SHOULDER_UD_=LEFTARM_SHOULDER_UD;
+  // LEFTARM_BICEP_ROTATE_=LEFTARM_BICEP_ROTATE;
+  LEFTARM_BICEP_ROTATE_=LEFTARM_BICEP_ROTATE;
+  // LEFTARM_ELBOW_=LEFTARM_ELBOW;
+  LEFTARM_ELBOW_=LEFTARM_ELBOW;
+  // LEFTARM_FOREARM_ROTATE_=LEFTARM_FOREARM_ROTATE;
+  LEFTARM_FOREARM_ROTATE_=LEFTARM_FOREARM_ROTATE;
 } // ik_leftarminitialize()
 void ik_leftarmupdate(
   const float ik_leftarmglobals[2],
-  float ik_leftarmparameters[16]
+  float ik_leftarmparameters[11]
 )
 {
   float ik_leftarmx[5];
   ik_leftarmsolve(ik_leftarmglobals,ik_leftarmparameters,ik_leftarmx);
 
-  // LEFT_SHOULDER_IO=LEFT_SHOULDER_IO_
-  LEFT_SHOULDER_IO=LEFT_SHOULDER_IO_;
-  // LEFT_SHOULDER_UD=LEFT_SHOULDER_UD_
-  LEFT_SHOULDER_UD=LEFT_SHOULDER_UD_;
-  // LEFT_BICEP_ROTATE=LEFT_BICEP_ROTATE_
-  LEFT_BICEP_ROTATE=LEFT_BICEP_ROTATE_;
-  // LEFT_ELBOW=LEFT_ELBOW_
-  LEFT_ELBOW=LEFT_ELBOW_;
-  // LEFT_FOREARM_ROTATE=LEFT_FOREARM_ROTATE_
-  LEFT_FOREARM_ROTATE=LEFT_FOREARM_ROTATE_;
+  // LEFTARM_SHOULDER_IO=LEFTARM_SHOULDER_IO_
+  LEFTARM_SHOULDER_IO=LEFTARM_SHOULDER_IO_;
+  // LEFTARM_SHOULDER_UD=LEFTARM_SHOULDER_UD_
+  LEFTARM_SHOULDER_UD=LEFTARM_SHOULDER_UD_;
+  // LEFTARM_BICEP_ROTATE=LEFTARM_BICEP_ROTATE_
+  LEFTARM_BICEP_ROTATE=LEFTARM_BICEP_ROTATE_;
+  // LEFTARM_ELBOW=LEFTARM_ELBOW_
+  LEFTARM_ELBOW=LEFTARM_ELBOW_;
+  // LEFTARM_FOREARM_ROTATE=LEFTARM_FOREARM_ROTATE_
+  LEFTARM_FOREARM_ROTATE=LEFTARM_FOREARM_ROTATE_;
 } // ik_leftarmupdate()
 
 void ik_leftarmf(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[16],
+  const float ik_leftarmparameters[11],
   const float ik_leftarmx[5],
   float ik_leftarmy[5]
 )
@@ -581,159 +571,1337 @@ float tmp112;
 float tmp113;
 float tmp114;
 float tmp115;
-tmp0=0.017453293f*LEFTARM_ELBOW;
-tmp1=sin(tmp0);
-tmp2=0.017453293f*LEFTARM_BICEP_ROTATE;
-tmp3=cos(tmp2);
-tmp4=0.017453293f*LEFTARM_SHOULDER_IO;
-tmp5=sin(tmp4);
-tmp6=0.017453293f*LEFTARM_SHOULDER_UD;
+float tmp116;
+float tmp117;
+float tmp118;
+float tmp119;
+float tmp120;
+float tmp121;
+float tmp122;
+float tmp123;
+float tmp124;
+float tmp125;
+float tmp126;
+float tmp127;
+float tmp128;
+float tmp129;
+float tmp130;
+float tmp131;
+float tmp132;
+float tmp133;
+float tmp134;
+float tmp135;
+float tmp136;
+float tmp137;
+float tmp138;
+float tmp139;
+float tmp140;
+float tmp141;
+float tmp142;
+float tmp143;
+float tmp144;
+float tmp145;
+float tmp146;
+float tmp147;
+float tmp148;
+float tmp149;
+float tmp150;
+float tmp151;
+float tmp152;
+float tmp153;
+float tmp154;
+float tmp155;
+float tmp156;
+float tmp157;
+float tmp158;
+float tmp159;
+float tmp160;
+float tmp161;
+float tmp162;
+float tmp163;
+float tmp164;
+tmp0=0.017453293f*LEFTARM_ELBOW_;
+tmp1=tmp0+(-0.78539816f);
+tmp2=sin(tmp1);
+tmp3=0.017453293f*LEFTARM_SHOULDER_IO_;
+tmp4=tmp3+(-0.78539816f);
+tmp5=cos(tmp4);
+tmp6=0.017453293f*LEFTARM_BICEP_ROTATE_;
 tmp7=sin(tmp6);
-tmp8=tmp3*tmp5*tmp7;
-tmp9=cos(tmp4);
-tmp10=sin(tmp2);
-tmp11=tmp9*tmp10;
-tmp12=tmp8+tmp11;
-tmp13=(-15.0f)*tmp1*tmp12;
-tmp14=(-1.0f)*px;
-tmp15=sin(tmp4);
-tmp16=3.625f*tmp15;
-tmp17=cos(tmp6);
-tmp18=sin(tmp4);
-tmp19=9.0f*tmp17*tmp18;
-tmp20=cos(tmp0);
-tmp21=cos(tmp6);
-tmp22=sin(tmp4);
-tmp23=15.0f*tmp20*tmp21*tmp22;
-tmp24=tmp13+tmp14+tmp16+tmp19+tmp23+(-6.0f);
-residual0=tmp24;
-tmp25=sin(tmp0);
-tmp26=cos(tmp2);
-tmp27=cos(tmp4);
-tmp28=sin(tmp6);
-tmp29=tmp26*tmp27*tmp28;
-tmp30=sin(tmp2);
-tmp31=sin(tmp4);
-tmp32=(-1.0f)*tmp30*tmp31;
-tmp33=tmp29+tmp32;
-tmp34=(-15.0f)*tmp25*tmp33;
-tmp35=(-1.0f)*py;
-tmp36=cos(tmp4);
-tmp37=3.625f*tmp36;
-tmp38=cos(tmp4);
+tmp8=tmp5*tmp7;
+tmp9=cos(tmp6);
+tmp10=(-0.017453293f)*LEFTARM_SHOULDER_UD_;
+tmp11=tmp10+0.78539816f;
+tmp12=sin(tmp11);
+tmp13=tmp3+(-0.78539816f);
+tmp14=sin(tmp13);
+tmp15=tmp9*tmp12*tmp14;
+tmp16=tmp8+tmp15;
+tmp17=(-15.0f)*tmp2*tmp16;
+tmp18=(-1.0f)*px;
+tmp19=tmp3+(-0.78539816f);
+tmp20=sin(tmp19);
+tmp21=3.625f*tmp20;
+tmp22=tmp10+0.78539816f;
+tmp23=cos(tmp22);
+tmp24=tmp3+(-0.78539816f);
+tmp25=sin(tmp24);
+tmp26=9.0f*tmp23*tmp25;
+tmp27=tmp10+0.78539816f;
+tmp28=cos(tmp27);
+tmp29=tmp0+(-0.78539816f);
+tmp30=cos(tmp29);
+tmp31=tmp3+(-0.78539816f);
+tmp32=sin(tmp31);
+tmp33=15.0f*tmp28*tmp30*tmp32;
+tmp34=tmp17+tmp18+tmp21+tmp26+tmp33+(-6.0f);
+residual0=tmp34;
+tmp35=tmp0+(-0.78539816f);
+tmp36=sin(tmp35);
+tmp37=tmp3+(-0.78539816f);
+tmp38=cos(tmp37);
 tmp39=cos(tmp6);
-tmp40=9.0f*tmp38*tmp39;
-tmp41=cos(tmp0);
-tmp42=cos(tmp4);
-tmp43=cos(tmp6);
-tmp44=15.0f*tmp41*tmp42*tmp43;
-tmp45=tmp34+tmp35+tmp37+tmp40+tmp44+2.375f;
-residual1=tmp45;
-tmp46=cos(tmp2);
-tmp47=cos(tmp6);
-tmp48=sin(tmp0);
-tmp49=(-15.0f)*tmp46*tmp47*tmp48;
-tmp50=cos(tmp0);
-tmp51=sin(tmp6);
-tmp52=(-15.0f)*tmp50*tmp51;
-tmp53=sin(tmp6);
-tmp54=(-9.0f)*tmp53;
-tmp55=(-1.0f)*pz;
-tmp56=tmp49+tmp52+tmp54+tmp55;
-residual2=tmp56;
-tmp57=0.017453293f*LEFTARM_FOREARM_ROTATE;
-tmp58=cos(tmp57);
-tmp59=cos(tmp0);
-tmp60=cos(tmp2);
-tmp61=sin(tmp4);
-tmp62=sin(tmp6);
-tmp63=tmp60*tmp61*tmp62;
-tmp64=cos(tmp4);
-tmp65=sin(tmp2);
-tmp66=tmp64*tmp65;
-tmp67=tmp63+tmp66;
-tmp68=tmp59*tmp67;
-tmp69=cos(tmp6);
-tmp70=sin(tmp0);
-tmp71=sin(tmp4);
-tmp72=tmp69*tmp70*tmp71;
-tmp73=tmp68+tmp72;
-tmp74=(-1.0f)*tmp58*tmp73;
-tmp75=sin(tmp57);
-tmp76=cos(tmp2);
-tmp77=cos(tmp4);
-tmp78=tmp76*tmp77;
-tmp79=sin(tmp2);
-tmp80=sin(tmp4);
-tmp81=sin(tmp6);
-tmp82=(-1.0f)*tmp79*tmp80*tmp81;
-tmp83=tmp78+tmp82;
-tmp84=(-1.0f)*tmp75*tmp83;
-tmp85=(-1.0f)*nx;
-tmp86=tmp74+tmp84+tmp85;
-residual3=tmp86;
-tmp87=cos(tmp57);
-tmp88=cos(tmp0);
-tmp89=cos(tmp2);
-tmp90=cos(tmp4);
-tmp91=sin(tmp6);
-tmp92=tmp89*tmp90*tmp91;
-tmp93=sin(tmp2);
-tmp94=sin(tmp4);
-tmp95=(-1.0f)*tmp93*tmp94;
-tmp96=tmp92+tmp95;
-tmp97=tmp88*tmp96;
-tmp98=cos(tmp4);
-tmp99=cos(tmp6);
-tmp100=sin(tmp0);
-tmp101=tmp98*tmp99*tmp100;
-tmp102=tmp97+tmp101;
-tmp103=(-1.0f)*tmp87*tmp102;
-tmp104=sin(tmp57);
-tmp105=cos(tmp2);
-tmp106=sin(tmp4);
-tmp107=(-1.0f)*tmp105*tmp106;
-tmp108=cos(tmp4);
-tmp109=sin(tmp2);
-tmp110=sin(tmp6);
-tmp111=(-1.0f)*tmp108*tmp109*tmp110;
-tmp112=tmp107+tmp111;
-tmp113=(-1.0f)*tmp104*tmp112;
-tmp114=(-1.0f)*ny;
-tmp115=tmp103+tmp113+tmp114;
-residual4=tmp115;
+tmp40=tmp10+0.78539816f;
+tmp41=sin(tmp40);
+tmp42=tmp38*tmp39*tmp41;
+tmp43=tmp3+(-0.78539816f);
+tmp44=sin(tmp43);
+tmp45=sin(tmp6);
+tmp46=(-1.0f)*tmp44*tmp45;
+tmp47=tmp42+tmp46;
+tmp48=(-15.0f)*tmp36*tmp47;
+tmp49=(-1.0f)*py;
+tmp50=tmp3+(-0.78539816f);
+tmp51=cos(tmp50);
+tmp52=3.625f*tmp51;
+tmp53=tmp10+0.78539816f;
+tmp54=cos(tmp53);
+tmp55=tmp3+(-0.78539816f);
+tmp56=cos(tmp55);
+tmp57=9.0f*tmp54*tmp56;
+tmp58=tmp10+0.78539816f;
+tmp59=cos(tmp58);
+tmp60=tmp0+(-0.78539816f);
+tmp61=cos(tmp60);
+tmp62=tmp3+(-0.78539816f);
+tmp63=cos(tmp62);
+tmp64=15.0f*tmp59*tmp61*tmp63;
+tmp65=tmp48+tmp49+tmp52+tmp57+tmp64+2.375f;
+residual1=tmp65;
+tmp66=tmp10+0.78539816f;
+tmp67=cos(tmp66);
+tmp68=cos(tmp6);
+tmp69=tmp0+(-0.78539816f);
+tmp70=sin(tmp69);
+tmp71=(-15.0f)*tmp67*tmp68*tmp70;
+tmp72=tmp0+(-0.78539816f);
+tmp73=cos(tmp72);
+tmp74=tmp10+0.78539816f;
+tmp75=sin(tmp74);
+tmp76=(-15.0f)*tmp73*tmp75;
+tmp77=tmp10+0.78539816f;
+tmp78=sin(tmp77);
+tmp79=(-9.0f)*tmp78;
+tmp80=(-1.0f)*pz;
+tmp81=tmp71+tmp76+tmp79+tmp80;
+residual2=tmp81;
+tmp82=0.017453293f*LEFTARM_FOREARM_ROTATE_;
+tmp83=tmp82+0.52359878f;
+tmp84=cos(tmp83);
+tmp85=tmp10+0.78539816f;
+tmp86=cos(tmp85);
+tmp87=tmp0+(-0.78539816f);
+tmp88=sin(tmp87);
+tmp89=tmp3+(-0.78539816f);
+tmp90=sin(tmp89);
+tmp91=tmp86*tmp88*tmp90;
+tmp92=tmp0+(-0.78539816f);
+tmp93=cos(tmp92);
+tmp94=tmp3+(-0.78539816f);
+tmp95=cos(tmp94);
+tmp96=sin(tmp6);
+tmp97=tmp95*tmp96;
+tmp98=cos(tmp6);
+tmp99=tmp10+0.78539816f;
+tmp100=sin(tmp99);
+tmp101=tmp3+(-0.78539816f);
+tmp102=sin(tmp101);
+tmp103=tmp98*tmp100*tmp102;
+tmp104=tmp97+tmp103;
+tmp105=tmp93*tmp104;
+tmp106=tmp91+tmp105;
+tmp107=tmp84*tmp106;
+tmp108=tmp82+0.52359878f;
+tmp109=sin(tmp108);
+tmp110=tmp3+(-0.78539816f);
+tmp111=cos(tmp110);
+tmp112=cos(tmp6);
+tmp113=tmp111*tmp112;
+tmp114=tmp10+0.78539816f;
+tmp115=sin(tmp114);
+tmp116=tmp3+(-0.78539816f);
+tmp117=sin(tmp116);
+tmp118=sin(tmp6);
+tmp119=(-1.0f)*tmp115*tmp117*tmp118;
+tmp120=tmp113+tmp119;
+tmp121=tmp109*tmp120;
+tmp122=(-1.0f)*nx;
+tmp123=tmp107+tmp121+tmp122;
+residual3=tmp123;
+tmp124=tmp82+0.52359878f;
+tmp125=cos(tmp124);
+tmp126=tmp10+0.78539816f;
+tmp127=cos(tmp126);
+tmp128=tmp3+(-0.78539816f);
+tmp129=cos(tmp128);
+tmp130=tmp0+(-0.78539816f);
+tmp131=sin(tmp130);
+tmp132=tmp127*tmp129*tmp131;
+tmp133=tmp0+(-0.78539816f);
+tmp134=cos(tmp133);
+tmp135=tmp3+(-0.78539816f);
+tmp136=cos(tmp135);
+tmp137=cos(tmp6);
+tmp138=tmp10+0.78539816f;
+tmp139=sin(tmp138);
+tmp140=tmp136*tmp137*tmp139;
+tmp141=tmp3+(-0.78539816f);
+tmp142=sin(tmp141);
+tmp143=sin(tmp6);
+tmp144=(-1.0f)*tmp142*tmp143;
+tmp145=tmp140+tmp144;
+tmp146=tmp134*tmp145;
+tmp147=tmp132+tmp146;
+tmp148=tmp125*tmp147;
+tmp149=tmp82+0.52359878f;
+tmp150=sin(tmp149);
+tmp151=tmp3+(-0.78539816f);
+tmp152=cos(tmp151);
+tmp153=tmp10+0.78539816f;
+tmp154=sin(tmp153);
+tmp155=sin(tmp6);
+tmp156=(-1.0f)*tmp152*tmp154*tmp155;
+tmp157=cos(tmp6);
+tmp158=tmp3+(-0.78539816f);
+tmp159=sin(tmp158);
+tmp160=(-1.0f)*tmp157*tmp159;
+tmp161=tmp156+tmp160;
+tmp162=tmp150*tmp161;
+tmp163=(-1.0f)*ny;
+tmp164=tmp148+tmp162+tmp163;
+residual4=tmp164;
 } // ik_leftarmf()
 
 void ik_leftarmdf(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[16],
+  const float ik_leftarmparameters[11],
   const float ik_leftarmx[5],
   float ik_leftarmdy[25]
 )
 {
-dresidual0_dLEFT_SHOULDER_IO_=0.0f;
-dresidual0_dLEFT_SHOULDER_UD_=0.0f;
-dresidual0_dLEFT_BICEP_ROTATE_=0.0f;
-dresidual0_dLEFT_ELBOW_=0.0f;
-dresidual0_dLEFT_FOREARM_ROTATE_=0.0f;
-dresidual1_dLEFT_SHOULDER_IO_=0.0f;
-dresidual1_dLEFT_SHOULDER_UD_=0.0f;
-dresidual1_dLEFT_BICEP_ROTATE_=0.0f;
-dresidual1_dLEFT_ELBOW_=0.0f;
-dresidual1_dLEFT_FOREARM_ROTATE_=0.0f;
-dresidual2_dLEFT_SHOULDER_IO_=0.0f;
-dresidual2_dLEFT_SHOULDER_UD_=0.0f;
-dresidual2_dLEFT_BICEP_ROTATE_=0.0f;
-dresidual2_dLEFT_ELBOW_=0.0f;
-dresidual2_dLEFT_FOREARM_ROTATE_=0.0f;
-dresidual3_dLEFT_SHOULDER_IO_=0.0f;
-dresidual3_dLEFT_SHOULDER_UD_=0.0f;
-dresidual3_dLEFT_BICEP_ROTATE_=0.0f;
-dresidual3_dLEFT_ELBOW_=0.0f;
-dresidual3_dLEFT_FOREARM_ROTATE_=0.0f;
-dresidual4_dLEFT_SHOULDER_IO_=0.0f;
-dresidual4_dLEFT_SHOULDER_UD_=0.0f;
-dresidual4_dLEFT_BICEP_ROTATE_=0.0f;
-dresidual4_dLEFT_ELBOW_=0.0f;
-dresidual4_dLEFT_FOREARM_ROTATE_=0.0f;
+float tmp0;
+float tmp1;
+float tmp2;
+float tmp3;
+float tmp4;
+float tmp5;
+float tmp6;
+float tmp7;
+float tmp8;
+float tmp9;
+float tmp10;
+float tmp11;
+float tmp12;
+float tmp13;
+float tmp14;
+float tmp15;
+float tmp16;
+float tmp17;
+float tmp18;
+float tmp19;
+float tmp20;
+float tmp21;
+float tmp22;
+float tmp23;
+float tmp24;
+float tmp25;
+float tmp26;
+float tmp27;
+float tmp28;
+float tmp29;
+float tmp30;
+float tmp31;
+float tmp32;
+float tmp33;
+float tmp34;
+float tmp35;
+float tmp36;
+float tmp37;
+float tmp38;
+float tmp39;
+float tmp40;
+float tmp41;
+float tmp42;
+float tmp43;
+float tmp44;
+float tmp45;
+float tmp46;
+float tmp47;
+float tmp48;
+float tmp49;
+float tmp50;
+float tmp51;
+float tmp52;
+float tmp53;
+float tmp54;
+float tmp55;
+float tmp56;
+float tmp57;
+float tmp58;
+float tmp59;
+float tmp60;
+float tmp61;
+float tmp62;
+float tmp63;
+float tmp64;
+float tmp65;
+float tmp66;
+float tmp67;
+float tmp68;
+float tmp69;
+float tmp70;
+float tmp71;
+float tmp72;
+float tmp73;
+float tmp74;
+float tmp75;
+float tmp76;
+float tmp77;
+float tmp78;
+float tmp79;
+float tmp80;
+float tmp81;
+float tmp82;
+float tmp83;
+float tmp84;
+float tmp85;
+float tmp86;
+float tmp87;
+float tmp88;
+float tmp89;
+float tmp90;
+float tmp91;
+float tmp92;
+float tmp93;
+float tmp94;
+float tmp95;
+float tmp96;
+float tmp97;
+float tmp98;
+float tmp99;
+float tmp100;
+float tmp101;
+float tmp102;
+float tmp103;
+float tmp104;
+float tmp105;
+float tmp106;
+float tmp107;
+float tmp108;
+float tmp109;
+float tmp110;
+float tmp111;
+float tmp112;
+float tmp113;
+float tmp114;
+float tmp115;
+float tmp116;
+float tmp117;
+float tmp118;
+float tmp119;
+float tmp120;
+float tmp121;
+float tmp122;
+float tmp123;
+float tmp124;
+float tmp125;
+float tmp126;
+float tmp127;
+float tmp128;
+float tmp129;
+float tmp130;
+float tmp131;
+float tmp132;
+float tmp133;
+float tmp134;
+float tmp135;
+float tmp136;
+float tmp137;
+float tmp138;
+float tmp139;
+float tmp140;
+float tmp141;
+float tmp142;
+float tmp143;
+float tmp144;
+float tmp145;
+float tmp146;
+float tmp147;
+float tmp148;
+float tmp149;
+float tmp150;
+float tmp151;
+float tmp152;
+float tmp153;
+float tmp154;
+float tmp155;
+float tmp156;
+float tmp157;
+float tmp158;
+float tmp159;
+float tmp160;
+float tmp161;
+float tmp162;
+float tmp163;
+float tmp164;
+float tmp165;
+float tmp166;
+float tmp167;
+float tmp168;
+float tmp169;
+float tmp170;
+float tmp171;
+float tmp172;
+float tmp173;
+float tmp174;
+float tmp175;
+float tmp176;
+float tmp177;
+float tmp178;
+float tmp179;
+float tmp180;
+float tmp181;
+float tmp182;
+float tmp183;
+float tmp184;
+float tmp185;
+float tmp186;
+float tmp187;
+float tmp188;
+float tmp189;
+float tmp190;
+float tmp191;
+float tmp192;
+float tmp193;
+float tmp194;
+float tmp195;
+float tmp196;
+float tmp197;
+float tmp198;
+float tmp199;
+float tmp200;
+float tmp201;
+float tmp202;
+float tmp203;
+float tmp204;
+float tmp205;
+float tmp206;
+float tmp207;
+float tmp208;
+float tmp209;
+float tmp210;
+float tmp211;
+float tmp212;
+float tmp213;
+float tmp214;
+float tmp215;
+float tmp216;
+float tmp217;
+float tmp218;
+float tmp219;
+float tmp220;
+float tmp221;
+float tmp222;
+float tmp223;
+float tmp224;
+float tmp225;
+float tmp226;
+float tmp227;
+float tmp228;
+float tmp229;
+float tmp230;
+float tmp231;
+float tmp232;
+float tmp233;
+float tmp234;
+float tmp235;
+float tmp236;
+float tmp237;
+float tmp238;
+float tmp239;
+float tmp240;
+float tmp241;
+float tmp242;
+float tmp243;
+float tmp244;
+float tmp245;
+float tmp246;
+float tmp247;
+float tmp248;
+float tmp249;
+float tmp250;
+float tmp251;
+float tmp252;
+float tmp253;
+float tmp254;
+float tmp255;
+float tmp256;
+float tmp257;
+float tmp258;
+float tmp259;
+float tmp260;
+float tmp261;
+float tmp262;
+float tmp263;
+float tmp264;
+float tmp265;
+float tmp266;
+float tmp267;
+float tmp268;
+float tmp269;
+float tmp270;
+float tmp271;
+float tmp272;
+float tmp273;
+float tmp274;
+float tmp275;
+float tmp276;
+float tmp277;
+float tmp278;
+float tmp279;
+float tmp280;
+float tmp281;
+float tmp282;
+float tmp283;
+float tmp284;
+float tmp285;
+float tmp286;
+float tmp287;
+float tmp288;
+float tmp289;
+float tmp290;
+float tmp291;
+float tmp292;
+float tmp293;
+float tmp294;
+float tmp295;
+float tmp296;
+float tmp297;
+float tmp298;
+float tmp299;
+float tmp300;
+float tmp301;
+float tmp302;
+float tmp303;
+float tmp304;
+float tmp305;
+float tmp306;
+float tmp307;
+float tmp308;
+float tmp309;
+float tmp310;
+float tmp311;
+float tmp312;
+float tmp313;
+float tmp314;
+float tmp315;
+float tmp316;
+float tmp317;
+float tmp318;
+float tmp319;
+float tmp320;
+float tmp321;
+float tmp322;
+float tmp323;
+float tmp324;
+float tmp325;
+float tmp326;
+float tmp327;
+float tmp328;
+float tmp329;
+float tmp330;
+float tmp331;
+float tmp332;
+float tmp333;
+float tmp334;
+float tmp335;
+float tmp336;
+float tmp337;
+float tmp338;
+float tmp339;
+float tmp340;
+float tmp341;
+float tmp342;
+float tmp343;
+float tmp344;
+float tmp345;
+float tmp346;
+float tmp347;
+float tmp348;
+float tmp349;
+float tmp350;
+float tmp351;
+float tmp352;
+float tmp353;
+float tmp354;
+float tmp355;
+float tmp356;
+float tmp357;
+float tmp358;
+float tmp359;
+float tmp360;
+float tmp361;
+float tmp362;
+float tmp363;
+float tmp364;
+float tmp365;
+float tmp366;
+float tmp367;
+float tmp368;
+float tmp369;
+float tmp370;
+float tmp371;
+float tmp372;
+float tmp373;
+float tmp374;
+float tmp375;
+float tmp376;
+float tmp377;
+float tmp378;
+float tmp379;
+float tmp380;
+float tmp381;
+float tmp382;
+float tmp383;
+float tmp384;
+float tmp385;
+float tmp386;
+float tmp387;
+float tmp388;
+float tmp389;
+float tmp390;
+float tmp391;
+float tmp392;
+float tmp393;
+float tmp394;
+float tmp395;
+float tmp396;
+float tmp397;
+float tmp398;
+float tmp399;
+float tmp400;
+float tmp401;
+float tmp402;
+float tmp403;
+float tmp404;
+float tmp405;
+float tmp406;
+float tmp407;
+float tmp408;
+float tmp409;
+float tmp410;
+float tmp411;
+float tmp412;
+float tmp413;
+float tmp414;
+float tmp415;
+float tmp416;
+float tmp417;
+float tmp418;
+float tmp419;
+float tmp420;
+float tmp421;
+float tmp422;
+float tmp423;
+float tmp424;
+float tmp425;
+float tmp426;
+float tmp427;
+float tmp428;
+float tmp429;
+float tmp430;
+float tmp431;
+float tmp432;
+float tmp433;
+float tmp434;
+float tmp435;
+float tmp436;
+float tmp437;
+float tmp438;
+float tmp439;
+float tmp440;
+float tmp441;
+float tmp442;
+float tmp443;
+float tmp444;
+float tmp445;
+float tmp446;
+float tmp447;
+float tmp448;
+float tmp449;
+float tmp450;
+float tmp451;
+float tmp452;
+float tmp453;
+float tmp454;
+float tmp455;
+float tmp456;
+float tmp457;
+float tmp458;
+float tmp459;
+float tmp460;
+float tmp461;
+float tmp462;
+float tmp463;
+float tmp464;
+float tmp465;
+float tmp466;
+float tmp467;
+float tmp468;
+float tmp469;
+float tmp470;
+float tmp471;
+float tmp472;
+float tmp473;
+float tmp474;
+float tmp475;
+float tmp476;
+float tmp477;
+float tmp478;
+float tmp479;
+float tmp480;
+float tmp481;
+float tmp482;
+float tmp483;
+float tmp484;
+float tmp485;
+float tmp486;
+float tmp487;
+float tmp488;
+float tmp489;
+float tmp490;
+float tmp491;
+float tmp492;
+float tmp493;
+float tmp494;
+float tmp495;
+float tmp496;
+float tmp497;
+float tmp498;
+float tmp499;
+float tmp500;
+float tmp501;
+float tmp502;
+float tmp503;
+float tmp504;
+float tmp505;
+float tmp506;
+float tmp507;
+float tmp508;
+float tmp509;
+float tmp510;
+float tmp511;
+float tmp512;
+float tmp513;
+float tmp514;
+float tmp515;
+float tmp516;
+float tmp517;
+float tmp518;
+float tmp519;
+float tmp520;
+float tmp521;
+float tmp522;
+float tmp523;
+float tmp524;
+float tmp525;
+float tmp526;
+float tmp527;
+float tmp528;
+float tmp529;
+float tmp530;
+float tmp531;
+float tmp532;
+float tmp533;
+float tmp534;
+float tmp535;
+float tmp536;
+float tmp537;
+float tmp538;
+float tmp539;
+tmp0=0.017453293f*LEFTARM_ELBOW_;
+tmp1=tmp0+(-0.78539816f);
+tmp2=sin(tmp1);
+tmp3=0.017453293f*LEFTARM_SHOULDER_IO_;
+tmp4=tmp3+(-0.78539816f);
+tmp5=sin(tmp4);
+tmp6=0.017453293f*LEFTARM_BICEP_ROTATE_;
+tmp7=sin(tmp6);
+tmp8=(-0.017453293f)*tmp5*tmp7;
+tmp9=tmp3+(-0.78539816f);
+tmp10=cos(tmp9);
+tmp11=cos(tmp6);
+tmp12=(-0.017453293f)*LEFTARM_SHOULDER_UD_;
+tmp13=tmp12+0.78539816f;
+tmp14=sin(tmp13);
+tmp15=0.017453293f*tmp10*tmp11*tmp14;
+tmp16=tmp8+tmp15;
+tmp17=(-15.0f)*tmp2*tmp16;
+tmp18=tmp3+(-0.78539816f);
+tmp19=cos(tmp18);
+tmp20=0.063268185f*tmp19;
+tmp21=tmp12+0.78539816f;
+tmp22=cos(tmp21);
+tmp23=tmp3+(-0.78539816f);
+tmp24=cos(tmp23);
+tmp25=0.15707963f*tmp22*tmp24;
+tmp26=tmp12+0.78539816f;
+tmp27=cos(tmp26);
+tmp28=tmp0+(-0.78539816f);
+tmp29=cos(tmp28);
+tmp30=tmp3+(-0.78539816f);
+tmp31=cos(tmp30);
+tmp32=0.26179939f*tmp27*tmp29*tmp31;
+tmp33=tmp17+tmp20+tmp25+tmp32;
+dresidual0_dLEFTARM_SHOULDER_IO_=tmp33;
+tmp34=tmp12+0.78539816f;
+tmp35=sin(tmp34);
+tmp36=tmp3+(-0.78539816f);
+tmp37=sin(tmp36);
+tmp38=0.15707963f*tmp35*tmp37;
+tmp39=tmp12+0.78539816f;
+tmp40=cos(tmp39);
+tmp41=cos(tmp6);
+tmp42=tmp0+(-0.78539816f);
+tmp43=sin(tmp42);
+tmp44=tmp3+(-0.78539816f);
+tmp45=sin(tmp44);
+tmp46=0.26179939f*tmp40*tmp41*tmp43*tmp45;
+tmp47=tmp0+(-0.78539816f);
+tmp48=cos(tmp47);
+tmp49=tmp12+0.78539816f;
+tmp50=sin(tmp49);
+tmp51=tmp3+(-0.78539816f);
+tmp52=sin(tmp51);
+tmp53=0.26179939f*tmp48*tmp50*tmp52;
+tmp54=tmp38+tmp46+tmp53;
+dresidual0_dLEFTARM_SHOULDER_UD_=tmp54;
+tmp55=tmp0+(-0.78539816f);
+tmp56=sin(tmp55);
+tmp57=tmp12+0.78539816f;
+tmp58=sin(tmp57);
+tmp59=tmp3+(-0.78539816f);
+tmp60=sin(tmp59);
+tmp61=sin(tmp6);
+tmp62=(-0.017453293f)*tmp58*tmp60*tmp61;
+tmp63=tmp3+(-0.78539816f);
+tmp64=cos(tmp63);
+tmp65=cos(tmp6);
+tmp66=0.017453293f*tmp64*tmp65;
+tmp67=tmp62+tmp66;
+tmp68=(-15.0f)*tmp56*tmp67;
+dresidual0_dLEFTARM_BICEP_ROTATE_=tmp68;
+tmp69=tmp12+0.78539816f;
+tmp70=cos(tmp69);
+tmp71=tmp0+(-0.78539816f);
+tmp72=sin(tmp71);
+tmp73=tmp3+(-0.78539816f);
+tmp74=sin(tmp73);
+tmp75=(-0.26179939f)*tmp70*tmp72*tmp74;
+tmp76=tmp0+(-0.78539816f);
+tmp77=cos(tmp76);
+tmp78=tmp3+(-0.78539816f);
+tmp79=cos(tmp78);
+tmp80=sin(tmp6);
+tmp81=tmp79*tmp80;
+tmp82=cos(tmp6);
+tmp83=tmp12+0.78539816f;
+tmp84=sin(tmp83);
+tmp85=tmp3+(-0.78539816f);
+tmp86=sin(tmp85);
+tmp87=tmp82*tmp84*tmp86;
+tmp88=tmp81+tmp87;
+tmp89=(-0.26179939f)*tmp77*tmp88;
+tmp90=tmp75+tmp89;
+dresidual0_dLEFTARM_ELBOW_=tmp90;
+dresidual0_dLEFTARM_FOREARM_ROTATE_=0.0f;
+tmp91=tmp0+(-0.78539816f);
+tmp92=sin(tmp91);
+tmp93=tmp3+(-0.78539816f);
+tmp94=cos(tmp93);
+tmp95=sin(tmp6);
+tmp96=(-0.017453293f)*tmp94*tmp95;
+tmp97=cos(tmp6);
+tmp98=tmp12+0.78539816f;
+tmp99=sin(tmp98);
+tmp100=tmp3+(-0.78539816f);
+tmp101=sin(tmp100);
+tmp102=(-0.017453293f)*tmp97*tmp99*tmp101;
+tmp103=tmp96+tmp102;
+tmp104=(-15.0f)*tmp92*tmp103;
+tmp105=tmp12+0.78539816f;
+tmp106=cos(tmp105);
+tmp107=tmp0+(-0.78539816f);
+tmp108=cos(tmp107);
+tmp109=tmp3+(-0.78539816f);
+tmp110=sin(tmp109);
+tmp111=(-0.26179939f)*tmp106*tmp108*tmp110;
+tmp112=tmp12+0.78539816f;
+tmp113=cos(tmp112);
+tmp114=tmp3+(-0.78539816f);
+tmp115=sin(tmp114);
+tmp116=(-0.15707963f)*tmp113*tmp115;
+tmp117=tmp3+(-0.78539816f);
+tmp118=sin(tmp117);
+tmp119=(-0.063268185f)*tmp118;
+tmp120=tmp104+tmp111+tmp116+tmp119;
+dresidual1_dLEFTARM_SHOULDER_IO_=tmp120;
+tmp121=tmp3+(-0.78539816f);
+tmp122=cos(tmp121);
+tmp123=tmp12+0.78539816f;
+tmp124=sin(tmp123);
+tmp125=0.15707963f*tmp122*tmp124;
+tmp126=tmp12+0.78539816f;
+tmp127=cos(tmp126);
+tmp128=tmp3+(-0.78539816f);
+tmp129=cos(tmp128);
+tmp130=cos(tmp6);
+tmp131=tmp0+(-0.78539816f);
+tmp132=sin(tmp131);
+tmp133=0.26179939f*tmp127*tmp129*tmp130*tmp132;
+tmp134=tmp0+(-0.78539816f);
+tmp135=cos(tmp134);
+tmp136=tmp3+(-0.78539816f);
+tmp137=cos(tmp136);
+tmp138=tmp12+0.78539816f;
+tmp139=sin(tmp138);
+tmp140=0.26179939f*tmp135*tmp137*tmp139;
+tmp141=tmp125+tmp133+tmp140;
+dresidual1_dLEFTARM_SHOULDER_UD_=tmp141;
+tmp142=tmp0+(-0.78539816f);
+tmp143=sin(tmp142);
+tmp144=tmp3+(-0.78539816f);
+tmp145=cos(tmp144);
+tmp146=tmp12+0.78539816f;
+tmp147=sin(tmp146);
+tmp148=sin(tmp6);
+tmp149=(-0.017453293f)*tmp145*tmp147*tmp148;
+tmp150=cos(tmp6);
+tmp151=tmp3+(-0.78539816f);
+tmp152=sin(tmp151);
+tmp153=(-0.017453293f)*tmp150*tmp152;
+tmp154=tmp149+tmp153;
+tmp155=(-15.0f)*tmp143*tmp154;
+dresidual1_dLEFTARM_BICEP_ROTATE_=tmp155;
+tmp156=tmp12+0.78539816f;
+tmp157=cos(tmp156);
+tmp158=tmp3+(-0.78539816f);
+tmp159=cos(tmp158);
+tmp160=tmp0+(-0.78539816f);
+tmp161=sin(tmp160);
+tmp162=(-0.26179939f)*tmp157*tmp159*tmp161;
+tmp163=tmp0+(-0.78539816f);
+tmp164=cos(tmp163);
+tmp165=tmp3+(-0.78539816f);
+tmp166=cos(tmp165);
+tmp167=cos(tmp6);
+tmp168=tmp12+0.78539816f;
+tmp169=sin(tmp168);
+tmp170=tmp166*tmp167*tmp169;
+tmp171=tmp3+(-0.78539816f);
+tmp172=sin(tmp171);
+tmp173=sin(tmp6);
+tmp174=(-1.0f)*tmp172*tmp173;
+tmp175=tmp170+tmp174;
+tmp176=(-0.26179939f)*tmp164*tmp175;
+tmp177=tmp162+tmp176;
+dresidual1_dLEFTARM_ELBOW_=tmp177;
+dresidual1_dLEFTARM_FOREARM_ROTATE_=0.0f;
+dresidual2_dLEFTARM_SHOULDER_IO_=0.0f;
+tmp178=cos(tmp6);
+tmp179=tmp12+0.78539816f;
+tmp180=sin(tmp179);
+tmp181=tmp0+(-0.78539816f);
+tmp182=sin(tmp181);
+tmp183=(-0.26179939f)*tmp178*tmp180*tmp182;
+tmp184=tmp12+0.78539816f;
+tmp185=cos(tmp184);
+tmp186=0.15707963f*tmp185;
+tmp187=tmp12+0.78539816f;
+tmp188=cos(tmp187);
+tmp189=tmp0+(-0.78539816f);
+tmp190=cos(tmp189);
+tmp191=0.26179939f*tmp188*tmp190;
+tmp192=tmp183+tmp186+tmp191;
+dresidual2_dLEFTARM_SHOULDER_UD_=tmp192;
+tmp193=tmp12+0.78539816f;
+tmp194=cos(tmp193);
+tmp195=tmp0+(-0.78539816f);
+tmp196=sin(tmp195);
+tmp197=sin(tmp6);
+tmp198=0.26179939f*tmp194*tmp196*tmp197;
+dresidual2_dLEFTARM_BICEP_ROTATE_=tmp198;
+tmp199=tmp12+0.78539816f;
+tmp200=cos(tmp199);
+tmp201=tmp0+(-0.78539816f);
+tmp202=cos(tmp201);
+tmp203=cos(tmp6);
+tmp204=(-0.26179939f)*tmp200*tmp202*tmp203;
+tmp205=tmp12+0.78539816f;
+tmp206=sin(tmp205);
+tmp207=tmp0+(-0.78539816f);
+tmp208=sin(tmp207);
+tmp209=0.26179939f*tmp206*tmp208;
+tmp210=tmp204+tmp209;
+dresidual2_dLEFTARM_ELBOW_=tmp210;
+dresidual2_dLEFTARM_FOREARM_ROTATE_=0.0f;
+tmp211=0.017453293f*LEFTARM_FOREARM_ROTATE_;
+tmp212=tmp211+0.52359878f;
+tmp213=cos(tmp212);
+tmp214=tmp0+(-0.78539816f);
+tmp215=cos(tmp214);
+tmp216=tmp3+(-0.78539816f);
+tmp217=sin(tmp216);
+tmp218=sin(tmp6);
+tmp219=(-0.017453293f)*tmp217*tmp218;
+tmp220=tmp3+(-0.78539816f);
+tmp221=cos(tmp220);
+tmp222=cos(tmp6);
+tmp223=tmp12+0.78539816f;
+tmp224=sin(tmp223);
+tmp225=0.017453293f*tmp221*tmp222*tmp224;
+tmp226=tmp219+tmp225;
+tmp227=tmp215*tmp226;
+tmp228=tmp12+0.78539816f;
+tmp229=cos(tmp228);
+tmp230=tmp3+(-0.78539816f);
+tmp231=cos(tmp230);
+tmp232=tmp0+(-0.78539816f);
+tmp233=sin(tmp232);
+tmp234=0.017453293f*tmp229*tmp231*tmp233;
+tmp235=tmp227+tmp234;
+tmp236=tmp213*tmp235;
+tmp237=tmp211+0.52359878f;
+tmp238=sin(tmp237);
+tmp239=tmp3+(-0.78539816f);
+tmp240=cos(tmp239);
+tmp241=tmp12+0.78539816f;
+tmp242=sin(tmp241);
+tmp243=sin(tmp6);
+tmp244=(-0.017453293f)*tmp240*tmp242*tmp243;
+tmp245=cos(tmp6);
+tmp246=tmp3+(-0.78539816f);
+tmp247=sin(tmp246);
+tmp248=(-0.017453293f)*tmp245*tmp247;
+tmp249=tmp244+tmp248;
+tmp250=tmp238*tmp249;
+tmp251=tmp236+tmp250;
+dresidual3_dLEFTARM_SHOULDER_IO_=tmp251;
+tmp252=tmp211+0.52359878f;
+tmp253=cos(tmp252);
+tmp254=tmp12+0.78539816f;
+tmp255=cos(tmp254);
+tmp256=tmp0+(-0.78539816f);
+tmp257=cos(tmp256);
+tmp258=cos(tmp6);
+tmp259=tmp3+(-0.78539816f);
+tmp260=sin(tmp259);
+tmp261=(-0.017453293f)*tmp255*tmp257*tmp258*tmp260;
+tmp262=tmp12+0.78539816f;
+tmp263=sin(tmp262);
+tmp264=tmp0+(-0.78539816f);
+tmp265=sin(tmp264);
+tmp266=tmp3+(-0.78539816f);
+tmp267=sin(tmp266);
+tmp268=0.017453293f*tmp263*tmp265*tmp267;
+tmp269=tmp261+tmp268;
+tmp270=tmp253*tmp269;
+tmp271=tmp12+0.78539816f;
+tmp272=cos(tmp271);
+tmp273=tmp211+0.52359878f;
+tmp274=sin(tmp273);
+tmp275=tmp3+(-0.78539816f);
+tmp276=sin(tmp275);
+tmp277=sin(tmp6);
+tmp278=0.017453293f*tmp272*tmp274*tmp276*tmp277;
+tmp279=tmp270+tmp278;
+dresidual3_dLEFTARM_SHOULDER_UD_=tmp279;
+tmp280=tmp0+(-0.78539816f);
+tmp281=cos(tmp280);
+tmp282=tmp211+0.52359878f;
+tmp283=cos(tmp282);
+tmp284=tmp12+0.78539816f;
+tmp285=sin(tmp284);
+tmp286=tmp3+(-0.78539816f);
+tmp287=sin(tmp286);
+tmp288=sin(tmp6);
+tmp289=(-0.017453293f)*tmp285*tmp287*tmp288;
+tmp290=tmp3+(-0.78539816f);
+tmp291=cos(tmp290);
+tmp292=cos(tmp6);
+tmp293=0.017453293f*tmp291*tmp292;
+tmp294=tmp289+tmp293;
+tmp295=tmp281*tmp283*tmp294;
+tmp296=tmp211+0.52359878f;
+tmp297=sin(tmp296);
+tmp298=tmp3+(-0.78539816f);
+tmp299=cos(tmp298);
+tmp300=sin(tmp6);
+tmp301=(-0.017453293f)*tmp299*tmp300;
+tmp302=cos(tmp6);
+tmp303=tmp12+0.78539816f;
+tmp304=sin(tmp303);
+tmp305=tmp3+(-0.78539816f);
+tmp306=sin(tmp305);
+tmp307=(-0.017453293f)*tmp302*tmp304*tmp306;
+tmp308=tmp301+tmp307;
+tmp309=tmp297*tmp308;
+tmp310=tmp295+tmp309;
+dresidual3_dLEFTARM_BICEP_ROTATE_=tmp310;
+tmp311=tmp211+0.52359878f;
+tmp312=cos(tmp311);
+tmp313=tmp0+(-0.78539816f);
+tmp314=sin(tmp313);
+tmp315=tmp3+(-0.78539816f);
+tmp316=cos(tmp315);
+tmp317=sin(tmp6);
+tmp318=tmp316*tmp317;
+tmp319=cos(tmp6);
+tmp320=tmp12+0.78539816f;
+tmp321=sin(tmp320);
+tmp322=tmp3+(-0.78539816f);
+tmp323=sin(tmp322);
+tmp324=tmp319*tmp321*tmp323;
+tmp325=tmp318+tmp324;
+tmp326=(-0.017453293f)*tmp314*tmp325;
+tmp327=tmp12+0.78539816f;
+tmp328=cos(tmp327);
+tmp329=tmp0+(-0.78539816f);
+tmp330=cos(tmp329);
+tmp331=tmp3+(-0.78539816f);
+tmp332=sin(tmp331);
+tmp333=0.017453293f*tmp328*tmp330*tmp332;
+tmp334=tmp326+tmp333;
+tmp335=tmp312*tmp334;
+dresidual3_dLEFTARM_ELBOW_=tmp335;
+tmp336=tmp211+0.52359878f;
+tmp337=sin(tmp336);
+tmp338=tmp12+0.78539816f;
+tmp339=cos(tmp338);
+tmp340=tmp0+(-0.78539816f);
+tmp341=sin(tmp340);
+tmp342=tmp3+(-0.78539816f);
+tmp343=sin(tmp342);
+tmp344=tmp339*tmp341*tmp343;
+tmp345=tmp0+(-0.78539816f);
+tmp346=cos(tmp345);
+tmp347=tmp3+(-0.78539816f);
+tmp348=cos(tmp347);
+tmp349=sin(tmp6);
+tmp350=tmp348*tmp349;
+tmp351=cos(tmp6);
+tmp352=tmp12+0.78539816f;
+tmp353=sin(tmp352);
+tmp354=tmp3+(-0.78539816f);
+tmp355=sin(tmp354);
+tmp356=tmp351*tmp353*tmp355;
+tmp357=tmp350+tmp356;
+tmp358=tmp346*tmp357;
+tmp359=tmp344+tmp358;
+tmp360=(-0.017453293f)*tmp337*tmp359;
+tmp361=tmp211+0.52359878f;
+tmp362=cos(tmp361);
+tmp363=tmp3+(-0.78539816f);
+tmp364=cos(tmp363);
+tmp365=cos(tmp6);
+tmp366=tmp364*tmp365;
+tmp367=tmp12+0.78539816f;
+tmp368=sin(tmp367);
+tmp369=tmp3+(-0.78539816f);
+tmp370=sin(tmp369);
+tmp371=sin(tmp6);
+tmp372=(-1.0f)*tmp368*tmp370*tmp371;
+tmp373=tmp366+tmp372;
+tmp374=0.017453293f*tmp362*tmp373;
+tmp375=tmp360+tmp374;
+dresidual3_dLEFTARM_FOREARM_ROTATE_=tmp375;
+tmp376=tmp211+0.52359878f;
+tmp377=cos(tmp376);
+tmp378=tmp0+(-0.78539816f);
+tmp379=cos(tmp378);
+tmp380=tmp3+(-0.78539816f);
+tmp381=cos(tmp380);
+tmp382=sin(tmp6);
+tmp383=(-0.017453293f)*tmp381*tmp382;
+tmp384=cos(tmp6);
+tmp385=tmp12+0.78539816f;
+tmp386=sin(tmp385);
+tmp387=tmp3+(-0.78539816f);
+tmp388=sin(tmp387);
+tmp389=(-0.017453293f)*tmp384*tmp386*tmp388;
+tmp390=tmp383+tmp389;
+tmp391=tmp379*tmp390;
+tmp392=tmp12+0.78539816f;
+tmp393=cos(tmp392);
+tmp394=tmp0+(-0.78539816f);
+tmp395=sin(tmp394);
+tmp396=tmp3+(-0.78539816f);
+tmp397=sin(tmp396);
+tmp398=(-0.017453293f)*tmp393*tmp395*tmp397;
+tmp399=tmp391+tmp398;
+tmp400=tmp377*tmp399;
+tmp401=tmp211+0.52359878f;
+tmp402=sin(tmp401);
+tmp403=tmp3+(-0.78539816f);
+tmp404=cos(tmp403);
+tmp405=cos(tmp6);
+tmp406=(-0.017453293f)*tmp404*tmp405;
+tmp407=tmp12+0.78539816f;
+tmp408=sin(tmp407);
+tmp409=tmp3+(-0.78539816f);
+tmp410=sin(tmp409);
+tmp411=sin(tmp6);
+tmp412=0.017453293f*tmp408*tmp410*tmp411;
+tmp413=tmp406+tmp412;
+tmp414=tmp402*tmp413;
+tmp415=tmp400+tmp414;
+dresidual4_dLEFTARM_SHOULDER_IO_=tmp415;
+tmp416=tmp211+0.52359878f;
+tmp417=cos(tmp416);
+tmp418=tmp12+0.78539816f;
+tmp419=cos(tmp418);
+tmp420=tmp0+(-0.78539816f);
+tmp421=cos(tmp420);
+tmp422=tmp3+(-0.78539816f);
+tmp423=cos(tmp422);
+tmp424=cos(tmp6);
+tmp425=(-0.017453293f)*tmp419*tmp421*tmp423*tmp424;
+tmp426=tmp3+(-0.78539816f);
+tmp427=cos(tmp426);
+tmp428=tmp12+0.78539816f;
+tmp429=sin(tmp428);
+tmp430=tmp0+(-0.78539816f);
+tmp431=sin(tmp430);
+tmp432=0.017453293f*tmp427*tmp429*tmp431;
+tmp433=tmp425+tmp432;
+tmp434=tmp417*tmp433;
+tmp435=tmp12+0.78539816f;
+tmp436=cos(tmp435);
+tmp437=tmp3+(-0.78539816f);
+tmp438=cos(tmp437);
+tmp439=tmp211+0.52359878f;
+tmp440=sin(tmp439);
+tmp441=sin(tmp6);
+tmp442=0.017453293f*tmp436*tmp438*tmp440*tmp441;
+tmp443=tmp434+tmp442;
+dresidual4_dLEFTARM_SHOULDER_UD_=tmp443;
+tmp444=tmp0+(-0.78539816f);
+tmp445=cos(tmp444);
+tmp446=tmp211+0.52359878f;
+tmp447=cos(tmp446);
+tmp448=tmp3+(-0.78539816f);
+tmp449=cos(tmp448);
+tmp450=tmp12+0.78539816f;
+tmp451=sin(tmp450);
+tmp452=sin(tmp6);
+tmp453=(-0.017453293f)*tmp449*tmp451*tmp452;
+tmp454=cos(tmp6);
+tmp455=tmp3+(-0.78539816f);
+tmp456=sin(tmp455);
+tmp457=(-0.017453293f)*tmp454*tmp456;
+tmp458=tmp453+tmp457;
+tmp459=tmp445*tmp447*tmp458;
+tmp460=tmp211+0.52359878f;
+tmp461=sin(tmp460);
+tmp462=tmp3+(-0.78539816f);
+tmp463=cos(tmp462);
+tmp464=cos(tmp6);
+tmp465=tmp12+0.78539816f;
+tmp466=sin(tmp465);
+tmp467=(-0.017453293f)*tmp463*tmp464*tmp466;
+tmp468=tmp3+(-0.78539816f);
+tmp469=sin(tmp468);
+tmp470=sin(tmp6);
+tmp471=0.017453293f*tmp469*tmp470;
+tmp472=tmp467+tmp471;
+tmp473=tmp461*tmp472;
+tmp474=tmp459+tmp473;
+dresidual4_dLEFTARM_BICEP_ROTATE_=tmp474;
+tmp475=tmp211+0.52359878f;
+tmp476=cos(tmp475);
+tmp477=tmp0+(-0.78539816f);
+tmp478=sin(tmp477);
+tmp479=tmp3+(-0.78539816f);
+tmp480=cos(tmp479);
+tmp481=cos(tmp6);
+tmp482=tmp12+0.78539816f;
+tmp483=sin(tmp482);
+tmp484=tmp480*tmp481*tmp483;
+tmp485=tmp3+(-0.78539816f);
+tmp486=sin(tmp485);
+tmp487=sin(tmp6);
+tmp488=(-1.0f)*tmp486*tmp487;
+tmp489=tmp484+tmp488;
+tmp490=(-0.017453293f)*tmp478*tmp489;
+tmp491=tmp12+0.78539816f;
+tmp492=cos(tmp491);
+tmp493=tmp0+(-0.78539816f);
+tmp494=cos(tmp493);
+tmp495=tmp3+(-0.78539816f);
+tmp496=cos(tmp495);
+tmp497=0.017453293f*tmp492*tmp494*tmp496;
+tmp498=tmp490+tmp497;
+tmp499=tmp476*tmp498;
+dresidual4_dLEFTARM_ELBOW_=tmp499;
+tmp500=tmp211+0.52359878f;
+tmp501=sin(tmp500);
+tmp502=tmp12+0.78539816f;
+tmp503=cos(tmp502);
+tmp504=tmp3+(-0.78539816f);
+tmp505=cos(tmp504);
+tmp506=tmp0+(-0.78539816f);
+tmp507=sin(tmp506);
+tmp508=tmp503*tmp505*tmp507;
+tmp509=tmp0+(-0.78539816f);
+tmp510=cos(tmp509);
+tmp511=tmp3+(-0.78539816f);
+tmp512=cos(tmp511);
+tmp513=cos(tmp6);
+tmp514=tmp12+0.78539816f;
+tmp515=sin(tmp514);
+tmp516=tmp512*tmp513*tmp515;
+tmp517=tmp3+(-0.78539816f);
+tmp518=sin(tmp517);
+tmp519=sin(tmp6);
+tmp520=(-1.0f)*tmp518*tmp519;
+tmp521=tmp516+tmp520;
+tmp522=tmp510*tmp521;
+tmp523=tmp508+tmp522;
+tmp524=(-0.017453293f)*tmp501*tmp523;
+tmp525=tmp211+0.52359878f;
+tmp526=cos(tmp525);
+tmp527=tmp3+(-0.78539816f);
+tmp528=cos(tmp527);
+tmp529=tmp12+0.78539816f;
+tmp530=sin(tmp529);
+tmp531=sin(tmp6);
+tmp532=(-1.0f)*tmp528*tmp530*tmp531;
+tmp533=cos(tmp6);
+tmp534=tmp3+(-0.78539816f);
+tmp535=sin(tmp534);
+tmp536=(-1.0f)*tmp533*tmp535;
+tmp537=tmp532+tmp536;
+tmp538=0.017453293f*tmp526*tmp537;
+tmp539=tmp524+tmp538;
+dresidual4_dLEFTARM_FOREARM_ROTATE_=tmp539;
 } // ik_leftarmdf()
