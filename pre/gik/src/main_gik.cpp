@@ -161,25 +161,21 @@ void gsolve_fk_arm(string side)
 void gsolve_ik_arm(string side)
 {
   string SIDE=utilities::toupper(side);
-  Mat pose=arm(side);
   string dir=string("../../drivers/ik");
   string inifile=dir + "/ik_" + side + "arm.ini";
 
   Vec p=vec(var("px"),var("py"),var("pz"));
   Vec n=vec(var("nx"),var("ny"),var("nz"));
 
-  Mat r=arm(side);
-  
-  Mat r0=r*column(o);
-  Mat rz=r*column(ez);
+  Mat pose=arm(side);
 
   Vec eq,x;
 
-  eq.push_back(r0[0][0]-p[0]);
-  eq.push_back(r0[1][0]-p[1]);
-  eq.push_back(r0[2][0]-p[2]);
-  eq.push_back(rz[0][0]-n[0]);
-  eq.push_back(rz[1][0]-n[1]);
+  eq.push_back(pose[0][3]-p[0]);
+  eq.push_back(pose[1][3]-p[1]);
+  eq.push_back(pose[2][3]-p[2]);
+  eq.push_back(-pose[0][2]-n[0]);
+  eq.push_back(-pose[1][2]-n[1]);
 
   E shoulderio=var(SIDE+"_SHOULDER_IO");
   E shoulderud=var(SIDE+"_SHOULDER_UD");
