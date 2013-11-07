@@ -28,7 +28,7 @@ setup()
   done
 
   # add 3rd party and project library paths
-  for lib in $MOJAVATON_DIR/libs/lib $MOJAVATON_DIR/drivers/*/lib $MOJAVATON_DIR/control/*/lib
+  for lib in $MOJAVATON_DIR/libs/lib $MOJAVATON_DIR/pre/*/lib $MOJAVATON_DIR/drivers/*/lib $MOJAVATON_DIR/control/*/lib
   do
     export LD_LIBRARY_PATH="$lib:$LD_LIBRARY_PATH"
     export PYTHONPATH="$lib:$PYTHONPATH"
@@ -45,7 +45,7 @@ setup()
 
 update()
 {
-  for dir in setup libs drivers centaur control
+  for dir in setup libs pre drivers centaur control
   do
       svn update $MOJAVATON_DIR/$dir
   done
@@ -53,7 +53,7 @@ update()
 
 build()
 {
-  for dir in libs drivers
+  for dir in libs pre drivers centaur control
   do
       make -C $MOJAVATON_DIR/$dir "$@"
   done
@@ -71,16 +71,6 @@ commander()
 {
     cd $MOJAVATON_DIR/control/commander
     bin/commander
-}
-
-connection()
-{
-  type=$1
-  if [ -f "$MOJAVATON_DIR/setup/config.csv-$type" ] ; then
-      cp $MOJAVATON_DIR/setup/config.csv-$type $MOJAVATON_DIR/setup/config.csv
-      echo "setting connection type to $type."
-      echo "do this on the other side..."
-  fi
 }
 
 synctime()
