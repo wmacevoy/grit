@@ -469,7 +469,7 @@ double legDirection(double angle) {
   else return 0.0; 
 }
  
-vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double z,double step,double direction,double zstep,int repeat) {
+vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double z,double step,double direction,double zstep,int repeat,float rotation) {
   vector<vector<double>> data;
   direction=(direction*M_PI)/180.0;
   double T =20.0; 
@@ -484,6 +484,9 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
   double l2d=direction;
   double l3d=direction;
   double l4d=direction;
+  l2d-=rotation*M_PI_2;
+  l3d+=rotation*M_PI;
+  l4d-=rotation*3.0*M_PI_2;
   for (int q=0;q<repeat;q++) {
     for(double a=0;a<fullCircle;a+=da) {
 	  float l1a=a;
@@ -495,19 +498,19 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
       { // leg 1
         p.push_back(circulateX(-x,radius,a)+stepX(step,l1d,l1a)); 
         p.push_back(circulateY(y,radius,a) +stepY(step,l1d,l1a)); 
-        p.push_back(lift(z,1.5,a+M_PI_2)+raise(zstep,l1a));
+        p.push_back(lift(z,1.0,a+M_PI_2)+raise(zstep,l1a));
       } { // leg 2
         p.push_back(circulateX(x,radius,a) +stepX(step,l2d,l2a)); 
         p.push_back(circulateY(y,radius,a) +stepY(step,l2d,l2a)); 
-        p.push_back(lift(z,1.5,a)       +raise(zstep,l2a));
+        p.push_back(lift(z,1.0,a)       +raise(zstep,l2a));
       } { // leg 3 
         p.push_back(circulateX(x,radius,a) +stepX(step,l3d,l3a)); 
         p.push_back(circulateY(-y,radius,a)+stepY(step,l3d,l3a)); 
-        p.push_back(lift(z,1.5,a+M_PI_2)+raise(zstep,l3a));
+        p.push_back(lift(z,1.0,a+M_PI_2)+raise(zstep,l3a));
       } { // leg 4
         p.push_back(circulateX(-x,radius,a)+stepX(step,l4d,l4a)); 
         p.push_back(circulateY(-y,radius,a)+stepY(step,l4d,l4a)); 
-        p.push_back(lift(z,1.5,a)       +raise(zstep,l4a));
+        p.push_back(lift(z,1.0,a)       +raise(zstep,l4a));
       }         
       p.push_back(waist); 
       p.push_back(legDirection(l1a)); 
@@ -521,9 +524,9 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
   return data;
 }
 
-bool BodyMover::bStep(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat) {
+bool BodyMover::bStep(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat,bool rotation) {
   vector<vector<double > > f;
-  f=bMove(radius,x,y,z,step,direction,zStep,repeat);
+  f=bMove(radius,x,y,z,step,direction,zStep,repeat,rotation);
   logPosition(f);
   fromTips(f);
   return true;  

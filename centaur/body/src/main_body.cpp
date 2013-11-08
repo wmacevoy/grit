@@ -365,6 +365,21 @@ public:
   
   void balancedForward()
   {
+      mover->bStep(2.5,15.9,15.9,-15.,0.5,90.0,0.5,4);
+  }
+  
+  void balancedLeft()
+  {
+      mover->bStep(2.5,15.9,15.9,-15.,0.5,90.0+45.0,0.5,4,-1.0);
+  }
+  
+  void balancedRight()
+  {
+      mover->bStep(2.5,15.9,15.9,-15.,0.5,90.0-45.0,0.5,4,+1.0);
+  }
+  
+  void balancedHighForward()
+  {
       mover->bStep(2.5,12.5,14.5,-20.00,0.5,90.0,12.0,4);
   }
   
@@ -1079,6 +1094,24 @@ public:
     }
     if (head == "bf") {  // forward
       balancedForward();
+      ostringstream oss;
+      oss << "Step Balanced r=2 zstep=12:ok."; 
+      answer(oss.str());
+    }
+    if (head == "br") {  // Right
+      balancedRight();
+      ostringstream oss;
+      oss << "Step Balanced r=2 zstep=12:ok."; 
+      answer(oss.str());
+    }
+    if (head == "bl") {  // Left
+      balancedLeft();
+      ostringstream oss;
+      oss << "Step Balanced r=2 zstep=12:ok."; 
+      answer(oss.str());
+    }
+    if (head == "bhf") {  // forward
+      balancedHighForward();
       ostringstream oss;
       oss << "Step Balanced r=2 zstep=12:ok."; 
       answer(oss.str());
