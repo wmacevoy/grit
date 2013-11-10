@@ -652,6 +652,20 @@
                     <property name="y">36</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkLabel" id="lblTop">
+                    <property name="width_request">103</property>
+                    <property name="height_request">28</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="xalign">0.33000001311302185</property>
+                    <property name="label" translatable="yes">Top: </property>
+                  </object>
+                  <packing>
+                    <property name="x">179</property>
+                    <property name="y">54</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>

@@ -101,7 +101,12 @@ class Base:
                     servos_dict[x] = item[i+1]
                     servos.append(x)
         print servos_dict
+        hottest = 0
+        h_servo = 0
         for servo in servos:
+            if int(servos_dict[servo]) > hottest:
+                hottest = int(servos_dict[servo])
+                h_servo = servo
             sev = 0
             if int(servos_dict[servo]) > 65:
                 sev = 0
@@ -117,6 +122,7 @@ class Base:
                 print "not defined %d" % int(servo)
             else:
                 print "defined %d" % int(servo)
+        self.hottest.label = 'Top is %d: %d' %  (h_servo, hottest)
 
     def press_check(self,widget):
         leg_dict = {}
@@ -208,6 +214,7 @@ class Base:
         #self.btnTemps = builder.get_object("btnTemps")
         #self.btnPressures = builder.get_object("btnPressures")
         self.back = builder.get_object("picBack")
+        self.hottest = builder.get_object("lblTop")
         #self.back.lower()
         #self.parts = builder.get_object("viewParts")
         #self.data = builder.get_object("viewData")
