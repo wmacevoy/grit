@@ -17,7 +17,7 @@ include/swig_$(TARGET).h :
 src/$(TARGET).cpp src/$(TARGET).py : include/$(TARGET).i
 	swig -c++ -python -o src/$(TARGET).cpp include/$(TARGET).i
 
-lib/_$(TARGET).so : $(OBJECTS)
+lib/_$(TARGET).so : tmp/$(TARGET).cpp.o
 	$(CXX) $(CXXFLAGS) -shared  -o $@ $^ $(LDFLAGS)
 
 lib/$(TARGET).py : src/$(TARGET).py

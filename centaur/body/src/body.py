@@ -90,6 +90,7 @@ class Body(_object):
     if _newclass:right = _swig_property(_body.Body_right_get, _body.Body_right_set)
     def init(self): return _body.Body_init(self)
     def report(self, *args): return _body.Body_report(self, *args)
+    def temp_report(self, *args): return _body.Body_temp_report(self, *args)
     def __init__(self): 
         this = _body.new_Body()
         try: self.this.append(this)
@@ -99,7 +100,6 @@ class Body(_object):
 Body_swigregister = _body.Body_swigregister
 Body_swigregister(Body)
 
-MOVE_RATE = _body.MOVE_RATE
 ANGLE360 = _body.ANGLE360
 ANGLE180 = _body.ANGLE180
 ANGLE90 = _body.ANGLE90
