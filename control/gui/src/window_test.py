@@ -205,8 +205,8 @@ class Base:
         self.colors = ['#FF0000','#F9FF00', '#0CFF00', '#000000']
 
         self.window = builder.get_object("winStatus")
-        self.btnTemps = builder.get_object("btnTemps")
-        self.btnPressures = builder.get_object("btnPressures")
+        #self.btnTemps = builder.get_object("btnTemps")
+        #self.btnPressures = builder.get_object("btnPressures")
         self.back = builder.get_object("picBack")
         #self.back.lower()
         #self.parts = builder.get_object("viewParts")
@@ -223,12 +223,12 @@ class Base:
         #self.about  = builder.get_object("aboutdialog1")
         
         builder.connect_signals(self)
-        self.btnTemps.connect("focus-in-event", self.focus_received)
-        self.btnPressures.connect("focus-in-event", self.focus_received)
+        #self.btnTemps.connect("focus-in-event", self.focus_received)
+        #self.btnPressures.connect("focus-in-event", self.focus_received)
         #self.parts.connect("focus-in-event", self.focus_received)
       #  self.data.connect("focus-in-event", self.focus_received)
         #self.entry2.connect("focus-in-event", self.focus_received)
-        self.focused=self.btnTemps
+        #self.focused=self.btnTemps
         self.update = self.Update(self,2)
         self.update.start()
 
