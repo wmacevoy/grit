@@ -1,9 +1,9 @@
 #pragma once
 void fk_leftarm(
-float LEFTARM_SHOULDER_IO,
-float LEFTARM_SHOULDER_UD,
-float LEFTARM_BICEP_ROTATE,
-float LEFTARM_ELBOW,
-float LEFTARM_FOREARM_ROTATE,
+float shoulderio,
+float shoulderud,
+float bicep,
+float elbow,
+float forearm,
 float pose[4][4]
 );

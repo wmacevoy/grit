@@ -18,10 +18,10 @@ function ik_legy=ik_legf(ik_legparameters,ik_legx)
   
     // import parameters
   
-  aknee=ik_legparameters(1);
-  afemur=ik_legparameters(2);
-  ahip=ik_legparameters(3);
-  achasis=ik_legparameters(4);
+  knee=ik_legparameters(1);
+  femur=ik_legparameters(2);
+  hip=ik_legparameters(3);
+  chasis=ik_legparameters(4);
   dfemur2knee=ik_legparameters(5);
   dhip2femur=ik_legparameters(6);
   drchasis2hip=ik_legparameters(7);
@@ -35,12 +35,12 @@ function ik_legy=ik_legf(ik_legparameters,ik_legx)
   
   // import variables
   
-  aknee_=ik_legx(1);
-  afemur_=ik_legx(2);
-  ahip_=ik_legx(3);
-  residual0=cos(afemur_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))*dfemur2knee+(cos(afemur_)*cos(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))+(-1)*sin(afemur_)*sin(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis)))*dyknee2tip+((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))*dhip2femur+((-1)*cos(afemur_)*sin(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))+(-1)*cos(aknee_)*sin(afemur_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis)))*dzknee2tip+(-1)*sin(achasis)*drchasis2hip+(-1)*px;
-  residual1=cos(achasis)*drchasis2hip+cos(afemur_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))*dfemur2knee+(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))*dhip2femur+(cos(afemur_)*cos(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))+(-1)*sin(afemur_)*sin(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_)))*dyknee2tip+((-1)*cos(afemur_)*sin(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))+(-1)*cos(aknee_)*sin(afemur_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_)))*dzknee2tip+(-1)*py;
-  residual2=sin(afemur_)*dfemur2knee+(cos(afemur_)*cos(aknee_)+(-1)*sin(afemur_)*sin(aknee_))*dzknee2tip+(cos(afemur_)*sin(aknee_)+cos(aknee_)*sin(afemur_))*dyknee2tip+(-1)*pz+dzchasis2hip;
+  _knee=ik_legx(1);
+  _femur=ik_legx(2);
+  _hip=ik_legx(3);
+  residual0=cos(0.0174532925199433*_femur)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))*dfemur2knee+(cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))+(-1)*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip)))*dyknee2tip+((-1)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))+(-1)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip)))*dzknee2tip+((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))*dhip2femur+(-1)*sin(0.0174532925199433*chasis)*drchasis2hip+(-1)*px;
+  residual1=cos(0.0174532925199433*_femur)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))*dfemur2knee+cos(0.0174532925199433*chasis)*drchasis2hip+(cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))+(-1)*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)))*dyknee2tip+(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))*dhip2femur+((-1)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))+(-1)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)))*dzknee2tip+(-1)*py;
+  residual2=sin(0.0174532925199433*_femur)*dfemur2knee+(cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)+(-1)*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee))*dzknee2tip+(cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)+cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur))*dyknee2tip+(-1)*pz+dzchasis2hip;
   ik_legy=zeros(3,1);
   ik_legy(1)=residual0;
   ik_legy(2)=residual1;
@@ -60,10 +60,10 @@ function ik_legdy=ik_legdf(ik_legparameters,ik_legx)
   
     // import parameters
   
-  aknee=ik_legparameters(1);
-  afemur=ik_legparameters(2);
-  ahip=ik_legparameters(3);
-  achasis=ik_legparameters(4);
+  knee=ik_legparameters(1);
+  femur=ik_legparameters(2);
+  hip=ik_legparameters(3);
+  chasis=ik_legparameters(4);
   dfemur2knee=ik_legparameters(5);
   dhip2femur=ik_legparameters(6);
   drchasis2hip=ik_legparameters(7);
@@ -77,29 +77,29 @@ function ik_legdy=ik_legdf(ik_legparameters,ik_legx)
   
   // import variables
   
-  aknee_=ik_legx(1);
-  afemur_=ik_legx(2);
-  ahip_=ik_legx(3);
-  dresidual0_daknee_=(sin(afemur_)*sin(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))+(-1)*cos(afemur_)*cos(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis)))*dzknee2tip+((-1)*cos(afemur_)*sin(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))+(-1)*cos(aknee_)*sin(afemur_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis)))*dyknee2tip;
-  dresidual0_dafemur_=(sin(afemur_)*sin(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))+(-1)*cos(afemur_)*cos(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis)))*dzknee2tip+((-1)*cos(afemur_)*sin(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))+(-1)*cos(aknee_)*sin(afemur_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis)))*dyknee2tip+(-1)*sin(afemur_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))*dfemur2knee;
-  dresidual0_dahip_=cos(afemur_)*(sin(achasis)*sin(ahip_)+(-1)*cos(achasis)*cos(ahip_))*dfemur2knee+(cos(afemur_)*cos(aknee_)*(sin(achasis)*sin(ahip_)+(-1)*cos(achasis)*cos(ahip_))+(-1)*sin(afemur_)*sin(aknee_)*(sin(achasis)*sin(ahip_)+(-1)*cos(achasis)*cos(ahip_)))*dyknee2tip+(sin(achasis)*sin(ahip_)+(-1)*cos(achasis)*cos(ahip_))*dhip2femur+((-1)*cos(afemur_)*sin(aknee_)*(sin(achasis)*sin(ahip_)+(-1)*cos(achasis)*cos(ahip_))+(-1)*cos(aknee_)*sin(afemur_)*(sin(achasis)*sin(ahip_)+(-1)*cos(achasis)*cos(ahip_)))*dzknee2tip;
-  dresidual1_daknee_=(sin(afemur_)*sin(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))+(-1)*cos(afemur_)*cos(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_)))*dzknee2tip+((-1)*cos(afemur_)*sin(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))+(-1)*cos(aknee_)*sin(afemur_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_)))*dyknee2tip;
-  dresidual1_dafemur_=(sin(afemur_)*sin(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))+(-1)*cos(afemur_)*cos(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_)))*dzknee2tip+((-1)*cos(afemur_)*sin(aknee_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))+(-1)*cos(aknee_)*sin(afemur_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_)))*dyknee2tip+(-1)*sin(afemur_)*(cos(achasis)*cos(ahip_)+(-1)*sin(achasis)*sin(ahip_))*dfemur2knee;
-  dresidual1_dahip_=cos(afemur_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))*dfemur2knee+(cos(afemur_)*cos(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))+(-1)*sin(afemur_)*sin(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis)))*dyknee2tip+((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))*dhip2femur+((-1)*cos(afemur_)*sin(aknee_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis))+(-1)*cos(aknee_)*sin(afemur_)*((-1)*cos(achasis)*sin(ahip_)+(-1)*cos(ahip_)*sin(achasis)))*dzknee2tip;
-  dresidual2_daknee_=(cos(afemur_)*cos(aknee_)+(-1)*sin(afemur_)*sin(aknee_))*dyknee2tip+((-1)*cos(afemur_)*sin(aknee_)+(-1)*cos(aknee_)*sin(afemur_))*dzknee2tip;
-  dresidual2_dafemur_=cos(afemur_)*dfemur2knee+(cos(afemur_)*cos(aknee_)+(-1)*sin(afemur_)*sin(aknee_))*dyknee2tip+((-1)*cos(afemur_)*sin(aknee_)+(-1)*cos(aknee_)*sin(afemur_))*dzknee2tip;
-  dresidual2_dahip_=0;
+  _knee=ik_legx(1);
+  _femur=ik_legx(2);
+  _hip=ik_legx(3);
+  dresidual0_d_knee=((-0.0174532925199433)*cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))+0.0174532925199433*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip)))*dzknee2tip+((-0.0174532925199433)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))+(-0.0174532925199433)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip)))*dyknee2tip;
+  dresidual0_d_femur=((-0.0174532925199433)*cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))+0.0174532925199433*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip)))*dzknee2tip+((-0.0174532925199433)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))+(-0.0174532925199433)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip)))*dyknee2tip+(-0.0174532925199433)*sin(0.0174532925199433*_femur)*((-1)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-1)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))*dfemur2knee;
+  dresidual0_d_hip=cos(0.0174532925199433*_femur)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+0.0174532925199433*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))*dfemur2knee+(cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+0.0174532925199433*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))+(-1)*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+0.0174532925199433*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)))*dyknee2tip+((-1)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+0.0174532925199433*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))+(-1)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+0.0174532925199433*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)))*dzknee2tip+((-0.0174532925199433)*cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+0.0174532925199433*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))*dhip2femur;
+  dresidual1_d_knee=((-0.0174532925199433)*cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))+0.0174532925199433*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)))*dzknee2tip+((-0.0174532925199433)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))+(-0.0174532925199433)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)))*dyknee2tip;
+  dresidual1_d_femur=((-0.0174532925199433)*cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))+0.0174532925199433*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)))*dzknee2tip+((-0.0174532925199433)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))+(-0.0174532925199433)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)))*dyknee2tip+(-0.0174532925199433)*sin(0.0174532925199433*_femur)*(cos(0.0174532925199433*_hip)*cos(0.0174532925199433*chasis)+(-1)*sin(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis))*dfemur2knee;
+  dresidual1_d_hip=cos(0.0174532925199433*_femur)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-0.0174532925199433)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))*dfemur2knee+(cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-0.0174532925199433)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))+(-1)*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-0.0174532925199433)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip)))*dyknee2tip+((-1)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-0.0174532925199433)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))+(-1)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur)*((-0.0174532925199433)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-0.0174532925199433)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip)))*dzknee2tip+((-0.0174532925199433)*cos(0.0174532925199433*_hip)*sin(0.0174532925199433*chasis)+(-0.0174532925199433)*cos(0.0174532925199433*chasis)*sin(0.0174532925199433*_hip))*dhip2femur;
+  dresidual2_d_knee=((-0.0174532925199433)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)+(-0.0174532925199433)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur))*dzknee2tip+((-0.0174532925199433)*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)+0.0174532925199433*cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee))*dyknee2tip;
+  dresidual2_d_femur=((-0.0174532925199433)*cos(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)+(-0.0174532925199433)*cos(0.0174532925199433*_knee)*sin(0.0174532925199433*_femur))*dzknee2tip+((-0.0174532925199433)*sin(0.0174532925199433*_femur)*sin(0.0174532925199433*_knee)+0.0174532925199433*cos(0.0174532925199433*_femur)*cos(0.0174532925199433*_knee))*dyknee2tip+0.0174532925199433*cos(0.0174532925199433*_femur)*dfemur2knee;
+  dresidual2_d_hip=0;
   // place derivatives in dy
   ik_legdy=zeros(3,3);
-  ik_legdy(1,1)=dresidual0_daknee_;
-  ik_legdy(1,2)=dresidual0_dafemur_;
-  ik_legdy(1,3)=dresidual0_dahip_;
-  ik_legdy(2,1)=dresidual1_daknee_;
-  ik_legdy(2,2)=dresidual1_dafemur_;
-  ik_legdy(2,3)=dresidual1_dahip_;
-  ik_legdy(3,1)=dresidual2_daknee_;
-  ik_legdy(3,2)=dresidual2_dafemur_;
-  ik_legdy(3,3)=dresidual2_dahip_;
+  ik_legdy(1,1)=dresidual0_d_knee;
+  ik_legdy(1,2)=dresidual0_d_femur;
+  ik_legdy(1,3)=dresidual0_d_hip;
+  ik_legdy(2,1)=dresidual1_d_knee;
+  ik_legdy(2,2)=dresidual1_d_femur;
+  ik_legdy(2,3)=dresidual1_d_hip;
+  ik_legdy(3,1)=dresidual2_d_knee;
+  ik_legdy(3,2)=dresidual2_d_femur;
+  ik_legdy(3,3)=dresidual2_d_hip;
 endfunction
 
 function ik_legx=ik_legsolve(ik_legparameters)
@@ -115,10 +115,10 @@ function ik_legx=ik_legsolve(ik_legparameters)
   
     // import parameters
   
-  aknee=ik_legparameters(1);
-  afemur=ik_legparameters(2);
-  ahip=ik_legparameters(3);
-  achasis=ik_legparameters(4);
+  knee=ik_legparameters(1);
+  femur=ik_legparameters(2);
+  hip=ik_legparameters(3);
+  chasis=ik_legparameters(4);
   dfemur2knee=ik_legparameters(5);
   dhip2femur=ik_legparameters(6);
   drchasis2hip=ik_legparameters(7);
@@ -134,16 +134,16 @@ function ik_legx=ik_legsolve(ik_legparameters)
   // initialize unknowns from parameters
   
   ik_legx=zeros(3,1);
-  aknee_=aknee;
-  afemur_=afemur;
-  ahip_=ahip;
+  _knee=knee;
+  _femur=femur;
+  _hip=hip;
   
   // setup unknown vector x
   
   ik_legx=zeros(3,1);
-  ik_legx(1)=aknee_;
-  ik_legx(2)=afemur_;
-  ik_legx(3)=ahip_;
+  ik_legx(1)=_knee;
+  ik_legx(2)=_femur;
+  ik_legx(3)=_hip;
   
   // newton iteration
   for step=1:steps
@@ -171,10 +171,10 @@ function ik_legnew_parameters=ik_legupdate(ik_legparameters)
   
     // import parameters
   
-  aknee=ik_legparameters(1);
-  afemur=ik_legparameters(2);
-  ahip=ik_legparameters(3);
-  achasis=ik_legparameters(4);
+  knee=ik_legparameters(1);
+  femur=ik_legparameters(2);
+  hip=ik_legparameters(3);
+  chasis=ik_legparameters(4);
   dfemur2knee=ik_legparameters(5);
   dhip2femur=ik_legparameters(6);
   drchasis2hip=ik_legparameters(7);
@@ -186,17 +186,23 @@ function ik_legnew_parameters=ik_legupdate(ik_legparameters)
   pz=ik_legparameters(13);
   residual=ik_legparameters(14);
   ik_legx=ik_legsolve(ik_legparameters);
-  aknee=aknee_;
-  afemur=afemur_;
-  ahip=ahip_;
+  
+  // import variables
+  
+  _knee=ik_legx(1);
+  _femur=ik_legx(2);
+  _hip=ik_legx(3);
+  knee=_knee;
+  femur=_femur;
+  hip=_hip;
   
   // assign to new_parameters
   
-  ik_legnew_parameters=zeros(3,1);
-  ik_legnew_parameters(1)=aknee;
-  ik_legnew_parameters(2)=afemur;
-  ik_legnew_parameters(3)=ahip;
-  ik_legnew_parameters(4)=achasis;
+  ik_legnew_parameters=zeros(14,1);
+  ik_legnew_parameters(1)=knee;
+  ik_legnew_parameters(2)=femur;
+  ik_legnew_parameters(3)=hip;
+  ik_legnew_parameters(4)=chasis;
   ik_legnew_parameters(5)=dfemur2knee;
   ik_legnew_parameters(6)=dhip2femur;
   ik_legnew_parameters(7)=drchasis2hip;

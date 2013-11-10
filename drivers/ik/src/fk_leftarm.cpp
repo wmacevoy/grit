@@ -2,11 +2,11 @@
 #include "fk_leftarm.h"
 
 void fk_leftarm(
-float LEFTARM_SHOULDER_IO,
-float LEFTARM_SHOULDER_UD,
-float LEFTARM_BICEP_ROTATE,
-float LEFTARM_ELBOW,
-float LEFTARM_FOREARM_ROTATE,
+float shoulderio,
+float shoulderud,
+float bicep,
+float elbow,
+float forearm,
 float pose[4][4]
 )
 {
@@ -350,16 +350,16 @@ float tmp336;
 float tmp337;
 float tmp338;
 float tmp339;
-tmp0=0.017453293f*LEFTARM_FOREARM_ROTATE;
+tmp0=0.017453293f*forearm;
 tmp1=tmp0+0.52359878f;
 tmp2=cos(tmp1);
-tmp3=0.017453293f*LEFTARM_SHOULDER_IO;
+tmp3=0.017453293f*shoulderio;
 tmp4=tmp3+(-0.78539816f);
 tmp5=cos(tmp4);
-tmp6=0.017453293f*LEFTARM_BICEP_ROTATE;
+tmp6=0.017453293f*bicep;
 tmp7=cos(tmp6);
 tmp8=tmp5*tmp7;
-tmp9=(-0.017453293f)*LEFTARM_SHOULDER_UD;
+tmp9=(-0.017453293f)*shoulderud;
 tmp10=tmp9+0.78539816f;
 tmp11=sin(tmp10);
 tmp12=tmp3+(-0.78539816f);
@@ -372,7 +372,7 @@ tmp18=tmp0+0.52359878f;
 tmp19=sin(tmp18);
 tmp20=tmp9+0.78539816f;
 tmp21=cos(tmp20);
-tmp22=0.017453293f*LEFTARM_ELBOW;
+tmp22=0.017453293f*elbow;
 tmp23=tmp22+(-0.78539816f);
 tmp24=sin(tmp23);
 tmp25=tmp3+(-0.78539816f);

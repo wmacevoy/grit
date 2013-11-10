@@ -20,11 +20,11 @@ const char *ik_leftarmglobal_names[]={
 };
 
 const char *ik_leftarmparameter_names[]={
-  "LEFTARM_SHOULDER_IO",
-  "LEFTARM_SHOULDER_UD",
-  "LEFTARM_BICEP_ROTATE",
-  "LEFTARM_ELBOW",
-  "LEFTARM_FOREARM_ROTATE",
+  "shoulderio",
+  "shoulderud",
+  "bicep",
+  "elbow",
+  "forearm",
   "leftpx",
   "leftpy",
   "leftpz",
@@ -34,11 +34,11 @@ const char *ik_leftarmparameter_names[]={
 };
 
 const char *ik_leftarmvariable_names[]={
-  "LEFTARM_SHOULDER_IO_",
-  "LEFTARM_SHOULDER_UD_",
-  "LEFTARM_BICEP_ROTATE_",
-  "LEFTARM_ELBOW_",
-  "LEFTARM_FOREARM_ROTATE_"
+  "_shoulderio",
+  "_shoulderud",
+  "_bicep",
+  "_elbow",
+  "_forearm"
 };
 
 const char *ik_leftarmequation_names[]={
@@ -357,11 +357,11 @@ void ik_leftarmruns(const std::string &ik_leftarmname)
 #define steps ik_leftarmglobals[1]
 
 // parameter aliases
-#define LEFTARM_SHOULDER_IO ik_leftarmparameters[0]
-#define LEFTARM_SHOULDER_UD ik_leftarmparameters[1]
-#define LEFTARM_BICEP_ROTATE ik_leftarmparameters[2]
-#define LEFTARM_ELBOW ik_leftarmparameters[3]
-#define LEFTARM_FOREARM_ROTATE ik_leftarmparameters[4]
+#define shoulderio ik_leftarmparameters[0]
+#define shoulderud ik_leftarmparameters[1]
+#define bicep ik_leftarmparameters[2]
+#define elbow ik_leftarmparameters[3]
+#define forearm ik_leftarmparameters[4]
 #define leftpx ik_leftarmparameters[5]
 #define leftpy ik_leftarmparameters[6]
 #define leftpz ik_leftarmparameters[7]
@@ -370,11 +370,11 @@ void ik_leftarmruns(const std::string &ik_leftarmname)
 #define residual ik_leftarmparameters[10]
 
 // variable aliases
-#define LEFTARM_SHOULDER_IO_ ik_leftarmx[0]
-#define LEFTARM_SHOULDER_UD_ ik_leftarmx[1]
-#define LEFTARM_BICEP_ROTATE_ ik_leftarmx[2]
-#define LEFTARM_ELBOW_ ik_leftarmx[3]
-#define LEFTARM_FOREARM_ROTATE_ ik_leftarmx[4]
+#define _shoulderio ik_leftarmx[0]
+#define _shoulderud ik_leftarmx[1]
+#define _bicep ik_leftarmx[2]
+#define _elbow ik_leftarmx[3]
+#define _forearm ik_leftarmx[4]
 
 // residual aliases
 #define residual0 ik_leftarmy[0]
@@ -384,31 +384,31 @@ void ik_leftarmruns(const std::string &ik_leftarmname)
 #define residual4 ik_leftarmy[4]
 
 // jacobian aliases (fortran order)
-#define dresidual0_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[0]
-#define dresidual0_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[5]
-#define dresidual0_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[10]
-#define dresidual0_dLEFTARM_ELBOW_ ik_leftarmdy[15]
-#define dresidual0_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[20]
-#define dresidual1_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[1]
-#define dresidual1_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[6]
-#define dresidual1_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[11]
-#define dresidual1_dLEFTARM_ELBOW_ ik_leftarmdy[16]
-#define dresidual1_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[21]
-#define dresidual2_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[2]
-#define dresidual2_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[7]
-#define dresidual2_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[12]
-#define dresidual2_dLEFTARM_ELBOW_ ik_leftarmdy[17]
-#define dresidual2_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[22]
-#define dresidual3_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[3]
-#define dresidual3_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[8]
-#define dresidual3_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[13]
-#define dresidual3_dLEFTARM_ELBOW_ ik_leftarmdy[18]
-#define dresidual3_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[23]
-#define dresidual4_dLEFTARM_SHOULDER_IO_ ik_leftarmdy[4]
-#define dresidual4_dLEFTARM_SHOULDER_UD_ ik_leftarmdy[9]
-#define dresidual4_dLEFTARM_BICEP_ROTATE_ ik_leftarmdy[14]
-#define dresidual4_dLEFTARM_ELBOW_ ik_leftarmdy[19]
-#define dresidual4_dLEFTARM_FOREARM_ROTATE_ ik_leftarmdy[24]
+#define dresidual0_d_shoulderio ik_leftarmdy[0]
+#define dresidual0_d_shoulderud ik_leftarmdy[5]
+#define dresidual0_d_bicep ik_leftarmdy[10]
+#define dresidual0_d_elbow ik_leftarmdy[15]
+#define dresidual0_d_forearm ik_leftarmdy[20]
+#define dresidual1_d_shoulderio ik_leftarmdy[1]
+#define dresidual1_d_shoulderud ik_leftarmdy[6]
+#define dresidual1_d_bicep ik_leftarmdy[11]
+#define dresidual1_d_elbow ik_leftarmdy[16]
+#define dresidual1_d_forearm ik_leftarmdy[21]
+#define dresidual2_d_shoulderio ik_leftarmdy[2]
+#define dresidual2_d_shoulderud ik_leftarmdy[7]
+#define dresidual2_d_bicep ik_leftarmdy[12]
+#define dresidual2_d_elbow ik_leftarmdy[17]
+#define dresidual2_d_forearm ik_leftarmdy[22]
+#define dresidual3_d_shoulderio ik_leftarmdy[3]
+#define dresidual3_d_shoulderud ik_leftarmdy[8]
+#define dresidual3_d_bicep ik_leftarmdy[13]
+#define dresidual3_d_elbow ik_leftarmdy[18]
+#define dresidual3_d_forearm ik_leftarmdy[23]
+#define dresidual4_d_shoulderio ik_leftarmdy[4]
+#define dresidual4_d_shoulderud ik_leftarmdy[9]
+#define dresidual4_d_bicep ik_leftarmdy[14]
+#define dresidual4_d_elbow ik_leftarmdy[19]
+#define dresidual4_d_forearm ik_leftarmdy[24]
 
 void ik_leftarminitialize(
   const float ik_leftarmglobals[2],
@@ -417,16 +417,16 @@ void ik_leftarminitialize(
 )
 {
   // initialize unknowns from parameters
-  // LEFTARM_SHOULDER_IO_=LEFTARM_SHOULDER_IO;
-  LEFTARM_SHOULDER_IO_=LEFTARM_SHOULDER_IO;
-  // LEFTARM_SHOULDER_UD_=LEFTARM_SHOULDER_UD;
-  LEFTARM_SHOULDER_UD_=LEFTARM_SHOULDER_UD;
-  // LEFTARM_BICEP_ROTATE_=LEFTARM_BICEP_ROTATE;
-  LEFTARM_BICEP_ROTATE_=LEFTARM_BICEP_ROTATE;
-  // LEFTARM_ELBOW_=LEFTARM_ELBOW;
-  LEFTARM_ELBOW_=LEFTARM_ELBOW;
-  // LEFTARM_FOREARM_ROTATE_=LEFTARM_FOREARM_ROTATE;
-  LEFTARM_FOREARM_ROTATE_=LEFTARM_FOREARM_ROTATE;
+  // _shoulderio=shoulderio;
+  _shoulderio=shoulderio;
+  // _shoulderud=shoulderud;
+  _shoulderud=shoulderud;
+  // _bicep=bicep;
+  _bicep=bicep;
+  // _elbow=elbow;
+  _elbow=elbow;
+  // _forearm=forearm;
+  _forearm=forearm;
 } // ik_leftarminitialize()
 void ik_leftarmupdate(
   const float ik_leftarmglobals[2],
@@ -436,16 +436,16 @@ void ik_leftarmupdate(
   float ik_leftarmx[5];
   ik_leftarmsolve(ik_leftarmglobals,ik_leftarmparameters,ik_leftarmx);
 
-  // LEFTARM_SHOULDER_IO=LEFTARM_SHOULDER_IO_
-  LEFTARM_SHOULDER_IO=LEFTARM_SHOULDER_IO_;
-  // LEFTARM_SHOULDER_UD=LEFTARM_SHOULDER_UD_
-  LEFTARM_SHOULDER_UD=LEFTARM_SHOULDER_UD_;
-  // LEFTARM_BICEP_ROTATE=LEFTARM_BICEP_ROTATE_
-  LEFTARM_BICEP_ROTATE=LEFTARM_BICEP_ROTATE_;
-  // LEFTARM_ELBOW=LEFTARM_ELBOW_
-  LEFTARM_ELBOW=LEFTARM_ELBOW_;
-  // LEFTARM_FOREARM_ROTATE=LEFTARM_FOREARM_ROTATE_
-  LEFTARM_FOREARM_ROTATE=LEFTARM_FOREARM_ROTATE_;
+  // shoulderio=_shoulderio
+  shoulderio=_shoulderio;
+  // shoulderud=_shoulderud
+  shoulderud=_shoulderud;
+  // bicep=_bicep
+  bicep=_bicep;
+  // elbow=_elbow
+  elbow=_elbow;
+  // forearm=_forearm
+  forearm=_forearm;
 } // ik_leftarmupdate()
 
 void ik_leftarmf(
@@ -604,17 +604,19 @@ float tmp145;
 float tmp146;
 float tmp147;
 float tmp148;
-tmp0=0.017453293f*LEFTARM_ELBOW_;
+float tmp149;
+float tmp150;
+tmp0=0.017453293f*_elbow;
 tmp1=tmp0+(-0.78539816f);
 tmp2=sin(tmp1);
-tmp3=0.017453293f*LEFTARM_SHOULDER_IO_;
+tmp3=0.017453293f*_shoulderio;
 tmp4=tmp3+(-0.78539816f);
 tmp5=cos(tmp4);
-tmp6=0.017453293f*LEFTARM_BICEP_ROTATE_;
+tmp6=0.017453293f*_bicep;
 tmp7=sin(tmp6);
 tmp8=tmp5*tmp7;
 tmp9=cos(tmp6);
-tmp10=(-0.017453293f)*LEFTARM_SHOULDER_UD_;
+tmp10=(-0.017453293f)*_shoulderud;
 tmp11=tmp10+0.78539816f;
 tmp12=sin(tmp11);
 tmp13=tmp3+(-0.78539816f);
@@ -689,7 +691,7 @@ tmp79=(-9.0f)*tmp78;
 tmp80=(-1.0f)*leftpz;
 tmp81=tmp71+tmp76+tmp79+tmp80;
 residual2=tmp81;
-tmp82=0.017453293f*LEFTARM_FOREARM_ROTATE_;
+tmp82=0.017453293f*_forearm;
 tmp83=tmp82+0.52359878f;
 tmp84=cos(tmp83);
 tmp85=tmp10+0.78539816f;
@@ -729,35 +731,37 @@ tmp118=sin(tmp6);
 tmp119=(-1.0f)*tmp115*tmp117*tmp118;
 tmp120=tmp113+tmp119;
 tmp121=tmp109*tmp120;
-tmp122=sin(leftroll);
-tmp123=(-1.0f)*tmp122;
-tmp124=tmp107+tmp121+tmp123;
-residual3=tmp124;
-tmp125=tmp10+0.78539816f;
-tmp126=cos(tmp125);
-tmp127=tmp0+(-0.78539816f);
-tmp128=cos(tmp127);
-tmp129=tmp3+(-0.78539816f);
-tmp130=sin(tmp129);
-tmp131=tmp126*tmp128*tmp130;
-tmp132=tmp0+(-0.78539816f);
-tmp133=sin(tmp132);
-tmp134=tmp3+(-0.78539816f);
-tmp135=cos(tmp134);
-tmp136=sin(tmp6);
-tmp137=tmp135*tmp136;
-tmp138=cos(tmp6);
-tmp139=tmp10+0.78539816f;
-tmp140=sin(tmp139);
-tmp141=tmp3+(-0.78539816f);
-tmp142=sin(tmp141);
-tmp143=tmp138*tmp140*tmp142;
-tmp144=tmp137+tmp143;
-tmp145=(-1.0f)*tmp133*tmp144;
-tmp146=sin(leftyaw);
-tmp147=(-1.0f)*tmp146;
-tmp148=tmp131+tmp145+tmp147;
-residual4=tmp148;
+tmp122=0.017453293f*leftroll;
+tmp123=sin(tmp122);
+tmp124=(-1.0f)*tmp123;
+tmp125=tmp107+tmp121+tmp124;
+residual3=tmp125;
+tmp126=tmp10+0.78539816f;
+tmp127=cos(tmp126);
+tmp128=tmp0+(-0.78539816f);
+tmp129=cos(tmp128);
+tmp130=tmp3+(-0.78539816f);
+tmp131=sin(tmp130);
+tmp132=tmp127*tmp129*tmp131;
+tmp133=tmp0+(-0.78539816f);
+tmp134=sin(tmp133);
+tmp135=tmp3+(-0.78539816f);
+tmp136=cos(tmp135);
+tmp137=sin(tmp6);
+tmp138=tmp136*tmp137;
+tmp139=cos(tmp6);
+tmp140=tmp10+0.78539816f;
+tmp141=sin(tmp140);
+tmp142=tmp3+(-0.78539816f);
+tmp143=sin(tmp142);
+tmp144=tmp139*tmp141*tmp143;
+tmp145=tmp138+tmp144;
+tmp146=(-1.0f)*tmp134*tmp145;
+tmp147=0.017453293f*leftyaw;
+tmp148=sin(tmp147);
+tmp149=(-1.0f)*tmp148;
+tmp150=tmp132+tmp146+tmp149;
+residual4=tmp150;
 } // ik_leftarmf()
 
 void ik_leftarmdf(
@@ -1217,19 +1221,19 @@ float tmp446;
 float tmp447;
 float tmp448;
 float tmp449;
-tmp0=0.017453293f*LEFTARM_ELBOW_;
+tmp0=0.017453293f*_elbow;
 tmp1=tmp0+(-0.78539816f);
 tmp2=sin(tmp1);
-tmp3=0.017453293f*LEFTARM_SHOULDER_IO_;
+tmp3=0.017453293f*_shoulderio;
 tmp4=tmp3+(-0.78539816f);
 tmp5=sin(tmp4);
-tmp6=0.017453293f*LEFTARM_BICEP_ROTATE_;
+tmp6=0.017453293f*_bicep;
 tmp7=sin(tmp6);
 tmp8=(-0.017453293f)*tmp5*tmp7;
 tmp9=tmp3+(-0.78539816f);
 tmp10=cos(tmp9);
 tmp11=cos(tmp6);
-tmp12=(-0.017453293f)*LEFTARM_SHOULDER_UD_;
+tmp12=(-0.017453293f)*_shoulderud;
 tmp13=tmp12+0.78539816f;
 tmp14=sin(tmp13);
 tmp15=0.017453293f*tmp10*tmp11*tmp14;
@@ -1251,7 +1255,7 @@ tmp30=tmp3+(-0.78539816f);
 tmp31=cos(tmp30);
 tmp32=0.26179939f*tmp27*tmp29*tmp31;
 tmp33=tmp17+tmp20+tmp25+tmp32;
-dresidual0_dLEFTARM_SHOULDER_IO_=tmp33;
+dresidual0_d_shoulderio=tmp33;
 tmp34=tmp12+0.78539816f;
 tmp35=sin(tmp34);
 tmp36=tmp3+(-0.78539816f);
@@ -1273,7 +1277,7 @@ tmp51=tmp3+(-0.78539816f);
 tmp52=sin(tmp51);
 tmp53=0.26179939f*tmp48*tmp50*tmp52;
 tmp54=tmp38+tmp46+tmp53;
-dresidual0_dLEFTARM_SHOULDER_UD_=tmp54;
+dresidual0_d_shoulderud=tmp54;
 tmp55=tmp0+(-0.78539816f);
 tmp56=sin(tmp55);
 tmp57=tmp12+0.78539816f;
@@ -1288,7 +1292,7 @@ tmp65=cos(tmp6);
 tmp66=0.017453293f*tmp64*tmp65;
 tmp67=tmp62+tmp66;
 tmp68=(-15.0f)*tmp56*tmp67;
-dresidual0_dLEFTARM_BICEP_ROTATE_=tmp68;
+dresidual0_d_bicep=tmp68;
 tmp69=tmp12+0.78539816f;
 tmp70=cos(tmp69);
 tmp71=tmp0+(-0.78539816f);
@@ -1311,8 +1315,8 @@ tmp87=tmp82*tmp84*tmp86;
 tmp88=tmp81+tmp87;
 tmp89=(-0.26179939f)*tmp77*tmp88;
 tmp90=tmp75+tmp89;
-dresidual0_dLEFTARM_ELBOW_=tmp90;
-dresidual0_dLEFTARM_FOREARM_ROTATE_=0.0f;
+dresidual0_d_elbow=tmp90;
+dresidual0_d_forearm=0.0f;
 tmp91=tmp0+(-0.78539816f);
 tmp92=sin(tmp91);
 tmp93=tmp3+(-0.78539816f);
@@ -1343,7 +1347,7 @@ tmp117=tmp3+(-0.78539816f);
 tmp118=sin(tmp117);
 tmp119=(-0.063268185f)*tmp118;
 tmp120=tmp104+tmp111+tmp116+tmp119;
-dresidual1_dLEFTARM_SHOULDER_IO_=tmp120;
+dresidual1_d_shoulderio=tmp120;
 tmp121=tmp3+(-0.78539816f);
 tmp122=cos(tmp121);
 tmp123=tmp12+0.78539816f;
@@ -1365,7 +1369,7 @@ tmp138=tmp12+0.78539816f;
 tmp139=sin(tmp138);
 tmp140=0.26179939f*tmp135*tmp137*tmp139;
 tmp141=tmp125+tmp133+tmp140;
-dresidual1_dLEFTARM_SHOULDER_UD_=tmp141;
+dresidual1_d_shoulderud=tmp141;
 tmp142=tmp0+(-0.78539816f);
 tmp143=sin(tmp142);
 tmp144=tmp3+(-0.78539816f);
@@ -1380,7 +1384,7 @@ tmp152=sin(tmp151);
 tmp153=(-0.017453293f)*tmp150*tmp152;
 tmp154=tmp149+tmp153;
 tmp155=(-15.0f)*tmp143*tmp154;
-dresidual1_dLEFTARM_BICEP_ROTATE_=tmp155;
+dresidual1_d_bicep=tmp155;
 tmp156=tmp12+0.78539816f;
 tmp157=cos(tmp156);
 tmp158=tmp3+(-0.78539816f);
@@ -1403,9 +1407,9 @@ tmp174=(-1.0f)*tmp172*tmp173;
 tmp175=tmp170+tmp174;
 tmp176=(-0.26179939f)*tmp164*tmp175;
 tmp177=tmp162+tmp176;
-dresidual1_dLEFTARM_ELBOW_=tmp177;
-dresidual1_dLEFTARM_FOREARM_ROTATE_=0.0f;
-dresidual2_dLEFTARM_SHOULDER_IO_=0.0f;
+dresidual1_d_elbow=tmp177;
+dresidual1_d_forearm=0.0f;
+dresidual2_d_shoulderio=0.0f;
 tmp178=cos(tmp6);
 tmp179=tmp12+0.78539816f;
 tmp180=sin(tmp179);
@@ -1421,14 +1425,14 @@ tmp189=tmp0+(-0.78539816f);
 tmp190=cos(tmp189);
 tmp191=0.26179939f*tmp188*tmp190;
 tmp192=tmp183+tmp186+tmp191;
-dresidual2_dLEFTARM_SHOULDER_UD_=tmp192;
+dresidual2_d_shoulderud=tmp192;
 tmp193=tmp12+0.78539816f;
 tmp194=cos(tmp193);
 tmp195=tmp0+(-0.78539816f);
 tmp196=sin(tmp195);
 tmp197=sin(tmp6);
 tmp198=0.26179939f*tmp194*tmp196*tmp197;
-dresidual2_dLEFTARM_BICEP_ROTATE_=tmp198;
+dresidual2_d_bicep=tmp198;
 tmp199=tmp12+0.78539816f;
 tmp200=cos(tmp199);
 tmp201=tmp0+(-0.78539816f);
@@ -1441,9 +1445,9 @@ tmp207=tmp0+(-0.78539816f);
 tmp208=sin(tmp207);
 tmp209=0.26179939f*tmp206*tmp208;
 tmp210=tmp204+tmp209;
-dresidual2_dLEFTARM_ELBOW_=tmp210;
-dresidual2_dLEFTARM_FOREARM_ROTATE_=0.0f;
-tmp211=0.017453293f*LEFTARM_FOREARM_ROTATE_;
+dresidual2_d_elbow=tmp210;
+dresidual2_d_forearm=0.0f;
+tmp211=0.017453293f*_forearm;
 tmp212=tmp211+0.52359878f;
 tmp213=cos(tmp212);
 tmp214=tmp0+(-0.78539816f);
@@ -1484,7 +1488,7 @@ tmp248=(-0.017453293f)*tmp245*tmp247;
 tmp249=tmp244+tmp248;
 tmp250=tmp238*tmp249;
 tmp251=tmp236+tmp250;
-dresidual3_dLEFTARM_SHOULDER_IO_=tmp251;
+dresidual3_d_shoulderio=tmp251;
 tmp252=tmp211+0.52359878f;
 tmp253=cos(tmp252);
 tmp254=tmp12+0.78539816f;
@@ -1513,7 +1517,7 @@ tmp276=sin(tmp275);
 tmp277=sin(tmp6);
 tmp278=0.017453293f*tmp272*tmp274*tmp276*tmp277;
 tmp279=tmp270+tmp278;
-dresidual3_dLEFTARM_SHOULDER_UD_=tmp279;
+dresidual3_d_shoulderud=tmp279;
 tmp280=tmp0+(-0.78539816f);
 tmp281=cos(tmp280);
 tmp282=tmp211+0.52359878f;
@@ -1545,7 +1549,7 @@ tmp307=(-0.017453293f)*tmp302*tmp304*tmp306;
 tmp308=tmp301+tmp307;
 tmp309=tmp297*tmp308;
 tmp310=tmp295+tmp309;
-dresidual3_dLEFTARM_BICEP_ROTATE_=tmp310;
+dresidual3_d_bicep=tmp310;
 tmp311=tmp211+0.52359878f;
 tmp312=cos(tmp311);
 tmp313=tmp0+(-0.78539816f);
@@ -1571,7 +1575,7 @@ tmp332=sin(tmp331);
 tmp333=0.017453293f*tmp328*tmp330*tmp332;
 tmp334=tmp326+tmp333;
 tmp335=tmp312*tmp334;
-dresidual3_dLEFTARM_ELBOW_=tmp335;
+dresidual3_d_elbow=tmp335;
 tmp336=tmp211+0.52359878f;
 tmp337=sin(tmp336);
 tmp338=tmp12+0.78539816f;
@@ -1612,7 +1616,7 @@ tmp372=(-1.0f)*tmp368*tmp370*tmp371;
 tmp373=tmp366+tmp372;
 tmp374=0.017453293f*tmp362*tmp373;
 tmp375=tmp360+tmp374;
-dresidual3_dLEFTARM_FOREARM_ROTATE_=tmp375;
+dresidual3_d_forearm=tmp375;
 tmp376=tmp0+(-0.78539816f);
 tmp377=sin(tmp376);
 tmp378=tmp3+(-0.78539816f);
@@ -1635,7 +1639,7 @@ tmp394=tmp3+(-0.78539816f);
 tmp395=cos(tmp394);
 tmp396=0.017453293f*tmp391*tmp393*tmp395;
 tmp397=tmp389+tmp396;
-dresidual4_dLEFTARM_SHOULDER_IO_=tmp397;
+dresidual4_d_shoulderio=tmp397;
 tmp398=tmp12+0.78539816f;
 tmp399=cos(tmp398);
 tmp400=cos(tmp6);
@@ -1652,7 +1656,7 @@ tmp410=tmp3+(-0.78539816f);
 tmp411=sin(tmp410);
 tmp412=0.017453293f*tmp407*tmp409*tmp411;
 tmp413=tmp405+tmp412;
-dresidual4_dLEFTARM_SHOULDER_UD_=tmp413;
+dresidual4_d_shoulderud=tmp413;
 tmp414=tmp0+(-0.78539816f);
 tmp415=sin(tmp414);
 tmp416=tmp12+0.78539816f;
@@ -1667,7 +1671,7 @@ tmp424=cos(tmp6);
 tmp425=0.017453293f*tmp423*tmp424;
 tmp426=tmp421+tmp425;
 tmp427=(-1.0f)*tmp415*tmp426;
-dresidual4_dLEFTARM_BICEP_ROTATE_=tmp427;
+dresidual4_d_bicep=tmp427;
 tmp428=tmp12+0.78539816f;
 tmp429=cos(tmp428);
 tmp430=tmp0+(-0.78539816f);
@@ -1690,6 +1694,6 @@ tmp446=tmp441*tmp443*tmp445;
 tmp447=tmp440+tmp446;
 tmp448=(-0.017453293f)*tmp436*tmp447;
 tmp449=tmp434+tmp448;
-dresidual4_dLEFTARM_ELBOW_=tmp449;
-dresidual4_dLEFTARM_FOREARM_ROTATE_=0.0f;
+dresidual4_d_elbow=tmp449;
+dresidual4_d_forearm=0.0f;
 } // ik_leftarmdf()
