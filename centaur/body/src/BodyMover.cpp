@@ -441,12 +441,12 @@ double stepX(double dist,double direction,double angle) {
   double xstep=cos(direction)*dist; // Effective step size in x
   while (angle>2.0*M_PI) 
     angle-=2.0*M_PI; // wrap around
-  while (angle<0) 
+  while (angle<0.0) 
     angle+=2.0*M_PI;
   angle-=3.0*M_PI_4; // Subtract off center of raise angle
   if (angle<0.0) angle+=2.0*M_PI;  // Add circle if negative
   // Angle should between 0 and 2Pi. 
-  return xstep*(1.0-angle/2.0*M_PI);
+  return xstep*(1.0-angle/(2.0*M_PI));
 }
 
 /* The function that steps forward with the leg naturally comes up */
@@ -454,12 +454,20 @@ double stepY(double dist,double direction,double angle) {
   double ystep=sin(direction)*dist;  // Effective step size in y
   while (angle>2.0*M_PI) 
     angle-=2.0*M_PI; // wrap around
-  while (angle<0) 
+  while (angle<0.0) 
     angle+=2.0*M_PI;
   angle-=3.0*M_PI_4; // Subtract off center of raise angle
   if (angle<0.0) angle+=2.0*M_PI;  // Add circle if negative
   // Angle should between 0 and 2Pi. 
-  return ystep*(1.0-angle/2.0*M_PI);
+  return ystep*(1.0-angle/(2.0*M_PI));
+}
+
+/* The function that steps forward with the leg naturally comes up */
+double stepZ(double dist,double angle) {
+  angle-=3.0*M_PI_4; // Subtract off center of raise angle
+  if (angle<0.0) angle+=2.0*M_PI;  // Add circle if negative
+  // Angle should between 0 and 2Pi. 
+  return dist*(1.0-angle/(2.0*M_PI));
 }
 
 double legDirection(double angle) {
@@ -469,7 +477,7 @@ double legDirection(double angle) {
   else return 0.0; 
 }
  
-vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double z,double step,double direction,double zstep,int repeat,float rotation) {
+vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double z,double step,double direction,double zstep,int repeat,float rotation,float zoffset) {
   vector<vector<double>> data;
   direction=(direction*M_PI)/180.0;
   double T =20.0; 
@@ -484,9 +492,13 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
   double l2d=direction;
   double l3d=direction;
   double l4d=direction;
-  l2d-=rotation*M_PI_2;
+  double l1z=z/*+zoffset/2.0*/;
+  double l2z=z/*+zoffset/2.0*/;
+  double l3z=z/*-zoffset/2.0*/;
+  double l4z=z/*-zoffset/2.0*/;
+  l2d+=rotation*3.0*M_PI_2;
   l3d+=rotation*M_PI;
-  l4d-=rotation*3.0*M_PI_2;
+  l4d+=rotation*M_PI_2;
   for (int q=0;q<repeat;q++) {
     for(double a=0;a<fullCircle;a+=da) {
 	  float l1a=a;
@@ -498,19 +510,19 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
       { // leg 1
         p.push_back(circulateX(-x,radius,a)+stepX(step,l1d,l1a)); 
         p.push_back(circulateY(y,radius,a) +stepY(step,l1d,l1a)); 
-        p.push_back(lift(z,1.0,a+M_PI_2)+raise(zstep,l1a));
+        p.push_back(lift(l1z,1.0,a+M_PI_2)+raise(zstep,l1a)+stepZ(zoffset,l1a)-zoffset/2.0);
       } { // leg 2
         p.push_back(circulateX(x,radius,a) +stepX(step,l2d,l2a)); 
         p.push_back(circulateY(y,radius,a) +stepY(step,l2d,l2a)); 
-        p.push_back(lift(z,1.0,a)       +raise(zstep,l2a));
+        p.push_back(lift(l2z,1.0,a)       +raise(zstep,l2a)+stepZ(zoffset,l2a)-zoffset/2.0);
       } { // leg 3 
         p.push_back(circulateX(x,radius,a) +stepX(step,l3d,l3a)); 
         p.push_back(circulateY(-y,radius,a)+stepY(step,l3d,l3a)); 
-        p.push_back(lift(z,1.0,a+M_PI_2)+raise(zstep,l3a));
+        p.push_back(lift(l3z,1.0,a+M_PI_2)+raise(zstep,l3a)-stepZ(zoffset,l3a)+zoffset/2.0);
       } { // leg 4
         p.push_back(circulateX(-x,radius,a)+stepX(step,l4d,l4a)); 
         p.push_back(circulateY(-y,radius,a)+stepY(step,l4d,l4a)); 
-        p.push_back(lift(z,1.0,a)       +raise(zstep,l4a));
+        p.push_back(lift(l4z,1.0,a)       +raise(zstep,l4a)-stepZ(zoffset,l4a)+zoffset/2.0);
       }         
       p.push_back(waist); 
       p.push_back(legDirection(l1a)); 
@@ -524,9 +536,9 @@ vector<vector<double> > BodyMover::bMove(double radius,double x,double y,double 
   return data;
 }
 
-bool BodyMover::bStep(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat,bool rotation) {
+bool BodyMover::bStep(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat,float rotation,float zoffset) {
   vector<vector<double > > f;
-  f=bMove(radius,x,y,z,step,direction,zStep,repeat,rotation);
+  f=bMove(radius,x,y,z,step,direction,zStep,repeat,rotation,zoffset);
   logPosition(f);
   fromTips(f);
   return true;  

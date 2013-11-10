@@ -106,6 +106,7 @@ public:
   string last;
   map < string , string > saved;
   mutex repliesMutex;
+  static int lab;
 
   void includeSavedCommands(string file="commands")
   {
@@ -301,10 +302,10 @@ public:
     setLUD(-40);
     setLElbow(40);
     setLBicep(-20);
-    setRIO(40);
+  /*  setRIO(40);
     setRUD(40);
     setRElbow(-40);
-    setRBicep(0);    
+    setRBicep(0); */
   }  
   void goHome() {
     load("home.csv");
@@ -313,10 +314,10 @@ public:
     setLUD(-40);
     setLElbow(40);
     setLBicep(-20);
-    setRIO(40);
+ /*   setRIO(40);
     setRUD(40);
     setRElbow(-40);
-    setRBicep(0);    
+    setRBicep(0);     */
   }
   
   void setPitch(float angle) {
@@ -363,19 +364,42 @@ public:
       mover->blended(4.0,15.0,15.0,-17.115+5.75,0.0,5.0,5.75+3.0,1.0,.72);
   }
   
-  void balancedForward()
+  void balancedRampUp()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,0.5,90.0,0.5,4);
+      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,8.0);
+  }
+  
+  void balancedRampDown()
+  {
+      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,-8.0);
+  }
+  
+  void balancedForward(int repeat=4)
+  {
+      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,repeat);
+  }
+  void balancedStrafeRight()
+  {
+      mover->bStep(2.5,15.9,15.9,-15.,2.0,0.0,1.0,1);
+  }
+  void balancedStrafeLeft()
+  {
+      mover->bStep(2.5,15.9,15.9,-15.,2.0,180.0,1.0,1);
+  }
+  
+  void balancedBackward(int repeat=4)
+  {
+      mover->bStep(2.5,15.9,15.9,-15.,2.0,270.0,1.0,repeat);
   }
   
   void balancedLeft()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,0.5,90.0+45.0,0.5,4,-1.0);
+      mover->bStep(2.5,15.9,15.9,-15.,4.0,90.0-45.0,1.0,4,-1.0);
   }
   
   void balancedRight()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,0.5,90.0-45.0,0.5,4,+1.0);
+      mover->bStep(2.5,15.9,15.9,-15.,4.0,90.0-45.0,1.0,4,+1.0);
   }
   
   void balancedHighForward()
@@ -424,7 +448,7 @@ public:
     setLElbow(-10);
   }
 
-  void handDown() {
+  void handDownPush() {
     //Push handle down
     setLUD(3);
     setLElbow(0);
@@ -433,6 +457,17 @@ public:
     setLElbow(15);
     sleep(1);
     setLUD(20);
+    sleep(5);
+  }
+  
+  void handDownPull() {
+    //Push handle down
+    setLUD(3);
+    setLElbow(-3);
+    sleep(5);
+    //Pull door open
+    setLUD(-10);
+    setLElbow(-20);
     sleep(5);
   }
 
@@ -450,7 +485,8 @@ public:
   }
   
   void shake() {
-	setRBicep(-30);
+/*  Double check signs before we turn this back on
+	setRBicep(-30);  
 	sleep(1);
 	setRElbow(44);
 	sleep(1);
@@ -466,7 +502,7 @@ public:
 	setRIO(44);
 	setRBicep(0);
     setRElbow(10);
-	setRUD(30);
+	setRUD(30); */
   }
   void yes()
   {
@@ -682,15 +718,29 @@ public:
       iss >> part;
       enable(part,false);
     }
+    if (head == "sl") {
+		lab -= 2;
+		setLBicep(lab);
+	}
+	if (head == "sr") {
+		lab += 2;
+		setLBicep(lab);
+	}
     if (head == "ph") {
+	  lab = 0;
       positionHand();
-      answer("Pushing door open...");
+      answer("Positioning hand...");
     }
-    if (head == "hd") {
-      handDown();
-      answer("Pushing handle down...");
+    if (head == "hd1") {
+      handDownPush();
+      answer("Pushing handle down and push...");
+    }
+    if (head == "hd2") {
+      handDownPull();
+      answer("Pushing handle down and pull...");
     }
     if (head == "ra") {
+	  lab = 0;
       retractArm();
       answer("Retracting arm...");
     }
@@ -1093,18 +1143,48 @@ public:
       answer(oss.str());
     }
     if (head == "bf") {  // forward
-      balancedForward();
+      int repeat=4;
+      iss >> repeat;
+      balancedForward(repeat);
       ostringstream oss;
       oss << "Step Balanced r=2 zstep=12:ok."; 
       answer(oss.str());
     }
-    if (head == "br") {  // Right
+    if (head == "bb") {  // backward
+      int repeat=4;
+      iss >> repeat;
+      balancedBackward(repeat);
+      ostringstream oss;
+      oss << "Step Balanced r=2 zstep=12:ok."; 
+      answer(oss.str());
+    }
+    if (head == "brd") {  // ramp down
+      balancedRampDown();
+      answer("Balanced Ramp Down");
+    }
+    if (head == "bru") {  // ramp up
+      balancedRampUp();
+      answer("Balanced Ramp Up");
+    }
+    if (head == "bsr") {  // right
+      balancedStrafeRight();
+      ostringstream oss;
+      oss << "Step strafe right"; 
+      answer(oss.str());
+    }
+    if (head == "bsl") {  // right
+      balancedStrafeLeft();
+      ostringstream oss;
+      oss << "Step strafe right"; 
+      answer(oss.str());
+    }
+    if (head == "br") {  // right
       balancedRight();
       ostringstream oss;
       oss << "Step Balanced r=2 zstep=12:ok."; 
       answer(oss.str());
     }
-    if (head == "bl") {  // Left
+    if (head == "bl") {  // left
       balancedLeft();
       ostringstream oss;
       oss << "Step Balanced r=2 zstep=12:ok."; 
@@ -1445,6 +1525,8 @@ public:
 
   }
 };
+
+int BodyController::lab = 0;
 
 shared_ptr < BodyController > bodyController;
 
