@@ -13,12 +13,6 @@ import threading
 import time
 pygtk.require('2.0')
 
-textFile = "/home/mojavaton/Documents/src/python/readTest.txt"
-servoTemp = "/home/mojavaton/trunk/servos.log"
-tempFile = "/home/mojavaton/Documents/src/python/servoTemp.txt"
-redLight = "/home/mojavaton/Downloads/icon_red_light.png"
-greenLight = "/home/mojavaton/Downloads/icon_green_light.png"
-
 class Base:
     #Request temp from ZMQ_REQ
     def temp_REQ(self):
@@ -122,7 +116,8 @@ class Base:
                 print "not defined %d" % int(servo)
             else:
                 print "defined %d" % int(servo)
-        self.hottest.label = 'Top is %d: %d' %  (h_servo, hottest)
+        self.hottest.set_label('Top is %d: %d' %  (h_servo, hottest))
+        print  'Top is %d: %d' %  (h_servo, hottest)
 
     def press_check(self,widget):
         leg_dict = {}
@@ -188,6 +183,7 @@ class Base:
             threading.Thread.__init__(self)
             self.base = base_
             self.delay = delay_
+
         def run(self):
             i = 0
             while self.base.update_bool:
@@ -196,7 +192,8 @@ class Base:
                 self.base.press_check1()
                 self.base.temp_check1()
                 time.sleep(self.delay)
-
+            
+                
     def quit(self,widget):
         print("QUIT")
         self.update_bool = False
@@ -221,6 +218,7 @@ class Base:
         self.color_btn = [0]*200
         for i in range(0,200):
             self.color_btn[i] = builder.get_object("sig"+str(i))
+       
         self.pressure_btn = [0]*5
         for i in range(1,5):
             self.pressure_btn[i] = builder.get_object("sigL"+str(i))
@@ -229,6 +227,11 @@ class Base:
         #self.label1 = builder.get_object("label1")
         #self.about  = builder.get_object("aboutdialog1")
         
+        self.highTemp = gtk.Label("Hottest temp")
+        fixed = gtk.Fixed()
+        fixed.put(self.highTemp,200,200)
+        self.window.add(fixed)
+
         builder.connect_signals(self)
         #self.btnTemps.connect("focus-in-event", self.focus_received)
         #self.btnPressures.connect("focus-in-event", self.focus_received)
@@ -241,7 +244,7 @@ class Base:
 
 if __name__ == "__main__":
     base = Base()
-    base.window.show()
+    base.window.show_all()
     gobject.threads_init()
     gtk.gdk.threads_init()
     gtk.gdk.threads_enter()
