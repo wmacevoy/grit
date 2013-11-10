@@ -10,7 +10,7 @@ using namespace symbolic;
 using namespace std;
 %}
 NUMBER      [0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?
-VARIABLE    ([A-Za-z%][A-Za-z0-9_$%]*|\{[^{}]+\})
+VARIABLE    ([A-Za-z_$%][A-Za-z0-9_$%]*|\{[^{}]+\})
 OP          [-()+*/^,]
 WS          [ \t\n\r]
 %% 

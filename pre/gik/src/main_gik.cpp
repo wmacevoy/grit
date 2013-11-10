@@ -16,7 +16,7 @@ Mat leg()
   E pi=var("%pi");
   //  E leg = var("leg");
   //  E achasis = (num(3)*pi/num(4))-(pi/num(2))*leg;
-  E achasis=var("achasis");
+  E chasis=(pi/num(180))*var("chasis");
   E drchasis2hip = var("drchasis2hip");
   E dzchasis2hip = var("dzchasis2hip");
   E dyknee2tip = var("dyknee2tip");
@@ -24,19 +24,19 @@ Mat leg()
   E dhip2femur=var("dhip2femur");
   E dfemur2knee=var("dfemur2knee");
 
-  E ahip=var("ahip");
-  E afemur=var("afemur");
-  E aknee=var("aknee");
+  E hip=(pi/num(180))*var("hip");
+  E femur=(pi/num(180))*var("femur");
+  E knee=(pi/num(180))*var("knee");
   
   Mat m = eye(4,4);
 
-  m = rotate(o,ez,cos(achasis),sin(achasis));
+  m = rotate(o,ez,cos(chasis),sin(chasis));
   m = m*translate(vec(num(0),drchasis2hip,dzchasis2hip));
-  m = m*rotate(o,ez,cos(ahip),sin(ahip));
+  m = m*rotate(o,ez,cos(hip),sin(hip));
   m = m*translate(vec(num(0),dhip2femur,num(0)));
-  m = m*rotate(o,ex,cos(afemur),sin(afemur));
+  m = m*rotate(o,ex,cos(femur),sin(femur));
   m = m*translate(vec(num(0),dfemur2knee,num(0)));
-  m = m*rotate(o,ex,cos(aknee),sin(aknee));
+  m = m*rotate(o,ex,cos(knee),sin(knee));
   m = m*translate(vec(num(0),dyknee2tip,dzknee2tip));
 
   return m;
@@ -55,11 +55,11 @@ Mat arm(string side)
   E dshoulderio2ud=num(3.0+5.0/8.0);
   E dshoulderud2elbow=num(9.0);
   E delbow2palm=num(15.0);
-  E shoulderio=(pi/num(180))*(var(SIDE+"ARM_SHOULDER_IO")-num(45));
-  E shoulderud=(pi/num(180))*(var(SIDE+"ARM_SHOULDER_UD")-num(45))*sigma;
-  E bicep=(pi/num(180))*var(SIDE+"ARM_BICEP_ROTATE");
-  E elbow=(pi/num(180))*(var(SIDE+"ARM_ELBOW")-num(45))*(-sigma);
-  E forearm=(pi/num(180))*(var(SIDE+"ARM_FOREARM_ROTATE")+num(30));
+  E shoulderio=(pi/num(180))*(var("shoulderio")-num(45));
+  E shoulderud=(pi/num(180))*(var("shoulderud")-num(45))*sigma;
+  E bicep=(pi/num(180))*var("bicep");
+  E elbow=(pi/num(180))*(var("elbow")-num(45))*(-sigma);
+  E forearm=(pi/num(180))*(var("forearm")+num(30));
 
   m=m*translate(vec(sigma*dxneck2shoulder,dyneck2shoulder,num(0)));
   m=m*rotate(o,ez,cos(shoulderio),-sin(shoulderio));
@@ -109,11 +109,11 @@ void gsolve_fk_arm(string side)
     ofstream out(hfile.c_str());
     out << "#pragma once" << endl;
     out << "void fk_" << side << "arm(" << endl;
-    out << "float " << SIDE << "ARM_SHOULDER_IO," << endl;
-    out << "float " << SIDE << "ARM_SHOULDER_UD," << endl;
-    out << "float " << SIDE << "ARM_BICEP_ROTATE," << endl;
-    out << "float " << SIDE << "ARM_ELBOW," << endl;
-    out << "float " << SIDE << "ARM_FOREARM_ROTATE," << endl;
+    out << "float shoulderio," << endl;
+    out << "float shoulderud," << endl;
+    out << "float bicep," << endl;
+    out << "float elbow," << endl;
+    out << "float forearm," << endl;
     out << "float pose[4][4]" << endl;
     out << ");" << endl;
   }
@@ -125,11 +125,11 @@ void gsolve_fk_arm(string side)
 
     out << endl;
     out << "void fk_" << side << "arm(" << endl;
-    out << "float " << SIDE << "ARM_SHOULDER_IO," << endl;
-    out << "float " << SIDE << "ARM_SHOULDER_UD," << endl;
-    out << "float " << SIDE << "ARM_BICEP_ROTATE," << endl;
-    out << "float " << SIDE << "ARM_ELBOW," << endl;
-    out << "float " << SIDE << "ARM_FOREARM_ROTATE," << endl;
+    out << "float shoulderio," << endl;
+    out << "float shoulderud," << endl;
+    out << "float bicep," << endl;
+    out << "float elbow," << endl;
+    out << "float forearm," << endl;
     out << "float pose[4][4]" << endl;
     out << ")" << endl;
     out << "{" << endl;
@@ -160,6 +160,7 @@ void gsolve_fk_arm(string side)
 
 void gsolve_ik_arm(string side)
 {
+  E pi=var("%pi");
   string SIDE=utilities::toupper(side);
   string dir=string("../../drivers/ik");
   string inifile=dir + "/ik_" + side + "arm.ini";
@@ -175,14 +176,15 @@ void gsolve_ik_arm(string side)
   eq.push_back(pose[0][3]-p[0]);
   eq.push_back(pose[1][3]-p[1]);
   eq.push_back(pose[2][3]-p[2]);
-  eq.push_back(pose[0][2]-sin(roll));
-  eq.push_back(pose[0][1]-sin(yaw));
 
-  E shoulderio=var(SIDE+"ARM_SHOULDER_IO");
-  E shoulderud=var(SIDE+"ARM_SHOULDER_UD");
-  E bicep=var(SIDE+"ARM_BICEP_ROTATE");
-  E elbow=var(SIDE+"ARM_ELBOW");
-  E forearm=var(SIDE+"ARM_FOREARM_ROTATE");
+  eq.push_back(pose[0][2]-sin((pi/num(180))*roll));
+  eq.push_back(pose[0][1]-sin((pi/num(180))*yaw));
+
+  E shoulderio=var("shoulderio");
+  E shoulderud=var("shoulderud");
+  E bicep=var("bicep");
+  E elbow=var("elbow");
+  E forearm=var("forearm");
 
   x.push_back(shoulderio);
   x.push_back(shoulderud);
@@ -190,9 +192,9 @@ void gsolve_ik_arm(string side)
   x.push_back(elbow);
   x.push_back(forearm);
 
-  Vec x_;
+  Vec _x;
   for (size_t i=0; i != x.size(); ++i) {
-    x_.push_back(var(name(x[i])+"_"));
+    _x.push_back(var(string("_")+name(x[i])));
   }
 
   Vec parms;
@@ -214,7 +216,7 @@ void gsolve_ik_arm(string side)
   map<string,const symbolic::Expression *> bar;
 
   for (size_t i=0; i != x.size(); ++i) {
-    bar[name(x[i])]=&*x_[i];
+    bar[name(x[i])]=&*_x[i];
   }
 
   for (size_t i=0; i != eq.size(); ++i) {
@@ -240,13 +242,13 @@ void gsolve_leg()
   eq.push_back(r[1][0]);
   eq.push_back(r[2][0]);
 
-  x.push_back(var("aknee"));
-  x.push_back(var("afemur"));
-  x.push_back(var("ahip"));
+  x.push_back(var("knee"));
+  x.push_back(var("femur"));
+  x.push_back(var("hip"));
 
-  Vec x_;
+  Vec _x;
   for (size_t i=0; i != x.size(); ++i) {
-    x_.push_back(var(name(x[i])+"_"));
+    _x.push_back(var(string("_")+name(x[i])));
   }
 
   Vec p;
@@ -268,7 +270,7 @@ void gsolve_leg()
   map<string,const symbolic::Expression *> bar;
 
   for (size_t i=0; i != x.size(); ++i) {
-    bar[name(x[i])]=&*x_[i];
+    bar[name(x[i])]=&*_x[i];
   }
 
   for (size_t i=0; i != eq.size(); ++i) {

@@ -26,11 +26,11 @@ $(*i)
 residual
 [variables]
 #! for (Vec::const_iterator i=variables.begin(); i != variables.end(); ++i) {
-$(*i)_
+_$(*i)
 #! }
 [initializers] # initial guess for solution of variables in terms of parameters/globals
 #! for (Vec::const_iterator i=variables.begin(); i != variables.end(); ++i) {
-$(*i)_=$(*i)
+_$(*i)=$(*i)
 #! }
 [equations] # system of equations variables should be a root of
 #! int count = 0; 
@@ -40,7 +40,7 @@ residual$count=$(*i)
 #! }
 [updates] # how parameters are updated in terms of temp variables
 #! for (Vec::const_iterator i=variables.begin(); i != variables.end(); ++i) {
-$(*i)=$(*i)_
+$(*i)=_$(*i)
 #! }
 [tests]
 #
