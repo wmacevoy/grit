@@ -70,7 +70,7 @@ class Base:
         temps = self.sensor_SUB()
         print temps
         for i in range(1,5):
-            leg_dict[i] = temps[-i]
+            leg_dict[i] = temps[-5+i]
             pressures.append(i)
         print leg_dict
         for pressure in pressures:
@@ -125,7 +125,7 @@ class Base:
         temps = self.sensor_SUB()
         print temps
         for i in range(1,5):
-            leg_dict[i] = temps[-4+i]
+            leg_dict[i] = temps[-5+i]
             pressures.append(i)
         print leg_dict
         for pressure in pressures:
