@@ -125,7 +125,7 @@ class Base:
         temps = self.sensor_SUB()
         print temps
         for i in range(1,5):
-            leg_dict[i] = temps[-i]
+            leg_dict[i] = temps[-4+i]
             pressures.append(i)
         print leg_dict
         for pressure in pressures:
@@ -184,7 +184,7 @@ class Base:
             self.delay = delay_
         def run(self):
             i = 0
-            while True:
+            while self.base.update_bool:
                 i += 1
                 print "Update %d" % i
                 self.base.press_check1()
@@ -193,10 +193,12 @@ class Base:
 
     def quit(self,widget):
         print("QUIT")
+        self.update_bool = False
         self.update.join()
         gtk.main_quit()
 
     def __init__(self):
+        self.update_bool = True
         builder = gtk.Builder()
         builder.add_from_file("main.xml") 
         self.servos_dict = {}

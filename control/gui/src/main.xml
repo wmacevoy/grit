@@ -676,8 +676,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">113</property>
-                    <property name="y">77</property>
+                    <property name="x">46</property>
+                    <property name="y">135</property>
                   </packing>
                 </child>
                 <child>
@@ -694,8 +694,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">116</property>
-                    <property name="y">141</property>
+                    <property name="x">119</property>
+                    <property name="y">75</property>
                   </packing>
                 </child>
                 <child>
@@ -712,8 +712,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">40</property>
-                    <property name="y">74</property>
+                    <property name="x">119</property>
+                    <property name="y">142</property>
                   </packing>
                 </child>
                 <child>
@@ -730,21 +730,21 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">41</property>
-                    <property name="y">135</property>
+                    <property name="x">44</property>
+                    <property name="y">76</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkImage" id="image1">
-                    <property name="width_request">100</property>
-                    <property name="height_request">80</property>
+                    <property name="width_request">49</property>
+                    <property name="height_request">65</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="stock">gtk-go-up</property>
                   </object>
                   <packing>
-                    <property name="x">39</property>
-                    <property name="y">26</property>
+                    <property name="x">74</property>
+                    <property name="y">29</property>
                   </packing>
                 </child>
                 <child>
