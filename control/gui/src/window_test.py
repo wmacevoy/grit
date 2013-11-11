@@ -22,13 +22,13 @@ class Base:
         req = context.socket(zmq.REQ)
         req.connect("tcp://192.168.2.101: %s" % (port))
         
-        temp = []
-        for i in range(0,2):
+        for i in range(0,1):
             message = ctypes.c_uint32(1)
             req.send(message)
             receive_msg = req.recv()
-            temp.append(map(ord,receive_msg))
-        return temp
+            temps = struct.unpack("<64i", receive_msg)
+            list_Temps = list(temps)
+        return list_Temps
 
     #Subscribe sensor from ZMQ_PUB
     def sensor_SUB(self):
@@ -39,7 +39,6 @@ class Base:
         sub.setsockopt(zmq.SUBSCRIBE, '')
         sub.connect("tcp://192.168.2.101: %s" % (port))
 
-        temp = []
         for i in range(0,1):
             print "Receiving msg..\n"
             sensors = sub.recv()
