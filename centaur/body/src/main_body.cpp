@@ -107,6 +107,14 @@ public:
   map < string , string > saved;
   mutex repliesMutex;
   static int lab;
+  //The following variables are used specifically for the ramp walk
+  //Amin/max is the accelerometer value and the zmin/max is the change
+  //in elevation on the ramp platforms
+  float Amin;
+  float Amax;
+  float zmin;
+  float zmax;
+  int zoffset;
 
   void includeSavedCommands(string file="commands")
   {
@@ -366,12 +374,14 @@ public:
   
   void balancedRampUp()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,8.0);
+      zoffset = ( ( (sensors.a[0] - Amin) * (Amin - Amax) ) / (zmin - zmax) ) - 8;
+      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,zoffset);
   }
   
   void balancedRampDown()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,-8.0);
+      zoffset = ( ( (sensors.a[0] - Amin) * (Amin - Amax) ) / (zmin - zmax) ) - 8;
+      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,zoffset);
   }
   
   void balancedForward(int repeat=4)
@@ -1493,6 +1503,12 @@ public:
     hands_on = false;
     handsThread = 0;
     neckThread = 0;
+    forearmsThread = 0;
+    Amin = -40.0;
+    Amax = 89.0;
+    zmin = 8.0;
+    zmax = -8.0;
+    zoffset = 0;
     includeSavedCommands();
   }
 
