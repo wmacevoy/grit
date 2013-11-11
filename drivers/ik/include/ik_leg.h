@@ -1,11 +1,50 @@
-#ifndef _IK_LEGSOLVE_HPP
-#define _IK_LEGSOLVE_HPP
-
+#pragma once
 
 #include <string>
 #include <stdint.h>
 #include <string.h>
 
+
+
+typedef union 
+{
+  struct {
+       float epsilon;
+       float steps;
+  } as_struct;
+  float as_array[2];
+} ik_legglobals;
+
+typedef union 
+{
+  struct {
+       float knee;
+       float femur;
+       float hip;
+       float chasis;
+       float dfemur2knee;
+       float dhip2femur;
+       float drchasis2hip;
+       float dyknee2tip;
+       float dzchasis2hip;
+       float dzknee2tip;
+       float px;
+       float py;
+       float pz;
+       float residual;
+  } as_struct;
+  float as_array[14];
+} ik_legparameters;
+
+typedef union 
+{
+  struct {
+       float _knee;
+       float _femur;
+       float _hip;
+  } as_struct;
+  float as_array[3];
+} ik_legvariables;
 
 enum { ik_legglobal_count=2 };
 extern const char *ik_legglobal_names[2];
@@ -52,4 +91,3 @@ void ik_legdf(
 void ik_legtests(const std::string &ik_legname);
 void ik_legruns(const std::string &ik_legname);
 
-#endif
