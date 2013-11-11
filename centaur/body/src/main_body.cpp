@@ -374,13 +374,13 @@ public:
   
   void balancedRampUp()
   {
-      zoffset = ( ( (sensors.a[0] - Amin) * (Amin - Amax) ) / (zmin - zmax) ) - 8;
+      zoffset = ( ( (sensors.a[0] - Amin) * (Amin - Amax) ) / (zmin - zmax) ) + 8;
       mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,zoffset);
   }
   
   void balancedRampDown()
   {
-      zoffset = ( ( (sensors.a[0] - Amin) * (Amin - Amax) ) / (zmin - zmax) ) - 8;
+      zoffset = ( ( (sensors.a[0] - Amin) * (Amin - Amax) ) / (zmin - zmax) ) + 8;
       mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,zoffset);
   }
   
