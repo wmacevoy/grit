@@ -496,7 +496,7 @@ struct DynamixelServoController : ServoController
   void iThread() {
 	uint32_t dataNeeded;
 	int rc, j, size = 34 * 2, sleep_time = 50;
-	uint8_t msgArr[size];
+	uint32_t msgArr[size];
 
 	void* context = zmq_ctx_new ();
 	void* rep = zmq_socket(context, ZMQ_REP);
