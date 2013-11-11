@@ -59,7 +59,6 @@ void mouseEvent(int evt, int x, int y, int flags, void* param)
 
 void quitproc(int param)
 {
-	std::cout << "\nQuitting..." << std::endl;
 	die = true;
 }
 
@@ -88,6 +87,7 @@ int main(int argc, char** argv)
 	std::string winName = "ICU";
 	std::string text = "0";
 	namedWindow(winName, CV_WINDOW_NORMAL);
+	
 	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
 	double fontScale = 0.75;
 	int thickness = 2;
@@ -197,6 +197,7 @@ int main(int argc, char** argv)
 		else if(c == 'q') die = true;
 	}
 
+	std::cout << std::endl << "Quitting..." << std::endl;
 	std::cout << "destroying window and freeing mat memory..." << std::endl;
 	destroyWindow(winName);
 	color.release();
