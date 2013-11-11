@@ -510,9 +510,9 @@ struct DynamixelServoController : ServoController
 		if(dataNeeded == 1) {
 		//Get temps and populate array
 			for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
-				msgArr[j] = (uint8_t)i->first; //Servo ID
+				msgArr[j] = (uint32_t)i->first; //Servo ID
 				++j;
-				msgArr[j] = (uint8_t)i->second->temp(); //Servo temp
+				msgArr[j] = (uint32_t)i->second->temp(); //Servo temp
 				++j;
 			}
 
