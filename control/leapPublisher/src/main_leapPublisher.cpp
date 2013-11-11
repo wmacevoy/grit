@@ -6,7 +6,7 @@
 #include <zmq.h>
 #include <math.h>
 #include <assert.h>
-#include "leapStruct.h"
+#include "LeapMessage.h"
 #include "Configure.h"
 #include "Leap.h"
 
@@ -17,104 +17,98 @@ bool verbose;
 volatile int die = 0;
 int sleep_time = 100;
 std::mutex locker;
-leapData leapD;
+LeapMessage leapMessage;
 
-void publish(leapData* data, void* zmq_pub)
+void publish(LeapMessage * data, void* zmq_pub)
 {
-  	if(verbose) std::cout << "Sending leap data..." << std::endl;
-	locker.lock();
-	int rc = zmq_send(zmq_pub, data, sizeof(leapData), ZMQ_DONTWAIT);
-	locker.unlock();
-	if(verbose && rc > 0) std::cout << "Leap data sent!" << std::endl;
+  if(verbose) std::cout << "Sending leap data..." << std::endl;
+  locker.lock();
+  int rc = zmq_send(zmq_pub, data, sizeof(LeapMessage), ZMQ_DONTWAIT);
+  locker.unlock();
+  if(verbose && rc > 0) std::cout << "Leap data sent!" << std::endl;
 }
 
 class handListener : public Listener
 {
 public:
-	virtual void onInit(const Controller&);
-	virtual void onConnect(const Controller&);
-	virtual void onDisconnect(const Controller&);
-	virtual void onExit(const Controller&);
-	virtual void onFrame(const Controller&);
+  virtual void onInit(const Controller&);
+  virtual void onConnect(const Controller&);
+  virtual void onDisconnect(const Controller&);
+  virtual void onExit(const Controller&);
+  virtual void onFrame(const Controller&);
 };
 
 void handListener::onInit(const Controller& controller)
 {
-	if(verbose) std::cout << "Initialized" << std::endl;
+  if(verbose) std::cout << "Initialized" << std::endl;
 }
 
 void handListener::onConnect(const Controller& controller)
 {
-	if(verbose)   std::cout << "Connected" << std::endl;
+  if(verbose)   std::cout << "Connected" << std::endl;
 }
 
 void handListener::onDisconnect(const Controller& controller)
 {
-	//Note: not dispatched when running in a debugger.
-	if(verbose) std::cout << "Disconnected" << std::endl;
+  //Note: not dispatched when running in a debugger.
+  if(verbose) std::cout << "Disconnected" << std::endl;
 }
 
 void handListener::onExit(const Controller& controller)
 {
-	if(verbose) std::cout << "Exited" << std::endl;
+  if(verbose) std::cout << "Exited" << std::endl;
+}
+
+void update(LeapHandMessage &message, const Hand &hand)
+{
+  const Vector &at = hand.palmPosition();
+  message.at[0]=at[0];
+  message.at[1]=at[1];
+  message.at[2]=at[2];
+  
+  const Vector &point = hand.direction();
+  message.point[0]=point[0];
+  message.point[1]=point[1];
+  message.point[2]=point[2];
+
+  const Vector &down = hand.palmNormal();
+  message.down[0]=down[0];
+  message.down[1]=down[1];
+  message.down[2]=down[2];
 }
 
 void handListener::onFrame(const Controller& controller)
 {
-	// Get the most recent frame and report some basic information
-	const Frame frame = controller.frame();
-	if (!frame.hands().empty())
-	{
-		// Get the first hand
-		const Hand hand0 = frame.hands()[0];
-		const Hand hand1 = frame.hands()[1];
-		if(verbose) std::cout << "hand0 Palm position: " << hand0.palmPosition() << std::endl;
-		if(verbose) std::cout << "hand1 Palm position: " << hand1.palmPosition() << std::endl;
+  // Get the most recent frame and report some basic information
+  const Frame frame = controller.frame();
+  if (frame.hands().count() != 2) return;
 
-		locker.lock();
-		
-		//This is a possible solution to keep the hands appropriately distinguished.  
-		//The X positions of the hands are checked.  x < 0 is left hand. x > 0 is the right hand :)
-		if(hand0.palmPosition()[0] < 0)
-		{
-			leapD.lx = hand0.palmPosition()[0]; leapD.ly = hand0.palmPosition()[1]; leapD.lz = hand0.palmPosition()[2];
-			leapD.lnormal1 = hand0.palmNormal()[0]; leapD.lnormal2 = hand0.palmNormal()[1]; leapD.lnormal3 = hand0.palmNormal()[2];
-			leapD.lroll = hand0.palmNormal().roll() * 180.0 / M_PI;
-			leapD.lpitch = hand0.palmNormal().pitch()  * 180.0 / M_PI;
-			leapD.lyaw = hand0.palmNormal().yaw() * 180.0 / M_PI;
-			
-			if(hand1.isValid())
-			{
-					leapD.rx = hand1.palmPosition()[0]; leapD.ry = hand1.palmPosition()[1]; leapD.rz = hand1.palmPosition()[2];
-					leapD.rnormal1 = hand1.palmNormal()[0]; leapD.rnormal2 = hand1.palmNormal()[1]; leapD.rnormal3 = hand1.palmNormal()[2];
-					leapD.rroll = hand1.palmNormal().roll() * 180.0 / M_PI;
-					leapD.rpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
-					leapD.ryaw = hand1.palmNormal().yaw() * 180.0 / M_PI;			
-			}
-		}
-		else if(hand0.palmPosition()[0] > 0)
-		{
-			leapD.rx = hand0.palmPosition()[0]; leapD.ry = hand0.palmPosition()[1]; leapD.rz = hand0.palmPosition()[2];
-			leapD.rnormal1 = hand0.palmNormal()[0]; leapD.rnormal2 = hand0.palmNormal()[1]; leapD.rnormal3 = hand0.palmNormal()[2];
-			leapD.rroll = hand0.palmNormal().roll() * 180.0 / M_PI;
-			leapD.rpitch = hand0.palmNormal().pitch()  * 180.0 / M_PI;
-			leapD.ryaw = hand0.palmNormal().yaw() * 180.0 / M_PI;
+  const Hand &hand0=frame.hands()[0];
+  const Hand &hand1=frame.hands()[1];
 
-			if(hand1.isValid())
-			{
-				leapD.lx = hand1.palmPosition()[0]; leapD.ly = hand1.palmPosition()[1]; leapD.lz = hand1.palmPosition()[2];
-				leapD.lnormal1 = hand1.palmNormal()[0]; leapD.lnormal2 = hand1.palmNormal()[1]; leapD.lnormal3 = hand1.palmNormal()[2];
-				leapD.lroll = hand1.palmNormal().roll() * 180.0 / M_PI;
-				leapD.lpitch = hand1.palmNormal().pitch()  * 180.0 / M_PI;
-				leapD.lyaw = hand1.palmNormal().yaw() * 180.0 / M_PI;
-			}
-		}
-	  
-		locker.unlock();
+  if (!hand0.isValid() || !hand1.isValid()) return;
 
-		if(verbose) std::cout << "LEFT: " << leapD.lx << " " << leapD.ly << " " << leapD.lz << " roll:" << leapD.lroll << " pitch:" << leapD.lpitch << " yaw:" << leapD.lyaw << " hnorm:" << hand0.palmNormal() << std::endl;
-		if(verbose) std::cout << "RIGHT: " << leapD.rx << " " << leapD.ry << " " << leapD.rz << " " << leapD.rroll << std::endl;
-	}	
+  locker.lock();
+  if (hand0.palmPosition()[0] < hand1.palmPosition()[0]) {
+    update(leapMessage.left,hand0);
+    update(leapMessage.right,hand1);
+  } else {
+    update(leapMessage.left,hand1);
+    update(leapMessage.right,hand0);
+  }
+  locker.unlock();
+
+  if (verbose) {
+    { 
+      LeapHandMessage &hand=leapMessage.left;
+      std::cout << "left" << ": at=[" << hand.at[0] << "," << hand.at[1] << "," << hand.at[2] << "] point=[" << hand.point[0] << "," << hand.point[1] << "," << hand.point[2] << "] down=[" << hand.down[0] << "," << hand.down[1] << "," << hand.down[2] << "]" << std::endl;
+    }
+    {
+      LeapHandMessage &hand=leapMessage.right;
+      std::cout << "right" << ": at=[" << hand.at[0] << "," << hand.at[1] << "," << hand.at[2] << "] point=[" << hand.point[0] << "," << hand.point[1] << "," << hand.point[2] << "] down=[" << hand.down[0] << "," << hand.down[1] << "," << hand.down[2] << "]" << std::endl;
+    }
+  }
+
 }
 
 void quitproc(int sig) {
@@ -159,7 +153,7 @@ int main(int argc, char** argv)
 
 	while(!die)
 	{
-		publish(&leapD, pub);
+		publish(&leapMessage, pub);
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
