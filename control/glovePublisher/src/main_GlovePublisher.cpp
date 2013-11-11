@@ -9,9 +9,13 @@
 #include <stdint.h>
 #include "glovestruct.h"
 
+#include "Configure.h"
+
 #define BAUDRATE B9600
 
-int die = 0;
+Configure cfg;
+
+volatile int die = 0;
 
 void quitproc(int param)
 {
@@ -25,21 +29,24 @@ void publish(void* zmq_pub, Hands* manos)
 
 int main(int argc, char** argv)
 {
+	cfg.path("../../setup");
+	cfg.args("gloves.publisher.", argv);
+	if (argc == 1) cfg.load("config.csv");
+	verbose = cfg.flag("gloves.publisher.verbose", false);
+	if (verbose) cfg.show();
+
+	std::string gloves_path = cfg.str("gloves.publisher.dev_path");
+	
 	char buff[1024];
 	int fd;
 	int hwm = 1, rc;
 	struct termios oldtio,newtio;
 	Hands manos;
 	
-	if (argc!=2) {
-	  std::cerr << "Run GlovePublisher <serial>" << std::endl;
-	  std::cerr << "  <serial> Serial Port /dev/ttyACM0 ..." << std::endl;
-	  return -1;
-	}
 	
-	fd = open((char *)argv[1], O_RDWR | O_NOCTTY ); 
+	fd = open(gloves_path.c_str(), O_RDWR | O_NOCTTY ); 
 	if (fd <0) {
-	  perror(argv[1]); 
+	  perror(gloves_path.c_str()); 
 	  return -1; 
 	}
 	
@@ -79,14 +86,15 @@ int main(int argc, char** argv)
 		
 		publish(pub, &manos);
 		
-		std::cout << manos.lring << " " << manos.lmiddle << " " << manos.ltrigger << " " << 
+		if(verbose) std::cout << manos.lring << " " << manos.lmiddle << " " << manos.ltrigger << " " << 
 			manos.lthumb << " " << manos.rring << " " << manos.rmiddle << " " << 
 			manos.rtrigger << " " << manos.rthumb << " " << std::endl;
 	}
 	
+	std::cout << "Quitting..." << std::endl;
+	std::cout << "destroying and closing zmq..." << std::endl;
 	zmq_close(pub);
 	zmq_ctx_destroy(context);
-	
-	std::cout << "Adios" << std::endl;
+	std::cout << "--done!" << std::endl;
 	return 0;
 }
