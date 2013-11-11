@@ -14,6 +14,7 @@
 #define BAUDRATE B9600
 
 Configure cfg;
+bool verbose;
 
 volatile int die = 0;
 
