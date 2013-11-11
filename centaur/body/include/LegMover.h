@@ -23,7 +23,7 @@ class LegMover : public LegGeometry
   std::map<std::string,ServoMoverSP> hipMovers;
   std::map<std::string,ServoMoverSP> femurMovers;
   std::map<std::string,CurveSP> liftsTapes;
-  std::mutex tapeMutex;
+  mutable std::mutex tapeMutex;
  public:
   int touchPressure;
   
@@ -54,6 +54,7 @@ class LegMover : public LegGeometry
 
   void setup(Leg &leg, Point p);
   void torque(float t);
+  bool done() const;
 };
 
 typedef std::shared_ptr < LegMover > LegMoverSP;

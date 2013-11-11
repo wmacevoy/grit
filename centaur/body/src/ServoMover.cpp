@@ -188,6 +188,11 @@ void ServoMover::setup(float angle)
   setup(angles,simTime,simTime+2e8);
 }
 
+bool ServoMover::done() const
+{
+  return simTime >= simTime1;
+}
+
 ServoMover::ServoMover()
 {
   setup(0);

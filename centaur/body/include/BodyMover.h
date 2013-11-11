@@ -29,6 +29,8 @@ class BodyMover
   bool load(const std::string &file);
   bool play(const std::string &file);
   ServoMover* getMover(const std::string &name);
+
+  bool done() const;
 };
 
 typedef std::shared_ptr < BodyMover > SPBodyMover;

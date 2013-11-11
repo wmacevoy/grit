@@ -61,3 +61,11 @@ void LegsMover::torque(float t, int num)
 {
   legMovers[num]->torque(t);
 }
+
+bool LegsMover::done() const
+{
+  for (int i=0; i<4; ++i) {
+    if (!legMovers[i]->done()) return false;
+  }
+  return true;
+}

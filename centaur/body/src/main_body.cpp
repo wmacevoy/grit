@@ -36,8 +36,10 @@
 #include "glovestruct.h"
 #include "Script.h"
 #include "StdCapture.h"
-#include "leapStruct.h"
+#include "LeapMessage.h"
 #include "joystick.h"
+#include "ik_leftarm.h"
+#include "ik_rightarm.h"
 
 
 SPScript py;
@@ -45,7 +47,7 @@ SPScript py;
 void subscribeH(void *zmq_sub, Hands* manos) 
 {
 	manos->clear();
-	int rc = zmq_recv(zmq_sub, manos, sizeof(Hands), 0);
+	zmq_recv(zmq_sub, manos, sizeof(Hands), 0);
 	manos->lthumb=manos->lthumb;
 	manos->ltrigger=manos->ltrigger;
 	manos->lmiddle=manos->lmiddle; 
@@ -56,43 +58,68 @@ void subscribeH(void *zmq_sub, Hands* manos)
 	manos->rring=manos->rring;
 }
 
-float mapForearmAngle(float angle)
-{
-  angle *= -1.0;
-  if (angle < -44.0) angle = -44.0;
-  if (angle > 44.0) angle = 44.0;
-  return angle;
-}
-
-void subscribeF(void *zmq_sub, leapData *leapItem)
-{
-  leapItem->clear();
-  int rc = zmq_recv(zmq_sub, leapItem, sizeof(leapData), 0);
-  leapItem->lroll = mapForearmAngle(leapItem->lroll);
-  //leapItem->rroll = mapForearmAngle(leapItem->rroll);
-  //leapItem->lpitch = mapForearmAngle(leapItem->lpitch);
-  //leapItem->rpitch = mapForearmAngle(leapItem->rpitch);
-  //NEED XYZ MAPPING STUFF
-}
 
 void subscribeN(void* zmq_sub, joystick* j)
 {
 	j->clear();
-	int rc = zmq_recv(zmq_sub, j, sizeof(joystick), 0);
+	zmq_recv(zmq_sub, j, sizeof(joystick), 0);
 }
 
 using namespace std;
 
+class LeapRx : public ZMQRx
+{
+public:
+  LeapMessage message;
+
+  LeapRx() {
+    subscribers.push_back(cfg->str("leap.requester.address"));
+  }
+
+  void rx(ZMQSubscribeSocket &socket) { 
+    ZMQMessage msg;
+    msg.recv(socket);
+    memcpy(&message,msg.data(),sizeof(LeapMessage));
+    process();
+  }
+
+  void process()
+  {
+    ik_leftarmglobals gl;
+    ik_leftarmparameters pl;
+
+    gl.as_struct.epsilon=1e-4;
+    gl.as_struct.steps=10;
+    pl.as_struct.px=message.left.at[0];
+    pl.as_struct.py=message.left.at[1];
+    pl.as_struct.pz=message.left.at[2];
+    pl.as_struct.waist=mover->waist.angle();
+    pl.as_struct.downx=message.left.down[0];
+    pl.as_struct.pointx=message.left.point[0];
+
+    ik_leftarmupdate(gl.as_array,pl.as_array);
+    if (pl.as_struct.residual < 1e-2) {
+      mover->left.leftRight.setup(pl.as_struct.shoulderio);
+      mover->left.upDown.setup(pl.as_struct.shoulderud);
+      mover->left.bicep.setup(pl.as_struct.bicep);
+      mover->left.elbow.setup(pl.as_struct.elbow);
+      mover->left.forearm.setup(pl.as_struct.forearm);
+
+      //      if (verbose) {
+	cout << "left: lr=" << pl.as_struct.shoulderio << " ud=" << pl.as_struct.shoulderud << " bicep=" << pl.as_struct.bicep << " elbow=" << pl.as_struct.elbow << " forearm=" << pl.as_struct.forearm << endl;
+	//      }
+    }
+  }
+};
+
 class SensorsRx : public ZMQRx
 {
 public:
-  SensorsRx()
-  {
+  SensorsRx() {
     subscribers.push_back(cfg->str("sensors.requester.address"));
   }
 
-  void rx(ZMQSubscribeSocket &socket)
-  {
+  void rx(ZMQSubscribeSocket &socket) {
     ZMQMessage msg;
     msg.recv(socket);
     memcpy(&sensors,msg.data(),sizeof(SensorsMessage));
@@ -146,6 +173,8 @@ public:
     answer(oss.str());
   }
 
+  LeapRx leapRx;
+
   SensorsRx sensorsRx;
 
   std::thread* neckThread;
@@ -196,7 +225,7 @@ public:
 	int rc;
 	int hwm = 1;
 	Hands manos;
-	std::string address = cfg->str("body.commander.glovesAddress", "tcp://192.168.2.113:6689");
+	std::string address = cfg->str("body.commander.glovesAddress");
 	
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
@@ -229,40 +258,6 @@ public:
 	zmq_ctx_destroy(context);
   }
   
-
-  std::thread* forearmsThread;
-  std::atomic < bool > forearms_on;
-  void subscribeToForearms() {	//Forearms thread function
-    int rc;
-    int hwm = 1;
-    leapData leap;
-    std::string address = cfg->str("body.commander.leapAddress", "tcp://192.168.2.113:9990");	
-
-	void *context = zmq_ctx_new ();
-	void *sub = zmq_socket(context, ZMQ_SUB);
-	//rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
-	if (zmq_connect(sub, address.c_str()) != 0)
-	{
-		printf("Error initializing 0mq ARMS...\n");
-		return;
-	}	
-
-	while(forearms_on.load())
-	{
-			subscribeF(sub,&leap);
-			mover->left.forearm.setup(leap.lroll);
-			//mover->right.forearm.setup(leap.rroll);
-			mover->left.elbow.setup(leap.lpitch);
-			//mover->right.elbow.setup(leap.rpitch);
-			std::this_thread::sleep_for(std::chrono::microseconds(25));
-	}	
-//	cout << "ending forearm control." << endl;	
-	zmq_close(sub);
-	zmq_ctx_destroy(context);
-  }
-
-
   void setLIO(float angle) {
 	mover->left.leftRight.setup(angle);
 //	mover->left.leftRight.torque=0.75;
@@ -598,20 +593,13 @@ public:
 
   void forearmsOn()
   {
-    if (forearmsThread == 0) {
-      forearms_on.store(true);
-      forearmsThread = new std::thread(&BodyController::subscribeToForearms, this);
-    }
+    leapRx.start();
   }
 
    void forearmsOff()
   {
-     if (forearmsThread != 0) {
-       forearms_on.store(false);
-       forearmsThread->join();
-       delete forearmsThread;
-       forearmsThread = 0;
-     }
+    leapRx.stop();
+    leapRx.join();
   }
 
 
@@ -901,6 +889,7 @@ public:
 	 answer("my hands are off.");
       }
     }
+
     if (head=="forearms"){
       string value;
       iss >> value;
@@ -1503,7 +1492,6 @@ public:
     hands_on = false;
     handsThread = 0;
     neckThread = 0;
-    forearmsThread = 0;
     Amin = -40.0;
     Amax = 89.0;
     zmin = 8.0;

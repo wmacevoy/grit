@@ -11,3 +11,8 @@ void NeckMover::torque(float t)
   upDown.torque=t;
   leftRight.torque=t;
 }
+
+bool NeckMover::done() const
+{
+  return upDown.done() && leftRight.done();
+}

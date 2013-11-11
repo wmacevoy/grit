@@ -1,5 +1,5 @@
 DEPS=servos
-DRIVER_DEPS=centaur utilities zmqpp
+DRIVER_DEPS=centaur utilities zmqpp ik
 
 MY_FLAGS=`python2.7-config --cflags`
 MY_LIBS=`python2.7-config --ldflags`

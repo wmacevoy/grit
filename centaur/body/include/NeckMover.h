@@ -10,5 +10,6 @@ class NeckMover
   ServoMover leftRight;
   void move(Neck &neck);
   void torque(float t);
+  bool done() const;
 };
 

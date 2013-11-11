@@ -32,6 +32,7 @@ public:
   void setup(const std::map < float , float > &angles_,
 	     double simTime0_=0, double simTime1_=1e99);
   void setup(float angle);
+  bool done() const;
   ServoMover();
 };
 

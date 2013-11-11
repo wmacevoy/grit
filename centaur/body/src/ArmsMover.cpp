@@ -33,3 +33,17 @@ void ArmMover::torque(float t)
   ring.torque=t;
   thumb.torque=t;
 }
+
+bool ArmMover::done() const
+{
+  if (!leftRight.done()) return false;
+  if (!upDown.done()) return false;
+  if (!bicep.done()) return false;
+  if (!elbow.done()) return false;
+  if (!forearm.done()) return false;
+  if (!trigger.done()) return false;
+  if (!middle.done()) return false;
+  if (!ring.done()) return false;
+  if (!thumb.done()) return false;
+  return true;
+}

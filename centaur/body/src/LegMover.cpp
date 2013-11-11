@@ -264,3 +264,9 @@ void LegMover::torque(float t)
   kneeMover->torque=t;
   hipMover->torque=t;
 }
+
+bool LegMover::done() const
+{
+  Lock lock(tapeMutex);
+  return femurMover->done() && kneeMover->done() && hipMover->done();
+}

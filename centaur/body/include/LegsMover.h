@@ -28,4 +28,5 @@ public:
   void setup(Legs &legs, const std::map < float , std::pair < Point, int > > *t2tips,
 	     double simTime0=0, double simTime1=1e99); 
   void torque(float t, int num);
+  bool done() const;
 };

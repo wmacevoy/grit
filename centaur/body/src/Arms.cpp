@@ -87,7 +87,7 @@ void LeftArm::init()
 
 void RightArm::init()
 {
-  float t=768;
+  float t=10.0;
   leftRight=servo("RIGHTARM_SHOULDER_IO");
   upDown=servo("RIGHTARM_SHOULDER_UD");
   bicep=servo("RIGHTARM_BICEP_ROTATE");

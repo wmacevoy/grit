@@ -18,4 +18,5 @@ class ArmMover
   void move(Arm &arm);
   void torque(float t);
   ArmMover();
+  bool done() const;
 };

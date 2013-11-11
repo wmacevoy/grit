@@ -686,3 +686,13 @@ bool BodyMover::load(const std::string &file)
     fromTips(data);
     return true;
 }
+
+bool BodyMover::done() const
+{
+  if (!legs.done()) return false;
+  if (!left.done()) return false;
+  if (!right.done()) return false;
+  if (!waist.done()) return false;
+  if (!neck.done()) return false;
+  return true;
+}
