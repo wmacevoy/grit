@@ -267,6 +267,40 @@ void $(prefix)update(
 #!    return oss.str();
 #!  }
 #!
+#!  void prototype_data() {
+
+typedef union 
+{
+  struct {
+#! FOREACH_GLOBAL(i) {
+       $(type) $(*i);
+#! }   
+  } as_struct;
+  float as_array[$(nglobals())];
+} $(prefix)globals;
+
+typedef union 
+{
+  struct {
+#! FOREACH_PARAMETER(i) {
+       $(type) $(*i);
+#! }   
+  } as_struct;
+  float as_array[$(nparameters())];
+} $(prefix)parameters;
+
+typedef union 
+{
+  struct {
+#! FOREACH_VARIABLE(i) {
+       $(type) $(*i);
+#! }   
+  } as_struct;
+  float as_array[$(nvariables())];
+} $(prefix)variables;
+
+#!  } // prototype data
+#!
 #!  void prototype_names(const std::string &end="")
 #!  {
 enum { $(prefix)global_count=$(nglobals()) };
@@ -512,10 +546,7 @@ int main(int argc, const char *argv[])$(end)
 #!      return;
 #!    }
 #!
-#!    (*out) << "#ifndef " << toupper(flag("namespace")) << "_" << toupper(prefix) << "SOLVE_HPP" << endl;
-#!    (*out) << "#define " << toupper(flag("namespace")) << "_" << toupper(prefix) << "SOLVE_HPP" << endl;
-#!    (*out) << endl;
-#!
+#!    (*out) << "#pragma once" << endl;
 
 #include <string>
 #include <stdint.h>
@@ -524,6 +555,7 @@ int main(int argc, const char *argv[])$(end)
 
 #!    begin_namespace();
 #!
+#!    prototype_data();
 #!    prototype_names(";");
 #!    linearAlgebra.prototype_all();
 #!
@@ -542,7 +574,6 @@ int main(int argc, const char *argv[])$(end)
 #!    }
 #!
 #!    (*out) << endl;
-#!    (*out) << "#endif" << endl;
 #!  }
 #!
 #!  void define_aliases()

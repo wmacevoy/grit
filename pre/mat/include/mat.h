@@ -1,10 +1,17 @@
 #pragma once
 
-#include <tr1/memory>
+#include <memory>
 #include "symbolic.hpp"
 #include "formatter.hpp"
 
-typedef std::tr1::shared_ptr < symbolic::Expression > E;
+class E : public std::shared_ptr < symbolic::Expression > {
+ public:
+  E(symbolic::Expression *e);
+  E(double x);
+  E(const std::string &x);
+};
+
+// typedef std::tr1::shared_ptr < symbolic::Expression > E;
 typedef std::vector < E > Vec;
 typedef std::vector < Vec > Mat;
 
@@ -38,7 +45,11 @@ Mat operator+(const Mat &a, const Mat &b);
 Mat operator-(const Mat &a, const Mat &b);
 Mat transpose(const Mat &a);
 Mat translate(const Vec &d);
+Mat translate(const E &dx, const E &dy, const E &dz);
 Mat rotate(const Vec &p, const Vec &n, const E &c, const E &s);
+Mat rotate(const Vec &p, const Vec &n, const E &theta);
+Mat rotate(const Vec &n, const E &c, const E &s);
+Mat rotate(const Vec &n, const E &theta);
 Mat coords(const Vec &ex, const Vec &ey, const Vec &ez, const Vec &origin);
 Mat simplify(const Mat &a);
 Mat clone(const Mat &a);

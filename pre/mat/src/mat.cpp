@@ -3,6 +3,21 @@
 using namespace symbolic;
 using namespace std;
 
+E::E(symbolic::Expression *e)
+  : std::shared_ptr < symbolic::Expression >(e)
+{
+}
+
+E::E(const std::string &x)
+  : std::shared_ptr < symbolic::Expression >(new symbolic::Variable(x))
+{
+}
+
+E::E(double x)
+  : std::shared_ptr < symbolic::Expression >(new symbolic::Constant(x))
+{
+}
+
 bool is_const(const E &a) { 
   return isconstant(&*a);
 }
@@ -224,6 +239,11 @@ Mat translate(const Vec &d)
   return m;
 }
 
+Mat translate(const E &dx, const E &dy, const E &dz)
+{
+  return translate(vec(dx,dy,dz));
+}
+
 //
 // rotate about line that contains p and goes in the unit direction n,
 // the angle given by the cosine c and sine s.
@@ -279,6 +299,21 @@ Mat rotate(const Vec &p, const Vec &n, const E &cosT, const E &sinT)
   m[3][3] = num(1);
 
   return m;
+}
+
+Mat rotate(const Vec &p, const Vec &n, const E &omega)
+{
+  return rotate(p,n,cos(omega),sin(omega));
+}
+
+Mat rotate(const Vec &n, const E &cos_omega, const E &sin_omega)
+{
+  return rotate(o,n,cos_omega,sin_omega);
+}
+
+Mat rotate(const Vec &n, const E &omega)
+{
+  return rotate(o,n,cos(omega),sin(omega));
 }
 
 Mat coords(const Vec &ex, const Vec &ey, const Vec &ez, const Vec &origin)
