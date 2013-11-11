@@ -51,6 +51,8 @@ sensors.provider.okwritetimeout,5.0
 sensors.provider.readtimeout,1.0
 sensors.provider.dev_path,"/dev/ttyUSB0"
 sensors.requester.address,tcp://${centaur.ip}:5506
+gloves.publisher.dev_path,"/dev/ttyACM0"
+gloves.publisher.verbose,"false"
 leg1.touchpressure,900
 leg2.touchpressure,900
 leg3.touchpressure,900
