@@ -63,7 +63,7 @@ int main(int argc, char** argv)
 	if (verbose) cfg.show();
 
 	int index = cfg.num("webcam.provider.index", 0);
-	int sleep_time = cfg.num("webcam.provider.sleep_time", 50);
+	int sleep_time = cfg.num("webcam.provider.sleep_time");
 
 	bool detect = cfg.flag("webcam.provider.detect");
 

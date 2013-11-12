@@ -14,7 +14,7 @@ using namespace cv;
 
 Configure cfg;
 
-bool die = false;
+volatile bool die = false;
 bool inside = false;
 bool verbose = false;
 
