@@ -155,18 +155,19 @@ int main(int argc, char** argv)
 				if(zmq_msg_size(&msg) == color.total() * color.elemSize())
 				{
 					memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+
+					line(color, pt1, pt2, Scalar(0, 0, 0));
+					if(inside)
+					{	
+						subscribe_lidar(lidar_data, sub_lidar);	
+						index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+						//index = 380 + mx;
+						text = convstr(lidar_data[index] * 0.00328084);
+						putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+						if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << "  sleep_time: " << sleep_time << std::endl;
+					}
+					imshow(winName, color);
 				}
-				line(color, pt1, pt2, Scalar(0, 0, 0));
-				if(inside)
-				{	
-					subscribe_lidar(lidar_data, sub_lidar);	
-					index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-					//index = 380 + mx;
-					text = convstr(lidar_data[index] * 0.00328084);
-					putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-					if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << "  sleep_time: " << sleep_time << std::endl;
-				}
-				imshow(winName, color);
 				break;
 			case true:
 				zmq_send (req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
@@ -174,18 +175,18 @@ int main(int argc, char** argv)
 				if(zmq_msg_size(&msg) == gray.total() * gray.elemSize())
 				{
 					memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+					line(gray, pt1, pt2, Scalar(0, 0, 0));
+					if(inside)
+					{	
+						subscribe_lidar(lidar_data, sub_lidar);	
+						index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+						//index = 380 + mx;
+						text = convstr(lidar_data[index] * 0.00328084);
+						putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+						if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << "  sleep_time: " << sleep_time << std::endl;
+					}
+					imshow(winName, gray);
 				}
-				line(gray, pt1, pt2, Scalar(0, 0, 0));
-				if(inside)
-				{	
-					subscribe_lidar(lidar_data, sub_lidar);	
-					index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-					//index = 380 + mx;
-					text = convstr(lidar_data[index] * 0.00328084);
-					putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-					if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << "  sleep_time: " << sleep_time << std::endl;
-				}
-				imshow(winName, gray);
 				break;
 			}
 		}
