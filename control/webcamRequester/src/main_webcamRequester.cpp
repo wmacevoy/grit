@@ -2,6 +2,7 @@
 #include <iostream>
 #include <signal.h>
 #include <assert.h>
+#include <sstream>
 #include <string>
 #include <zmq.h>
 #include <sstream>
@@ -33,6 +34,13 @@ std::string convstr(const float t)
 	std::stringstream ftoa;
 	ftoa << std::setprecision(3) << std::setw(4) << t;
 	return ftoa.str();
+}
+
+template<class T>
+std::string itoa(const T& t) {
+	std::stringstream itoa;
+	itoa << t;
+	return itoa.str();
 }
 
 void subscribe_lidar(int64_t* data, void* zmq_sub)
@@ -79,6 +87,7 @@ int main(int argc, char** argv)
 	int rcc = 0;
 	int rcl = 0;
 	int index = 0;
+	int imgNum = 0;
 	int sleep_time = sleep_time_gray;
 	bool CorG  = true;
 	Mat color(240, 320, CV_8UC3);
@@ -86,6 +95,7 @@ int main(int argc, char** argv)
 
 	std::string winName = "ICU";
 	std::string text = "0";
+	std::string imageName = "";
 	namedWindow(winName, CV_WINDOW_NORMAL);
 	
 	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
@@ -195,6 +205,17 @@ int main(int argc, char** argv)
 			}
 		}
 		else if(c == 'q') die = true;
+		else if(c == 's') {
+			imageName = "image";
+			imageName += itoa(imgNum++);
+			imageName += ".jpg";
+			if(CorG == true) {
+				imwrite(imageName,  gray);
+			}
+			else {
+				imwrite(imageName,  color);
+			}
+		}
 	}
 
 	std::cout << std::endl << "Quitting..." << std::endl;
