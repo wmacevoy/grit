@@ -93,6 +93,79 @@ namespace $(flag("namespace")) {
 #!    }
 #!  }
 #!
+#!  void define_aliases()
+#!  {
+#!    o() << "// global aliases" << endl;
+#!    { int count=0; FOREACH_GLOBAL(i) {
+#!      o() << "#define " << format(*i) << " " << prefix << "globals[" << count << "]" << endl;
+#!      ++count; 
+#!      }}
+#!    o() << endl;
+#!
+#!    o() << "// parameter aliases" << endl;
+#!    { int count=0; FOREACH_PARAMETER(i) {
+#!      o() << "#define " << format(*i) << " " << prefix << "parameters[" << count << "]" << endl;
+#!      ++count;
+#!      }}
+#!    o() << endl;
+#!
+#!    o() << "// variable aliases" << endl;
+#!    { int count=0; FOREACH_VARIABLE(i) {
+#!      o() << "#define " << format(*i) << " " << prefix << "x[" << count << "]" << endl;
+#!      ++count;
+#!      }}
+#!    o() << endl;
+#!
+#!    o() << "// residual aliases" << endl;
+#!    { int count=0; FOREACH_EQUATION(i) {
+#!      o() << "#define " << format(i->first) << " " << prefix << "y[" << count << "]" << endl;
+#!      ++count;
+#!      }}
+#!    o() << endl;
+#!
+#!    o() << "// jacobian aliases (fortran order)" << endl;
+#!    { int icount=0; FOREACH_EQUATION(i) {
+#!      { int jcount=0; FOREACH_VARIABLE(j) {
+#!          o() << "#define " << "d" << format(i->first) << "_d" << format(*j) << " " << prefix << "dy[" << (dim*jcount+icount) << "]" << endl;
+#!          ++jcount;
+#!        }}
+#!      ++icount;
+#!      }}
+#!    o() << endl;
+#!
+#!  }
+#!
+#!  void undefine_aliases()
+#!  {
+// undefine global aliases
+#! FOREACH_GLOBAL(i) {
+#undef $(format(*i))
+#! }
+
+// undefine parameter aliases
+#! FOREACH_PARAMETER(i) {
+#undef $(format(*i))
+#! }
+
+// undefine variable aliases
+#! FOREACH_VARIABLE(i) {
+#undef $(format(*i))
+#! }
+
+// undefine residual aliases
+#! FOREACH_EQUATION(i) {
+#undef $(format(i->first))
+#! }
+
+// undefine jacobian aliases (fortran order)
+#! FOREACH_EQUATION(i) {
+#!   FOREACH_VARIABLE(j) {
+#undef d$(format(i->first))_d$(format(*j))
+#!   }
+#! }
+#!
+#!  }
+#!
 #!  void prototype_function(const std::string &end="")
 #!  {
 void $(prefix)f(
@@ -107,6 +180,7 @@ void $(prefix)f(
 #!  {
 #!prototype_function();
 {
+#!    define_aliases();
 #!    if (flag("coptgen")=="true") {
 #!      COptGen coptgen;
 #!      coptgen.type=type;
@@ -121,6 +195,7 @@ void $(prefix)f(
   $(format(i->first))=$(format(i->second));
 #!      }
 #!    }
+#!    undefine_aliases();
 } // $(prefix)f()
 
 #!  } // define_function
@@ -140,6 +215,7 @@ void $(prefix)df(
 #!  {
 #!prototype_jacobian();
 {
+#!    define_aliases();
 #!    if (flag("coptgen")=="true") {
 #!      COptGen coptgen;
 #!      coptgen.type=type;
@@ -176,6 +252,7 @@ void $(prefix)df(
 #!        delete ri;
 #!      }
 #!    }
+#!    undefine_aliases();
 } // $(prefix)df()
 #!  } // define_jacobian()
 #!
@@ -219,11 +296,13 @@ void $(prefix)initialize(
 #!  {
 #!prototype_initialize();
 {
+#! define_aliases();
   // initialize unknowns from parameters
 #!FOREACH_INITIALIZER(k) {
   // $(k->first)=$(k->second);
   $(format(k->first))=$(format(k->second));
 #!}
+#!  undefine_aliases();
 } // $(prefix)initialize()
 #!  } // define_initialize()
 #!
@@ -241,11 +320,12 @@ void $(prefix)update(
 {
   $(type) $(prefix)x[$dim];
   $(prefix)solve($(prefix)globals,$(prefix)parameters,$(prefix)x);
-
+#! define_aliases();
 #!    FOREACH_UPDATE(k) {
   // $(k->first)=$(k->second)
   $(format(k->first))=$(format(k->second));
 #!    }
+#! undefine_aliases();
 } // $(prefix)update()
 
 #!  } // define_update()
@@ -269,35 +349,53 @@ void $(prefix)update(
 #!
 #!  void prototype_data() {
 
-typedef union 
-{
-  struct {
+typedef struct {
 #! FOREACH_GLOBAL(i) {
        $(type) $(*i);
 #! }   
-  } as_struct;
+} $(prefix)globals_t;
+
+typedef union 
+{
+  $(prefix)globals_t as_struct;
   float as_array[$(nglobals())];
 } $(prefix)globals;
 
-typedef union 
-{
-  struct {
+typedef struct {
 #! FOREACH_PARAMETER(i) {
        $(type) $(*i);
 #! }   
-  } as_struct;
-  float as_array[$(nparameters())];
-} $(prefix)parameters;
+} $(prefix)parameters_t;
 
 typedef union 
 {
-  struct {
+  $(prefix)parameters_t as_struct;
+  float as_array[$(nparameters())];
+} $(prefix)parameters;
+
+typedef struct {
 #! FOREACH_VARIABLE(i) {
        $(type) $(*i);
 #! }   
-  } as_struct;
+} $(prefix)variables_t;
+
+typedef union 
+{
+  $(prefix)variables_t as_struct;
   float as_array[$(nvariables())];
 } $(prefix)variables;
+
+typedef struct {
+#! FOREACH_EQUATION(i) {
+       $(type) $(i->first);
+#! }   
+} $(prefix)residuals_t;
+
+typedef union 
+{
+  $(prefix)residuals_t as_struct;
+  float as_array[$(nequations())];
+} $(prefix)residuals;
 
 #!  } // prototype data
 #!
@@ -574,50 +672,6 @@ int main(int argc, const char *argv[])$(end)
 #!    }
 #!
 #!    (*out) << endl;
-#!  }
-#!
-#!  void define_aliases()
-#!  {
-#!    int count;
-#!
-#!    o() << "// global aliases" << endl;
-#!    { int count=0; FOREACH_GLOBAL(i) {
-#!      o() << "#define " << format(*i) << " " << prefix << "globals[" << count << "]" << endl;
-#!      ++count; 
-#!      }}
-#!    o() << endl;
-#!
-#!    o() << "// parameter aliases" << endl;
-#!    { int count=0; FOREACH_PARAMETER(i) {
-#!      o() << "#define " << format(*i) << " " << prefix << "parameters[" << count << "]" << endl;
-#!      ++count;
-#!      }}
-#!    o() << endl;
-#!
-#!    o() << "// variable aliases" << endl;
-#!    { int count=0; FOREACH_VARIABLE(i) {
-#!      o() << "#define " << format(*i) << " " << prefix << "x[" << count << "]" << endl;
-#!      ++count;
-#!      }}
-#!    o() << endl;
-#!
-#!    o() << "// residual aliases" << endl;
-#!    { int count=0; FOREACH_EQUATION(i) {
-#!      o() << "#define " << format(i->first) << " " << prefix << "y[" << count << "]" << endl;
-#!      ++count;
-#!      }}
-#!    o() << endl;
-#!
-#!    o() << "// jacobian aliases (fortran order)" << endl;
-#!    { int icount=0; FOREACH_EQUATION(i) {
-#!      { int jcount=0; FOREACH_VARIABLE(j) {
-#!          o() << "#define " << "d" << format(i->first) << "_d" << format(*j) << " " << prefix << "dy[" << (dim*jcount+icount) << "]" << endl;
-#!          ++jcount;
-#!        }}
-#!      ++icount;
-#!      }}
-#!    o() << endl;
-#!
 #!  }
 #!
 #!  void includes()
