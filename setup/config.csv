@@ -3,6 +3,8 @@ control.ip,192.168.2.113
 centaur.ip,192.168.2.101
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
+arms.minspeed,15,Degrees per second on the servo
+arms.maxspeed,15,Degrees per second on the servo 
 servos.verbose,true
 servos.type,real
 servos.deviceindex,1
@@ -19,8 +21,8 @@ body.commander.publish,tcp://*:5502
 body.commander.subscribers,"tcp://${control.ip}:5504"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
 body.commander.neckAddress,"tcp://${control.ip}:5556"
-body.verbose,true
-commander.publish,tcp://*:5504
+body.verbose,false
+commander.publish,"tcp://*:5504"
 commander.subscribers,"tcp://${centaur.ip}:5502"
 lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"100"
@@ -35,7 +37,7 @@ webcam.provider.index,"0"
 webcam.provider.sleep_time,"50"
 webcam.provider.detect,"false"
 webcam.provider.cascade,"../cascades/handwheel.xml"
-leap.provider.verbose,"false"
+leap.provider.verbose,"true"
 leap.provider.sleep_time,"100"
 leap.provider.ip,"${control.ip}"
 leap.provider.port,"9990"
