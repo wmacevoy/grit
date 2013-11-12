@@ -140,7 +140,7 @@ int main(int argc, char** argv)
 	rc = zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger));
 	assert(rc == 0);
 	
-	rc = zmq_bind(pub, "tcp://*:9990");
+	rc = zmq_bind(pub, cfg.str("leap.provider.publish").c_str());
 	if (rc!=0) {
 		int en=zmq_errno();
 		std::cout << "TCP Error Number " << en << " " << zmq_strerror(en) << std::endl;
