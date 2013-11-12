@@ -63,6 +63,6 @@ leg1.touchpressure,900
 leg2.touchpressure,900
 leg3.touchpressure,900
 leg4.touchpressure,900
-ik.epsilon,1e-4
+ik.epsilon,1e-2
 ik.steps,4
 ik.speed,4,"inches/sec"
