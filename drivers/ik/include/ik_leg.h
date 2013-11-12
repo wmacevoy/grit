@@ -6,18 +6,18 @@
 
 
 
-typedef union 
-{
-  struct {
+typedef struct {
        float epsilon;
        float steps;
-  } as_struct;
-  float as_array[2];
-} ik_legglobals;
+} ik_legglobals_t;
 
 typedef union 
 {
-  struct {
+  ik_legglobals_t as_struct;
+  float as_array[2];
+} ik_legglobals;
+
+typedef struct {
        float knee;
        float femur;
        float hip;
@@ -32,19 +32,37 @@ typedef union
        float py;
        float pz;
        float residual;
-  } as_struct;
-  float as_array[14];
-} ik_legparameters;
+} ik_legparameters_t;
 
 typedef union 
 {
-  struct {
+  ik_legparameters_t as_struct;
+  float as_array[14];
+} ik_legparameters;
+
+typedef struct {
        float _knee;
        float _femur;
        float _hip;
-  } as_struct;
+} ik_legvariables_t;
+
+typedef union 
+{
+  ik_legvariables_t as_struct;
   float as_array[3];
 } ik_legvariables;
+
+typedef struct {
+       float residual0;
+       float residual1;
+       float residual2;
+} ik_legresiduals_t;
+
+typedef union 
+{
+  ik_legresiduals_t as_struct;
+  float as_array[3];
+} ik_legresiduals;
 
 enum { ik_legglobal_count=2 };
 extern const char *ik_legglobal_names[2];

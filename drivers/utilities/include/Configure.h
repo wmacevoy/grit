@@ -44,7 +44,7 @@ class Configure
   void servos(const std::string &file);
   void servos();
   std::set < std::string > servoNames() const;
-  std::string substitute(const std::string &name) const;
+  std::string substitute(const std::string &word) const;
   std::string servo(const std::string &name,const std::string &parameter) const;
   std::string servo(int id,const std::string &parameter) const;
 };

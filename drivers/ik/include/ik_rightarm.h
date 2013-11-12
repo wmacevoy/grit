@@ -6,18 +6,18 @@
 
 
 
-typedef union 
-{
-  struct {
+typedef struct {
        float epsilon;
        float steps;
-  } as_struct;
-  float as_array[2];
-} ik_rightarmglobals;
+} ik_rightarmglobals_t;
 
 typedef union 
 {
-  struct {
+  ik_rightarmglobals_t as_struct;
+  float as_array[2];
+} ik_rightarmglobals;
+
+typedef struct {
        float shoulderio;
        float shoulderud;
        float bicep;
@@ -30,21 +30,41 @@ typedef union
        float pz;
        float waist;
        float residual;
-  } as_struct;
-  float as_array[12];
-} ik_rightarmparameters;
+} ik_rightarmparameters_t;
 
 typedef union 
 {
-  struct {
+  ik_rightarmparameters_t as_struct;
+  float as_array[12];
+} ik_rightarmparameters;
+
+typedef struct {
        float _shoulderio;
        float _shoulderud;
        float _bicep;
        float _elbow;
        float _forearm;
-  } as_struct;
+} ik_rightarmvariables_t;
+
+typedef union 
+{
+  ik_rightarmvariables_t as_struct;
   float as_array[5];
 } ik_rightarmvariables;
+
+typedef struct {
+       float residual0;
+       float residual1;
+       float residual2;
+       float residual3;
+       float residual4;
+} ik_rightarmresiduals_t;
+
+typedef union 
+{
+  ik_rightarmresiduals_t as_struct;
+  float as_array[5];
+} ik_rightarmresiduals;
 
 enum { ik_rightarmglobal_count=2 };
 extern const char *ik_rightarmglobal_names[2];

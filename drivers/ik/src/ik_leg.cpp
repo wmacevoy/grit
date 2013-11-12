@@ -398,6 +398,47 @@ void ik_leginitialize(
   float ik_legx[3]
 )
 {
+// global aliases
+#define epsilon ik_legglobals[0]
+#define steps ik_legglobals[1]
+
+// parameter aliases
+#define knee ik_legparameters[0]
+#define femur ik_legparameters[1]
+#define hip ik_legparameters[2]
+#define chasis ik_legparameters[3]
+#define dfemur2knee ik_legparameters[4]
+#define dhip2femur ik_legparameters[5]
+#define drchasis2hip ik_legparameters[6]
+#define dyknee2tip ik_legparameters[7]
+#define dzchasis2hip ik_legparameters[8]
+#define dzknee2tip ik_legparameters[9]
+#define px ik_legparameters[10]
+#define py ik_legparameters[11]
+#define pz ik_legparameters[12]
+#define residual ik_legparameters[13]
+
+// variable aliases
+#define _knee ik_legx[0]
+#define _femur ik_legx[1]
+#define _hip ik_legx[2]
+
+// residual aliases
+#define residual0 ik_legy[0]
+#define residual1 ik_legy[1]
+#define residual2 ik_legy[2]
+
+// jacobian aliases (fortran order)
+#define dresidual0_d_knee ik_legdy[0]
+#define dresidual0_d_femur ik_legdy[3]
+#define dresidual0_d_hip ik_legdy[6]
+#define dresidual1_d_knee ik_legdy[1]
+#define dresidual1_d_femur ik_legdy[4]
+#define dresidual1_d_hip ik_legdy[7]
+#define dresidual2_d_knee ik_legdy[2]
+#define dresidual2_d_femur ik_legdy[5]
+#define dresidual2_d_hip ik_legdy[8]
+
   // initialize unknowns from parameters
   // _knee=knee;
   _knee=knee;
@@ -405,6 +446,46 @@ void ik_leginitialize(
   _femur=femur;
   // _hip=hip;
   _hip=hip;
+// undefine global aliases
+#undef epsilon
+#undef steps
+
+// undefine parameter aliases
+#undef knee
+#undef femur
+#undef hip
+#undef chasis
+#undef dfemur2knee
+#undef dhip2femur
+#undef drchasis2hip
+#undef dyknee2tip
+#undef dzchasis2hip
+#undef dzknee2tip
+#undef px
+#undef py
+#undef pz
+#undef residual
+
+// undefine variable aliases
+#undef _knee
+#undef _femur
+#undef _hip
+
+// undefine residual aliases
+#undef residual0
+#undef residual1
+#undef residual2
+
+// undefine jacobian aliases (fortran order)
+#undef dresidual0_d_knee
+#undef dresidual0_d_femur
+#undef dresidual0_d_hip
+#undef dresidual1_d_knee
+#undef dresidual1_d_femur
+#undef dresidual1_d_hip
+#undef dresidual2_d_knee
+#undef dresidual2_d_femur
+#undef dresidual2_d_hip
 } // ik_leginitialize()
 void ik_legupdate(
   const float ik_legglobals[2],
@@ -413,6 +494,46 @@ void ik_legupdate(
 {
   float ik_legx[3];
   ik_legsolve(ik_legglobals,ik_legparameters,ik_legx);
+// global aliases
+#define epsilon ik_legglobals[0]
+#define steps ik_legglobals[1]
+
+// parameter aliases
+#define knee ik_legparameters[0]
+#define femur ik_legparameters[1]
+#define hip ik_legparameters[2]
+#define chasis ik_legparameters[3]
+#define dfemur2knee ik_legparameters[4]
+#define dhip2femur ik_legparameters[5]
+#define drchasis2hip ik_legparameters[6]
+#define dyknee2tip ik_legparameters[7]
+#define dzchasis2hip ik_legparameters[8]
+#define dzknee2tip ik_legparameters[9]
+#define px ik_legparameters[10]
+#define py ik_legparameters[11]
+#define pz ik_legparameters[12]
+#define residual ik_legparameters[13]
+
+// variable aliases
+#define _knee ik_legx[0]
+#define _femur ik_legx[1]
+#define _hip ik_legx[2]
+
+// residual aliases
+#define residual0 ik_legy[0]
+#define residual1 ik_legy[1]
+#define residual2 ik_legy[2]
+
+// jacobian aliases (fortran order)
+#define dresidual0_d_knee ik_legdy[0]
+#define dresidual0_d_femur ik_legdy[3]
+#define dresidual0_d_hip ik_legdy[6]
+#define dresidual1_d_knee ik_legdy[1]
+#define dresidual1_d_femur ik_legdy[4]
+#define dresidual1_d_hip ik_legdy[7]
+#define dresidual2_d_knee ik_legdy[2]
+#define dresidual2_d_femur ik_legdy[5]
+#define dresidual2_d_hip ik_legdy[8]
 
   // knee=_knee
   knee=_knee;
@@ -420,6 +541,46 @@ void ik_legupdate(
   femur=_femur;
   // hip=_hip
   hip=_hip;
+// undefine global aliases
+#undef epsilon
+#undef steps
+
+// undefine parameter aliases
+#undef knee
+#undef femur
+#undef hip
+#undef chasis
+#undef dfemur2knee
+#undef dhip2femur
+#undef drchasis2hip
+#undef dyknee2tip
+#undef dzchasis2hip
+#undef dzknee2tip
+#undef px
+#undef py
+#undef pz
+#undef residual
+
+// undefine variable aliases
+#undef _knee
+#undef _femur
+#undef _hip
+
+// undefine residual aliases
+#undef residual0
+#undef residual1
+#undef residual2
+
+// undefine jacobian aliases (fortran order)
+#undef dresidual0_d_knee
+#undef dresidual0_d_femur
+#undef dresidual0_d_hip
+#undef dresidual1_d_knee
+#undef dresidual1_d_femur
+#undef dresidual1_d_hip
+#undef dresidual2_d_knee
+#undef dresidual2_d_femur
+#undef dresidual2_d_hip
 } // ik_legupdate()
 
 void ik_legf(
@@ -429,6 +590,47 @@ void ik_legf(
   float ik_legy[3]
 )
 {
+// global aliases
+#define epsilon ik_legglobals[0]
+#define steps ik_legglobals[1]
+
+// parameter aliases
+#define knee ik_legparameters[0]
+#define femur ik_legparameters[1]
+#define hip ik_legparameters[2]
+#define chasis ik_legparameters[3]
+#define dfemur2knee ik_legparameters[4]
+#define dhip2femur ik_legparameters[5]
+#define drchasis2hip ik_legparameters[6]
+#define dyknee2tip ik_legparameters[7]
+#define dzchasis2hip ik_legparameters[8]
+#define dzknee2tip ik_legparameters[9]
+#define px ik_legparameters[10]
+#define py ik_legparameters[11]
+#define pz ik_legparameters[12]
+#define residual ik_legparameters[13]
+
+// variable aliases
+#define _knee ik_legx[0]
+#define _femur ik_legx[1]
+#define _hip ik_legx[2]
+
+// residual aliases
+#define residual0 ik_legy[0]
+#define residual1 ik_legy[1]
+#define residual2 ik_legy[2]
+
+// jacobian aliases (fortran order)
+#define dresidual0_d_knee ik_legdy[0]
+#define dresidual0_d_femur ik_legdy[3]
+#define dresidual0_d_hip ik_legdy[6]
+#define dresidual1_d_knee ik_legdy[1]
+#define dresidual1_d_femur ik_legdy[4]
+#define dresidual1_d_hip ik_legdy[7]
+#define dresidual2_d_knee ik_legdy[2]
+#define dresidual2_d_femur ik_legdy[5]
+#define dresidual2_d_hip ik_legdy[8]
+
 float tmp0;
 float tmp1;
 float tmp2;
@@ -740,6 +942,46 @@ tmp151=tmp150*dyknee2tip;
 tmp152=(-1.0f)*pz;
 tmp153=tmp135+tmp143+tmp151+tmp152+dzchasis2hip;
 residual2=tmp153;
+// undefine global aliases
+#undef epsilon
+#undef steps
+
+// undefine parameter aliases
+#undef knee
+#undef femur
+#undef hip
+#undef chasis
+#undef dfemur2knee
+#undef dhip2femur
+#undef drchasis2hip
+#undef dyknee2tip
+#undef dzchasis2hip
+#undef dzknee2tip
+#undef px
+#undef py
+#undef pz
+#undef residual
+
+// undefine variable aliases
+#undef _knee
+#undef _femur
+#undef _hip
+
+// undefine residual aliases
+#undef residual0
+#undef residual1
+#undef residual2
+
+// undefine jacobian aliases (fortran order)
+#undef dresidual0_d_knee
+#undef dresidual0_d_femur
+#undef dresidual0_d_hip
+#undef dresidual1_d_knee
+#undef dresidual1_d_femur
+#undef dresidual1_d_hip
+#undef dresidual2_d_knee
+#undef dresidual2_d_femur
+#undef dresidual2_d_hip
 } // ik_legf()
 
 void ik_legdf(
@@ -749,6 +991,47 @@ void ik_legdf(
   float ik_legdy[9]
 )
 {
+// global aliases
+#define epsilon ik_legglobals[0]
+#define steps ik_legglobals[1]
+
+// parameter aliases
+#define knee ik_legparameters[0]
+#define femur ik_legparameters[1]
+#define hip ik_legparameters[2]
+#define chasis ik_legparameters[3]
+#define dfemur2knee ik_legparameters[4]
+#define dhip2femur ik_legparameters[5]
+#define drchasis2hip ik_legparameters[6]
+#define dyknee2tip ik_legparameters[7]
+#define dzchasis2hip ik_legparameters[8]
+#define dzknee2tip ik_legparameters[9]
+#define px ik_legparameters[10]
+#define py ik_legparameters[11]
+#define pz ik_legparameters[12]
+#define residual ik_legparameters[13]
+
+// variable aliases
+#define _knee ik_legx[0]
+#define _femur ik_legx[1]
+#define _hip ik_legx[2]
+
+// residual aliases
+#define residual0 ik_legy[0]
+#define residual1 ik_legy[1]
+#define residual2 ik_legy[2]
+
+// jacobian aliases (fortran order)
+#define dresidual0_d_knee ik_legdy[0]
+#define dresidual0_d_femur ik_legdy[3]
+#define dresidual0_d_hip ik_legdy[6]
+#define dresidual1_d_knee ik_legdy[1]
+#define dresidual1_d_femur ik_legdy[4]
+#define dresidual1_d_hip ik_legdy[7]
+#define dresidual2_d_knee ik_legdy[2]
+#define dresidual2_d_femur ik_legdy[5]
+#define dresidual2_d_hip ik_legdy[8]
+
 float tmp0;
 float tmp1;
 float tmp2;
@@ -1482,4 +1765,44 @@ tmp360=0.017453293f*tmp359*dfemur2knee;
 tmp361=tmp350+tmp358+tmp360;
 dresidual2_d_femur=tmp361;
 dresidual2_d_hip=0.0f;
+// undefine global aliases
+#undef epsilon
+#undef steps
+
+// undefine parameter aliases
+#undef knee
+#undef femur
+#undef hip
+#undef chasis
+#undef dfemur2knee
+#undef dhip2femur
+#undef drchasis2hip
+#undef dyknee2tip
+#undef dzchasis2hip
+#undef dzknee2tip
+#undef px
+#undef py
+#undef pz
+#undef residual
+
+// undefine variable aliases
+#undef _knee
+#undef _femur
+#undef _hip
+
+// undefine residual aliases
+#undef residual0
+#undef residual1
+#undef residual2
+
+// undefine jacobian aliases (fortran order)
+#undef dresidual0_d_knee
+#undef dresidual0_d_femur
+#undef dresidual0_d_hip
+#undef dresidual1_d_knee
+#undef dresidual1_d_femur
+#undef dresidual1_d_hip
+#undef dresidual2_d_knee
+#undef dresidual2_d_femur
+#undef dresidual2_d_hip
 } // ik_legdf()

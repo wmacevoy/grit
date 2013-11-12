@@ -418,6 +418,65 @@ void ik_rightarminitialize(
   float ik_rightarmx[5]
 )
 {
+// global aliases
+#define epsilon ik_rightarmglobals[0]
+#define steps ik_rightarmglobals[1]
+
+// parameter aliases
+#define shoulderio ik_rightarmparameters[0]
+#define shoulderud ik_rightarmparameters[1]
+#define bicep ik_rightarmparameters[2]
+#define elbow ik_rightarmparameters[3]
+#define forearm ik_rightarmparameters[4]
+#define downx ik_rightarmparameters[5]
+#define pointx ik_rightarmparameters[6]
+#define px ik_rightarmparameters[7]
+#define py ik_rightarmparameters[8]
+#define pz ik_rightarmparameters[9]
+#define waist ik_rightarmparameters[10]
+#define residual ik_rightarmparameters[11]
+
+// variable aliases
+#define _shoulderio ik_rightarmx[0]
+#define _shoulderud ik_rightarmx[1]
+#define _bicep ik_rightarmx[2]
+#define _elbow ik_rightarmx[3]
+#define _forearm ik_rightarmx[4]
+
+// residual aliases
+#define residual0 ik_rightarmy[0]
+#define residual1 ik_rightarmy[1]
+#define residual2 ik_rightarmy[2]
+#define residual3 ik_rightarmy[3]
+#define residual4 ik_rightarmy[4]
+
+// jacobian aliases (fortran order)
+#define dresidual0_d_shoulderio ik_rightarmdy[0]
+#define dresidual0_d_shoulderud ik_rightarmdy[5]
+#define dresidual0_d_bicep ik_rightarmdy[10]
+#define dresidual0_d_elbow ik_rightarmdy[15]
+#define dresidual0_d_forearm ik_rightarmdy[20]
+#define dresidual1_d_shoulderio ik_rightarmdy[1]
+#define dresidual1_d_shoulderud ik_rightarmdy[6]
+#define dresidual1_d_bicep ik_rightarmdy[11]
+#define dresidual1_d_elbow ik_rightarmdy[16]
+#define dresidual1_d_forearm ik_rightarmdy[21]
+#define dresidual2_d_shoulderio ik_rightarmdy[2]
+#define dresidual2_d_shoulderud ik_rightarmdy[7]
+#define dresidual2_d_bicep ik_rightarmdy[12]
+#define dresidual2_d_elbow ik_rightarmdy[17]
+#define dresidual2_d_forearm ik_rightarmdy[22]
+#define dresidual3_d_shoulderio ik_rightarmdy[3]
+#define dresidual3_d_shoulderud ik_rightarmdy[8]
+#define dresidual3_d_bicep ik_rightarmdy[13]
+#define dresidual3_d_elbow ik_rightarmdy[18]
+#define dresidual3_d_forearm ik_rightarmdy[23]
+#define dresidual4_d_shoulderio ik_rightarmdy[4]
+#define dresidual4_d_shoulderud ik_rightarmdy[9]
+#define dresidual4_d_bicep ik_rightarmdy[14]
+#define dresidual4_d_elbow ik_rightarmdy[19]
+#define dresidual4_d_forearm ik_rightarmdy[24]
+
   // initialize unknowns from parameters
   // _shoulderio=shoulderio;
   _shoulderio=shoulderio;
@@ -429,6 +488,64 @@ void ik_rightarminitialize(
   _elbow=elbow;
   // _forearm=forearm;
   _forearm=forearm;
+// undefine global aliases
+#undef epsilon
+#undef steps
+
+// undefine parameter aliases
+#undef shoulderio
+#undef shoulderud
+#undef bicep
+#undef elbow
+#undef forearm
+#undef downx
+#undef pointx
+#undef px
+#undef py
+#undef pz
+#undef waist
+#undef residual
+
+// undefine variable aliases
+#undef _shoulderio
+#undef _shoulderud
+#undef _bicep
+#undef _elbow
+#undef _forearm
+
+// undefine residual aliases
+#undef residual0
+#undef residual1
+#undef residual2
+#undef residual3
+#undef residual4
+
+// undefine jacobian aliases (fortran order)
+#undef dresidual0_d_shoulderio
+#undef dresidual0_d_shoulderud
+#undef dresidual0_d_bicep
+#undef dresidual0_d_elbow
+#undef dresidual0_d_forearm
+#undef dresidual1_d_shoulderio
+#undef dresidual1_d_shoulderud
+#undef dresidual1_d_bicep
+#undef dresidual1_d_elbow
+#undef dresidual1_d_forearm
+#undef dresidual2_d_shoulderio
+#undef dresidual2_d_shoulderud
+#undef dresidual2_d_bicep
+#undef dresidual2_d_elbow
+#undef dresidual2_d_forearm
+#undef dresidual3_d_shoulderio
+#undef dresidual3_d_shoulderud
+#undef dresidual3_d_bicep
+#undef dresidual3_d_elbow
+#undef dresidual3_d_forearm
+#undef dresidual4_d_shoulderio
+#undef dresidual4_d_shoulderud
+#undef dresidual4_d_bicep
+#undef dresidual4_d_elbow
+#undef dresidual4_d_forearm
 } // ik_rightarminitialize()
 void ik_rightarmupdate(
   const float ik_rightarmglobals[2],
@@ -437,6 +554,64 @@ void ik_rightarmupdate(
 {
   float ik_rightarmx[5];
   ik_rightarmsolve(ik_rightarmglobals,ik_rightarmparameters,ik_rightarmx);
+// global aliases
+#define epsilon ik_rightarmglobals[0]
+#define steps ik_rightarmglobals[1]
+
+// parameter aliases
+#define shoulderio ik_rightarmparameters[0]
+#define shoulderud ik_rightarmparameters[1]
+#define bicep ik_rightarmparameters[2]
+#define elbow ik_rightarmparameters[3]
+#define forearm ik_rightarmparameters[4]
+#define downx ik_rightarmparameters[5]
+#define pointx ik_rightarmparameters[6]
+#define px ik_rightarmparameters[7]
+#define py ik_rightarmparameters[8]
+#define pz ik_rightarmparameters[9]
+#define waist ik_rightarmparameters[10]
+#define residual ik_rightarmparameters[11]
+
+// variable aliases
+#define _shoulderio ik_rightarmx[0]
+#define _shoulderud ik_rightarmx[1]
+#define _bicep ik_rightarmx[2]
+#define _elbow ik_rightarmx[3]
+#define _forearm ik_rightarmx[4]
+
+// residual aliases
+#define residual0 ik_rightarmy[0]
+#define residual1 ik_rightarmy[1]
+#define residual2 ik_rightarmy[2]
+#define residual3 ik_rightarmy[3]
+#define residual4 ik_rightarmy[4]
+
+// jacobian aliases (fortran order)
+#define dresidual0_d_shoulderio ik_rightarmdy[0]
+#define dresidual0_d_shoulderud ik_rightarmdy[5]
+#define dresidual0_d_bicep ik_rightarmdy[10]
+#define dresidual0_d_elbow ik_rightarmdy[15]
+#define dresidual0_d_forearm ik_rightarmdy[20]
+#define dresidual1_d_shoulderio ik_rightarmdy[1]
+#define dresidual1_d_shoulderud ik_rightarmdy[6]
+#define dresidual1_d_bicep ik_rightarmdy[11]
+#define dresidual1_d_elbow ik_rightarmdy[16]
+#define dresidual1_d_forearm ik_rightarmdy[21]
+#define dresidual2_d_shoulderio ik_rightarmdy[2]
+#define dresidual2_d_shoulderud ik_rightarmdy[7]
+#define dresidual2_d_bicep ik_rightarmdy[12]
+#define dresidual2_d_elbow ik_rightarmdy[17]
+#define dresidual2_d_forearm ik_rightarmdy[22]
+#define dresidual3_d_shoulderio ik_rightarmdy[3]
+#define dresidual3_d_shoulderud ik_rightarmdy[8]
+#define dresidual3_d_bicep ik_rightarmdy[13]
+#define dresidual3_d_elbow ik_rightarmdy[18]
+#define dresidual3_d_forearm ik_rightarmdy[23]
+#define dresidual4_d_shoulderio ik_rightarmdy[4]
+#define dresidual4_d_shoulderud ik_rightarmdy[9]
+#define dresidual4_d_bicep ik_rightarmdy[14]
+#define dresidual4_d_elbow ik_rightarmdy[19]
+#define dresidual4_d_forearm ik_rightarmdy[24]
 
   // shoulderio=_shoulderio
   shoulderio=_shoulderio;
@@ -448,6 +623,64 @@ void ik_rightarmupdate(
   elbow=_elbow;
   // forearm=_forearm
   forearm=_forearm;
+// undefine global aliases
+#undef epsilon
+#undef steps
+
+// undefine parameter aliases
+#undef shoulderio
+#undef shoulderud
+#undef bicep
+#undef elbow
+#undef forearm
+#undef downx
+#undef pointx
+#undef px
+#undef py
+#undef pz
+#undef waist
+#undef residual
+
+// undefine variable aliases
+#undef _shoulderio
+#undef _shoulderud
+#undef _bicep
+#undef _elbow
+#undef _forearm
+
+// undefine residual aliases
+#undef residual0
+#undef residual1
+#undef residual2
+#undef residual3
+#undef residual4
+
+// undefine jacobian aliases (fortran order)
+#undef dresidual0_d_shoulderio
+#undef dresidual0_d_shoulderud
+#undef dresidual0_d_bicep
+#undef dresidual0_d_elbow
+#undef dresidual0_d_forearm
+#undef dresidual1_d_shoulderio
+#undef dresidual1_d_shoulderud
+#undef dresidual1_d_bicep
+#undef dresidual1_d_elbow
+#undef dresidual1_d_forearm
+#undef dresidual2_d_shoulderio
+#undef dresidual2_d_shoulderud
+#undef dresidual2_d_bicep
+#undef dresidual2_d_elbow
+#undef dresidual2_d_forearm
+#undef dresidual3_d_shoulderio
+#undef dresidual3_d_shoulderud
+#undef dresidual3_d_bicep
+#undef dresidual3_d_elbow
+#undef dresidual3_d_forearm
+#undef dresidual4_d_shoulderio
+#undef dresidual4_d_shoulderud
+#undef dresidual4_d_bicep
+#undef dresidual4_d_elbow
+#undef dresidual4_d_forearm
 } // ik_rightarmupdate()
 
 void ik_rightarmf(
@@ -457,6 +690,65 @@ void ik_rightarmf(
   float ik_rightarmy[5]
 )
 {
+// global aliases
+#define epsilon ik_rightarmglobals[0]
+#define steps ik_rightarmglobals[1]
+
+// parameter aliases
+#define shoulderio ik_rightarmparameters[0]
+#define shoulderud ik_rightarmparameters[1]
+#define bicep ik_rightarmparameters[2]
+#define elbow ik_rightarmparameters[3]
+#define forearm ik_rightarmparameters[4]
+#define downx ik_rightarmparameters[5]
+#define pointx ik_rightarmparameters[6]
+#define px ik_rightarmparameters[7]
+#define py ik_rightarmparameters[8]
+#define pz ik_rightarmparameters[9]
+#define waist ik_rightarmparameters[10]
+#define residual ik_rightarmparameters[11]
+
+// variable aliases
+#define _shoulderio ik_rightarmx[0]
+#define _shoulderud ik_rightarmx[1]
+#define _bicep ik_rightarmx[2]
+#define _elbow ik_rightarmx[3]
+#define _forearm ik_rightarmx[4]
+
+// residual aliases
+#define residual0 ik_rightarmy[0]
+#define residual1 ik_rightarmy[1]
+#define residual2 ik_rightarmy[2]
+#define residual3 ik_rightarmy[3]
+#define residual4 ik_rightarmy[4]
+
+// jacobian aliases (fortran order)
+#define dresidual0_d_shoulderio ik_rightarmdy[0]
+#define dresidual0_d_shoulderud ik_rightarmdy[5]
+#define dresidual0_d_bicep ik_rightarmdy[10]
+#define dresidual0_d_elbow ik_rightarmdy[15]
+#define dresidual0_d_forearm ik_rightarmdy[20]
+#define dresidual1_d_shoulderio ik_rightarmdy[1]
+#define dresidual1_d_shoulderud ik_rightarmdy[6]
+#define dresidual1_d_bicep ik_rightarmdy[11]
+#define dresidual1_d_elbow ik_rightarmdy[16]
+#define dresidual1_d_forearm ik_rightarmdy[21]
+#define dresidual2_d_shoulderio ik_rightarmdy[2]
+#define dresidual2_d_shoulderud ik_rightarmdy[7]
+#define dresidual2_d_bicep ik_rightarmdy[12]
+#define dresidual2_d_elbow ik_rightarmdy[17]
+#define dresidual2_d_forearm ik_rightarmdy[22]
+#define dresidual3_d_shoulderio ik_rightarmdy[3]
+#define dresidual3_d_shoulderud ik_rightarmdy[8]
+#define dresidual3_d_bicep ik_rightarmdy[13]
+#define dresidual3_d_elbow ik_rightarmdy[18]
+#define dresidual3_d_forearm ik_rightarmdy[23]
+#define dresidual4_d_shoulderio ik_rightarmdy[4]
+#define dresidual4_d_shoulderud ik_rightarmdy[9]
+#define dresidual4_d_bicep ik_rightarmdy[14]
+#define dresidual4_d_elbow ik_rightarmdy[19]
+#define dresidual4_d_forearm ik_rightarmdy[24]
+
 float tmp0;
 float tmp1;
 float tmp2;
@@ -886,6 +1178,64 @@ tmp209=sin(tmp208);
 tmp210=(-1.0f)*tmp205*tmp207*tmp209;
 tmp211=tmp203+tmp210+downx;
 residual4=tmp211;
+// undefine global aliases
+#undef epsilon
+#undef steps
+
+// undefine parameter aliases
+#undef shoulderio
+#undef shoulderud
+#undef bicep
+#undef elbow
+#undef forearm
+#undef downx
+#undef pointx
+#undef px
+#undef py
+#undef pz
+#undef waist
+#undef residual
+
+// undefine variable aliases
+#undef _shoulderio
+#undef _shoulderud
+#undef _bicep
+#undef _elbow
+#undef _forearm
+
+// undefine residual aliases
+#undef residual0
+#undef residual1
+#undef residual2
+#undef residual3
+#undef residual4
+
+// undefine jacobian aliases (fortran order)
+#undef dresidual0_d_shoulderio
+#undef dresidual0_d_shoulderud
+#undef dresidual0_d_bicep
+#undef dresidual0_d_elbow
+#undef dresidual0_d_forearm
+#undef dresidual1_d_shoulderio
+#undef dresidual1_d_shoulderud
+#undef dresidual1_d_bicep
+#undef dresidual1_d_elbow
+#undef dresidual1_d_forearm
+#undef dresidual2_d_shoulderio
+#undef dresidual2_d_shoulderud
+#undef dresidual2_d_bicep
+#undef dresidual2_d_elbow
+#undef dresidual2_d_forearm
+#undef dresidual3_d_shoulderio
+#undef dresidual3_d_shoulderud
+#undef dresidual3_d_bicep
+#undef dresidual3_d_elbow
+#undef dresidual3_d_forearm
+#undef dresidual4_d_shoulderio
+#undef dresidual4_d_shoulderud
+#undef dresidual4_d_bicep
+#undef dresidual4_d_elbow
+#undef dresidual4_d_forearm
 } // ik_rightarmf()
 
 void ik_rightarmdf(
@@ -895,6 +1245,65 @@ void ik_rightarmdf(
   float ik_rightarmdy[25]
 )
 {
+// global aliases
+#define epsilon ik_rightarmglobals[0]
+#define steps ik_rightarmglobals[1]
+
+// parameter aliases
+#define shoulderio ik_rightarmparameters[0]
+#define shoulderud ik_rightarmparameters[1]
+#define bicep ik_rightarmparameters[2]
+#define elbow ik_rightarmparameters[3]
+#define forearm ik_rightarmparameters[4]
+#define downx ik_rightarmparameters[5]
+#define pointx ik_rightarmparameters[6]
+#define px ik_rightarmparameters[7]
+#define py ik_rightarmparameters[8]
+#define pz ik_rightarmparameters[9]
+#define waist ik_rightarmparameters[10]
+#define residual ik_rightarmparameters[11]
+
+// variable aliases
+#define _shoulderio ik_rightarmx[0]
+#define _shoulderud ik_rightarmx[1]
+#define _bicep ik_rightarmx[2]
+#define _elbow ik_rightarmx[3]
+#define _forearm ik_rightarmx[4]
+
+// residual aliases
+#define residual0 ik_rightarmy[0]
+#define residual1 ik_rightarmy[1]
+#define residual2 ik_rightarmy[2]
+#define residual3 ik_rightarmy[3]
+#define residual4 ik_rightarmy[4]
+
+// jacobian aliases (fortran order)
+#define dresidual0_d_shoulderio ik_rightarmdy[0]
+#define dresidual0_d_shoulderud ik_rightarmdy[5]
+#define dresidual0_d_bicep ik_rightarmdy[10]
+#define dresidual0_d_elbow ik_rightarmdy[15]
+#define dresidual0_d_forearm ik_rightarmdy[20]
+#define dresidual1_d_shoulderio ik_rightarmdy[1]
+#define dresidual1_d_shoulderud ik_rightarmdy[6]
+#define dresidual1_d_bicep ik_rightarmdy[11]
+#define dresidual1_d_elbow ik_rightarmdy[16]
+#define dresidual1_d_forearm ik_rightarmdy[21]
+#define dresidual2_d_shoulderio ik_rightarmdy[2]
+#define dresidual2_d_shoulderud ik_rightarmdy[7]
+#define dresidual2_d_bicep ik_rightarmdy[12]
+#define dresidual2_d_elbow ik_rightarmdy[17]
+#define dresidual2_d_forearm ik_rightarmdy[22]
+#define dresidual3_d_shoulderio ik_rightarmdy[3]
+#define dresidual3_d_shoulderud ik_rightarmdy[8]
+#define dresidual3_d_bicep ik_rightarmdy[13]
+#define dresidual3_d_elbow ik_rightarmdy[18]
+#define dresidual3_d_forearm ik_rightarmdy[23]
+#define dresidual4_d_shoulderio ik_rightarmdy[4]
+#define dresidual4_d_shoulderud ik_rightarmdy[9]
+#define dresidual4_d_bicep ik_rightarmdy[14]
+#define dresidual4_d_elbow ik_rightarmdy[19]
+#define dresidual4_d_forearm ik_rightarmdy[24]
+
 float tmp0;
 float tmp1;
 float tmp2;
@@ -2118,4 +2527,62 @@ tmp597=0.017453293f*tmp592*tmp594*tmp596;
 tmp598=tmp590+tmp597;
 dresidual4_d_elbow=tmp598;
 dresidual4_d_forearm=0.0f;
+// undefine global aliases
+#undef epsilon
+#undef steps
+
+// undefine parameter aliases
+#undef shoulderio
+#undef shoulderud
+#undef bicep
+#undef elbow
+#undef forearm
+#undef downx
+#undef pointx
+#undef px
+#undef py
+#undef pz
+#undef waist
+#undef residual
+
+// undefine variable aliases
+#undef _shoulderio
+#undef _shoulderud
+#undef _bicep
+#undef _elbow
+#undef _forearm
+
+// undefine residual aliases
+#undef residual0
+#undef residual1
+#undef residual2
+#undef residual3
+#undef residual4
+
+// undefine jacobian aliases (fortran order)
+#undef dresidual0_d_shoulderio
+#undef dresidual0_d_shoulderud
+#undef dresidual0_d_bicep
+#undef dresidual0_d_elbow
+#undef dresidual0_d_forearm
+#undef dresidual1_d_shoulderio
+#undef dresidual1_d_shoulderud
+#undef dresidual1_d_bicep
+#undef dresidual1_d_elbow
+#undef dresidual1_d_forearm
+#undef dresidual2_d_shoulderio
+#undef dresidual2_d_shoulderud
+#undef dresidual2_d_bicep
+#undef dresidual2_d_elbow
+#undef dresidual2_d_forearm
+#undef dresidual3_d_shoulderio
+#undef dresidual3_d_shoulderud
+#undef dresidual3_d_bicep
+#undef dresidual3_d_elbow
+#undef dresidual3_d_forearm
+#undef dresidual4_d_shoulderio
+#undef dresidual4_d_shoulderud
+#undef dresidual4_d_bicep
+#undef dresidual4_d_elbow
+#undef dresidual4_d_forearm
 } // ik_rightarmdf()
