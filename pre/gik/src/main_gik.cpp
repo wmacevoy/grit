@@ -68,6 +68,7 @@ Mat arm(string side)
   m=m*rotate(ex,waist);
   m=m*translate(0.0,0.0,dwaist2neck);
   m=m*translate(sigma*dxneck2shoulder,dyneck2shoulder,0.0);
+
   m=m*rotate(ez,shoulderio);
   m=m*translate(0.0,dshoulderio2ud,0.0);
   m=m*rotate(ex,shoulderud);

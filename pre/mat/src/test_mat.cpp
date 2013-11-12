@@ -1,10 +1,19 @@
 #include "mat.h"
 #include <iostream>
+#include <assert.h>
 
 using namespace std;
 
+void counterclockwise()
+{
+  // turn counter-clockwise as I look in the direction of the turning axis.
+  Mat R=rotate(o,ez,var("%pi")/2.0);
+  assert(eval(R[1][0]) > 0);
+}
+
 int main()
 {
+  counterclockwise();
   E pi=var("%pi");
 
   E tx=var("tx");
