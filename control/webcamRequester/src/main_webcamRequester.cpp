@@ -78,8 +78,8 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("webcam.requester.verbose", false);
 	if (verbose) cfg.show();
 
-	int sleep_time_color = cfg.num("webcam.requester.sleep_time_color", 450);
-	int sleep_time_gray = cfg.num("webcam.requester.sleep_time_gray", 100);
+	int sleep_time_color = cfg.num("webcam.requester.sleep_time_color");
+	int sleep_time_gray = cfg.num("webcam.requester.sleep_time_gray");
 	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
 	int hwm = 1;
