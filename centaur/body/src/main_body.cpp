@@ -34,15 +34,23 @@
 #include "now.h"
 #include "BodyMover.h"
 #include "glovestruct.h"
+
+
+#define USE_PY 0
+
+#if USE_PY != 0
 #include "Script.h"
+#endif
+
 #include "StdCapture.h"
 #include "LeapMessage.h"
 #include "joystick.h"
 #include "ik_leftarm.h"
 #include "ik_rightarm.h"
 
-
+#if USE_PY != 0
 SPScript py;
+#endif
 
 void subscribeH(void *zmq_sub, Hands* manos) 
 {
@@ -73,42 +81,22 @@ public:
   LeapMessage message;
 
   LeapRx() {
-    subscribers.push_back(cfg->str("leap.requester.address"));
+    subscribers.push_back(cfg->str("leap.provider.subscribe"));
+  }
+
+  void start()
+  {
+    mover->left.leapReset();
+    mover->right.leapReset();
+    ZMQRx::start();
   }
 
   void rx(ZMQSubscribeSocket &socket) { 
     ZMQMessage msg;
     msg.recv(socket);
     memcpy(&message,msg.data(),sizeof(LeapMessage));
-    process();
-  }
-
-  void process()
-  {
-    ik_leftarmglobals gl;
-    ik_leftarmparameters pl;
-
-    gl.as_struct.epsilon=1e-4;
-    gl.as_struct.steps=10;
-    pl.as_struct.px=message.left.at[0];
-    pl.as_struct.py=message.left.at[1];
-    pl.as_struct.pz=message.left.at[2];
-    pl.as_struct.waist=mover->waist.angle();
-    pl.as_struct.downx=message.left.down[0];
-    pl.as_struct.pointx=message.left.point[0];
-
-    ik_leftarmupdate(gl.as_array,pl.as_array);
-    if (pl.as_struct.residual < 1e-2) {
-      mover->left.leftRight.setup(pl.as_struct.shoulderio);
-      mover->left.upDown.setup(pl.as_struct.shoulderud);
-      mover->left.bicep.setup(pl.as_struct.bicep);
-      mover->left.elbow.setup(pl.as_struct.elbow);
-      mover->left.forearm.setup(pl.as_struct.forearm);
-
-      //      if (verbose) {
-	cout << "left: lr=" << pl.as_struct.shoulderio << " ud=" << pl.as_struct.shoulderud << " bicep=" << pl.as_struct.bicep << " elbow=" << pl.as_struct.elbow << " forearm=" << pl.as_struct.forearm << endl;
-	//      }
-    }
+    mover->left.leapAdjust(message.left);
+    mover->right.leapAdjust(message.right);
   }
 };
 
@@ -182,15 +170,14 @@ public:
   void subscribeToNeck() {	//Neck thread function
 	float currentUpDown = 0;
 	float currentLeftRight = 0;
-	int rc;
-	int hwm = 1;
+	// int hwm = 1;
 	joystick jm;
 	std::string address = cfg->str("body.commander.neckAddress", "tcp://192.168.2.113:5556");
 
 	void* context = zmq_ctx_new();
 	void* sub = zmq_socket(context, ZMQ_SUB);
 	//rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
+	zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 
 	if (zmq_connect(sub, address.c_str()) != 0)
 	{
@@ -222,15 +209,15 @@ public:
   std::thread* handsThread;
   std::atomic < bool > hands_on;
   void subscribeToHands() {	//Hands thread function
-	int rc;
-	int hwm = 1;
+    //int rc;
+    //int hwm = 1;
 	Hands manos;
 	std::string address = cfg->str("body.commander.glovesAddress");
 	
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
 	//rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	rc = zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
+	zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	
 	if (zmq_connect(sub, address.c_str()) != 0)
 	{
@@ -257,7 +244,7 @@ public:
 	zmq_close(sub);
 	zmq_ctx_destroy(context);
   }
-  
+
   void setLIO(float angle) {
 	mover->left.leftRight.setup(angle);
 //	mover->left.leftRight.torque=0.75;
@@ -697,7 +684,58 @@ public:
       answer(oss.str());
     }
     
-    
+    if (head == "lik") {
+      LeftArmGeometry geometry;
+      map<string,int> parameterMap;
+      bool real=true;
+      bool ok=true;
+
+      geometry.forward();
+      for (int i=0; i<ik_leftarmparameter_count; ++i) {
+	parameterMap[ik_leftarmparameter_names[i]]=i;
+      }
+
+      string name;
+      while (iss >> name) {
+	if (name == "fake") { real=false; continue; }
+	if (name == "real") { real=true;  continue; }
+	if (name.rfind('=') != string::npos) {
+	  size_t eq=name.rfind('=');
+	  double value=atof(name.substr(eq+1).c_str());
+	  name=name.substr(0,eq);
+	  map<string,int>::iterator i = parameterMap.find(name);
+	  if (i != parameterMap.end()) {
+	    geometry.parameters.as_array[i->second]=value;
+	  } else {
+	    ok = false;
+	    break;
+	  }
+	}
+      }
+
+      if (ok) {
+	ok=geometry.inverse();
+	if (ok && real) {
+	  mover->left.leftRight.setup(geometry.parameters.as_struct.shoulderio);
+	  mover->left.upDown.setup(geometry.parameters.as_struct.shoulderud);
+	  mover->left.bicep.setup(geometry.parameters.as_struct.bicep);
+	  mover->left.elbow.setup(geometry.parameters.as_struct.elbow);
+	  mover->left.forearm.setup(geometry.parameters.as_struct.forearm);
+	}
+      }
+      
+      if (!ok) {
+	oss << "failed.";
+      } else {
+	if (!real) oss << "(fake)";
+	for (map<string,int>::iterator i=parameterMap.begin(); i!=parameterMap.end(); ++i) {
+	  oss << " " << i->first << "=" << geometry.parameters.as_array[i->second];
+	}
+      }
+      answer(oss.str());
+    }
+
+#if USE_PY != 0
     if (head == "py") {
       StdCapture capture;
       capture.BeginCapture();
@@ -705,6 +743,7 @@ public:
       capture.EndCapture();
       answer(capture.GetCapture());
     }
+#endif
     
     if (head == "enable") {
       string part;
@@ -837,7 +876,6 @@ public:
       }
     }
     if (head == "touch") {
-      bool any=false;
       int legNumber;
       int touchPressure;
       iss >> legNumber >> touchPressure;
@@ -1412,10 +1450,6 @@ public:
 
   void update()
   {
-    double rho=0.01;
-    double delta_bar=0;
-    double delta2_bar=0;
-    double max_delta=0;
     int sleep_us = (1.0/cfg->num("body.servos.rate"))*1000000;
 
     realTime = now();
@@ -1563,8 +1597,10 @@ void run()
 
 int main(int argc, char *argv[])
 {
+#if USE_PY != 0
   py = SPScript(new Script(argv[0]));
   py->import("__main__");
+#endif
 
   simTime = 0;
   simSpeed = 1;

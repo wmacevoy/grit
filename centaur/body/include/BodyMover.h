@@ -7,7 +7,8 @@
 #include "LegsMover.h"
 #include "ServoMover.h"
 #include "NeckMover.h"
-#include "ArmsMover.h"
+#include "LeftArmMover.h"
+#include "RightArmMover.h"
 
 class BodyMover
 {
@@ -15,7 +16,8 @@ class BodyMover
   LegsMover legs;
   ServoMover waist;
   NeckMover neck;
-  ArmMover left,right;
+  LeftArmMover left;
+  RightArmMover right;
 
   BodyMover();
   std::vector<std::vector<double> > bMove(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat=1,float rotation=0.0,float zoffset=0.0);
