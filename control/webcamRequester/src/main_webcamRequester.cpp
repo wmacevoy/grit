@@ -164,7 +164,8 @@ int main(int argc, char** argv)
 						//index = 380 + mx;
 						text = convstr(lidar_data[index] * 0.00328084);
 						putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-						if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << "  sleep_time: " << sleep_time << std::endl;
+						if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index <<
+								"  sleep_time: " << sleep_time << std::endl;
 					}
 					imshow(winName, color);
 				}
@@ -183,7 +184,8 @@ int main(int argc, char** argv)
 						//index = 380 + mx;
 						text = convstr(lidar_data[index] * 0.00328084);
 						putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-						if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << "  sleep_time: " << sleep_time << std::endl;
+						if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
+								"  sleep_time: " << sleep_time << std::endl;
 					}
 					imshow(winName, gray);
 				}
