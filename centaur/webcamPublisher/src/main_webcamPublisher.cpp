@@ -1,4 +1,7 @@
 #include "/usr/include/opencv2/opencv.hpp"
+#include "/usr/include/opencv2/objdetect/objdetect.hpp"
+#include "/usr/include/opencv2/highgui/highgui.hpp"
+#include "/usr/include/opencv2/imgproc/imgproc.hpp"
 
 #include <iostream>
 #include <signal.h>
@@ -12,6 +15,28 @@ using namespace cv;
 
 bool die = false;
 bool verbose = false;
+CascadeClassifier cc;
+
+void detectObjects(Mat& frame, const bool CorG) {
+	std::vector<Rect> objects;	
+	Mat temp;
+
+	if(CorG == 0) {
+		cvtColor( frame, temp, CV_BGR2GRAY );
+	}
+	else {
+		temp = frame;
+	}
+	
+	equalizeHist( temp, temp );
+	
+	cc.detectMultiScale( temp, objects, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(25, 25) );
+
+	for( size_t i = 0; i < objects.size(); i++ ) {
+		Point center( objects[i].x + objects[i].width*0.5, objects[i].y + objects[i].height*0.5 );
+		ellipse( frame, center, Size( objects[i].width*0.5, objects[i].height*0.5), 0, 0, 360, Scalar( 255, 0, 255 ), 4, 8, 0 );
+	}
+}
 
 void publish_mat(Mat& mat, void* zmq_pub)
 {
@@ -42,14 +67,28 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("webcam.provider.verbose", false);
 	if (verbose) cfg.show();
 
-	int index = cfg.num("webcam.provider.index", 1);
+	int index = cfg.num("webcam.provider.index", 0);
 	int sleep_time = cfg.num("webcam.provider.sleep_time", 50);
+
+	bool detect = cfg.flag("webcam.provider.detect");
 
 	int linger = 25;
 	int rc = 0;
 	bool CorG = false;
+	std::string cascadeName;
 	Mat frame;
 	Mat gray;
+
+	if(detect) {
+		cascadeName = cfg.str("webcam.provider.cascade");
+		if(!cc.load(cascadeName)) {
+			std::cout << "Could not load cascade. Object detection mode set to false..." << std::endl;
+			detect = false;		
+		}
+		else {
+			std::cout << "Loaded cascade:" << cascadeName << std::endl;
+		}
+	}
 	
 	VideoCapture capture(index);
 	if(!capture.isOpened())
@@ -86,8 +125,19 @@ int main(int argc, char** argv)
 	{
 		capture >> frame;
 		cvtColor(frame, gray, CV_RGB2GRAY);
+
+		if(detect) {
+			if(CorG == 0) {
+				detectObjects(frame, false);			
+			}
+			else {
+				detectObjects(gray, true);
+			}
+		}
+
 		frame.reshape(0,1);
 		gray.reshape(0,1);
+
 		int rv = zmq_recv(rep_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
 		switch(CorG)
 		{
