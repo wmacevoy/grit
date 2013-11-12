@@ -50,9 +50,9 @@ Mat arm(string side)
   Mat m = eye(4,4);
 
   E pi=var("%pi");
-  E dbase2waist=9.0; // check
-  E waist=(pi/180.0)*var("waist"); // check
-  E dwaist2neck=15.0; // check
+  E dbase2waist=12.0;
+  E waist=(pi/180.0)*(var("waist")+5.0); // check
+  E dwaist2neck=13.5; // check
   E dxneck2shoulder=6.0;
   E dyneck2shoulder=2.0+3.0/8.0;
   E dshoulderio2ud=3.0+5.0/8.0;
