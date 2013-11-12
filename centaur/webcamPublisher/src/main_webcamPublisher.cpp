@@ -17,16 +17,11 @@ bool die = false;
 bool verbose = false;
 CascadeClassifier cc;
 
-void detectObjects(Mat& frame, const bool CorG) {
+void detectObjects(Mat& frame, const Mat& gray_img) {
 	std::vector<Rect> objects;	
 	Mat temp;
 
-	if(CorG == 0) {
-		cvtColor( frame, temp, CV_BGR2GRAY );
-	}
-	else {
-		temp = frame.clone();
-	}
+	temp = gray_img.clone();
 	
 	equalizeHist( temp, temp );
 	
@@ -128,10 +123,10 @@ int main(int argc, char** argv)
 
 		if(detect) {
 			if(CorG == 0) {
-				detectObjects(frame, false);			
+				detectObjects(frame, gray);			
 			}
 			else {
-				detectObjects(gray, true);
+				detectObjects(gray, gray);
 			}
 		}
 
