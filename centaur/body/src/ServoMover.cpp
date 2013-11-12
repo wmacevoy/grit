@@ -183,9 +183,7 @@ void ServoMover::setup(float angle)
   map < float , float > angles;
   
   angles[simTime]=angle;
-  angles[simTime+1e8]=angle;
-  angles[simTime+2e8]=angle;
-  setup(angles,simTime,simTime+2e8);
+  setup(angles,simTime,simTime);
 }
 
 bool ServoMover::done() const
