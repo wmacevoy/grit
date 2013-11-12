@@ -96,7 +96,7 @@ int main(int argc, char** argv)
 	std::string winName = "ICU";
 	std::string text = "0";
 	std::string imageName = "";
-	namedWindow(winName, CV_WINDOW_NORMAL);
+	namedWindow(winName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_EXPANDED);
 	
 	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
 	double fontScale = 0.75;
