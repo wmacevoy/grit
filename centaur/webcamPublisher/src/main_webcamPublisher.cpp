@@ -13,7 +13,7 @@ Configure cfg;
 
 using namespace cv;
 
-bool die = false;
+volatile bool die = false;
 bool verbose = false;
 CascadeClassifier cc;
 
