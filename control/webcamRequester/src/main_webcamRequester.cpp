@@ -120,6 +120,9 @@ int main(int argc, char** argv)
 	rcl = zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0);
 	assert(rcl == 0);
 
+	rcl = zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger));
+	assert(rcl == 0);
+
 	rcl = zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger));
 	assert(rcl == 0);
 
