@@ -18,7 +18,6 @@ body.servos.subscribers,tcp://127.0.0.1:5500
 body.commander.publish,tcp://*:5502
 body.commander.subscribers,"tcp://${control.ip}:5504"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
-body.commander.leapAddress,"tcp://${control.ip}:9990"
 body.commander.neckAddress,"tcp://${control.ip}:5556"
 body.verbose,true
 commander.publish,tcp://*:5504
@@ -36,9 +35,12 @@ webcam.provider.index,"0"
 webcam.provider.sleep_time,"50"
 webcam.provider.detect,"false"
 webcam.provider.cascade,"../cascades/handwheel.xml"
-leap.provider.sleep_time,"100"
 leap.provider.verbose,"false"
-leap.requester.address,"${control.ip}"
+leap.provider.sleep_time,"100"
+leap.provider.ip,"${control.ip}"
+leap.provider.port,"9990"
+leap.provider.publish,"tcp://*:${leap.provider.port}"
+leap.provider.subscribe,"tcp://${leap.provider.ip}:${leap.provider.port}"
 leap.requester.verbose,"true"
 leap.requester.sleep_time,"10000"
 heartbeat.provider.verbose,"true"
@@ -59,3 +61,6 @@ leg1.touchpressure,900
 leg2.touchpressure,900
 leg3.touchpressure,900
 leg4.touchpressure,900
+ik.epsilon,1e-4
+ik.steps,4
+ik.speed,4,"inches/sec"
