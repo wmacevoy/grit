@@ -25,7 +25,7 @@ void detectObjects(Mat& frame, const bool CorG) {
 		cvtColor( frame, temp, CV_BGR2GRAY );
 	}
 	else {
-		temp = frame;
+		temp = frame.clone();
 	}
 	
 	equalizeHist( temp, temp );
