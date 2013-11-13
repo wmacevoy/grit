@@ -154,7 +154,7 @@ int main(int argc, char** argv)
   zmq_close(zmq_pub);
   zmq_ctx_destroy(zmq_context);
 
-  kill(leapd_pid,SIGQUIT);
+  kill(leapd_pid,SIGTERM);
   waitpid(leapd_pid,0,0);
 
   std::cout << "done." << std::endl;

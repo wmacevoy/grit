@@ -19,6 +19,118 @@ then
   exit 1
 fi
 
+pid()
+{
+    app=$1
+    if [ -f $MOJAVATON_DIR/pids/$app.pid ]
+    then
+	pid=$(cat $MOJAVATON_DIR/pids/$app.pid)
+	if ps -eo pid | egrep -q '\<'$pid'\>'
+	then
+	    echo $pid
+	    return
+	fi
+    fi
+    echo -1
+}
+
+running()
+{
+  test $(pid $app) -ne -1
+}
+
+stop_app()
+{
+  app=$1
+
+  term_tries=2
+  kill_tries=2
+
+  for try in $(seq 1 $((term_tries+$kill_tries)))
+  do
+      if ! running $app
+      then
+	  echo $app stopped
+	  /bin/rm -rf $MOJAVATON_DIR/pids/$app.pid
+	  return 0
+      fi
+
+      if [ $try -le $term_tries ]
+      then
+	  echo sending term to $app...
+	  kill $(cat $MOJAVATON_DIR/pids/$app.pid)
+      else
+	  echo sending kill to $app...
+	  kill -9 $(cat $MOJAVATON_DIR/pids/$app.pid)
+      fi
+      sleep 1
+  done
+  return 1
+}
+
+stop_apps()
+{
+    for app in "$@"
+    do
+	stop_app $app
+    done
+}
+
+
+prioritize()
+{
+    for app in "$@"
+    do
+	app_pid=$(pid $app)
+	if [ $app_pid -ne -1 ]
+	then
+	    priority=0
+	    app_pid=$(pid $app)
+	    case $app in
+		*) priority=0;;
+	    esac
+	    if renice -n $priority -p $(pid $app)
+	    then
+		echo set priority of $app to $priority
+	    else
+		echo failed to set priority of $app to $priority		
+	    fi
+	fi
+    done
+}
+
+start_app()
+{
+  app=$1
+  app_pid=$(pid $app)
+  if [ $app_pid -ne -1 ]
+  then
+      echo $app already running as pid $app_pid
+      return 0
+  fi
+  
+  mkdir -p $MOJAVATON_DIR/pids
+  mkdir -p $MOJAVATON_DIR/logs
+  cd $MOJAVATON_DIR/control/$app
+  $MOJAVATON_DIR/control/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
+  app_pid=$!
+  echo $app_pid > $MOJAVATON_DIR/pids/$app.pid
+  echo $app started as pid $app_pid
+  prioritize $app
+}
+
+start_apps()
+{
+    for app in "$@"
+    do
+	if ! start_app $app
+	then
+	    return 1
+	fi
+    done
+    return 0
+}
+
 setup()
 {
   # add bin folders to PATH
@@ -73,9 +185,26 @@ commander()
     bin/commander
 }
 
+start()
+{
+    start_apps leapPublisher glovePublisher webcamRequester heartBeatRequester joystickProvider
+}
+
+stop()
+{
+    stop_apps leapPublisher glovePublisher webcamRequester heartBeatRequester joystickProvider
+}
+
 synctime()
 {
   sudo ntpdate 132.163.4.101
+}
+
+go()
+{
+    start
+    commander
+    stop
 }
 
 setup
