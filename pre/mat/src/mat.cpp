@@ -271,7 +271,7 @@ Mat rotate(const Vec &p, const Vec &n, const E &cosT, const E &sinT)
   E vw=v*w;
   E w2=w*w;
 
-  E oneMinusCosT = num(1)-c;
+  E oneMinusCosT = num(1)-cosT;
 
   Mat m(4,Vec(4,num(0)));
 

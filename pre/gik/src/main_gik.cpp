@@ -51,18 +51,18 @@ Mat arm(string side)
 
   E pi=var("%pi");
   E dbase2waist=12.0;
-  E waist=(pi/180.0)*(var("waist")+5.0); // check
+  E waist=-(pi/180.0)*(var("waist")); // check
   E dwaist2neck=13.5; // check
-  E dxneck2shoulder=6.0;
+  E dxneck2shoulder=(9.0+3.0/4.0)/2.0;
   E dyneck2shoulder=2.0+3.0/8.0;
   E dshoulderio2ud=3.0+5.0/8.0;
   E dshoulderud2elbow=9.0;
-  E delbow2palm=15.0;
+  E delbow2palm=14.0;
   E shoulderio=sigma*(pi/180.0)*(var("shoulderio")-45.0);
   E shoulderud=(pi/180.0)*(var("shoulderud")-45.0);
   E bicep=-sigma*(pi/180.0)*var("bicep");
-  E elbow=(pi/180.0)*(var("elbow")-45.0);
-  E forearm=-sigma*(pi/180.0)*(var("forearm")-40.0);
+  E elbow=-(pi/180.0)*(var("elbow")-45.0);
+  E forearm=-sigma*(pi/180.0)*(var("forearm")-30.0);
 
   m=m*translate(0.0,0.0,dbase2waist);
   m=m*rotate(ex,waist);
