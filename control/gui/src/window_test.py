@@ -16,32 +16,32 @@ pygtk.require('2.0')
 class Base:
     #Request temp from ZMQ_REQ
     def temp_REQ(self):
-        context = zmq.Context()
+        contextTemp = zmq.Context()
         port = '9001'
 
-        req = context.socket(zmq.REQ)
-        req.connect("tcp://192.168.2.101: %s" % (port))
+        reqTemp = contextTemp.socket(zmq.REQ)
+        reqTemp.connect("tcp://192.168.2.101: %s" % (port))
         
         for i in range(0,1):
             message = ctypes.c_uint32(1)
-            req.send(message)
-            receive_msg = req.recv()
+            reqTemp.send(message)
+            receive_msg = reqTemp.recv()
             temps = struct.unpack("<64i", receive_msg)
             list_Temps = list(temps)
         return list_Temps
 
     #Subscribe sensor from ZMQ_PUB
     def sensor_SUB(self):
-        context = zmq.Context()
+        contextSensors = zmq.Context()
         port = '5506'
         
-        sub = context.socket(zmq.SUB)
-        sub.setsockopt(zmq.SUBSCRIBE, '')
-        sub.connect("tcp://192.168.2.101: %s" % (port))
+        subSensors = contextSensors.socket(zmq.SUB)
+        subSensors.setsockopt(zmq.SUBSCRIBE, '')
+        subSensors.connect("tcp://192.168.2.101: %s" % (port))
 
         for i in range(0,1):
             print "Receiving msg..\n"
-            sensors = sub.recv()
+            sensors = subSensors.recv()
             #for j in range(0,56,4):
             new_Sensors = struct.unpack("<14i",sensors)#sensors[j:j+4])
             list_Sensors = list(new_Sensors)
