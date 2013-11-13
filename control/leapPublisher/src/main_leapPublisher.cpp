@@ -13,6 +13,7 @@
 #include "LeapMessage.h"
 #include "Configure.h"
 #include "Leap.h"
+#include "now.h"
 
 using namespace Leap;
 using namespace std;
@@ -22,9 +23,10 @@ void *zmq_pub = 0;
 Configure cfg;
 bool verbose;
 volatile int die = 0;
-int sleep_time = 100;
-std::mutex locker;
 LeapMessage leapMessage;
+double decay_time;
+double t;
+double dt;
 
 class MyListener : public Listener
 {
@@ -32,6 +34,8 @@ public:
   void onInit(const Controller &controller)
   {
     if (verbose) cout << "init" << endl;
+    t=now();
+    dt=0;
   }
   void onConnect(const Controller &controller) 
   {
@@ -46,26 +50,36 @@ public:
     if (verbose) cout << "exit" << endl;
   }
 
-  void update(LeapHandMessage &message, const Hand &hand)
+  void average(double p, double q, float uxyzbar_in[3], const Vector &uxzy_mm)
   {
-    const Vector &at = hand.palmPosition();
-    message.at[0]=at[0]/25.4;
-    message.at[1]=at[1]/25.4;
-    message.at[2]=at[2]/25.4;
-  
-    const Vector &point = hand.direction();
-    message.point[0]=point[0];
-    message.point[1]=point[1];
-    message.point[2]=point[2];
-    
-    const Vector &down = hand.palmNormal();
-    message.down[0]=down[0];
-    message.down[1]=down[1];
-    message.down[2]=down[2];
+    if (p > 0.0) {
+      uxyzbar_in[0]=p*uxyzbar_in[0]+q*( uxzy_mm[0]/25.4);
+      uxyzbar_in[1]=p*uxyzbar_in[1]+q*(-uxzy_mm[2]/25.4);
+      uxyzbar_in[2]=p*uxyzbar_in[2]+q*( uxzy_mm[1]/25.4);
+    } else {
+      uxyzbar_in[0]=( uxzy_mm[0]/25.4);
+      uxyzbar_in[1]=(-uxzy_mm[2]/25.4);
+      uxyzbar_in[2]=( uxzy_mm[1]/25.4);
+    }
+
+  }
+
+  void update(double p, double q, LeapHandMessage &message, const Hand &hand)
+  {
+    average(p,q,message.at,hand.palmPosition());
+    average(p,q,message.point,hand.direction());
+    average(p,q,message.down,hand.palmNormal());
   }
 
   void onFrame(const Controller &controller)
   {
+    double t1=now();
+    dt=t1-t;
+    t=t1;
+    double p=(dt < decay_time) ? exp(-dt/decay_time) : 0.0;
+    double q=1-p;
+    
+
     const Frame frame = controller.frame();
     if (frame.hands().count() != 2) return;
     
@@ -75,11 +89,11 @@ public:
     if (!hand0.isValid() || !hand1.isValid()) return;
     
     if (hand0.palmPosition()[0] < hand1.palmPosition()[0]) {
-      update(leapMessage.left,hand0);
-      update(leapMessage.right,hand1);
+      update(p,q,leapMessage.left,hand0);
+      update(p,q,leapMessage.right,hand1);
     } else {
-      update(leapMessage.left,hand1);
-      update(leapMessage.right,hand0);
+      update(p,q,leapMessage.left,hand1);
+      update(p,q,leapMessage.right,hand0);
     }
     
     int rc = zmq_send(zmq_pub, &leapMessage, sizeof(LeapMessage), ZMQ_DONTWAIT);
@@ -118,7 +132,7 @@ int main(int argc, char** argv)
   verbose = cfg.flag("leap.provider.verbose", false);
   if (verbose) cfg.show();
   
-  sleep_time = (int)cfg.num("leap.provider.sleep_time");
+  decay_time = cfg.num("leap.provider.decay_time");
   
   int hwm = 1;
   int linger = 25;
@@ -147,7 +161,7 @@ int main(int argc, char** argv)
   signal(SIGQUIT, quitproc);
 
   while(!die) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
 
   controller.removeListener(listener);
