@@ -2,9 +2,9 @@
 
 struct LeapHandMessage
 {
-  float at[3];
-  float point[3];
-  float down[3];
+  float at[3]; // inches
+  float point[3]; // unit vector
+  float down[3];  // unit vector
 };
 
 struct LeapMessage 
