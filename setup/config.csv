@@ -21,7 +21,7 @@ body.commander.publish,tcp://*:5502
 body.commander.subscribers,"tcp://${control.ip}:5504"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
 body.commander.neckAddress,"tcp://${control.ip}:5556"
-body.verbose,false
+body.verbose,true
 commander.publish,"tcp://*:5504"
 commander.subscribers,"tcp://${centaur.ip}:5502"
 lidar.provider.dev_path,"/dev/ttyACM0"
@@ -38,13 +38,14 @@ webcam.provider.sleep_time,"50"
 webcam.provider.detect,"false"
 webcam.provider.cascade,"../cascades/handwheel.xml"
 leap.provider.verbose,"true"
-leap.provider.sleep_time,"100"
+leap.provider.decay_time,0.5,seconds
 leap.provider.ip,"${control.ip}"
 leap.provider.port,"9990"
 leap.provider.publish,"tcp://*:${leap.provider.port}"
 leap.provider.subscribe,"tcp://${leap.provider.ip}:${leap.provider.port}"
 leap.requester.verbose,"true"
 leap.requester.sleep_time,"10000"
+leap.requester
 leap.center.x,0.0,offset (inches)
 leap.center.y,26.0,offset (inches)
 leap.center.z,12.0,offset (inches)
