@@ -50,7 +50,7 @@ stop_app()
   do
       if ! running $app
       then
-	  echo $app stoppped
+	  echo $app stopped
 	  /bin/rm -rf $MOJAVATON_DIR/pids/$app.pid
 	  return 0
       fi
