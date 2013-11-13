@@ -1,9 +1,13 @@
 #include <math.h>
+#include <iostream>
 #include <assert.h>
 
 #include "RightArmGeometry.h"
 #include "BodyGlobals.h"
 #include "ik_rightarm.h"
+
+using namespace std;
+
 RightArmGeometry::RightArmGeometry()
 {
   name("RIGHTARM");
@@ -90,6 +94,11 @@ void RightArmGeometry::compute(float x,float y,float z,float pointx, float downx
     ik_rightarmupdate(globals.as_array,p.as_array);
     if (p.as_struct.residual <= globals.as_struct.epsilon) {
       memcpy(&q,&p,sizeof(ik_rightarmparameters));
+    } else {
+      if (verbose) {
+	cout << "right arm ik did not converge." << endl;
+      }
+      break;
     }
   }
 

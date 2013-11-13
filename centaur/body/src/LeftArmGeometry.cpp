@@ -1,9 +1,13 @@
 #include <math.h>
+#include <iostream>
 #include <assert.h>
 
 #include "RightArmGeometry.h"
 #include "BodyGlobals.h"
 #include "ik_leftarm.h"
+
+using namespace std;
+
 LeftArmGeometry::LeftArmGeometry()
 {
   name("LEFTARM");
@@ -90,6 +94,11 @@ void LeftArmGeometry::compute(float x,float y,float z,float pointx, float downx,
     ik_leftarmupdate(globals.as_array,p.as_array);
     if (p.as_struct.residual <= globals.as_struct.epsilon) {
       memcpy(&q,&p,sizeof(ik_leftarmparameters));
+    } else {
+      if (verbose) {
+	cout << "left arm ik did not converge." << endl;
+      }
+      break;
     }
   }
 

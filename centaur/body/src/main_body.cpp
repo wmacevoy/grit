@@ -79,9 +79,13 @@ class LeapRx : public ZMQRx
 {
 public:
   LeapMessage message;
+  float center[3];
 
   LeapRx() {
     subscribers.push_back(cfg->str("leap.provider.subscribe"));
+    center[0]=cfg->num("leap.center.x");
+    center[1]=cfg->num("leap.center.y");
+    center[2]=cfg->num("leap.center.z");
   }
 
   void start()
@@ -95,6 +99,10 @@ public:
     ZMQMessage msg;
     msg.recv(socket);
     memcpy(&message,msg.data(),sizeof(LeapMessage));
+    for (int i=0; i<3; ++i) {
+      message.left.at[i] += center[i];
+      message.right.at[i] += center[i];
+    }
     mover->left.leapAdjust(message.left);
     mover->right.leapAdjust(message.right);
   }
@@ -578,12 +586,12 @@ public:
      }
   }
 
-  void forearmsOn()
+  void leapOn()
   {
     leapRx.start();
   }
 
-   void forearmsOff()
+   void leapOff()
   {
     leapRx.stop();
     leapRx.join();
@@ -928,15 +936,15 @@ public:
       }
     }
 
-    if (head=="forearms"){
+    if (head=="leap"){
       string value;
       iss >> value;
       if (value == "on"){
-	forearmsOn();
-	answer("my forearms are on.");
+	leapOn();
+	answer("leap controls arms.");
       } else if (value=="off") {
-	forearmsOff();
-	answer("my forearms are off.");
+	leapOff();
+	answer("leap no longer controls arms.");
       }
     }
     if (head=="shake") {

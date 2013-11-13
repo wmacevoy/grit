@@ -5,7 +5,6 @@
 
 class ArmGeometry {
  protected:
-  int m_side;
   std::string m_name;
  public:
   void name(const std::string &name);
