@@ -494,9 +494,9 @@ struct DynamixelServoController : ServoController
   }
 
   void iThread() {
-	uint32_t dataNeeded;
+	int32_t dataNeeded;
 	int rc, j, size = 34 * 2, sleep_time = 50;
-	uint32_t msgArr[size];
+	int32_t msgArr[size];
 
 	void* context = zmq_ctx_new ();
 	void* rep = zmq_socket(context, ZMQ_REP);
@@ -504,16 +504,14 @@ struct DynamixelServoController : ServoController
 	assert(rc == 0);
 
 	while(running) {
-		int rv = zmq_recv(rep, &dataNeeded, sizeof(uint32_t), ZMQ_DONTWAIT);
+		int rv = zmq_recv(rep, &dataNeeded, sizeof(int32_t), ZMQ_DONTWAIT);
 		j = 0;		
 
 		if(dataNeeded == 1) {
 		//Get temps and populate array
 			for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
-				msgArr[j] = (uint32_t)i->first; //Servo ID
-				++j;
-				msgArr[j] = (uint32_t)i->second->temp(); //Servo temp
-				++j;
+				msgArr[j++] = (int32_t)i->first; //Servo ID
+				msgArr[j++] = (int32_t)i->second->temp(); //Servo temp
 			}
 
 			zmq_msg_t msg;
