@@ -86,6 +86,10 @@ public:
     center[0]=cfg->num("leap.center.x");
     center[1]=cfg->num("leap.center.y");
     center[2]=cfg->num("leap.center.z");
+    if (verbose) {
+      cout << "LeapRx: subscribe to " << subscribers[0] << endl;
+      cout << "LeapRx: center=[" << center[0] << "," << center[1] << "," << center[2] << "]" << endl;
+    }
   }
 
   void start()
@@ -105,6 +109,9 @@ public:
     }
     mover->left.leapAdjust(message.left);
     mover->right.leapAdjust(message.right);
+    if (verbose) {
+      cout << "leap adjusted" << endl;
+    }
   }
 };
 
@@ -895,7 +902,6 @@ public:
     }
     if (head == "at") {
       set<string> names = cfg->servoNames();
-
       bool any=false;
       string name;
       while (iss >> name) {

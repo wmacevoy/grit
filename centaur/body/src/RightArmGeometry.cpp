@@ -77,15 +77,14 @@ void RightArmGeometry::compute(float x,float y,float z,float pointx, float downx
 
   int n = ceil(dist/10);
 
-  ik_rightarmparameters q;
+  ik_rightarmparameters p,q;
   memcpy(&q,&parameters,sizeof(ik_rightarmparameters));
+  memcpy(&p,&parameters,sizeof(ik_rightarmparameters));
 
   for (int i=1; i<=n; ++i) {
     double s = double(i)/double(n);
     double t = double(n-i)/double(n);
 
-    ik_rightarmparameters p;
-    memcpy(&p,&parameters,sizeof(ik_rightarmparameters));
     p.as_struct.px=t*parameters.as_struct.px+s*x;
     p.as_struct.py=t*parameters.as_struct.py+s*y;
     p.as_struct.pz=t*parameters.as_struct.pz+s*z;

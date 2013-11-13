@@ -75,17 +75,16 @@ void LeftArmGeometry::compute(float x,float y,float z,float pointx, float downx,
   dist = fmax(dist, (180/M_PI)*fabs(asin(downx)-asin(parameters.as_struct.downx)));
   dist = fmax(dist, (180/M_PI)*fabs(asin(pointx)-asin(parameters.as_struct.pointx)));
 
-  int n = ceil(dist/10);
+  int n = ceil(dist);
 
-  ik_leftarmparameters q;
+  ik_leftarmparameters p,q;
   memcpy(&q,&parameters,sizeof(ik_leftarmparameters));
+  memcpy(&p,&parameters,sizeof(ik_leftarmparameters));
 
   for (int i=1; i<=n; ++i) {
     double s = double(i)/double(n);
     double t = double(n-i)/double(n);
 
-    ik_leftarmparameters p;
-    memcpy(&p,&parameters,sizeof(ik_leftarmparameters));
     p.as_struct.px=t*parameters.as_struct.px+s*x;
     p.as_struct.py=t*parameters.as_struct.py+s*y;
     p.as_struct.pz=t*parameters.as_struct.pz+s*z;
