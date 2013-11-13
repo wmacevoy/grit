@@ -15,39 +15,22 @@ pygtk.require('2.0')
 
 class Base:
     #Request temp from ZMQ_REQ
-    def temp_REQ(self):
-        contextTemp = zmq.Context()
-        port = '9001'
-
-        reqTemp = contextTemp.socket(zmq.REQ)
-        reqTemp.connect("tcp://192.168.2.101: %s" % (port))
-        
+    def temp_REQ(self):        
         message = ctypes.c_int32(1)
-        reqTemp.send(message)
-        receive_msg = reqTemp.recv()
+        self.reqTemp.send(message)
+        receive_msg = self.reqTemp.recv()
         temps = struct.unpack("<68i", receive_msg)
         list_Temps = list(temps)
 
-        reqTemp.close()
-        contextTemp.term()
         return list_Temps
 
     #Subscribe sensor from ZMQ_PUB
     def sensor_SUB(self):
-        contextSensors = zmq.Context()
-        port = '5506'
-        
-        subSensors = contextSensors.socket(zmq.SUB)
-        subSensors.setsockopt(zmq.SUBSCRIBE, '')
-        subSensors.connect("tcp://192.168.2.101: %s" % (port))
-
         print "Receiving msg..\n"
-        sensors = subSensors.recv()
+        sensors = self.subSensors.recv()
         new_Sensors = struct.unpack("<14i",sensors)
         list_Sensors = list(new_Sensors)
 
-        subSensors.close()
-        contextSensors.term()
         return list_Sensors
 
     def temp_Check():
@@ -56,6 +39,10 @@ class Base:
 
     #kills the process when window is closed
     def destroy(self,widget):
+	self.reqTemp.close()
+	self.subSensors.close()
+	self.contextTemp.term()
+	self.contextSensors.term();
         print "Window terminated"
         gtk.main_quit()
 
@@ -207,6 +194,18 @@ class Base:
         builder.add_from_file("main.xml") 
         self.servos_dict = {}
         self.colors = ['#FF0000','#F9FF00', '#0CFF00', '#000000']
+	self.contextSensors = zmq.Context()
+	self.contextTemp = zmq.Context()
+
+	portTemp = '9001'
+	portSense = '5506'
+
+        self.reqTemp = self.contextTemp.socket(zmq.REQ)
+        self.reqTemp.connect("tcp://192.168.2.101: %s" % (portTemp))
+        
+        self.subSensors = self.contextSensors.socket(zmq.SUB)
+        self.subSensors.setsockopt(zmq.SUBSCRIBE, '')
+        self.subSensors.connect("tcp://192.168.2.101: %s" % (portSense))
 
         self.window = builder.get_object("winStatus")
         #self.btnTemps = builder.get_object("btnTemps")
