@@ -22,12 +22,14 @@ class Base:
         reqTemp = contextTemp.socket(zmq.REQ)
         reqTemp.connect("tcp://192.168.2.101: %s" % (port))
         
-        for i in range(0,1):
-            message = ctypes.c_uint32(1)
-            reqTemp.send(message)
-            receive_msg = reqTemp.recv()
-            temps = struct.unpack("<64i", receive_msg)
-            list_Temps = list(temps)
+        message = ctypes.c_int32(1)
+        reqTemp.send(message)
+        receive_msg = reqTemp.recv()
+        temps = struct.unpack("<68i", receive_msg)
+        list_Temps = list(temps)
+
+        reqTemp.close()
+        contextTemp.term()
         return list_Temps
 
     #Subscribe sensor from ZMQ_PUB
@@ -39,12 +41,13 @@ class Base:
         subSensors.setsockopt(zmq.SUBSCRIBE, '')
         subSensors.connect("tcp://192.168.2.101: %s" % (port))
 
-        for i in range(0,1):
-            print "Receiving msg..\n"
-            sensors = subSensors.recv()
-            #for j in range(0,56,4):
-            new_Sensors = struct.unpack("<14i",sensors)#sensors[j:j+4])
-            list_Sensors = list(new_Sensors)
+        print "Receiving msg..\n"
+        sensors = subSensors.recv()
+        new_Sensors = struct.unpack("<14i",sensors)
+        list_Sensors = list(new_Sensors)
+
+        subSensors.close()
+        contextSensors.term()
         return list_Sensors
 
     def temp_Check():
@@ -88,12 +91,11 @@ class Base:
         servos = []
 
         temps = self.temp_REQ()
-        for item in temps:
-            for (i, x) in enumerate(item):
-                if i%2==0:
-                    servos_dict[x] = item[i+1]
-                    servos.append(x)
-        print servos_dict
+        for i in range(0, (len(temps) - 1), 2):
+            servos.append(temps[i])
+            servos_dict[temps[i]] = temps[i+1]
+
+	print servos_dict
         hottest = 0
         h_servo = 0
         for servo in servos:
