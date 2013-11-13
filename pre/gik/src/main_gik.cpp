@@ -62,7 +62,7 @@ Mat arm(string side)
   E shoulderud=(pi/180.0)*(var("shoulderud")-45.0);
   E bicep=-sigma*(pi/180.0)*var("bicep");
   E elbow=(pi/180.0)*(var("elbow")-45.0);
-  E forearm=-sigma*(pi/180.0)*(var("forearm")+40.0);
+  E forearm=-sigma*(pi/180.0)*(var("forearm")-40.0);
 
   m=m*translate(0.0,0.0,dbase2waist);
   m=m*rotate(ex,waist);
@@ -74,11 +74,9 @@ Mat arm(string side)
   m=m*rotate(ex,shoulderud);
   m=m*rotate(ey,bicep);
   m=m*translate(0.0,dshoulderud2elbow,0.0);
-#if 0
   m=m*rotate(ex,elbow);
   m=m*rotate(ey,forearm);
   m=m*translate(0.0,delbow2palm,0.0);
-#endif
 
   return m;
 }
@@ -123,8 +121,8 @@ void gsolve_ik_arm(string side)
   eq.push_back(pose[1][3]-p[1]);
   eq.push_back(pose[2][3]-p[2]);
 
-  eq.push_back(pose[0][2]+downx);
   eq.push_back(pose[0][1]-pointx);
+  eq.push_back(pose[0][2]+downx);
 
   E shoulderio=var("shoulderio");
   E shoulderud=var("shoulderud");
