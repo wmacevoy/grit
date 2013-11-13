@@ -254,8 +254,8 @@ public:
   }
 
   void setLIO(float angle) {
-	mover->left.leftRight.setup(angle);
-//	mover->left.leftRight.torque=0.75;
+	mover->left.inOut.setup(angle);
+//	mover->left.inOut.torque=0.75;
   }
   void setLUD(float angle) {
 	mover->left.upDown.setup(angle);
@@ -274,8 +274,8 @@ public:
 //	mover->left.elbow.torque=0.75;
   }
   void setRIO(float angle) {
-	mover->right.leftRight.setup(angle);
-//	mover->right.leftRight.torque=0.75;
+	mover->right.inOut.setup(angle);
+//	mover->right.inOut.torque=0.75;
   }
   void setRUD(float angle) {
 	mover->right.upDown.setup(angle);
@@ -724,7 +724,7 @@ public:
       if (ok) {
 	ok=geometry.inverse();
 	if (ok && real) {
-	  mover->left.leftRight.setup(geometry.parameters.as_struct.shoulderio);
+	  mover->left.inOut.setup(geometry.parameters.as_struct.shoulderio);
 	  mover->left.upDown.setup(geometry.parameters.as_struct.shoulderud);
 	  mover->left.bicep.setup(geometry.parameters.as_struct.bicep);
 	  mover->left.elbow.setup(geometry.parameters.as_struct.elbow);

@@ -10,7 +10,7 @@ class ArmMover
 {
  public:
   ArmGeometry *geometry;
-  ServoMover leftRight;
+  ServoMover inOut;
   ServoMover upDown;
   ServoMover bicep;
   ServoMover elbow;

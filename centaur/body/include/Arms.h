@@ -6,7 +6,7 @@
 class Arm
 {
  public:
-  std::shared_ptr < Servo > leftRight; 
+  std::shared_ptr < Servo > inOut;
   std::shared_ptr < Servo > upDown;
   std::shared_ptr < Servo > bicep;
   std::shared_ptr < Servo > elbow; 

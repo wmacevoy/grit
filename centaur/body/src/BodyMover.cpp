@@ -583,7 +583,7 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
 
 ServoMover* BodyMover::getMover(const std::string &name)
 {
-  if (name == "LEFTARM_SHOULDER_IO") return &left.leftRight;
+  if (name == "LEFTARM_SHOULDER_IO") return &left.inOut;
   if (name == "LEFTARM_SHOULDER_UD") return &left.upDown;
   if (name == "LEFTARM_BICEP_ROTATE") return &left.bicep;
   if (name == "LEFTARM_ELBOW") return &left.elbow;
@@ -593,7 +593,7 @@ ServoMover* BodyMover::getMover(const std::string &name)
   if (name == "LEFTARM_RING") return &left.ring;
   if (name == "LEFTARM_THUMB") return &left.thumb;
 
-  if (name == "RIGHTARM_SHOULDER_IO") return &right.leftRight;
+  if (name == "RIGHTARM_SHOULDER_IO") return &right.inOut;
   if (name == "RIGHTARM_SHOULDER_UD") return &right.upDown;
   if (name == "RIGHTARM_BICEP_ROTATE") return &right.bicep;
   if (name == "RIGHTARM_ELBOW") return &right.elbow;

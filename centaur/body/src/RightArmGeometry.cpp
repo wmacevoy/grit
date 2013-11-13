@@ -26,7 +26,7 @@ void RightArmGeometry::forward()
     memset(&parameters,0,sizeof(ik_rightarmparameters));
     memset(&variables,0,sizeof(ik_rightarmvariables));
     parameters.as_struct.waist=mover->waist.angle();
-    variables.as_struct._shoulderio=mover->right.leftRight.angle();
+    variables.as_struct._shoulderio=mover->right.inOut.angle();
     variables.as_struct._shoulderud=mover->right.upDown.angle();
     variables.as_struct._bicep=mover->right.bicep.angle();
     variables.as_struct._elbow=mover->right.elbow.angle();

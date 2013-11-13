@@ -12,8 +12,8 @@ ArmMover::ArmMover(ArmGeometry *geometry_)
 
 void ArmMover::move(Arm &arm)
 {
+  inOut.move(*arm.inOut);
   upDown.move(*arm.upDown);
-  leftRight.move(*arm.leftRight);
   bicep.move(*arm.bicep);
   elbow.move(*arm.elbow);
   forearm.move(*arm.forearm);
@@ -26,7 +26,7 @@ void ArmMover::move(Arm &arm)
 void ArmMover::torque(float t)
 {
   upDown.torque=t;
-  leftRight.torque=t;
+  inOut.torque=t;
   bicep.torque=t;
   elbow.torque=t;
   forearm.torque=t;
@@ -38,7 +38,7 @@ void ArmMover::torque(float t)
 
 bool ArmMover::done() const
 {
-  if (!leftRight.done()) return false;
+  if (!inOut.done()) return false;
   if (!upDown.done()) return false;
   if (!bicep.done()) return false;
   if (!elbow.done()) return false;
@@ -60,7 +60,7 @@ void ArmMover::leapAdjust(LeapHandMessage &hand)
   float _shoulderio,_shoulderud,_bicep,_elbow,_forearm;
   geometry->compute(hand.at[0],hand.at[1],hand.at[2],hand.point[0],hand.down[0],
 		    _shoulderio,_shoulderud,_bicep,_elbow,_forearm);
-  leftRight.setup(_shoulderio);
+  inOut.setup(_shoulderio);
   upDown.setup(_shoulderud);
   bicep.setup(_bicep);
   elbow.setup(_elbow);

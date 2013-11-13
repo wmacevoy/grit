@@ -4,7 +4,7 @@
 void Arm::goLimp()
 { 
   float t = 0.0;
-  leftRight->torque(t);
+  inOut->torque(t);
   upDown->torque(t);
   bicep->torque(t);
   elbow->torque(t);
@@ -13,12 +13,12 @@ void Arm::goLimp()
   middle->torque(t);
   ring->torque(t);
   thumb->torque(t);
-  leftRight->torque(t);
+  inOut->torque(t);
 }
 
 void Arm::report(std::ostream &out) const
 {
-  leftRight->report(out);
+  inOut->report(out);
   out << ",";
   upDown->report(out);
   out << ",";
@@ -36,12 +36,12 @@ void Arm::report(std::ostream &out) const
   out << ",";
   thumb->report(out);
   out << ",";
-  leftRight->report(out);	
+  inOut->report(out);	
 }
 
 void Arm::temp_report(std::ostream &out) const
 {
-  leftRight->temp_report(out);
+  inOut->temp_report(out);
   out << ",";
   upDown->temp_report(out);
   out << ",";
@@ -64,7 +64,7 @@ void Arm::temp_report(std::ostream &out) const
 void LeftArm::init()
 { 
   float t=768;
-  leftRight=servo("LEFTARM_SHOULDER_IO");
+  inOut=servo("LEFTARM_SHOULDER_IO");
   upDown=servo("LEFTARM_SHOULDER_UD");
   bicep=servo("LEFTARM_BICEP_ROTATE");
   elbow=servo("LEFTARM_ELBOW");
@@ -73,7 +73,7 @@ void LeftArm::init()
   middle=servo("LEFTARM_MIDDLE");  
   ring=servo("LEFTARM_RING");
   thumb=servo("LEFTARM_THUMB");
-  leftRight->torque(t);
+  inOut->torque(t);
   upDown->torque(t);
   bicep->torque(t);
   elbow->torque(t);
@@ -82,13 +82,13 @@ void LeftArm::init()
   middle->torque(t);
   ring->torque(t);
   thumb->torque(t);
-  leftRight->torque(t);
+  inOut->torque(t);
 }
 
 void RightArm::init()
 {
   float t=10.0;
-  leftRight=servo("RIGHTARM_SHOULDER_IO");
+  inOut=servo("RIGHTARM_SHOULDER_IO");
   upDown=servo("RIGHTARM_SHOULDER_UD");
   bicep=servo("RIGHTARM_BICEP_ROTATE");
   elbow=servo("RIGHTARM_ELBOW");
@@ -97,7 +97,7 @@ void RightArm::init()
   middle=servo("RIGHTARM_MIDDLE");  
   ring=servo("RIGHTARM_RING");
   thumb=servo("RIGHTARM_THUMB");
-  leftRight->torque(t);
+  inOut->torque(t);
   upDown->torque(t);
   bicep->torque(t);
   elbow->torque(t);
@@ -106,5 +106,5 @@ void RightArm::init()
   middle->torque(t);
   ring->torque(t);
   thumb->torque(t);
-  leftRight->torque(t);
+  inOut->torque(t);
 }
