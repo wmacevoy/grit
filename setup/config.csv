@@ -45,6 +45,9 @@ leap.provider.publish,"tcp://*:${leap.provider.port}"
 leap.provider.subscribe,"tcp://${leap.provider.ip}:${leap.provider.port}"
 leap.requester.verbose,"true"
 leap.requester.sleep_time,"10000"
+leap.center.x,0.0,offset (inches)
+leap.center.y,26.0,offset (inches)
+leap.center.z,12.0,offset (inches)
 heartbeat.provider.verbose,"true"
 heartbeat.provider.sleep_time,"100"
 heartbeat.requester.address,"tcp://${centaur.ip}:9800"
