@@ -307,10 +307,10 @@ public:
     setLUD(-40);
     setLElbow(40);
     setLBicep(-20);
-  /*  setRIO(40);
-    setRUD(40);
-    setRElbow(-40);
-    setRBicep(0); */
+    setRIO(-40);
+    setRUD(-40);
+    setRElbow(40);
+    setRBicep(-20); 
   }  
   void goHome() {
     load("home.csv");
@@ -319,10 +319,10 @@ public:
     setLUD(-40);
     setLElbow(40);
     setLBicep(-20);
- /*   setRIO(40);
-    setRUD(40);
-    setRElbow(-40);
-    setRBicep(0);     */
+    setRIO(-40);
+    setRUD(-40);
+    setRElbow(40);
+    setRBicep(-20);    
   }
   
   void setPitch(float angle) {
@@ -487,15 +487,43 @@ public:
   void positionHand() {
     //Lift arm and place over handle
     setLElbow(-40);
-    sleep(4);
+    setRElbow(-40);    
+    sleep(8);
     setLUD(35);
     setLBicep(0);
     setLIO(30);
     setLForearm(42);
-    sleep(7);
+    setRUD(35);
+    setRBicep(0);
+    setRIO(30);
+    setRForearm(42);
+    sleep(14);
     setLUD(10);
     setLElbow(-10);
+    setRUD(10);
+    setRElbow(-10);
   }
+  
+void leapHand() {
+    //Lift arm and place over handle
+    setLElbow(-40);
+    setRElbow(-40);    
+    sleep(8);
+    setLUD(35);
+    setLBicep(0);
+    setLIO(23);
+    setLForearm(42);
+    setRUD(35);
+    setRBicep(0);
+    setRIO(23);
+    setRForearm(42);
+    sleep(14);
+    setLUD(10);
+    setLElbow(-10);
+    setRUD(10);
+    setRElbow(-10);
+  }
+
 
   void handDownPush() {
     //Push handle down
@@ -524,13 +552,19 @@ public:
     //Position arm in to be ready to move from door
     setLUD(30);
     setLElbow(-35);
-    sleep(2);
+    setRUD(30);
+    setRElbow(-35);
+    sleep(4);
     //Put arm back near home
     setLIO(-40);
-    sleep(3);
+    setRIO(-40);
+    sleep(6);
     setLUD(-40);
     setLElbow(0);
     setLForearm(0);
+    setRUD(-40);
+    setRElbow(0);
+    setRForearm(0);
   }
   
   void shake() {
@@ -824,6 +858,11 @@ public:
 	  lab = 0;
       positionHand();
       answer("Positioning hand...");
+    }
+    if (head == "lh") {
+	  lab = 0;
+      leapHand();
+      answer("Leap hand...");
     }
     if (head == "hd1") {
       handDownPush();
