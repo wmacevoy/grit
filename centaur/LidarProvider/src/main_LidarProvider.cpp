@@ -23,7 +23,6 @@ int sz_lidar_data;
 
 void quitproc(int param)
 {
-	std::cout << "\nQuitting..." << std::endl;
 	die = true;
 }
 
@@ -89,6 +88,7 @@ int main(int argc, char** argv)
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
+	std::cout << std::endl << "Quitting..." << std::endl;
 	printf("freeing memory for data array...\n");
 	free(lidar_data);
 	printf("--done\n");
