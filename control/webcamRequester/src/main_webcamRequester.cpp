@@ -83,7 +83,6 @@ int main(int argc, char** argv)
 	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
 	int hwm = 1;
-	int linger = 25;
 	int rcc = 0;
 	int rcl = 0;
 	int index = 0;
@@ -118,12 +117,6 @@ int main(int argc, char** argv)
 	assert(rcl == 0);
 
 	rcl = zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0);
-	assert(rcl == 0);
-
-	rcl = zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger));
-	assert(rcl == 0);
-
-	rcl = zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger));
 	assert(rcl == 0);
 
 	rcc = zmq_connect(req_mat, ip1.c_str());

@@ -43,7 +43,6 @@ int main(int argc, char** argv)
 
 	urg_t urg;
 	int hwm = 1;
-	int linger = 25;
 	int rcl = 0;
 	int64_t* lidar_data = NULL;
 
@@ -51,9 +50,6 @@ int main(int argc, char** argv)
 	void* context_lidar = zmq_ctx_new ();
 	void* pub_lidar = zmq_socket(context_lidar, ZMQ_PUB);
 	rcl = zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	assert(rcl == 0);
-
-	rcl = zmq_setsockopt(pub_lidar, ZMQ_LINGER, &linger, sizeof(linger));
 	assert(rcl == 0);
 
 	rcl = zmq_bind(pub_lidar, "tcp://*:9997");
