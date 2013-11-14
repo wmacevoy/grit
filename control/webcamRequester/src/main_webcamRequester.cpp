@@ -1,7 +1,8 @@
 #include "opencv2/opencv.hpp"
 #include <iostream>
 #include <signal.h>
-#include <assert.h>
+#include <thread>
+#include <chrono>
 #include <sstream>
 #include <string>
 #include <zmq.h>
@@ -41,13 +42,6 @@ std::string itoa(const T& t) {
 	std::stringstream itoa;
 	itoa << t;
 	return itoa.str();
-}
-
-void subscribe_lidar(int64_t* data, void* zmq_sub)
-{
-	if(verbose) printf("waiting for lidar data...\n");
-	int rc = zmq_recv(zmq_sub, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);
-	if(verbose && rc > 0) printf("received lidar data!\n");
 }
 
 void mouseEvent(int evt, int x, int y, int flags, void* param)
@@ -114,26 +108,7 @@ int main(int argc, char** argv)
 	void* context_lidar = zmq_ctx_new ();
 
 	void* req_mat = zmq_socket(context_mat, ZMQ_REQ);
-	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
-
-	rcl = zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	assert(rcl == 0);
-
-	rcl = zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0);
-	assert(rcl == 0);
-
-	rcl = zmq_setsockopt(req_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	assert(rcl == 0);
-
-	rcl = zmq_setsockopt(req_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	assert(rcl == 0);
-
-	rcl = zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger));
-	assert(rcl == 0);
-
-	rcc = zmq_connect(req_mat, ip1.c_str());
-	rcl = zmq_connect(sub_lidar, ip2.c_str());
-	assert(rcc == 0 && rcl == 0);	
+	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);	
 
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	assert(lidar_data != NULL);
@@ -150,7 +125,6 @@ int main(int argc, char** argv)
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
 	zmq_msg_t msg;
-	t1 = time(0);
 	while(!die)
 	{
 		rcc = zmq_send(req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
@@ -171,7 +145,7 @@ int main(int argc, char** argv)
 						line(color, pt1, pt2, Scalar(0, 0, 0));
 						if(inside)
 						{	
-							subscribe_lidar(lidar_data, sub_lidar);	
+							zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
 							text = convstr(lidar_data[index] * 0.00328084);
@@ -191,7 +165,7 @@ int main(int argc, char** argv)
 						line(gray, pt1, pt2, Scalar(0, 0, 0));
 						if(inside)
 						{	
-							subscribe_lidar(lidar_data, sub_lidar);	
+							zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
 							text = convstr(lidar_data[index] * 0.00328084);
@@ -244,10 +218,11 @@ int main(int argc, char** argv)
 				}
 			}
 			if(rcc == 0) {
-				std::cout << "Connection successfully reset" << std::endl;
+				std::cout << "Connection successfully reset" << std::endl;				
 				t1 = time(0);
 			}
 			else std::cout << "Connection un-successfully reset" << std::endl;
+			
 		}
 	}
 
