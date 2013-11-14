@@ -372,51 +372,93 @@ public:
   void balancedRampUp()
   {
       zoffset = ( ( (sensors.a[0] - Amin) * (Amin - Amax) ) / (zmin - zmax) ) + 8;
-      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,zoffset);
+      WalkParameters wp(2.5,15.9,15.9,-15.,2.0,90.0,1.0);
+      wp.repeat=4;
+      wp.zOffset=zoffset;
+      mover->bStep(wp);
   }
   
   void balancedRampDown()
   {
       zoffset = ( ( (sensors.a[0] - Amin) * (Amin - Amax) ) / (zmin - zmax) ) + 8;
-      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,4,0.0,zoffset);
+      WalkParameters wp(2.5,15.9,15.9,-15.,2.0,90.0,1.0);
+      wp.repeat=4;
+      wp.zOffset=zoffset;
+      mover->bStep(wp);
   }
   
   void balancedForward(int repeat=4)
   {
-      mover->bStep(2.5,15.9,15.9,-15.,2.0,90.0,1.0,repeat);
+	double step=4.0;
+    WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0,2.0);
+    wp.y3-=step;  // move back legs back 
+    wp.y4-=step;    
+    wp.repeat=repeat;
+    mover->bStep(wp);
   }
   void balancedStrafeRight()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,2.0,0.0,1.0,1);
+	  double step=2.0;
+      WalkParameters wp(2.5,12.0,17.25,-15.,step,0.0,1.0);    
+      wp.y3-=step;  // move back legs back 
+      wp.y4-=step;    
+      mover->bStep(wp);
   }
   void balancedStrafeLeft()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,2.0,180.0,1.0,1);
+	  double step=2.0;
+      WalkParameters wp(2.5,12.0,17.25,-15.,step,180.0,1.0);
+      wp.y3-=step;  // move back legs back 
+      wp.y4-=step;    
+      mover->bStep(wp);
   }
   
   void balancedBackward(int repeat=4)
   {
-      mover->bStep(2.5,15.9,15.9,-15.,2.0,270.0,1.0,repeat);
+	  double step=2.0;
+      WalkParameters wp(2.5,12.0,17.25,-15.,step,270.0,1.0);
+      wp.y3-=step;  // move back legs back 
+      wp.y4-=step;    
+      wp.repeat=repeat;
+      mover->bStep(wp);
   }
   
   void balancedLeft()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,4.0,90.0-45.0,1.0,4,-1.0);
+	  double step=4.0;
+      WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0-45.0,1.0);
+      wp.y3-=step;  // move back legs back 
+      wp.y4-=step;    
+      wp.repeat=4;
+      wp.rotation=-1.0;
+      mover->bStep(wp);
   }
   
   void balancedRight()
   {
-      mover->bStep(2.5,15.9,15.9,-15.,4.0,90.0-45.0,1.0,4,+1.0);
+	  double step=4.0;
+      WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0-45.0,1.0);
+      wp.y3-=step;  // move back legs back 
+      wp.y4-=step;    
+      wp.repeat=4;
+      wp.rotation=1.0;
+      mover->bStep(wp);
   }
   
   void balancedHighForward()
   {
-      mover->bStep(2.5,12.5,14.5,-20.00,0.5,90.0,12.0,4);
+	  double step=0.5;
+	  WalkParameters wp(2.5,12.5,14.5,-20.00,step,90.0,12.0);
+	  wp.repeat=4;
+      mover->bStep(wp);
   }
   
   void balancedLowForward()
   {
-      mover->bStep(2.5,12.5,14.5,-10.00,0.5,90.0,0.0,4);
+	  double step=0.5;
+	  WalkParameters wp(2.5,12.5,14.5,-10.00,step,90.0,0.0);
+	  wp.repeat=4;
+      mover->bStep(wp);
   }
 
   void tape(const std::string &tape)

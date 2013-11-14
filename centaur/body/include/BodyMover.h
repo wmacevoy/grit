@@ -10,6 +10,23 @@
 #include "LeftArmMover.h"
 #include "RightArmMover.h"
 
+class WalkParameters {
+  public:
+    double radius;
+    double x1,y1,z1;
+    double x2,y2,z2;
+    double x3,y3,z3;
+    double x4,y4,z4;
+    double z;
+    double step;
+    double direction;
+    double zStep;
+    int repeat;
+    double rotation;
+    double zOffset;
+    WalkParameters(double radius,double x,double y,double z,double step,double direction,double zStep);
+};
+
 class BodyMover
 {
  public:
@@ -20,11 +37,13 @@ class BodyMover
   RightArmMover right;
 
   BodyMover();
-  std::vector<std::vector<double> > bMove(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat=1,float rotation=0.0,float zoffset=0.0);
+//  std::vector<std::vector<double> > bMove(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat=1,float rotation=0.0,float zoffset=0.0);
+  std::vector<std::vector<double> > bMove(WalkParameters wp);
   std::vector<std::vector<double> > createMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow=false,int repeat=1);
   bool stepMove(double r,double x,double y,double z,double xstep,double ystep,double stepheight,double left,double right,bool narrow=false,int repeat=1);
   bool blended(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow=false,int repeat=1);
-  bool bStep(double radius,double x,double y,double z,double step,double directionDegrees,double zStep,int repeat=1,float rotation=0.0,float zoffset=0.0);
+//  bool bStep(double radius,double x,double y,double z,double step,double directionDegrees,double zStep,int repeat=1,float rotation=0.0,float zoffset=0.0);
+  bool bStep(WalkParameters wp);
   void logPosition(std::vector<std::vector <double> > data);
   void fromTips(std::vector<std::vector <double> > data);  
   void move(Body &body);

@@ -514,14 +514,7 @@ struct DynamixelServoController : ServoController
 				msgArr[j++] = (int32_t)i->second->temp(); //Servo temp
 			}
 
-			zmq_msg_t msg;
-			int rc = zmq_msg_init_size(&msg, size);
-			memcpy(zmq_msg_data(&msg), msgArr, size);
-			if(rc == 0)
-			{
-				int rc = zmq_sendmsg(rep, &msg, ZMQ_DONTWAIT);
-			}
-			zmq_msg_close(&msg);
+			int rc = zmq_send(rep, msgArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
