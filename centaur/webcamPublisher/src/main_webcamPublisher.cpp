@@ -5,7 +5,8 @@
 
 #include <iostream>
 #include <signal.h>
-#include <assert.h>
+#include <thread>
+#include <chrono>
 #include <zmq.h>
 #include "Configure.h"
 
@@ -70,7 +71,8 @@ int main(int argc, char** argv)
 	int hwm = 1;
 	int linger = 25;
 	int rc = 0;
-	bool CorG = false;
+	int retries = 5;
+	bool CorG = false, connected = false;
 	std::string cascadeName;
 	Mat frame;
 	Mat gray;
@@ -100,20 +102,25 @@ int main(int argc, char** argv)
 	//Setup ZMQ
 	//tcp://*:9993
 	void* context_mat = zmq_ctx_new ();
-
 	void* rep_mat = zmq_socket(context_mat, ZMQ_REP);
 
-	rc = zmq_setsockopt(rep_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm));
-	assert(rc == 0);
-
-	rc = zmq_setsockopt(rep_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	assert(rc == 0);
-
-	rc = zmq_setsockopt(rep_mat, ZMQ_LINGER, &linger, sizeof(linger));
-	assert(rc == 0);
-
-	rc = zmq_bind(rep_mat, "tcp://*:9993");
-	assert(rc == 0);
+	while(!connected && retries--) {
+		if(zmq_setsockopt(rep_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+			if(zmq_setsockopt(rep_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+				if(zmq_setsockopt(rep_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+					if(zmq_bind(rep_mat, "tcp://*:9993") == 0) {
+						connected = true;
+						std::cout << "Socket is bound and listening!" << std::endl;
+					}
+				}
+			}	
+		}
+		if(retries <= 0) {
+			std::cout << "Could not bind to tcp://9993..." << std::endl;
+			return 1;
+		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
+	}
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
