@@ -86,7 +86,6 @@ int main(int argc, char** argv)
 	int linger = 25;
 	int rcc = 0;
 	int rcl = 0;
-	int rc = 0;
 	int index = 0;
 	int imgNum = 0;
 	int sleep_time = sleep_time_gray;
@@ -145,15 +144,15 @@ int main(int argc, char** argv)
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
+	zmq_msg_t msg;
 	while(!die)
 	{
-		zmq_msg_t msg;
-		switch(CorG)
+		int rc = zmq_msg_init (&msg);
+		if(rc == 0)
 		{
-		case false:
-			rc = zmq_msg_init (&msg);
-			if(rc == 0)
+			switch(CorG)
 			{
+			case false:
 				zmq_send(req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
 				zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
 				if(zmq_msg_size(&msg) == color.total() * color.elemSize())
@@ -173,12 +172,8 @@ int main(int argc, char** argv)
 					}
 					imshow(winName, color);
 				}
-			}
-			break;
-		case true:
-			rc = zmq_msg_init (&msg);
-			if(rc == 0)
-			{
+				break;
+			case true:
 				zmq_send (req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
 				zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
 				if(zmq_msg_size(&msg) == gray.total() * gray.elemSize())
@@ -197,8 +192,8 @@ int main(int argc, char** argv)
 					}
 					imshow(winName, gray);
 				}
+				break;
 			}
-			break;
 		}
 		zmq_msg_close(&msg);
 		char c = waitKey(sleep_time);
