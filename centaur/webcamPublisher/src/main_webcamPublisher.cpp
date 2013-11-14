@@ -68,6 +68,7 @@ int main(int argc, char** argv)
 	bool detect = cfg.flag("webcam.provider.detect");
 
 	int hwm = 1;
+	int linger = 25;
 	int rc = 0;
 	bool CorG = false;
 	std::string cascadeName;
@@ -108,6 +109,9 @@ int main(int argc, char** argv)
 	rc = zmq_setsockopt(rep_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm));
 	assert(rc == 0);
 
+	rc = zmq_setsockopt(rep_mat, ZMQ_LINGER, &linger, sizeof(linger));
+	assert(rc == 0);
+
 	rc = zmq_bind(rep_mat, "tcp://*:9993");
 	assert(rc == 0);
 
@@ -136,8 +140,7 @@ int main(int argc, char** argv)
 		frame.reshape(0,1);
 		gray.reshape(0,1);
 
-		int rv = zmq_recv(rep_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
-		if(rv == 1) {
+		if(zmq_recv(rep_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT) == 1) {
 			switch(CorG)
 			{
 			case 0:		
