@@ -91,6 +91,7 @@ int main(int argc, char** argv)
 	int sleep_time = sleep_time_gray;
 	int t1 = 0, t2 = 0;
 	bool CorG  = true;
+	float timeOut = 3.0;
 	Mat color(240, 320, CV_8UC3);
 	Mat gray(240, 320, CV_8UC1);
 
@@ -232,7 +233,7 @@ int main(int argc, char** argv)
 			}
 		}
 		t2 = time(0);
-		if(t2 - t1 > 5.0) {
+		if(t2 - t1 > timeOut) {
 			zmq_close(req_mat);
 			req_mat = zmq_socket(context_mat, ZMQ_REQ);
 			if(zmq_setsockopt(req_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
