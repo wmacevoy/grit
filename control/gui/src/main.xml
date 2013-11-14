@@ -240,7 +240,7 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">85</property>
+                    <property name="x">100</property>
                     <property name="y">5</property>
                   </packing>
                 </child>
@@ -259,7 +259,7 @@
                   </object>
                   <packing>
                     <property name="x">30</property>
-                    <property name="y">1</property>
+                    <property name="y">5</property>
                   </packing>
                 </child>
                 <child>
@@ -301,7 +301,7 @@
                 <child>
                   <object class="GtkColorButton" id="sig53">
                     <property name="width_request">25</property>
-                    <property name="height_request">23</property>
+                    <property name="height_request">25</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="receives_default">True</property>
@@ -312,7 +312,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">54</property>
+                    <property name="x">70</property>
+		    <property name="y">5</property>
                   </packing>
                 </child>
                 <child>
@@ -330,7 +331,7 @@
                   </object>
                   <packing>
                     <property name="x">10</property>
-                    <property name="y">1</property>
+                    <property name="y">5</property>
                   </packing>
                 </child>
                 <child>
@@ -365,8 +366,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">179</property>
-                    <property name="y">10</property>
+                    <property name="x">180</property>
+                    <property name="y">5</property>
                   </packing>
                 </child>
                 <child>
@@ -455,7 +456,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">262</property>
+                    <property name="x">260</property>
+		    <property name="y">5</property>
                   </packing>
                 </child>
                 <child>
@@ -562,8 +564,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">239</property>
-                    <property name="y">10</property>
+                    <property name="x">240</property>
+                    <property name="y">5</property>
                   </packing>
                 </child>
                 <child>
@@ -580,8 +582,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">205</property>
-                    <property name="y">23</property>
+                    <property name="x">210</property>
+                    <property name="y">5</property>
                   </packing>
                 </child>
                 <child>

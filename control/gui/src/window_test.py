@@ -25,24 +25,28 @@ class Base:
         return list_Temps
 
     #Subscribe sensor from ZMQ_PUB
-    def sensor_SUB(self):
+    def sensor_SUB(self):	
+	portSense = '5506'
+
+	contextSensors = zmq.Context()
+	subSensors = contextSensors.socket(zmq.SUB)
+	subSensors.setsockopt(zmq.HWM, 1)
+        subSensors.setsockopt(zmq.SUBSCRIBE, '')
+        subSensors.connect("tcp://192.168.2.101:%s" % (portSense))
+
         print "Receiving msg..\n"
-        sensors = self.subSensors.recv()
+        sensors = subSensors.recv()
         new_Sensors = struct.unpack("<14i",sensors)
         list_Sensors = list(new_Sensors)
 
+	subSensors.close()
+	contextSensors.term();
         return list_Sensors
-
-    def temp_Check():
-        temp = temp_REQ()
-        return temp
 
     #kills the process when window is closed
     def destroy(self,widget):
 	self.reqTemp.close()
-	self.subSensors.close()
 	self.contextTemp.term()
-	self.contextSensors.term();
         print "Window terminated"
         gtk.main_quit()
 
@@ -50,10 +54,10 @@ class Base:
         leg_dict = {}
         pressures = []
 
-        temps = self.sensor_SUB()
-        print temps
+        sensors = self.sensor_SUB()
+        print sensors
         for i in range(1,5):
-            leg_dict[i] = temps[-5+i]
+            leg_dict[i] = sensors[-5+i]
             pressures.append(i)
         print leg_dict
         for pressure in pressures:
@@ -70,8 +74,8 @@ class Base:
                 self.pressure_btn[int(pressure)].set_color(gtk.gdk.color_parse(self.colors[sev]))
             except:
                 print "not defined %d" % int(pressure)
-            else:
-                print "defined %d" % int(pressure)
+            #else:
+                #print "defined %d" % int(pressure)
 
     def temp_check1(self):
         servos_dict = {}
@@ -102,8 +106,8 @@ class Base:
                 self.color_btn[int(servo)].set_color(gtk.gdk.color_parse(self.colors[sev]))
             except:
                 print "not defined %d" % int(servo)
-            else:
-                print "defined %d" % int(servo)
+            #else:
+                #print "defined %d" % int(servo)
         self.hottest.set_label('Top is %d: %d' %  (h_servo, hottest))
         print  'Top is %d: %d' %  (h_servo, hottest)
 
@@ -111,10 +115,10 @@ class Base:
         leg_dict = {}
         pressures = []
 
-        temps = self.sensor_SUB()
-        print temps
+        sensors = self.sensor_SUB()
+        print sensors
         for i in range(1,5):
-            leg_dict[i] = temps[-5+i]
+            leg_dict[i] = sensors[-5+i]
             pressures.append(i)
         print leg_dict
         for pressure in pressures:
@@ -131,19 +135,18 @@ class Base:
                 self.pressure_btn[int(pressure)].set_color(gtk.gdk.color_parse(self.colors[sev]))
             except:
                 print "not defined %d" % int(pressure)
-            else:
-                print "defined %d" % int(pressure)
+            #else:
+                #print "defined %d" % int(pressure)
         
     def temp_check(self,widget):
         servos_dict = {}
         servos = []
 
         temps = self.temp_REQ()
-        for item in temps:
-            for (i, x) in enumerate(item):
-                if i%2==0:
-                    servos_dict[x] = item[i+1]
-                    servos.append(x)
+        for i in range(0, (len(temps) - 1), 2):
+            servos.append(temps[i])
+            servos_dict[temps[i]] = temps[i+1]
+
         print servos_dict
         for servo in servos:
             sev = 0
@@ -159,8 +162,8 @@ class Base:
                 self.color_btn[int(servo)].set_color(gtk.gdk.color_parse(self.colors[sev]))
             except:
                 print "not defined %d" % int(servo)
-            else:
-                print "defined %d" % int(servo)
+            #else:
+                #print "defined %d" % int(servo)
 
     def focus_received(self,widget,data=None):
         self.focused=widget
@@ -194,18 +197,11 @@ class Base:
         builder.add_from_file("main.xml") 
         self.servos_dict = {}
         self.colors = ['#FF0000','#F9FF00', '#0CFF00', '#000000']
-	self.contextSensors = zmq.Context()
+
 	self.contextTemp = zmq.Context()
-
 	portTemp = '9001'
-	portSense = '5506'
-
         self.reqTemp = self.contextTemp.socket(zmq.REQ)
-        self.reqTemp.connect("tcp://192.168.2.101: %s" % (portTemp))
-        
-        self.subSensors = self.contextSensors.socket(zmq.SUB)
-        self.subSensors.setsockopt(zmq.SUBSCRIBE, '')
-        self.subSensors.connect("tcp://192.168.2.101: %s" % (portSense))
+        self.reqTemp.connect("tcp://192.168.2.101:%s" % (portTemp))
 
         self.window = builder.get_object("winStatus")
         #self.btnTemps = builder.get_object("btnTemps")
