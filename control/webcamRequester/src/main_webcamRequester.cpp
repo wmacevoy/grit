@@ -153,7 +153,7 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		rcc = zmq_send(req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
-		//if (rcc)
+		if (rcc)
 		{
 			rcc = zmq_msg_init (&msg);
 			if(rcc == 0)
@@ -232,7 +232,6 @@ int main(int argc, char** argv)
 			}
 		}
 		t2 = time(0);
-		std::cout << t2 - t1 << std::endl;
 		if(t2 - t1 > 5.0) {
 			zmq_close(req_mat);
 			req_mat = zmq_socket(context_mat, ZMQ_REQ);
