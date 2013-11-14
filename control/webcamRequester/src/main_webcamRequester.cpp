@@ -7,7 +7,7 @@
 #include <zmq.h>
 #include <sstream>
 #include <iomanip>
-
+#include <time.h>
 #include "Configure.h"
 
 using namespace cv;
@@ -83,11 +83,13 @@ int main(int argc, char** argv)
 	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
 	int hwm = 1;
+	int linger = 25;
 	int rcc = 0;
 	int rcl = 0;
 	int index = 0;
 	int imgNum = 0;
 	int sleep_time = sleep_time_gray;
+	int t1 = 0, t2 = 0;
 	bool CorG  = true;
 	Mat color(240, 320, CV_8UC3);
 	Mat gray(240, 320, CV_8UC1);
@@ -119,6 +121,15 @@ int main(int argc, char** argv)
 	rcl = zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0);
 	assert(rcl == 0);
 
+	rcl = zmq_setsockopt(req_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	assert(rcl == 0);
+
+	rcl = zmq_setsockopt(req_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+	assert(rcl == 0);
+
+	rcl = zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger));
+	assert(rcl == 0);
+
 	rcc = zmq_connect(req_mat, ip1.c_str());
 	rcl = zmq_connect(sub_lidar, ip2.c_str());
 	assert(rcc == 0 && rcl == 0);	
@@ -138,54 +149,59 @@ int main(int argc, char** argv)
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
 	zmq_msg_t msg;
+	t1 = time(0);
 	while(!die)
 	{
-		int rc = zmq_msg_init (&msg);
-		if(rc == 0)
+		rcc = zmq_send(req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
+		//if (rcc)
 		{
-			switch(CorG)
-			{
-			case false:
-				zmq_send(req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
-				zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-				if(zmq_msg_size(&msg) == color.total() * color.elemSize())
+			rcc = zmq_msg_init (&msg);
+			if(rcc == 0)
+			{			
+				switch(CorG)
 				{
-					memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+				case false:
+					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
+					if(rcc == color.total() * color.elemSize())
+					{
+						t1 = time(0);
+						memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
 
-					line(color, pt1, pt2, Scalar(0, 0, 0));
-					if(inside)
-					{	
-						subscribe_lidar(lidar_data, sub_lidar);	
-						index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-						//index = 380 + mx;
-						text = convstr(lidar_data[index] * 0.00328084);
-						putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-						if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index <<
-								"  sleep_time: " << sleep_time << std::endl;
+						line(color, pt1, pt2, Scalar(0, 0, 0));
+						if(inside)
+						{	
+							subscribe_lidar(lidar_data, sub_lidar);	
+							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+							//index = 380 + mx;
+							text = convstr(lidar_data[index] * 0.00328084);
+							putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index <<
+									"  sleep_time: " << sleep_time << std::endl;
+						}
+						imshow(winName, color);
 					}
-					imshow(winName, color);
-				}
-				break;
-			case true:
-				zmq_send (req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
-				zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-				if(zmq_msg_size(&msg) == gray.total() * gray.elemSize())
-				{
-					memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
-					line(gray, pt1, pt2, Scalar(0, 0, 0));
-					if(inside)
-					{	
-						subscribe_lidar(lidar_data, sub_lidar);	
-						index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-						//index = 380 + mx;
-						text = convstr(lidar_data[index] * 0.00328084);
-						putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-						if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
-								"  sleep_time: " << sleep_time << std::endl;
+					break;
+				case true:
+					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
+					if(rcc == gray.total() * gray.elemSize())
+					{
+						t1 = time(0);
+						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+						line(gray, pt1, pt2, Scalar(0, 0, 0));
+						if(inside)
+						{	
+							subscribe_lidar(lidar_data, sub_lidar);	
+							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+							//index = 380 + mx;
+							text = convstr(lidar_data[index] * 0.00328084);
+							putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
+									"  sleep_time: " << sleep_time << std::endl;
+						}
+						imshow(winName, gray);
 					}
-					imshow(winName, gray);
+					break;
 				}
-				break;
 			}
 		}
 		zmq_msg_close(&msg);
@@ -214,6 +230,24 @@ int main(int argc, char** argv)
 			else {
 				imwrite(imageName,  color);
 			}
+		}
+		t2 = time(0);
+		std::cout << t2 - t1 << std::endl;
+		if(t2 - t1 > 5.0) {
+			zmq_close(req_mat);
+			req_mat = zmq_socket(context_mat, ZMQ_REQ);
+			if(zmq_setsockopt(req_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+				if(zmq_setsockopt(req_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+					if(zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+						rcc = zmq_connect(req_mat, ip1.c_str());
+					}
+				}
+			}
+			if(rcc == 0) {
+				std::cout << "Connection successfully reset" << std::endl;
+				t1 = time(0);
+			}
+			else std::cout << "Connection un-successfully reset" << std::endl;
 		}
 	}
 
