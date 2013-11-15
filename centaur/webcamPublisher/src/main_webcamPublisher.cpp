@@ -65,8 +65,8 @@ int main(int argc, char** argv)
 
 	int index = cfg.num("webcam.provider.index", 0);
 	int sleep_time = cfg.num("webcam.provider.sleep_time");
-
 	bool detect = cfg.flag("webcam.provider.detect");
+	std::string address = cfg.str("webcam.provider.address").c_str();
 
 	int hwm = 1;
 	int linger = 25;
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 		if(zmq_setsockopt(rep_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
 			if(zmq_setsockopt(rep_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
 				if(zmq_setsockopt(rep_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-					if(zmq_bind(rep_mat, "tcp://*:9993") == 0) {
+					if(zmq_bind(rep_mat, address.c_str()) == 0) {
 						connected = true;
 						std::cout << "Socket is bound and listening!" << std::endl;
 					}

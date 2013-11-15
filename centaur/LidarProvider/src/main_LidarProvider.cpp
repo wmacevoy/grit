@@ -32,6 +32,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("lidar.provider.verbose", false);
 	if (verbose) cfg.show();
 	
+	std::string address = cfg.str("lidar.provider.address").c_str();
 	std::string lidar_path = cfg.str("lidar.provider.dev_path").c_str();
 	int sleep_time = (int)cfg.num("lidar.provider.sleep_time");
 
@@ -54,7 +55,7 @@ int main(int argc, char** argv)
 	while(!connected && retries--) {
 		if(zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
 			if(zmq_setsockopt(pub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-				if(zmq_bind(pub_lidar, "tcp://*:9997") == 0) {
+				if(zmq_bind(pub_lidar, address.c_str()) == 0) {
 					retries = 5;
 					connected = true;
 				}

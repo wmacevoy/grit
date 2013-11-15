@@ -98,11 +98,8 @@ int main(int argc, char** argv)
 	double fontScale = 0.75;
 	int thickness = 2;
 
-	std::string ip1 = cfg.str("webcam.requester.address", "localhost");
-	std::string ip2 = cfg.str("webcam.requester.address", "localhost");
-	
-	ip1 += ":9993";
-	ip2 += ":9997";
+	std::string ip1 = cfg.str("webcam.requester.addressW");
+	std::string ip2 = cfg.str("webcam.requester.addressL");
 
 	void* context_mat = zmq_ctx_new ();
 	void* context_lidar = zmq_ctx_new ();

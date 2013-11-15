@@ -25,7 +25,8 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("heartbeat.provider.verbose", false);
 	if (verbose) cfg.show();
 
-	int sleep_time = (int)cfg.num("heartbeat.provider.sleep_time", 1000);
+	int sleep_time = (int)cfg.num("heartbeat.provider.sleep_time");
+	std::string address = cfg.str("heartbeat.provider.address").c_str();
 
 	int hwm = 1;
 	int linger = 25;
@@ -44,7 +45,7 @@ int main(int argc, char** argv)
 
 	while(!connected && retries--) {
 		if(zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-			if(zmq_bind(pub, "tcp://*:9800") == 0) {
+			if(zmq_bind(pub, address.c_str()) == 0) {
 				connected == true;
 			}
 		}

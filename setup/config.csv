@@ -24,11 +24,13 @@ body.commander.neckAddress,"tcp://${control.ip}:5556"
 body.verbose,false
 commander.publish,"tcp://*:5504"
 commander.subscribers,"tcp://${centaur.ip}:5502"
+lidar.provider.address,"tcp://*:9997"
 lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"100"
-lidar.provider.verbose,"false"
+lidar.provider.verbose,"true"
 webcam.requester.verbose,"false"
-webcam.requester.address,"tcp://127.0.0.1"
+webcam.requester.addressW,"tcp://${centaur.ip}:9993"
+webcam.requester.addressL,"tcp://${centaur.ip}:9997"
 webcam.requester.calibration,"false"
 webcam.requester.sleep_time_color,"100"
 webcam.requester.sleep_time_gray,"100"
@@ -37,6 +39,7 @@ webcam.provider.index,"0"
 webcam.provider.sleep_time,"10"
 webcam.provider.detect,"false"
 webcam.provider.cascade,"../cascades/handwheel.xml"
+webcam.provider.address,"tcp://*:9993"
 leap.provider.verbose,"true"
 leap.provider.decay_time,0.5,seconds
 leap.provider.ip,"${control.ip}"
@@ -49,6 +52,7 @@ leap.requester
 leap.center.x,0.0,offset (inches)
 leap.center.y,26.0,offset (inches)
 leap.center.z,12.0,offset (inches)
+heartbeat.provider.address,"tcp://*:9800"
 heartbeat.provider.verbose,"true"
 heartbeat.provider.sleep_time,"100"
 heartbeat.requester.address,"tcp://${centaur.ip}:9800"
