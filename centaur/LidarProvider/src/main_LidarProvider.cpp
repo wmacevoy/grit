@@ -75,8 +75,8 @@ int main(int argc, char** argv)
 	if (verbose) std::cout << "Publishing on tcp://*:9997" << std::endl;
 	while(!die)
 	{
-		rcl = urg_isConnected(&urg);
-		if(rcl >= 0) {
+		std::cout << retries << std::endl;
+		if(urg_isConnected(&urg) >= 0) {
 			rcl = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
 			rcl = urg_receiveData(&urg, lidar_data, sz_lidar_data);
 
@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 	zmq_ctx_destroy(context_lidar);
 	printf("-- done!\n");
 	printf("closing urg...\n");
-	if(urg_isConnected(&urg)) urg_disconnect(&urg);
+	if(urg_isConnected(&urg) >= 0) urg_disconnect(&urg);
 	printf("--done\n");
 
 	return 0;
