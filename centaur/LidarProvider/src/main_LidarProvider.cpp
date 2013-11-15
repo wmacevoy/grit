@@ -3,7 +3,6 @@
  * Written by Michaela Ervin and based off of c_urg samples
 */
 
-#include <assert.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,8 +17,7 @@ Configure cfg;
 bool verbose;
 
 volatile int die = 0;
-
-int sz_lidar_data;
+int sz_lidar_data = 0;
 
 void quitproc(int param)
 {
@@ -43,42 +41,59 @@ int main(int argc, char** argv)
 
 	urg_t urg;
 	int hwm = 1;
+	int linger = 25;
 	int rcl = 0;
+	int retries = 5;
+	bool connected = false;
 	int64_t* lidar_data = NULL;
 
 	//Initialize ZMQ and LIDAR connection
 	void* context_lidar = zmq_ctx_new ();
 	void* pub_lidar = zmq_socket(context_lidar, ZMQ_PUB);
-	rcl = zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-	assert(rcl == 0);
 
-	rcl = zmq_bind(pub_lidar, "tcp://*:9997");
-	assert(rcl == 0);
-
-	//Connect lidar
-	rcl = urg_connect(&urg, lidar_path.c_str(), 115200);
-	if (rcl < 0) {
-	  std::cout << "failed urg_connect()" << std::endl;
-	  return 1;
+	while(!connected && retries--) {
+		if(zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+			if(zmq_setsockopt(pub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+				if(zmq_bind(pub_lidar, "tcp://*:9997") == 0) {
+					retries = 5;
+					connected = true;
+				}
+			}
+		}
+		if(retries <= 0) {
+			std::cout << "Could not bind to tcp://*:9997..." << std::endl;
+			die = true;
+		}
 	}
 
-	//Get max size of lidar data
-	sz_lidar_data = urg_dataMax(&urg);
-	if(verbose) printf("Max size of lidar data: %d\n", sz_lidar_data);
-	
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
-	assert(lidar_data != NULL);
+	if(!lidar_data) {
+		std::cout << "Could not allocate memory for lidar data..." << std::endl;
+		die = true;
+	}
 
-	if (verbose) printf("Publishing on tcp://*:9997\n");
+	if (verbose) std::cout << "Publishing on tcp://*:9997" << std::endl;
 	while(!die)
 	{
 		rcl = urg_isConnected(&urg);
 		if(rcl >= 0) {
 			rcl = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
 			rcl = urg_receiveData(&urg, lidar_data, sz_lidar_data);
+
 			if(verbose) printf("sending lidar data...\n");
 			int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
 			if(verbose && rc > 0) printf("sent lidat data!\n");
+		}
+		else {
+			if(urg_connect(&urg, lidar_path.c_str(), 115200) >= 0) {
+				sz_lidar_data = urg_dataMax(&urg);
+				if(verbose) printf("Max size of lidar data: %d\n", sz_lidar_data);
+				retries = 5;			
+			}
+			else if(retries-- <= 0) {
+				std::cout << "Retry limit reached and lidar cannot connect..." << std::endl;
+				die = true;			
+			}
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
@@ -93,7 +108,7 @@ int main(int argc, char** argv)
 	zmq_ctx_destroy(context_lidar);
 	printf("-- done!\n");
 	printf("closing urg...\n");
-	urg_disconnect(&urg);
+	if(urg_isConnected(&urg)) urg_disconnect(&urg);
 	printf("--done\n");
 
 	return 0;
