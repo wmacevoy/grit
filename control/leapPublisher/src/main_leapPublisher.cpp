@@ -160,6 +160,7 @@ int main(int argc, char** argv)
 	    std::cout << "TCP Error Number " << en << " " << zmq_strerror(en) << std::endl;
 	    die = true;
 	  }
+	  std::this_thread::sleep_for(std::chrono::milliseconds(200));
   }
   signal(SIGINT, quitproc);
   signal(SIGTERM, quitproc);
