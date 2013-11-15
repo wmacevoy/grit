@@ -83,7 +83,7 @@ int main(int argc, char** argv)
 	int index = 0;
 	int imgNum = 0;
 	int sleep_time = sleep_time_gray;
-	int t1 = 0, t2 = 0;
+	float t1 = 0, t2 = 0;
 	bool CorG  = true;
 	float timeOut = 3.0;
 	Mat color(240, 320, CV_8UC3);
