@@ -35,6 +35,8 @@ int main(int argc, char** argv)
 	int sleep_time = (int)cfg.num("heartbeat.requester.sleep_time", 1000);
 
 	int linger = 25;
+	int retries = 5;
+	bool connected = false;
 	char strTime[80];
 	char strTime1[80];
 	time_t t;
@@ -44,13 +46,20 @@ int main(int argc, char** argv)
 
 	void* context = zmq_ctx_new ();
 	void* sub = zmq_socket(context, ZMQ_SUB);
-	zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
-	rc = zmq_setsockopt(sub, ZMQ_LINGER, &linger, sizeof(linger));
-	assert(rc == 0);
-	if(zmq_connect(sub, address.c_str()) != 0)
-	{
-		printf("Error connecting zmq...");
-		die = true;
+	
+	while(!connected && retries--) {
+		if(zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0) == 0) {
+			if(zmq_setsockopt(sub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+				if(zmq_connect(sub, address.c_str()) == 0) {
+					connected = true;
+				}
+			}
+		}
+		if(retries <= 0) {
+			int en=zmq_errno();
+			printf("TCP Error Number %d %s\n", en, zmq_strerror(en));
+			die = true;
+		}
 	}
 
 	signal(SIGINT, quitproc);

@@ -218,10 +218,10 @@ int main(int argc, char** argv)
 				}
 			}
 			if(rcc == 0) {
-				std::cout << "Connection successfully reset" << std::endl;				
+				std::cout << "Connection successfully set/reset" << std::endl;				
 				t1 = time(0);
 			}
-			else std::cout << "Connection un-successfully reset" << std::endl;
+			else std::cout << "Connection un-successfully set/reset" << std::endl;
 			
 		}
 	}
