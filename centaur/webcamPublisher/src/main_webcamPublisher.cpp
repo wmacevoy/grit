@@ -116,7 +116,8 @@ int main(int argc, char** argv)
 			}	
 		}
 		if(retries <= 0) {
-			std::cout << "Could not bind to tcp://9993..." << std::endl;
+			int en=zmq_errno();
+	  		std::cout << "TCP Error Number " << en << " " << zmq_strerror(en) << std::endl;
 			die = true;
 		}
 		std::this_thread::sleep_for(std::chrono::milliseconds(200));

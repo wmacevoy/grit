@@ -30,6 +30,8 @@ int main(int argc, char** argv)
 	int hwm = 1;
 	int linger = 25;
 	int rc = 0;
+	int retries = 5;
+	bool connected = false;
 
 	char strTime[80];
 	time_t t;
@@ -39,12 +41,18 @@ int main(int argc, char** argv)
 
 	void* context = zmq_ctx_new ();
 	void* pub = zmq_socket(context, ZMQ_PUB);
-	rc = zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger));
-	assert(rc == 0);
-	if(zmq_bind(pub, "tcp://*:9800") != 0)
-	{
-		printf("Could not connect zmq...\n");
-		die = true;
+
+	while(!connected && retries--) {
+		if(zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+			if(zmq_bind(pub, "tcp://*:9800") == 0) {
+				connected == true;
+			}
+		}
+		if(retries <= 0) {		
+			int en=zmq_errno();
+			printf("TCP Error Number %d %s\n", en, zmq_strerror(en));
+			die = true;
+		}
 	}
 
 	signal(SIGINT, quitproc);

@@ -94,7 +94,8 @@ int main(int argc, char** argv)
 				retries = 5;			
 			}
 			else if(retries-- <= 0) {
-				std::cout << "Retry limit reached and lidar cannot connect..." << std::endl;
+				int en=zmq_errno();
+				std::cout << "TCP Error Number " << en << " " << zmq_strerror(en) << std::endl;
 				die = true;			
 			}
 		}
