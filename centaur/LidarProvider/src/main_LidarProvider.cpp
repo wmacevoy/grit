@@ -111,7 +111,7 @@ int main(int argc, char** argv)
 	zmq_ctx_destroy(context_lidar);
 	printf("-- done!\n");
 	printf("closing urg...\n");
-	if(urg_isConnected(&urg) >= 0) urg_disconnect(&urg);
+	urg_disconnect(&urg);
 	printf("--done\n");
 
 	return 0;
