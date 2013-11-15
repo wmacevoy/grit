@@ -71,12 +71,15 @@ int main(int argc, char** argv)
 		std::cout << "Could not allocate memory for lidar data..." << std::endl;
 		die = true;
 	}
+	
+	urg_connect(&urg, lidar_path.c_str(), 115200);
 
 	if (verbose) std::cout << "Publishing on tcp://*:9997" << std::endl;
 	while(!die)
 	{
-		std::cout << retries << std::endl;
-		if(urg_isConnected(&urg) >= 0) {
+		if(verbose) std::cout << retries << std::endl;
+		if((rcl = urg_isConnected(&urg)) > 0) {
+			std::cout << rcl << std::endl;
 			rcl = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
 			rcl = urg_receiveData(&urg, lidar_data, sz_lidar_data);
 
