@@ -53,6 +53,7 @@ int main(int argc, char** argv)
 			printf("TCP Error Number %d %s\n", en, zmq_strerror(en));
 			die = true;
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	}
 
 	signal(SIGINT, quitproc);

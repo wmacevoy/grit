@@ -64,6 +64,7 @@ int main(int argc, char** argv)
 			std::cout << "Could not bind to tcp://*:9997..." << std::endl;
 			die = true;
 		}
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	}
 
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
