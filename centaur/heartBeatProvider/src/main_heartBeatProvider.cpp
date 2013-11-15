@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 	while(!connected && retries--) {
 		if(zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
 			if(zmq_bind(pub, address.c_str()) == 0) {
-				connected == true;
+				connected = true;
 			}
 		}
 		if(retries <= 0) {		
