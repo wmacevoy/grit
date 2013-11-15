@@ -1,0 +1,14 @@
+Methods to create a cascade
+
+A positive image should be a grayscale .bmp file cropped to only have the desired object to be detected.
+A negative image should be and image that is of where you will find the object to be detected but without the actual object.
+
+Place each type in it's respective folder. i.e. positve/ negative/
+
+In the negative folder run create_list.sh to generate a list of the negative images.
+
+If needed, adjust create_samples.sh to fit your needs. Then run create_samples.sh
+
+If needed, adjust traincascade.sh to fit your needs. Then run traincascade.sh
+
+The final cascade will be in data/cascade.xml

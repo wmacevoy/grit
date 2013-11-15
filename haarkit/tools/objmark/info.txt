@@ -1,0 +1,5 @@
+rawdata/3.bmp 2 129 132 52 52 246 121 65 68
+rawdata/2.bmp 1 67 110 112 107
+rawdata/13.bmp 1 44 7 244 221
+rawdata/9.bmp 1 177 142 62 52
+rawdata/4.bmp 2 194 135 60 48 26 106 123 108

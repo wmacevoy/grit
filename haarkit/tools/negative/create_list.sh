@@ -1,0 +1,1 @@
+ls *.bmp > negatives.txt

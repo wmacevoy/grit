@@ -1,0 +1,1 @@
+ls *.vec > vectorList.dat
