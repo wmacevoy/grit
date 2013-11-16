@@ -7,6 +7,10 @@
 #include <time.h>
 #include <zmq.h>
 
+zmqWrapper::zmqWrapper(const std::string _sockType, const std::string _ip) {
+	zmqWrapper(_sockType, _ip, 1, 25, 2.0, false, 5);
+}
+
 zmqWrapper::zmqWrapper(const std::string _sockType, const std::string _ip, const int _hwm, const int _linger, 
 				const float _timeOut, const bool _block, const int _retries) {
 	connected = false;
@@ -138,10 +142,6 @@ int zmqWrapper::rx(void* _data, const size_t _size = 0) {
 	return ret;
 }
 
-void zmqWrapper::setRequestType(const int _requestType) {
-	requestType = _requestType;
-}
-
 int zmqWrapper::sockPublish(void* data, const size_t size) {
 	int ret = 0;		
 	zmq_msg_t msg;
@@ -153,10 +153,10 @@ int zmqWrapper::sockPublish(void* data, const size_t size) {
 	return ret;
 }
 
-int zmqWrapper::sockSubscribe(void* data, const size_t size = 0) {
+int zmqWrapper::sockSubscribe(void* data, const size_t size) {
 	int ret = 0;	
 	zmq_msg_t msg;	
-	if(zmq_msg_init (&msg) == 0) {
+	if(zmq_msg_init(&msg) == 0) {
 		ret = zmq_recvmsg(socket, &msg, block);
 		if(ret > 0) {
 			memcpy(data, zmq_msg_data(&msg), zmq_msg_size(&msg));
@@ -167,36 +167,51 @@ int zmqWrapper::sockSubscribe(void* data, const size_t size = 0) {
 	return ret;
 }
 
+//Return 0+ on success (valid request type) or -1 on error
+int zmqWrapper::getReq() {
+	requestType = -1;
+	requested = false;
+	if(zmq_recv(socket, &requestType, sizeof(requestType), block) == sizeof(requestType)) {
+		requested = true;
+	}
+	return requestType;
+}
+
 int zmqWrapper::sockReply(void* data, const size_t size) {
 	int ret = 0;
-	requestType = 0;
 
 	zmq_msg_t msg;
-	if(zmq_msg_init_size(&msg, size) == 0) {
-		if(zmq_recv(socket, &requestType, sizeof(requestType), block) == sizeof(requestType)) {
-
-			int* i = (int*)data;
-			int* t = (int*)i[requestType];
-			void* d = (void*)t;
-
-			memcpy(zmq_msg_data(&msg), d, zmq_msg_size(&msg));
+	if(requested) {
+		if(zmq_msg_init_size(&msg, size) == 0) {
+			memcpy(zmq_msg_data(&msg), data, zmq_msg_size(&msg));
 			ret = zmq_sendmsg(socket, &msg, block);
+			zmq_msg_close(&msg);
 		}
-		zmq_msg_close(&msg);
 	}
 	
 	return ret;
 }
 
-int zmqWrapper::sockRequest(void* data, const size_t size = 0) {
+//Return the requestType on success or -1 on error
+int zmqWrapper::sendReq(const int _requestType) {
+	requestType = _requestType;
+	if(zmq_send(socket, &requestType, sizeof(requestType), block) == sizeof(requestType)) {
+		requested = true;
+		return requestType;
+	}
+	return -1;
+}
+
+int zmqWrapper::sockRequest(void* data, const size_t size) {
 	int ret = 0;
 	zmq_msg_t msg;
-	if(zmq_msg_init(&msg) == 0) {
-		if(zmq_send(socket, &requestType, sizeof(requestType), block) == sizeof(requestType)) {
+	if(requested) {
+		if(zmq_msg_init(&msg) == 0) {
 			ret = zmq_recvmsg(socket, &msg, block);
 			memcpy(data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+			zmq_msg_close(&msg);
 		}
-		zmq_msg_close(&msg);
+		requested = false;
 	}
 
 	return ret;

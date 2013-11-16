@@ -1,11 +1,12 @@
 /*
  * A wrapper for zerom that handles publish, subscribe, request, and reply sockets
  *  -A socket will reconnect after 'timeOut' seconds and retry 'retries' times
- *  -Use tx for publish and reply
- *  -Use rx for subscribe and request
+ *  -Use tx for publish
+ *  -Use rx for subscribe
+ *  -Use getReq and tx for reply
+ *  -Use sendReq and rx for request
  *
  * Give rx a minimum msg size so it can test for a valid packet.  If recieve >= _size then a msg is valid
- * For reply sockets, give an array of pointers as the data, the request type is the index to use
  *
 */
 
@@ -27,6 +28,7 @@ class zmqWrapper {
 	bool connected;
 	int requestType;
 	int waitTime;
+	bool requested;
 
 	int hwm;
 	int linger;
@@ -42,18 +44,19 @@ class zmqWrapper {
 	void reconnect();
 
 	int sockPublish(void*, const size_t);
-	int sockSubscribe(void*, const size_t);
+	int sockSubscribe(void*, const size_t = 0);
 	int sockReply(void*, const size_t);
-	int sockRequest(void*, const size_t);
+	int sockRequest(void*, const size_t = 0);
 
 public:
-	zmqWrapper(const std::string _sockType, const std::string _ip, const int _hwm = 1, const int _linger = 25, 
-				const float _timeOut = 2.0, const bool _block = false, const int _retries = 5);
+	zmqWrapper(const std::string, const std::string);
+	zmqWrapper(const std::string, const std::string, const int, const int, const float, const bool, const int);
 	bool connect();
 	void disconnect();
 	int tx(void*, const size_t);
 	int rx(void*, const size_t);
-	void setRequestType(const int);
+	int sendReq(const int);
+	int getReq();
 	~zmqWrapper();
 };
 
