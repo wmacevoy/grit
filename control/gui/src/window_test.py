@@ -72,6 +72,7 @@ class Base:
                 sev = 3
             try:
                 self.pressure_btn[int(pressure)].set_color(gtk.gdk.color_parse(self.colors[sev]))
+                self.tooltips.set_tip(self.pressure_btn[int(pressure)], "Leg: %d | Pressure: %s" % (int(pressure),leg_dict[pressure]))
             except:
                 print "not defined %d" % int(pressure)
             #else:
@@ -104,12 +105,13 @@ class Base:
                 sev = 3
             try:
                 self.color_btn[int(servo)].set_color(gtk.gdk.color_parse(self.colors[sev]))
+                self.tooltips.set_tip(self.color_btn[int(servo)], "Servo: %s | Temp: %s" % (int(servo),servos_dict[servo]))
             except:
                 print "not defined %d" % int(servo)
             #else:
                 #print "defined %d" % int(servo)
         self.hottest.set_label('Top is %d: %d' %  (h_servo, hottest))
-        print  'Top is %d: %d' %  (h_servo, hottest)
+        print 'Top is %d: %d' %  (h_servo, hottest)
 
     def press_check(self,widget):
         leg_dict = {}
@@ -211,6 +213,7 @@ class Base:
         #self.back.lower()
         #self.parts = builder.get_object("viewParts")
         #self.data = builder.get_object("viewData")
+        self.tooltips = gtk.Tooltips()
         self.color_btn = [0]*200
         for i in range(0,200):
             self.color_btn[i] = builder.get_object("sig"+str(i))
