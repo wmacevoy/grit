@@ -75,9 +75,7 @@ class Base:
                 self.tooltips.set_tip(self.pressure_btn[int(pressure)], "Leg: %d | Pressure: %s" % (int(pressure),leg_dict[pressure]))
             except:
                 print "not defined %d" % int(pressure)
-            #else:
-                #print "defined %d" % int(pressure)
-
+           
     def temp_check1(self):
         servos_dict = {}
         servos = []
@@ -108,8 +106,7 @@ class Base:
                 self.tooltips.set_tip(self.color_btn[int(servo)], "Servo: %s | Temp: %s" % (int(servo),servos_dict[servo]))
             except:
                 print "not defined %d" % int(servo)
-            #else:
-                #print "defined %d" % int(servo)
+           
         self.hottest.set_label('Top is %d: %d' %  (h_servo, hottest))
         print 'Top is %d: %d' %  (h_servo, hottest)
 
@@ -137,9 +134,7 @@ class Base:
                 self.pressure_btn[int(pressure)].set_color(gtk.gdk.color_parse(self.colors[sev]))
             except:
                 print "not defined %d" % int(pressure)
-            #else:
-                #print "defined %d" % int(pressure)
-        
+                   
     def temp_check(self,widget):
         servos_dict = {}
         servos = []
@@ -164,9 +159,7 @@ class Base:
                 self.color_btn[int(servo)].set_color(gtk.gdk.color_parse(self.colors[sev]))
             except:
                 print "not defined %d" % int(servo)
-            #else:
-                #print "defined %d" % int(servo)
-
+           
     def focus_received(self,widget,data=None):
         self.focused=widget
         #print(widget.get_name())
@@ -176,7 +169,8 @@ class Base:
             threading.Thread.__init__(self)
             self.base = base_
             self.delay = delay_
-
+        
+        #temperature thread
         def run(self):
             i = 0
             while self.base.update_bool:
@@ -186,7 +180,7 @@ class Base:
                 self.base.temp_check1()
                 time.sleep(self.delay)
             
-                
+    #stops thread and close window
     def quit(self,widget):
         print("QUIT")
         self.update_bool = False
@@ -206,38 +200,30 @@ class Base:
         self.reqTemp.connect("tcp://192.168.2.101:%s" % (portTemp))
 
         self.window = builder.get_object("winStatus")
-        #self.btnTemps = builder.get_object("btnTemps")
-        #self.btnPressures = builder.get_object("btnPressures")
         self.back = builder.get_object("picBack")
         self.hottest = builder.get_object("lblTop")
-        #self.back.lower()
-        #self.parts = builder.get_object("viewParts")
-        #self.data = builder.get_object("viewData")
+       
+        #create tooltip object
         self.tooltips = gtk.Tooltips()
+        
+        #temp btn array
         self.color_btn = [0]*200
         for i in range(0,200):
             self.color_btn[i] = builder.get_object("sig"+str(i))
        
+        #pressure btn array
         self.pressure_btn = [0]*5
         for i in range(1,5):
             self.pressure_btn[i] = builder.get_object("sigL"+str(i))
-       # self. = builder.get_object("entry1")
-        #self.entry2 = builder.get_object("entry2")
-        #self.label1 = builder.get_object("label1")
-        #self.about  = builder.get_object("aboutdialog1")
         
+        #hottest temp servo object
         self.highTemp = gtk.Label("Hottest temp")
         fixed = gtk.Fixed()
         fixed.put(self.highTemp,200,200)
         self.window.add(fixed)
 
         builder.connect_signals(self)
-        #self.btnTemps.connect("focus-in-event", self.focus_received)
-        #self.btnPressures.connect("focus-in-event", self.focus_received)
-        #self.parts.connect("focus-in-event", self.focus_received)
-      #  self.data.connect("focus-in-event", self.focus_received)
-        #self.entry2.connect("focus-in-event", self.focus_received)
-        #self.focused=self.btnTemps
+
         self.update = self.Update(self,2)
         self.update.start()
 
