@@ -204,6 +204,7 @@ int main(int argc, char** argv)
 			}
 		}
 		t2 = time(0);
+		std::cout << t2 - t1 << std::endl;
 		if(t2 - t1 > timeOut) {
 			zmq_close(req_mat);
 			req_mat = zmq_socket(context_mat, ZMQ_REQ);
@@ -211,6 +212,13 @@ int main(int argc, char** argv)
 				if(zmq_setsockopt(req_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
 					if(zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
 						rcc = zmq_connect(req_mat, ip1.c_str());
+					}
+				}
+			}
+			if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {
+				if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+					if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+						rcc = zmq_connect(sub_lidar, ip2.c_str());
 					}
 				}
 			}
