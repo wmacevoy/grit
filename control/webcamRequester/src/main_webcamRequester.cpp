@@ -204,10 +204,12 @@ int main(int argc, char** argv)
 			}
 		}
 		t2 = time(0);
-		std::cout << t2 - t1 << std::endl;
 		if(t2 - t1 > timeOut) {
 			zmq_close(req_mat);
+			zmq_close(sub_lidar);
 			req_mat = zmq_socket(context_mat, ZMQ_REQ);
+			sub_lidar = zmq_socket(context_mat, ZMQ_SUB);
+		
 			if(zmq_setsockopt(req_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
 				if(zmq_setsockopt(req_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
 					if(zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
