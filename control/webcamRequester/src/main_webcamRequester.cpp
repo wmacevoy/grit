@@ -158,7 +158,6 @@ int main(int argc, char** argv)
 					if(rcc == gray.total() * gray.elemSize())
 					{
 						t1 = time(0);
-						std::cout << rcc << " " << t1 << std::endl;
 						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
 						line(gray, pt1, pt2, Scalar(0, 0, 0));
 						if(inside)
