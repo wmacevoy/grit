@@ -83,7 +83,7 @@ int main(int argc, char** argv)
 	int index = 0;
 	int imgNum = 0;
 	int sleep_time = sleep_time_gray;
-	float t1 = 0, t2 = 0;
+	int t1 = 0, t2 = 0;
 	bool CorG  = true;
 	float timeOut = 3.0;
 	Mat color(240, 320, CV_8UC3);
@@ -158,6 +158,7 @@ int main(int argc, char** argv)
 					if(rcc == gray.total() * gray.elemSize())
 					{
 						t1 = time(0);
+						std::cout << rcc << " " << t1 << std::endl;
 						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
 						line(gray, pt1, pt2, Scalar(0, 0, 0));
 						if(inside)
