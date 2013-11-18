@@ -11,6 +11,11 @@
 
 using namespace std;
 
+class GIK
+{
+
+};
+
 Mat leg()
 {
   E pi=var("%pi");
@@ -40,6 +45,25 @@ Mat leg()
   m = m*translate(vec(0.0,dyknee2tip,dzknee2tip));
 
   return m;
+}
+
+Mat head()
+{
+  Mat m = eye(4,4);
+
+  E pi=var("%pi");
+  E dbase2waist=12.0;
+  E waist=-(pi/180.0)*(var("waist"));
+  E dwaist2neck=13.5;
+  Vec neck2necklr(0.0,0.0,2.0);
+  E necklr=(pi/180.0)*var("necklr");
+  E dnecklr2neckud=2.0;
+  E neckud=(pi/180.0)*var("neckud");
+
+  m=m*translate(0.0,0.0,dbase2waist);
+  m=m*rotate(ex,waist);
+  m=m*translate(0.0,0.0,dwaist2neck);
+  m=m*translate(
 }
 
 Mat arm(string side)
