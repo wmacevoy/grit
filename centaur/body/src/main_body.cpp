@@ -1627,6 +1627,7 @@ void leapHand() {
     zmax = -8.0;
     zoffset = 0;
     includeSavedCommands();
+    goHome();
   }
 
   thread *goUpdate;

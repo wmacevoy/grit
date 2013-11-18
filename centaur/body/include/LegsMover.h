@@ -9,8 +9,12 @@ class LegsMover
 {
  private:
   int m_state;
+  float m_cutoff;
 
 public:
+  float cutoff() const;
+  void cutoff(float value);
+  
   LegMoverSP legMovers[4];
 
   void state(int m_state);

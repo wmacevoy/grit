@@ -31,6 +31,11 @@ void LegMover::tape(const std::string &m_tape_)
   kneeMover=kneeMovers[m_tape];
   femurMover=femurMovers[m_tape];
   hipMover=hipMovers[m_tape];
+
+  kneeMover->sharpCutoff=m_cutoff;
+  femurMover->sharpCutoff=m_cutoff;
+  hipMover->sharpCutoff=m_cutoff;
+
   lifts=liftsTapes[m_tape];
 
   cout << "kneeMover@" << (void*) &*kneeMover << endl;
@@ -56,12 +61,26 @@ int LegMover::state() const
   return m_state;
 }
 
+float LegMover::cutoff() const 
+{
+  return m_cutoff;
+}
+
+void LegMover::cutoff(float value)
+{
+  m_cutoff=value;
+
+  if (kneeMover)  kneeMover->sharpCutoff=m_cutoff;
+  if (femurMover) femurMover->sharpCutoff=m_cutoff;
+  if (hipMover)   hipMover->sharpCutoff=m_cutoff;
+}
+
 LegMover::LegMover(LegsMover *legs_, int number_)
 {
   legs=legs_;
   number(number_);
   state(LEG_NORMAL);
-
+  if (legs) cutoff(legs->cutoff());
   ostringstream oss;
   oss << "leg" << (number()+1) << ".touchpressure";
   touchPressure=cfg->num(oss.str());
@@ -214,6 +233,7 @@ void LegMover::setup(Leg &leg, const std::map < float , std::pair<Point,int> > &
   kneeMover->setup(t2knee,simTime0,simTime1);
   femurMover->setup(t2femur,simTime0,simTime1);
   hipMover->setup(t2hip,simTime0,simTime1);
+  cutoff(m_cutoff);
 }
 
 void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips,
@@ -240,7 +260,7 @@ void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips,
   kneeMover->setup(t2knee,simTime0,simTime1);
   femurMover->setup(t2femur,simTime0,simTime1);
   hipMover->setup(t2hip,simTime0,simTime1);
-
+  cutoff(m_cutoff);
 }
 
 void LegMover::setup(Leg &leg, Point p)
@@ -255,6 +275,7 @@ void LegMover::setup(Leg &leg, Point p)
   kneeMover->setup(knee);
   femurMover->setup(femur);
   hipMover->setup(hip);
+  cutoff(m_cutoff);
 }
 
 void LegMover::torque(float t)
@@ -263,6 +284,9 @@ void LegMover::torque(float t)
   femurMover->torque=t;
   kneeMover->torque=t;
   hipMover->torque=t;
+  kneeMover->sharpCutoff=m_cutoff;
+  femurMover->sharpCutoff=m_cutoff;
+  hipMover->sharpCutoff=m_cutoff;
 }
 
 bool LegMover::done() const

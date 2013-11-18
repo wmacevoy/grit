@@ -1,5 +1,9 @@
 #include "ArmMover.h"
 #include "ArmGeometry.h"
+#include "BodyGlobals.h"
+#include <map>
+
+using namespace std;
 
 ArmMover::ArmMover(ArmGeometry *geometry_)
 {
@@ -53,18 +57,54 @@ bool ArmMover::done() const
 void ArmMover::leapReset()
 {
   geometry->forward();
+  lastLeapTime=simTime;
+  lastLeapShoulderIO=inOut.angle();
+  lastLeapShoulderUD=upDown.angle();
+  lastLeapElbow=elbow.angle();
+  lastLeapForearm=forearm.angle();
 }
 
 void ArmMover::leapAdjust(LeapHandMessage &hand)
 {
+  map<float,float> shoulderios;
+  map<float,float> shoulderuds;
+  map<float,float> biceps;
+  map<float,float> elbows;
+  map<float,float> forearms;
+
+  double t=simTime;
+
   float _shoulderio,_shoulderud,_bicep,_elbow,_forearm;
   geometry->compute(hand.at[0],hand.at[1],hand.at[2],hand.point[0],hand.down[0],
 		    _shoulderio,_shoulderud,_bicep,_elbow,_forearm);
-  inOut.setup(_shoulderio);
-  upDown.setup(_shoulderud);
-  bicep.setup(_bicep);
-  elbow.setup(_elbow);
-  forearm.setup(_forearm);
+
+  shoulderios[t]=_shoulderio;
+  shoulderuds[t]=_shoulderud;
+  biceps[t]=_bicep;
+  elbows[t]=_elbow;
+  forearms[t]=_forearm;
+  
+  if (t-1 < lastLeapTime && lastLeapTime < t-0.001) {
+    double t0=lastLeapTime;
+    shoulderios[t0]=lastLeapShoulderIO;
+    shoulderuds[t0]=lastLeapShoulderUD;
+    biceps[t0]=lastLeapBicep;
+    elbows[t0]=lastLeapElbow;
+    forearms[t0]=lastLeapForearm;
+  }
+
+  inOut.setup(shoulderios);
+  upDown.setup(shoulderuds);
+  bicep.setup(biceps);
+  elbow.setup(elbows);
+  forearm.setup(forearms);
+
+  lastLeapTime = t;
+  lastLeapShoulderIO=_shoulderio;
+  lastLeapShoulderUD=_shoulderud;
+  lastLeapBicep=_bicep;
+  lastLeapElbow=_elbow;
+  lastLeapForearm=_forearm;
 }
 
 ArmMover::~ArmMover() {}

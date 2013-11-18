@@ -33,6 +33,10 @@ class LegMover : public LegGeometry
   void tape(const std::string &m_tape_);
   const std::string &tape() const;
 
+  float m_cutoff;
+  void cutoff(float value);
+  float cutoff() const;
+
   LegsMover *legs;
   enum {LEG_NORMAL, LEG_CAUTIOUS, LEG_BRICKS };
   LegMover(LegsMover *_legs, int number_);

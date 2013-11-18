@@ -138,7 +138,7 @@ int main(int argc, char **argv)
   }
   if (use_controller == "dynamixel") {
     cout << "dynamixel controller device index " << deviceIndex << " baud number " << baudNum << endl;
-    controller = shared_ptr<ServoController>(CreateDynamixelServoController(cfg,deviceIndex,baudNum));    
+    controller = shared_ptr<ServoController>(CreateDynamixelServoController(deviceIndex,baudNum));    
   }
   shared_ptr<Servo> servo(controller->servo(servoId));
 

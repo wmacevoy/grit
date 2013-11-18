@@ -14,6 +14,7 @@
 #include <zmq.h>
 #include <string.h>
 
+#include "ServoGlobals.h"
 #include "ServoController.h"
 #include "Configure.h"
 
@@ -60,7 +61,7 @@ struct DynamixelServo : Servo
   float rxTempRate;
   float rxPositionRate;
 
-  DynamixelServo(Configure &cfg, DXLIO &io_, int id_) 
+  DynamixelServo(DXLIO &io_, int id_) 
     : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
   {
     enabled=true;
@@ -235,7 +236,6 @@ struct DynamixelServo : Servo
 
 struct DynamixelServoController : ServoController
 {
-  Configure &cfg;
   DXLIO io;
   typedef std::map < int , std::shared_ptr <DynamixelServo> > Servos;
   Servos servos;
@@ -247,7 +247,7 @@ struct DynamixelServoController : ServoController
     assert(running == false);
 
     return &*(servos[id] = 
-	      std::shared_ptr <DynamixelServo> (new DynamixelServo(cfg,io,id)));
+	      std::shared_ptr <DynamixelServo> (new DynamixelServo(io,id)));
   }
 
   int countServosInRange(int lower,int upper) {
@@ -486,6 +486,17 @@ struct DynamixelServoController : ServoController
 	broadcastSpeedPosition(output,t,t1,60,69);
       }
 #endif
+      if (verbose) {
+	cout << t << ",";
+	for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
+	  DynamixelServo &servo = *(i->second);
+	  if (servo.id > 20 && servo.id < 30) {
+	    cout << "," << servo.id << "," << servo.presentPosition << "," << servo.goalPosition << "," << servo.presentSpeed << "," << servo.goalSpeed;
+	  }
+	}
+	cout << endl;
+      }
+
       t=now();
       if (t1 > t) {
 	usleep(int((t1-t)*1000000));
@@ -503,8 +514,8 @@ struct DynamixelServoController : ServoController
     }
   }
 
-  DynamixelServoController(Configure &cfg_, int deviceIndex, int baudNum)
-    : cfg(cfg_), io(deviceIndex,baudNum)
+  DynamixelServoController(int deviceIndex, int baudNum)
+    : io(deviceIndex,baudNum)
   {
     running = false;
     txRate=cfg.num("servos.dynamixel.rate.tx");
@@ -520,7 +531,7 @@ struct DynamixelServoController : ServoController
   }
 };
 
-ServoController* CreateDynamixelServoController(Configure &cfg, int deviceIndex,int baudNum)
+ServoController* CreateDynamixelServoController(int deviceIndex,int baudNum)
 {
-  return new DynamixelServoController(cfg, deviceIndex,baudNum);
+  return new DynamixelServoController(deviceIndex,baudNum);
 }

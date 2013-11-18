@@ -8,6 +8,7 @@
 #include <thread>
 #include <chrono>
 
+#include "ServoGlobals.h"
 #include "Configure.h"
 //#include "zmq.hpp"
 #include "ZMQHub.h"
@@ -21,9 +22,6 @@
 
 
 using namespace std;
-
-Configure cfg;
-bool verbose;
 
 // manage all servo controllers (real or fake)
 
@@ -44,7 +42,7 @@ SPServo servo(string device, int id)
   }
   if (device == "real") {
     if (realServoController.get() == 0) {
-      realServoController = SPServoController(CreateDynamixelServoController(cfg,cfg.num("servos.deviceindex"),cfg.num("servos.baudnum")));
+      realServoController = SPServoController(CreateDynamixelServoController(cfg.num("servos.deviceindex"),cfg.num("servos.baudnum")));
     }
     controller=realServoController;
   }
@@ -181,6 +179,68 @@ public:
     cout << setprecision(5);
   }
 
+  std::thread *goInfo;
+  bool infoRunning;
+  
+  void infoUpdate() {
+    int32_t dataNeeded;
+    int rc, j, size = 34 * 2, sleep_time = 50;
+    int32_t msgArr[size];
+    
+    void* context = zmq_ctx_new ();
+    void* rep = zmq_socket(context, ZMQ_REP);
+    rc = zmq_bind(rep, "tcp://*:9001");
+    assert(rc == 0);
+    
+    while(infoRunning) {
+      zmq_recv(rep, &dataNeeded, sizeof(int32_t), ZMQ_DONTWAIT);
+      j = 0;		
+      
+      if(dataNeeded == 1) {
+	//Get temps and populate array
+	for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
+	  msgArr[j++] = (int32_t)i->first; //Servo ID
+	  msgArr[j++] = (int32_t)i->second->temp(); //Servo temp
+	}
+	
+	zmq_send(rep, msgArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
+      }
+      
+      std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+    }
+    
+    zmq_close(rep);
+    zmq_ctx_destroy(context);
+  }
+
+  void infoOn()
+  {
+    if (!infoRunning) {
+      infoRunning = true;
+      goInfo = new thread(&ZMQServoServer::infoUpdate,this);
+    }
+  }
+
+  void infoOff()
+  {
+    if (goInfo != 0) {
+      infoRunning = false;
+      goInfo->join();
+      delete goInfo;
+      goInfo = 0;
+    }
+  }
+
+  ZMQServoServer()
+  {
+    goInfo = 0;
+    infoOn();
+  }
+
+  ~ZMQServoServer()
+  {
+    infoOff();
+  }
 };
 
 shared_ptr < ZMQServoPlacebo > placebo;
@@ -231,36 +291,6 @@ void args()
 }
 
 /*I am unfamiliar with this code and need to know where to start and stop this thread.
-std::thread *infoThread;
-void iThread() {
-	int32_t dataNeeded;
-	int rc, j, size = 34 * 2, sleep_time = 50;
-	int32_t msgArr[size];
-
-	void* context = zmq_ctx_new ();
-	void* rep = zmq_socket(context, ZMQ_REP);
-	rc = zmq_bind(rep, "tcp://*:9001");
-	assert(rc == 0);
-
-	while(running) {
-		int rv = zmq_recv(rep, &dataNeeded, sizeof(int32_t), ZMQ_DONTWAIT);
-		j = 0;		
-
-		if(dataNeeded == 1) {
-		//Get temps and populate array
-			for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
-				msgArr[j++] = (int32_t)i->first; //Servo ID
-				msgArr[j++] = (int32_t)i->second->temp(); //Servo temp
-			}
-
-			int rc = zmq_send(rep, msgArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
-		}
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
-	}
-
-	zmq_close(rep);
-	zmq_ctx_destroy(context);
 }*/
 
 void run() {

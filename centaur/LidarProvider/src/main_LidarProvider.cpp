@@ -9,6 +9,7 @@
 #include <iostream>
 #include <thread>
 #include <chrono>
+#include <time.h>
 #include <zmq.h>
 #include "urg_ctrl.h"
 #include "Configure.h"
@@ -17,10 +18,9 @@ Configure cfg;
 bool verbose;
 
 volatile int die = 0;
-int sz_lidar_data = 0;
+int sz_lidar_data = 1081;
 
-void quitproc(int param)
-{
+void quitproc(int param) {
 	die = true;
 }
 
@@ -44,29 +44,13 @@ int main(int argc, char** argv)
 	int hwm = 1;
 	int linger = 25;
 	int rcl = 0;
-	int retries = 5;
+	int t1 = 0, t2 = 0, timeOut = 3;
 	bool connected = false;
 	int64_t* lidar_data = NULL;
 
 	//Initialize ZMQ and LIDAR connection
 	void* context_lidar = zmq_ctx_new ();
 	void* pub_lidar = zmq_socket(context_lidar, ZMQ_PUB);
-
-	while(!connected && retries--) {
-		if(zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-			if(zmq_setsockopt(pub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-				if(zmq_bind(pub_lidar, address.c_str()) == 0) {
-					retries = 5;
-					connected = true;
-				}
-			}
-		}
-		if(retries <= 0) {
-			std::cout << "Could not bind to tcp://*:9997..." << std::endl;
-			die = true;
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	}
 
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	if(!lidar_data) {
@@ -79,26 +63,42 @@ int main(int argc, char** argv)
 	if (verbose) std::cout << "Publishing on tcp://*:9997" << std::endl;
 	while(!die)
 	{
-		if(verbose) std::cout << retries << std::endl;
-		if((rcl = urg_isConnected(&urg)) > 0) {
-			std::cout << rcl << std::endl;
-			rcl = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
-			rcl = urg_receiveData(&urg, lidar_data, sz_lidar_data);
+		if(connected) {
+			if((rcl = urg_isConnected(&urg)) > 0) {
+				rcl = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
+				rcl = urg_receiveData(&urg, lidar_data, sz_lidar_data);
 
-			if(verbose) printf("sending lidar data...\n");
-			int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
-			if(verbose && rc > 0) printf("sent lidat data!\n");
-		}
-		else {
-			if(urg_connect(&urg, lidar_path.c_str(), 115200) >= 0) {
-				sz_lidar_data = urg_dataMax(&urg);
-				if(verbose) printf("Max size of lidar data: %d\n", sz_lidar_data);
-				retries = 5;			
+				if(verbose) printf("sending lidar data...\n");
+				int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
+				if(verbose && rc > 0) printf("sent lidat data!\n");
+
+				if(rc > 0) {
+					t1 = time(0);
+				}
 			}
-			else if(retries-- <= 0) {
-				int en=zmq_errno();
-				std::cout << "TCP Error Number " << en << " " << zmq_strerror(en) << std::endl;
-				die = true;			
+			else {
+				if(urg_connect(&urg, lidar_path.c_str(), 115200) >= 0) {
+					sz_lidar_data = urg_dataMax(&urg);
+					if(verbose) printf("Max size of lidar data: %d\n", sz_lidar_data);
+					std::cout << "Connected lidar..." << std::endl;			
+				}
+			}
+		}
+
+		t2 = time(0);
+		if(t2 - t1 > timeOut) {
+			connected = false;
+			zmq_close(pub_lidar);
+			pub_lidar = zmq_socket(context_lidar, ZMQ_PUB);
+			while(!connected) {
+				if(zmq_setsockopt(pub_lidar, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+					if(zmq_setsockopt(pub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+						if(zmq_bind(pub_lidar, address.c_str()) == 0) {
+							connected = true;
+						}
+					}
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(200));
 			}
 		}
 

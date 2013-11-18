@@ -6,6 +6,7 @@
 #include "CSVRead.h"
 #include "BodyGlobals.h"
 #include "split.h"
+#include "Sawtooth.h"
 #include <cmath>
 #include <sstream>
 
@@ -466,7 +467,9 @@ double stepX(double dist,double direction,double angle) {
   angle-=3.0*M_PI_4; // Subtract off center of raise angle
   if (angle<0.0) angle+=2.0*M_PI;  // Add circle if negative
   // Angle should between 0 and 2Pi. 
-  return xstep*(1.0-angle/(2.0*M_PI));
+  Sawtooth st(2.0*M_PI,M_PI_4/2.0);
+  return xstep*st(angle);
+//  return xstep*(1.0-angle/(2.0*M_PI));
 }
 
 /* The function that steps forward with the leg naturally comes up */
@@ -479,7 +482,9 @@ double stepY(double dist,double direction,double angle) {
   angle-=3.0*M_PI_4; // Subtract off center of raise angle
   if (angle<0.0) angle+=2.0*M_PI;  // Add circle if negative
   // Angle should between 0 and 2Pi. 
-  return ystep*(1.0-angle/(2.0*M_PI));
+  Sawtooth st(2.0*M_PI,M_PI_4/2.0);
+  return ystep*st(angle);
+//  return ystep*(1.0-angle/(2.0*M_PI));
 }
 
 /* The function that steps forward with the leg naturally comes up */
@@ -491,7 +496,9 @@ double stepZ(double dist,double angle) {
   angle-=3.0*M_PI_4; // Subtract off center of raise angle
   if (angle<0.0) angle+=2.0*M_PI;  // Add circle if negative
   // Angle should between 0 and 2Pi. 
-  return dist*(1.0-angle/(2.0*M_PI));
+  Sawtooth st(2.0*M_PI,M_PI_4/2.0);
+  return dist*st(angle);
+//  return dist*(1.0-angle/(2.0*M_PI));
 }
 
 double legDirection(double angle) {

@@ -23,6 +23,14 @@ class ArmMover
   void torque(float t);
   bool done() const;
   void leapReset();
+
+  double lastLeapTime;
+  float lastLeapShoulderIO;
+  float lastLeapShoulderUD;
+  float lastLeapBicep;
+  float lastLeapElbow;
+  float lastLeapForearm;
+
   void leapAdjust(LeapHandMessage &leapHandMessage);
   virtual ~ArmMover();
   ArmMover(ArmGeometry *geometry_);

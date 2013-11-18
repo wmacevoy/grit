@@ -2,6 +2,18 @@
 
 #include "BodyGlobals.h"
 
+void LegsMover::cutoff(float value)
+{
+  m_cutoff=value;
+  for (int i=0; i<4; ++i) {
+    if (legMovers[i]) legMovers[i]->cutoff(value);
+  }
+}
+
+float LegsMover::cutoff() const
+{
+  return m_cutoff;
+}
 void LegsMover::state(int m_state_)
 {
   m_state = m_state_;
@@ -22,7 +34,9 @@ LegsMover::LegsMover(BodyMover *bodyMover_)
   legMovers[1]=LegMoverSP(new LegMover(this,LEG2));
   legMovers[2]=LegMoverSP(new LegMover(this,LEG3));
   legMovers[3]=LegMoverSP(new LegMover(this,LEG4));
+
   state(LegMover::LEG_NORMAL);
+  cutoff(cfg->num("legs.cutoff"));
 }
 
 void LegsMover::normal(Legs &legs)
