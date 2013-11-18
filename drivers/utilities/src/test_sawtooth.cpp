@@ -12,7 +12,7 @@ int main()
   double L = 2*M_PI;
 
   // width of mollifying  (<= L)
-  double w = L/4;
+  double w = M_PI_4;
 
   Sawtooth s(L,w);
 
