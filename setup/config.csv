@@ -4,11 +4,11 @@ centaur.ip,192.168.2.101
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,15,Degrees per second on the servo
-arms.maxspeed,15,Degrees per second on the servo 
-servos.verbose,true
+arms.maxspeed,30,Degrees per second on the servo 
+servos.verbose,false
 servos.type,real
 servos.deviceindex,1
-servos.baudnum,34
+servos.baudnum,3
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
 servos.dynamixel.rate.tx,20.0
 servos.publish,tcp://*:5500
@@ -67,6 +67,7 @@ sensors.provider.dev_path,"/dev/ttyUSB0"
 sensors.requester.address,tcp://${centaur.ip}:5506
 gloves.publisher.dev_path,"/dev/ttyACM0"
 gloves.publisher.verbose,"false"
+legs.cutoff,1.0,cutoff for linearity (0 = always linear)
 leg1.touchpressure,900
 leg2.touchpressure,900
 leg3.touchpressure,900
