@@ -39,6 +39,21 @@ running()
   test $(pid $app) -ne -1
 }
 
+has_leapd()
+{
+    ps aux | grep leapd | grep -v -q grep
+}
+
+term_leapd()
+{
+    ps aux | grep leapd | grep -v grep |  (while read uid pid rest; do echo "term leapd($pid)..."; kill $pid; done)
+}
+
+kill_leapd()
+{
+    ps aux | grep leapd | grep -v grep |  (while read uid pid rest; do echo "kill leapd($pid)..."; kill -9 $pid; done)
+}
+
 stop_app()
 {
   app=$1
@@ -103,10 +118,23 @@ start_app()
 {
   app=$1
   app_pid=$(pid $app)
+
   if [ $app_pid -ne -1 ]
   then
       echo $app already running as pid $app_pid
       return 0
+  fi
+
+  if [ $app = "leapPublisher" ] ; then
+      if has_leapd ; then
+	  term_leapd
+	  if has_leapd ; then
+	      sleep 1
+	      if has_leapd ; then
+		  kill_leapd
+	      fi
+	  fi
+      fi
   fi
   
   mkdir -p $MOJAVATON_DIR/pids

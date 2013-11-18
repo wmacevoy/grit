@@ -50,25 +50,25 @@ public:
     if (verbose) cout << "exit" << endl;
   }
 
-  void average(double p, double q, float uxyzbar_in[3], const Vector &uxzy_mm)
+  void average(double p, double q, float uxyzbar[3], float w,const Vector &uxzy)
   {
     if (p > 0.0) {
-      uxyzbar_in[0]=p*uxyzbar_in[0]+q*( uxzy_mm[0]/25.4);
-      uxyzbar_in[1]=p*uxyzbar_in[1]+q*(-uxzy_mm[2]/25.4);
-      uxyzbar_in[2]=p*uxyzbar_in[2]+q*( uxzy_mm[1]/25.4);
+      uxyzbar[0]=p*uxyzbar[0]+q*( w*uxzy[0]);
+      uxyzbar[1]=p*uxyzbar[1]+q*(-w*uxzy[2]);
+      uxyzbar[2]=p*uxyzbar[2]+q*( w*uxzy[1]);
     } else {
-      uxyzbar_in[0]=( uxzy_mm[0]/25.4);
-      uxyzbar_in[1]=(-uxzy_mm[2]/25.4);
-      uxyzbar_in[2]=( uxzy_mm[1]/25.4);
+      uxyzbar[0]=( w*uxzy[0]);
+      uxyzbar[1]=(-w*uxzy[2]);
+      uxyzbar[2]=( w*uxzy[1]);
     }
 
   }
 
   void update(double p, double q, LeapHandMessage &message, const Hand &hand)
   {
-    average(p,q,message.at,hand.palmPosition());
-    average(p,q,message.point,hand.direction());
-    average(p,q,message.down,hand.palmNormal());
+    average(p,q,message.at,(1/25.4),hand.palmPosition());
+    average(p,q,message.point,1,hand.direction());
+    average(p,q,message.down,1,hand.palmNormal());
   }
 
   void onFrame(const Controller &controller)
