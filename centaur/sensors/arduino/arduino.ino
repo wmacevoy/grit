@@ -45,7 +45,7 @@ void readXYZ(int device,union XYZBuffer *xyz) {
 void setupAccel(int device) {
   // Check ID to see if we are communicating
   Wire.beginTransmission(device);
-  Wire.write(0x00); // One Reading
+  Wire.write((uint8_t)0x00); // One Reading
   Wire.endTransmission(); 
   Wire.requestFrom(device,1);
   while (!Wire.available());  
@@ -57,12 +57,12 @@ void setupAccel(int device) {
   // https://www.sparkfun.com/datasheets/Sensors/Accelerometer/ADXL345.pdf
   // Page 16
   Wire.beginTransmission(device);
-  Wire.write(0x2d);
-  Wire.write(0x08);
+  Wire.write((uint8_t)0x2d);
+  Wire.write((uint8_t)0x08);
   Wire.endTransmission();
   Wire.beginTransmission(device);
-  Wire.write(0x38);
-  Wire.write(0x84);
+  Wire.write((uint8_t)0x38);
+  Wire.write((uint8_t)0x84);
   Wire.endTransmission();
 
 }
@@ -77,7 +77,7 @@ void setupCompass(int device) {
   // Check ID to see if we are communicating
   Serial.print("Compass id is ");
   Wire.beginTransmission(device);
-  Wire.write(10); // One Reading
+  Wire.write((uint8_t)10); // One Reading
   Wire.endTransmission(); 
   Wire.requestFrom(device,2); 
   while (!Wire.available());
@@ -90,13 +90,13 @@ void setupCompass(int device) {
 // Page 18
 // at http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/Magneto/HMC5883L-FDS.pdf
   Wire.beginTransmission(device);
-  Wire.write(0x00); Wire.write(0x70);
+  Wire.write((uint8_t)0x00); Wire.write((uint8_t)0x70);
   Wire.endTransmission();
   Wire.beginTransmission(device);
-  Wire.write(0x01); Wire.write(0xA0);
+  Wire.write((uint8_t)0x01); Wire.write((uint8_t)0xA0);
   Wire.endTransmission();
   Wire.beginTransmission(device);
-  Wire.write(0x02); Wire.write(0x00); //  Reading
+  Wire.write((uint8_t)0x02); Wire.write((uint8_t)0x00); //  Reading
   Wire.endTransmission(); 
   delay(6);
 }
@@ -104,14 +104,14 @@ void readCompass(int device,union XYZBuffer *xyz) {
   readXYZ(device,xyz);
   changeEndian(xyz);
   Wire.beginTransmission(device);
-  Wire.write(0x03);
+  Wire.write((uint8_t)0x03);
   Wire.endTransmission(); 
 }
 
 void setupGyro(int device) {
   // Check ID to see if we are communicating
   Wire.beginTransmission(device);
-  Wire.write(0x00); // One Reading
+  Wire.write((uint8_t)0x00); // One Reading
   Wire.endTransmission(); 
   Wire.requestFrom(device,1);
   while (!Wire.available());  
@@ -124,7 +124,7 @@ void readGyro(int device,union XYZBuffer *xyz) {
   // https://www.sparkfun.com/datasheets/Sensors/Gyro/PS-ITG-3200-00-01.4.pdf
   // page 20
   Wire.beginTransmission(device);
-  Wire.write(0x1d);
+  Wire.write((uint8_t)0x1d);
   Wire.endTransmission(); 
   readXYZ(device,xyz);
   changeEndian(xyz);  
@@ -172,37 +172,33 @@ void setup()
   setupAccel(ACCELADDR);
   setupGyro(GYROADDR);
 
-  nois=0;
+  nios=0;
+  
+  // safe light
   ios[nios].pin=13;
-  ios[nois].output=true;
-  ios[nois].analog=false;
-  ios[nois].pullup=false;
-  ios[nois].value=0;
+  ios[nios].output=true;
+  ios[nios].analog=false;
+  ios[nios].pullup=false;
+  ios[nios].value=0;
+  ++nios;
 
-  ++nois;
-  ios[nios].pin = 8;
-  ios[nois].output = false;
-  ios[nois].analog = false;
-  ios[nois].pullup = true;
-  ios[nois].value = 0;
-
-  for (int i=0; i<nois; ++i) {
+  for (int i=0; i<nios; ++i) {
     if (ios[i].output) {
       if (ios[i].analog) {
         analogWrite(ios[i].pin,ios[i].value);
       } else {
         digitalWrite(ios[i].pin,ios[i].value);
-        pinMode(ios[i],OUTPUT);
+        pinMode(ios[i].pin,OUTPUT);
       }
     } else {
       if (ios[i].analog) {
         ios[i].value = analogRead(ios[i].pin);
       } else {
         if (ios[i].pullup) {
-          pinMode(ios[i],INPUT);
-          digitalWrite(ios[i],HIGH);
+          pinMode(ios[i].pin,INPUT);
+          digitalWrite(ios[i].pin,HIGH);
         } else {
-          pinMode(ios[i],INPUT);
+          pinMode(ios[i].pin,INPUT);
         }
 	ios[i].value = digitalRead(ios[i].pin);
       }
@@ -211,15 +207,17 @@ void setup()
 }
 
 int state = 0;
+int index = 0;
+int number = 0;
 
-void proces(char ch)
+void process(char ch)
 {
   switch(state) {
   case 0: 
-    if (ch == 'O') state = 1;
+    if (ch == 'S') { state = 1; }
     break;
   case 1:
-    if (ch >= '1' && ch <= '4') {
+    if (ch >= '0' && ch <= '9') {
       index = (ch - '0');
       state = 2;
     } else {
@@ -239,9 +237,9 @@ void proces(char ch)
       if (index < nios && ios[index].output) {
         ios[index].value = number;
         if (ios[index].analog) {
-          analogWrite(outputs[index].pin,number);
+          analogWrite(ios[index].pin,number);
         } else {
-          digitalWrite(outputs[index].pin,number);
+          digitalWrite(ios[index].pin,number);
         }
       }
       state = 0;
@@ -284,14 +282,14 @@ void loop()
   l4=analogRead(3);
 
   while (Serial.available()) {
-
+    process(Serial.read());
   }
-  if (Serial.avail
 
 
   readAccel(ACCELADDR,&accel);
   readCompass(COMPASSADDR,&compass);
   readGyro(GYROADDR,&gyro);
+  
   Serial.print("A,");
   output(accel);
   Serial.print(",C,");
@@ -306,14 +304,6 @@ void loop()
   Serial.print(l3);
   Serial.print(",");
   Serial.print(l4);
-  Serial.print(",I,");
-  Serial.print(i1);
-  Serial.print(",");
-  Serial.print(i2);
-  Serial.print(",");
-  Serial.print(i3);
-  Serial.print(",");
-  Serial.print(i4);
   if (nios > 0) {
     Serial.print(",S");
     for (int i=0; i<nios; ++i) {
