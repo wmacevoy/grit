@@ -165,7 +165,7 @@ public:
 	float currentUpDown = 0;
 	float currentLeftRight = 0;
 	int rc;
-	double timeOut = 2.0;
+	double t, t1 = 0.0, t2 = 0.0, timeOut = 2.0, timeOut2 = 0.5;
 	int hwm = 1;
 	int linger = 25;
 	bool active = true;
@@ -183,7 +183,7 @@ public:
 		return;
 	}
 	
-	double t = now();
+	t = now();
 	while(neck_on.load()) {
 		jm.clear();
 		rc = zmq_recv(sub, &jm, sizeof(joystick), 0);
@@ -192,7 +192,11 @@ public:
 		}
 		
 		if(jm.button2) {
-			active = !active;		
+			t1 = now();
+			if(t1 - t2 > timeOut2) {
+				active = !active;
+				t2 = now();
+			}		
 		}
 
 		if(active) {
@@ -247,7 +251,10 @@ public:
 	double t = now();	
 	while(hands_on.load()) {
 		manos.clear();
-		zmq_recv(sub, &manos, sizeof(Hands), 0);	
+		rc = zmq_recv(sub, &manos, sizeof(Hands), 0);
+		if(rc == sizeof(Hands)) {
+			t = now();
+		}	
 
 		mover->left.trigger.setup(manos.ltrigger);
 		mover->left.middle.setup(manos.lmiddle);
