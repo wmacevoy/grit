@@ -40,22 +40,22 @@ int main(int argc,char **argv)
 	void *context = zmq_ctx_new ();
 	void* pub;
 
-	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
-	{
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0) {
 		std::cerr<< "Couldn't initialize SDL:"<< SDL_GetError()<<std::endl;
 		die = true;
-	}
-	else 
-	{
+	} else {
 		while(!connected) {
 			std::cout << "Press button 1 to terminate" << std::endl;
 			SDL_JoystickEventState(SDL_ENABLE);
 			pub = zmq_socket(context, ZMQ_PUB);
 			if(zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-			if(zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-			if(zmq_bind(pub, "tcp://*:5556")) == 0 ) {
-				connected = true;
+				if(zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+					if(zmq_bind(pub, "tcp://*:5556") == 0 ) {
+						connected = true;
+					}
+				}
 			}
+			SDL_Delay(1);
 		}
 	}
 
@@ -66,13 +66,10 @@ int main(int argc,char **argv)
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
-	while(!die)
-	{  
+	while(!die) {  
 		SDL_Delay(100); // Don't check faster than 10 times a second
-		while (SDL_PollEvent(&event)) 
-		{
-			switch(event.type)
-			{  
+		while (SDL_PollEvent(&event)) {
+			switch(event.type) {  
 			case SDL_JOYAXISMOTION:
 				if (event.jaxis.axis==0 && event.jaxis.which==0) { 
 					jm.setX1(event.jaxis.value);
@@ -119,6 +116,7 @@ int main(int argc,char **argv)
 				break;
 			}
 		}
+
 		if(verbose) std::cout << "X1: " << jm.x1 << " Y1: " << jm.y1 << "X2: " << jm.x2 << " Y2: " << jm.y2 << " Button1: " << jm.button1 << " Button2: " << jm.button2 << std::endl;
 	}
 
