@@ -43,7 +43,7 @@ int main(int argc,char **argv)
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
 	{
 		std::cerr<< "Couldn't initialize SDL:"<< SDL_GetError()<<std::endl;
-		return 1;
+		die = true;
 	}
 	else 
 	{
