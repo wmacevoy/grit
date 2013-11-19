@@ -12,14 +12,11 @@ volatile bool die = false;
 
 int last;
 
-void publish(joystick *j,void *zmq_pub) 
-{
+void publish(joystick *j,void *zmq_pub) {
 	int rc = zmq_send(zmq_pub, j, sizeof(joystick), ZMQ_DONTWAIT);
 }
 
-void quitproc(int param)
-{
-	std::cout << "\nQuitting..." << std::endl;
+void quitproc(int param) {
 	die = true;
 }
 
@@ -33,9 +30,13 @@ int main(int argc,char **argv)
 
 	joystick jm;
 	SDL_Joystick *joystick;
+	bool active = true;
+	bool connected = false;
 	int rc;
 	int hwm = 1;
 	int linger = 25;
+	double jxMappedStep = 175.0 / 32768.0;
+	double jyMappedStep = 65.0 / 32768.0;
 	void *context = zmq_ctx_new ();
 	void* pub;
 
@@ -46,19 +47,16 @@ int main(int argc,char **argv)
 	}
 	else 
 	{
-		std::cout << "Press 1 to terminate"<<std::endl;
-		SDL_JoystickEventState(SDL_ENABLE);
-
-		pub = zmq_socket(context, ZMQ_PUB);
-	
-		rc = zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm));
-		assert(rc == 0);
-
-		rc = zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger));
-		assert(rc == 0);
-
-		rc = zmq_bind(pub, "tcp://*:5556");
-		assert(rc == 0);
+		while(!connected) {
+			std::cout << "Press button 1 to terminate" << std::endl;
+			SDL_JoystickEventState(SDL_ENABLE);
+			pub = zmq_socket(context, ZMQ_PUB);
+			if(zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+			if(zmq_setsockopt(pub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+			if(zmq_bind(pub, "tcp://*:5556")) == 0 ) {
+				connected = true;
+			}
+		}
 	}
 
 	joystick = SDL_JoystickOpen(0);
@@ -76,43 +74,42 @@ int main(int argc,char **argv)
 			switch(event.type)
 			{  
 			case SDL_JOYAXISMOTION:
-				if (event.jaxis.axis==0 && event.jaxis.which==0) 
-				{ 
+				if (event.jaxis.axis==0 && event.jaxis.which==0) { 
 					jm.setX1(event.jaxis.value);
 					publish(&jm,pub);
 				}
-				else if (event.jaxis.axis==1 && event.jaxis.which==0)
-				{
+				else if (event.jaxis.axis==1 && event.jaxis.which==0) {
 					jm.setY1(event.jaxis.value); 
 					publish(&jm,pub);
 				}
-				else if (event.jaxis.axis==2 && event.jaxis.which==0) 
-				{ 
-					jm.setX2(event.jaxis.value / -1000);
+				else if (event.jaxis.axis==2 && event.jaxis.which==0) { 
+					jm.setX2(event.jaxis.value * jxMappedStep);
 					publish(&jm,pub);
 				}
-				else if (event.jaxis.axis==3 && event.jaxis.which==0)
-				{
-					jm.setY2(event.jaxis.value / -1000); 
+				else if (event.jaxis.axis==3 && event.jaxis.which==0) {
+					jm.setY2(event.jaxis.value * jyMappedStep); 
 					publish(&jm,pub);
 				} 
 				break;
 			case SDL_JOYBUTTONDOWN:  /* Handle Joystick Button Presses */
-				if ( event.jbutton.button==0 && event.jbutton.which==0)
-				{
+				if ( event.jbutton.button==0 && event.jbutton.which==0) {
 					jm.setButtonDown(1);
 					publish(&jm,pub); 
 					die = true;
 				}
-				else if ( event.jbutton.button == 1 && event.jbutton.which==0 ) 
-				{
+				else if ( event.jbutton.button == 1 && event.jbutton.which==0 ) {
 					jm.setButtonDown(2);
 					publish(&jm,pub);
+					active = !active;
+					if(active) {
+						std::cout << "Joystick enabled!" << std::endl;
+					} else {
+						std::cout << "Joystick disabled!" << std::endl;
+					}
 				}
 				break;
 			case SDL_JOYBUTTONUP:  /* Handle Joystick Button Presses */
-				if ( event.jbutton.button == 1 && event.jbutton.which==0 ) 
-				{
+				if ( event.jbutton.button == 1 && event.jbutton.which==0 ) {
 					jm.setButtonUp(2);
 					publish(&jm,pub);
 				}
@@ -125,6 +122,7 @@ int main(int argc,char **argv)
 		if(verbose) std::cout << "X1: " << jm.x1 << " Y1: " << jm.y1 << "X2: " << jm.x2 << " Y2: " << jm.y2 << " Button1: " << jm.button1 << " Button2: " << jm.button2 << std::endl;
 	}
 
+	std::cout << std::endl << "Quitting..." << std::endl;
 	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(pub);
 	zmq_ctx_destroy(context);

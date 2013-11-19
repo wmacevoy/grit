@@ -30,8 +30,7 @@ const int x_max = 285;
 const int ind_min = 479;
 const int ind_max = 605;
 
-std::string convstr(const float t)
-{
+std::string convstr(const float t) {
 	std::stringstream ftoa;
 	ftoa << std::setprecision(3) << std::setw(4) << t;
 	return ftoa.str();
@@ -44,23 +43,19 @@ std::string itoa(const T& t) {
 	return itoa.str();
 }
 
-void mouseEvent(int evt, int x, int y, int flags, void* param)
-{
-	if(evt == CV_EVENT_MOUSEMOVE)
-	{
-		if(x >=0 && x <= 320 && y >= 100 && y <= 110)
-		{
+void mouseEvent(int evt, int x, int y, int flags, void* param) {
+	if(evt == CV_EVENT_MOUSEMOVE) {
+		if(x >=0 && x <= 320 && y >= 100 && y <= 110) {
 			mx = x;
 			my = y;
 			inside = true;
-		}
-		else
+		} else {
 			inside = false;
+		}
 	}
 }
 
-void quitproc(int param)
-{
+void quitproc(int param) {
 	die = true;
 }
 
@@ -122,26 +117,20 @@ int main(int argc, char** argv)
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
 	zmq_msg_t msg;
-	while(!die)
-	{
+	while(!die) {
 		rcc = zmq_send(req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
-		if (rcc)
-		{
+		if (rcc) {
 			rcc = zmq_msg_init (&msg);
-			if(rcc == 0)
-			{			
-				switch(CorG)
-				{
+			if(rcc == 0) {			
+				switch(CorG) {
 				case false:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-					if(rcc == color.total() * color.elemSize())
-					{
+					if(rcc == color.total() * color.elemSize()) {
 						t1 = time(0);
 						memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
 
 						line(color, pt1, pt2, Scalar(0, 0, 0));
-						if(inside)
-						{	
+						if(inside) {	
 							zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
@@ -155,13 +144,11 @@ int main(int argc, char** argv)
 					break;
 				case true:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-					if(rcc == gray.total() * gray.elemSize())
-					{
+					if(rcc == gray.total() * gray.elemSize()) {
 						t1 = time(0);
 						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
 						line(gray, pt1, pt2, Scalar(0, 0, 0));
-						if(inside)
-						{	
+						if(inside) {	
 							zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
@@ -178,15 +165,11 @@ int main(int argc, char** argv)
 		}
 		zmq_msg_close(&msg);
 		char c = waitKey(sleep_time);
-		if(c == 't') 
-		{
-			if(CorG == false)
-			{
+		if(c == 't') {
+			if(CorG == false) {
 				CorG = true;
 				sleep_time = sleep_time_gray;
-			}
-			else
-			{
+			} else {
 				CorG = false;
 				sleep_time = sleep_time_color;
 			}
