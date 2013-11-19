@@ -66,13 +66,6 @@ void subscribeH(void *zmq_sub, Hands* manos)
 	manos->rring=manos->rring;
 }
 
-
-void subscribeN(void* zmq_sub, joystick* j)
-{
-	j->clear();
-	zmq_recv(zmq_sub, j, sizeof(joystick), 0);
-}
-
 using namespace std;
 
 class LeapRx : public ZMQRx
@@ -185,35 +178,58 @@ public:
   void subscribeToNeck() {	//Neck thread function
 	float currentUpDown = 0;
 	float currentLeftRight = 0;
-	// int hwm = 1;
+	int rc;
+	double timeOut = 2.0;
+	int hwm = 1;
+	int linger = 25;
+	bool active = true;
 	joystick jm;
-	std::string address = cfg->str("body.commander.neckAddress", "tcp://192.168.2.113:5556");
+	std::string address = cfg->str("body.commander.neckAddress");
 
 	void* context = zmq_ctx_new();
 	void* sub = zmq_socket(context, ZMQ_SUB);
-	//rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	zmq_setsockopt(sub, ZMQ_LINGER, &linger, sizeof(linger));
 	zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 
-	if (zmq_connect(sub, address.c_str()) != 0)
-	{
+	if (zmq_connect(sub, address.c_str()) != 0) {
 		printf("Error initializing 0mq NECK...\n");
 		return;
 	}
 	
 	double t = now();
-	while(neck_on.load())
-	{
-		double deltat = now()-t;
-		t=t+deltat;
-		subscribeN(sub, &jm);
-		currentUpDown = currentUpDown + (deltat)*(float(jm.y2)/32.0)*(15.0);
-		currentLeftRight = currentLeftRight + (deltat)*(float(jm.x2)/32.0)*(15.0);
-		if(currentUpDown < -65) currentUpDown = -65;
-		else if(currentUpDown > 65) currentUpDown = 65;
-		if(currentLeftRight < -175) currentLeftRight = -175;
-		else if(currentLeftRight > 175) currentLeftRight = 175;
-		mover->neck.upDown.setup(currentUpDown);
-		mover->neck.leftRight.setup(currentLeftRight);
+	while(neck_on.load()) {
+		jm.clear();
+		rc = zmq_recv(sub, &jm, sizeof(joystick), 0);
+		if(rc == sizeof(joystick)) {
+			t = now();
+		}
+		
+		if(jm.button2) {
+			active = !active;		
+		}
+
+		if(active) {
+			currentUpDown = jm.y2;
+			currentLeftRight = jm.x2;
+			if(currentUpDown < -65) currentUpDown = -65;
+			else if(currentUpDown > 65) currentUpDown = 65;
+			if(currentLeftRight < -175) currentLeftRight = -175;
+			else if(currentLeftRight > 175) currentLeftRight = 175;
+			mover->neck.upDown.setup(currentUpDown);
+			mover->neck.leftRight.setup(currentLeftRight);
+		}
+
+		if(now() - t > timeOut) {
+			zmq_close(sub);
+			sub = zmq_socket(context, ZMQ_SUB);
+			zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+			zmq_setsockopt(sub, ZMQ_LINGER, &linger, sizeof(linger));
+			zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
+			if (zmq_connect(sub, address.c_str()) == 0) {
+				t = now();
+			}			
+		}
 		std::this_thread::sleep_for(std::chrono::microseconds(25));
 	}  
 
@@ -224,38 +240,48 @@ public:
   std::thread* handsThread;
   std::atomic < bool > hands_on;
   void subscribeToHands() {	//Hands thread function
-    //int rc;
-    //int hwm = 1;
+	int rc;
+	int hwm = 1;
+	double timeOut = 2;
+	int linger = 25;
 	Hands manos;
 	std::string address = cfg->str("body.commander.glovesAddress");
 	
 	void *context = zmq_ctx_new ();
 	void *sub = zmq_socket(context, ZMQ_SUB);
-	//rc = zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+	zmq_setsockopt(sub, ZMQ_LINGER, &linger, sizeof(linger));
 	zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
 	
-	if (zmq_connect(sub, address.c_str()) != 0)
-	{
+	if (zmq_connect(sub, address.c_str()) != 0) {
 		printf("Error initializing 0mq HANDS...\n");
 		return;
 	}
 	
-//	cout << "starting hands control." << endl;
-	while(hands_on.load())
-	{
-			subscribeH(sub, &manos);
-			mover->left.trigger.setup(manos.ltrigger);
-			mover->left.middle.setup(manos.lmiddle);
-			mover->left.ring.setup(manos.lring);
-			mover->left.thumb.setup(manos.lthumb);
-			mover->right.trigger.setup(manos.rtrigger);
-			mover->right.middle.setup(manos.rmiddle);
-			mover->right.ring.setup(manos.rring);
-			mover->right.thumb.setup(manos.rthumb);
-//			cout << "adjusted hands (rthumb=" << manos.rthumb << ")." << endl;
-			std::this_thread::sleep_for(std::chrono::microseconds(25));
-	}	
-//	cout << "ending hands control." << endl;	
+	double t = now();	
+	while(hands_on.load()) {
+		subscribeH(sub, &manos);
+		mover->left.trigger.setup(manos.ltrigger);
+		mover->left.middle.setup(manos.lmiddle);
+		mover->left.ring.setup(manos.lring);
+		mover->left.thumb.setup(manos.lthumb);
+		mover->right.trigger.setup(manos.rtrigger);
+		mover->right.middle.setup(manos.rmiddle);
+		mover->right.ring.setup(manos.rring);
+		mover->right.thumb.setup(manos.rthumb);
+
+		if(now() - t > timeOut) {
+			zmq_close(sub);
+			sub = zmq_socket(context, ZMQ_SUB);
+			zmq_setsockopt(sub, ZMQ_RCVHWM, &hwm, sizeof(hwm));
+			zmq_setsockopt(sub, ZMQ_LINGER, &linger, sizeof(linger));
+			zmq_setsockopt(sub, ZMQ_SUBSCRIBE, "", 0);
+			if (zmq_connect(sub, address.c_str()) == 0) {
+				t = now();
+			}			
+		}
+		std::this_thread::sleep_for(std::chrono::microseconds(25));
+	}		
 	zmq_close(sub);
 	zmq_ctx_destroy(context);
   }
