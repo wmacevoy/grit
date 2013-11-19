@@ -52,20 +52,6 @@
 SPScript py;
 #endif
 
-void subscribeH(void *zmq_sub, Hands* manos) 
-{
-	manos->clear();
-	zmq_recv(zmq_sub, manos, sizeof(Hands), 0);
-	manos->lthumb=manos->lthumb;
-	manos->ltrigger=manos->ltrigger;
-	manos->lmiddle=manos->lmiddle; 
-	manos->lring=manos->lring;
-	manos->rthumb=manos->rthumb;
-	manos->rtrigger=manos->rtrigger; 
-	manos->rmiddle=manos->rmiddle; 
-	manos->rring=manos->rring;
-}
-
 using namespace std;
 
 class LeapRx : public ZMQRx
@@ -260,7 +246,9 @@ public:
 	
 	double t = now();	
 	while(hands_on.load()) {
-		subscribeH(sub, &manos);
+		manos.clear();
+		zmq_recv(sub, &manos, sizeof(Hands), 0);	
+
 		mover->left.trigger.setup(manos.ltrigger);
 		mover->left.middle.setup(manos.lmiddle);
 		mover->left.ring.setup(manos.lring);
