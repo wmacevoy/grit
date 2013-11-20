@@ -33,16 +33,10 @@ int main(int argc, char** argv)
   signal(SIGTERM, quit);
   signal(SIGQUIT, quit);
 
-  server = CreateSafetyServer(cfg.str("safety.publish"),cfg.list("safety.subscribers"),cfg.num("safety.rate"),cfg.num("safety.delayoff"));
+  server = CreateSafetyServer(cfg);
 
   while (server) {
     sleep(1);
-    if (verbose) {
-      double t=now();
-      bool safe=server->safe();
-      bool warn=server->warn();
-      cout << t << "," << safe << "," << warn << endl;
-    }
   }
   return 0;
 }

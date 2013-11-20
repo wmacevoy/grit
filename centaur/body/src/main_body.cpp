@@ -258,7 +258,7 @@ public:
 	double t = now();	
 	while(hands_on.load()) {
 		manos.clear();
-		rc = zmq_recv(sub, &manos, sizeof(Hands), 0);
+		int rc = zmq_recv(sub, &manos, sizeof(Hands), 0);
 		if(rc == sizeof(Hands)) {
 			t = now();
 		}	
@@ -1731,7 +1731,7 @@ void run()
   servoController->start();
   bodyController->start();
   safety=CreateSafetyClient(cfg->str("body.safety.publish"),cfg->str("safety.subscribe"),4);
-  safety->safe(true);
+  safety->safe(false);
   signal(SIGINT, SigIntHandler);
   signal(SIGTERM, SigIntHandler);
   signal(SIGQUIT, SigIntHandler);
