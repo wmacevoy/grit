@@ -4,6 +4,7 @@
 #include <SDL/SDL.h>
 #include <assert.h>
 #include "joystick.h"
+#include "now.h"
 #include "Configure.h"
 
 Configure cfg;
@@ -35,6 +36,7 @@ int main(int argc,char **argv)
 	int rc;
 	int hwm = 1;
 	int linger = 25;
+	double t1 = 0.0, t2 = 0.0, timeOut = 0.5;
 	double jxMappedStep = 175.0 / 32768.0;
 	double jyMappedStep = 65.0 / 32768.0;
 	void *context = zmq_ctx_new ();
@@ -45,7 +47,6 @@ int main(int argc,char **argv)
 		die = true;
 	} else {
 		while(!connected) {
-			std::cout << "Press button 1 to terminate" << std::endl;
 			SDL_JoystickEventState(SDL_ENABLE);
 			pub = zmq_socket(context, ZMQ_PUB);
 			if(zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
@@ -92,16 +93,19 @@ int main(int argc,char **argv)
 				if ( event.jbutton.button==0 && event.jbutton.which==0) {
 					jm.setButtonDown(1);
 					publish(&jm,pub); 
-					die = true;
 				}
 				else if ( event.jbutton.button == 1 && event.jbutton.which==0 ) {
 					jm.setButtonDown(2);
 					publish(&jm,pub);
-					active = !active;
-					if(active) {
-						std::cout << "Joystick enabled!" << std::endl;
-					} else {
-						std::cout << "Joystick disabled!" << std::endl;
+					t1 = now();
+					if(t1 - t2 > timeOut) {
+						active = !active;
+						if(active) {
+							std::cout << "Joystick enabled!" << std::endl;
+						} else {
+							std::cout << "Joystick disabled!" << std::endl;
+						}
+						t2 = now();
 					}
 				}
 				break;
