@@ -1,10 +1,25 @@
 name,value
-control.ip,192.168.2.113
-centaur.ip,192.168.2.101
+xcontrol.ip,192.168.2.113
+control.ip,127.0.0.1
+xcentaur.ip,192.168.2.101
+centaur.ip,127.0.0.1
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,15,Degrees per second on the servo
 arms.maxspeed,30,Degrees per second on the servo 
+safety.ip,${centaur.ip}
+safety.port,5600
+safety.delayoff,2.5,seconds of warning
+safety.rate,4,update rate (hertz)
+safety.verbose,true
+safety.publish,tcp://*:${safety.port}
+safety.subscribe,tcp://${safety.ip}:${safety.port}
+safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port}"
+xsafety.subscribers,"tcp://${servos.ip}:${servos.safety.port}"
+servos.ip,${centaur.ip}
+servos.safety.port,5601
+servos.safety.publish,tcp://*:${servos.safety.port}
+servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
 servos.verbose,false
 servos.type,real
 servos.deviceindex,1
@@ -14,16 +29,23 @@ servos.dynamixel.rate.tx,20.0
 servos.publish,tcp://*:5500
 servos.subscribers,"tcp://127.0.0.1:5501,tcp://127.0.0.1:5503"
 servos.map,../../setup/servomap.csv
+body.ip,${centaur.ip}
+body.safety.port,5602
+body.safety.publish,tcp://*:${body.safety.port}
+body.safety.subscribe,tcp://${safety.ip}:${safety.port}
 body.servos.rate,40
 body.servos.publish,tcp://*:5503
 body.servos.subscribers,tcp://127.0.0.1:5500
-body.commander.publish,tcp://*:5502
-body.commander.subscribers,"tcp://${control.ip}:5504"
+body.commander.port,5502
+body.commander.publish,tcp://*:${body.commander.port}
+body.commander.subscribers,"tcp://${commander.ip}:${commander.port}"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
 body.commander.neckAddress,"tcp://${control.ip}:5556"
 body.verbose,false
-commander.publish,"tcp://*:5504"
-commander.subscribers,"tcp://${centaur.ip}:5502"
+commander.ip,${control.ip}
+commander.port,5504
+commander.publish,"tcp://*:${commander.port}"
+commander.subscribers,"tcp://${body.ip}:${body.commander.port}"
 lidar.provider.address,"tcp://*:9997"
 lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"100"
@@ -48,23 +70,31 @@ leap.provider.publish,"tcp://*:${leap.provider.port}"
 leap.provider.subscribe,"tcp://${leap.provider.ip}:${leap.provider.port}"
 leap.requester.verbose,"true"
 leap.requester.sleep_time,"10000"
-leap.requester
-leap.center.x,0.0,offset (inches)
-leap.center.y,26.0,offset (inches)
-leap.center.z,12.0,offset (inches)
+leap.origin.x,0.0,offset (inches)
+leap.origin.y,26.0,offset (inches)
+leap.origin.z,12.0,offset (inches)
+leap.scale.x,1.0
+leap.scale.y,1.0
+leap.scale.z,1.0
 heartbeat.provider.address,"tcp://*:9800"
 heartbeat.provider.verbose,"true"
 heartbeat.provider.sleep_time,"100"
 heartbeat.requester.address,"tcp://${centaur.ip}:9800"
 heartbeat.requester.verbose,"false"
 heartbeat.requester.sleep_time,"15"
-sensors.provider.publish,tcp://*:5506
-sensors.provider.verbose,"true"
-sensors.provider.okreadtimeout,5.0
-sensors.provider.okwritetimeout,5.0
-sensors.provider.readtimeout,1.0
-sensors.provider.dev_path,"/dev/ttyUSB0"
-sensors.requester.address,tcp://${centaur.ip}:5506
+sensors.ip,"${centaur.ip}"
+sensors.port,"5506"
+sensors.publish,"tcp://*:${sensors.port}"
+sensors.subscribe,"tcp://${sensors.ip}:${sensors.port}"
+sensors.safety.port,5603
+sensors.safety.publish,"tcp://*:${sensors.safety.port}
+sensors.safety.subscribe,"tcp://${safety.ip}:${safety.port}"
+sensors.verbose,"true"
+sensors.rxpolltimeout,0.5
+sensors.rxtimeout,5.0
+sensors.txtimeout,5.0
+sensors.rate,10.0
+sensors.dev_path,"/dev/ttyUSB0"
 gloves.publisher.dev_path,"/dev/ttyACM0"
 gloves.publisher.verbose,"false"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
