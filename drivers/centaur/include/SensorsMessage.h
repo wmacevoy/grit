@@ -15,4 +15,7 @@ class SensorsMessage
 
   // leg1,..,leg4
   int32_t p[4];
+
+  // status -- safe(output), warn(output)
+  int16_t s[2];
 };

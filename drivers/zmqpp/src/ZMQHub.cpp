@@ -23,6 +23,7 @@
 #include "ZMQSubscribeSocket.h"
 #include "ZMQMessage.h"
 #include "ZMQ_OK.h"
+#include "now.h"
 
 using namespace std;
 
@@ -38,39 +39,63 @@ ZMQHub::ZMQHub()
   rxCount=0;
   txRate = 0.0/1.0;
   rxRate = 0.0/1.0;
+  rxTimeout=4.0;
+  rxPollTimeout=0.25;
+  txTimeout=4.0;
+}
+
+void ZMQHub::rxClose()
+{
+  rxSockets.clear();
+  rxPollItems.clear();
+  rxContext.reset();
+}
+
+void ZMQHub::rxOpen()
+{
+  rxClose();
+
+  cout << "ZMQHub::rxOpen(this=" << ((void*)this);
+  for (size_t i=0; i<subscribers.size(); ++i) {
+    cout << "," << subscribers[i];
+  }
+  cout << ")" << endl;
+
+  rxContext = std::shared_ptr < ZMQContext > (new ZMQContext());
+
+  for (size_t i=0; i<subscribers.size(); ++i) {
+    ZMQSubscribeSocket *p = new ZMQSubscribeSocket(*rxContext,subscribers[i].c_str());
+    p->highWaterMark(highWaterMark);
+    rxSockets.push_back(shared_ptr<ZMQSubscribeSocket>(p));
+  }
+  
+  rxPollItems.resize(rxSockets.size());
+  
+  for (size_t i=0; i < rxPollItems.size(); ++i) {
+    rxPollItems[i].socket = rxSockets[i]->me;
+    rxPollItems[i].events = ZMQ_POLLIN;
+  }
+  rxOk = now();
 }
 
 void ZMQHub::rxLoop() 
 {
-  ZMQContext context;
-  vector < shared_ptr < ZMQSubscribeSocket > > sockets;
-
-  vector < zmq_pollitem_t > items;
-
-  for (size_t i=0; i<subscribers.size(); ++i) {
-    ZMQSubscribeSocket *p = new ZMQSubscribeSocket(context,subscribers[i].c_str());
-    p->highWaterMark(highWaterMark);
-    sockets.push_back(shared_ptr<ZMQSubscribeSocket>(p));
-  }
-  
-  items.resize(sockets.size());
-  
-  for (size_t i=0; i < items.size(); ++i) {
-    items[i].socket = sockets[i]->me;
-    items[i].events = ZMQ_POLLIN;
-  }
-  
+  rxOpen();
   while (running) {
-    if (zmq_poll(&items[0],items.size(),int(0.25*1000)) <= 0) continue;
+    if (rxOk+rxTimeout < now()) rxOpen();
+    if (zmq_poll(&rxPollItems[0],rxPollItems.size(),int(rxPollTimeout*1000)) <= 0) continue;
     if (!running) break;
-    for (size_t i=0; i != sockets.size(); ++i) {
-      if ((items[i].revents & ZMQ_POLLIN) != 0) {
+    bool ok = true;
+    for (size_t i=0; i != rxSockets.size(); ++i) {
+      if ((rxPollItems[i].revents & ZMQ_POLLIN) != 0) {
 	++rxCount;
-	rx(*sockets[i]);
-	items[i].revents = 0;
+	if (!rx(*rxSockets[i])) ok = false;
+	rxPollItems[i].revents = 0;
       }
     }
+    if (ok) rxOk=now();
   }
+  rxClose();
 }
 
 void ZMQHub::txWait()
@@ -78,16 +103,33 @@ void ZMQHub::txWait()
 	std::this_thread::sleep_for(std::chrono::microseconds(int((1.0/rate)*1000000)));
 }
 
+void ZMQHub::txClose()
+{
+  txSocket.reset();
+  txContext.reset();
+}
+
+void ZMQHub::txOpen()
+{
+  txClose();
+  cout << "ZMQHub::txOpen(this=" << ((void*)this) << "," << publish << ")" << endl;;
+
+  txContext = std::shared_ptr < ZMQContext > ( new ZMQContext() );
+  txSocket = std::shared_ptr < ZMQPublishSocket > ( new ZMQPublishSocket(*txContext,publish) );
+  txSocket->highWaterMark(highWaterMark);
+  txOk=now();
+}
+
 void ZMQHub::txLoop() 
 {
-  ZMQContext context;
-  ZMQPublishSocket socket(context, publish);
-  socket.highWaterMark(highWaterMark);
+  txOpen();
   while (running) {
+    if (txOk+txTimeout < now()) txOpen();
     txWait();
-    tx(socket);
+    if (tx(*txSocket)) txOk=now();
     ++txCount;
   }
+  txClose();
 }
 
 void ZMQHub::reportLoop()
@@ -112,9 +154,15 @@ void ZMQHub::start()
 { 
   if (running == false) {
     running = true;
-    goTx = new std::thread(&ZMQHub::txLoop,this);
-    goRx = new std::thread(&ZMQHub::rxLoop,this);
-    goReport = new std::thread(&ZMQHub::reportLoop,this);
+    if (publish != "") {
+      goTx = new std::thread(&ZMQHub::txLoop,this);
+    }
+    if (!subscribers.empty()) {
+      goRx = new std::thread(&ZMQHub::rxLoop,this);
+    }
+    if (publish != "" || !subscribers.empty()) {
+      goReport = new std::thread(&ZMQHub::reportLoop,this);
+    }
   }
 }
 
