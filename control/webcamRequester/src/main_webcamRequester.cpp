@@ -1,4 +1,5 @@
 #include "opencv2/opencv.hpp"
+#include "opencv2/highgui/highgui.hpp"
 #include <iostream>
 #include <signal.h>
 #include <thread>
@@ -24,6 +25,11 @@ const int sz_lidar_data  = 1081;
 
 volatile int mx = 0;
 volatile int my = 0;
+
+const int normalWidth = 320;
+const int normalHeight = 240;
+const int extendedWidth = 640;
+const int extendedHeight = 480;
 
 const int x_min = 34;
 const int x_max = 285;
@@ -87,7 +93,7 @@ int main(int argc, char** argv)
 	std::string winName = "ICU";
 	std::string text = "0";
 	std::string imageName = "";
-	namedWindow(winName, CV_WINDOW_AUTOSIZE | CV_WINDOW_KEEPRATIO | CV_GUI_EXPANDED);
+	namedWindow(winName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_EXPANDED);
 	
 	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
 	double fontScale = 0.75;
