@@ -93,10 +93,10 @@ int main(int argc, char** argv)
 	std::string winName = "ICU";
 	std::string text = "0";
 	std::string imageName = "";
-	namedWindow(winName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_EXPANDED);
+	namedWindow(winName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
 	
 	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
-	double fontScale = 0.75;
+	double fontScale = 0.60;
 	int thickness = 2;
 
 	std::string ip1 = cfg.str("webcam.requester.addressW");
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 	//Line on screen needs to be calibrated with lidar
 	Point pt1(0, 105);
 	Point pt2(320, 105);
-	Point textOrg(1, 30);
+	Point textOrg(0, 40);
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
@@ -134,8 +134,15 @@ int main(int argc, char** argv)
 					if(rcc == color.total() * color.elemSize()) {
 						t1 = time(0);
 						memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
-
 						line(color, pt1, pt2, Scalar(0, 0, 0));
+
+						for(int i = 0; i < normalWidth; ++i) {
+							int y = 20 - (lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084 * 2);
+							if(y <= 20) { 							
+								line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+							}
+						}	
+
 						if(inside) {	
 							zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
@@ -154,6 +161,14 @@ int main(int argc, char** argv)
 						t1 = time(0);
 						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
 						line(gray, pt1, pt2, Scalar(0, 0, 0));
+
+						for(int i = 0; i < normalWidth; ++i) {
+							int y = 20 - (lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084 * 2);
+							if(y <= 20) { 							
+								line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+							}
+						}				
+
 						if(inside) {	
 							zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
