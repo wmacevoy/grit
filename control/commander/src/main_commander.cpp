@@ -31,20 +31,22 @@ public:
     sends.push_back(content);
   }
 
-  void rx(ZMQSubscribeSocket &socket)
+  bool rx(ZMQSubscribeSocket &socket)
   {
     ZMQMessage msg;
-    msg.recv(socket);
+    if (msg.recv(socket) == 0) return false;
     char *data = (char*) msg.data();
     size_t size = *(uint16_t*)data;
     string reply(data+2,size);
     cout << "\rreply: " << reply << endl << "?";
     cout.flush();
+    return true;
   }
 
-  void tx(ZMQPublishSocket &socket)
+  bool tx(ZMQPublishSocket &socket)
   {
     Lock lock(sendsMutex);
+    bool ok=true;
 
     while (!sends.empty()) {
       string &message = *sends.begin();
@@ -53,9 +55,10 @@ public:
       char *data = (char*)msg.data();
       data[0]=size;
       memcpy(data+1,&message[0],size);
-      msg.send(socket);
+      if (msg.send(socket) == 0) ok=false;
       sends.pop_front();
     }
+    return ok;
   }
 };
 
@@ -70,6 +73,7 @@ void run()
   Commander commander;
   commander.publish = cfg.str("commander.publish");
   commander.subscribers = cfg.list("commander.subscribers");
+  commander.rxTimeout = 1e6;
   commander.start();
   pserver=&commander;
   
