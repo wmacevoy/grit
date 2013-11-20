@@ -18,6 +18,7 @@
 #include "Servo.h"
 #include "ScaledServo.h"
 #include "CSVRead.h"
+#include "CreateSafetyClient.h"
 #include "now.h"
 
 
@@ -87,11 +88,13 @@ public:
   {
     ready=false;
   }
-  void rx(ZMQSubscribeSocket &socket) {
+  bool rx(ZMQSubscribeSocket &socket) {
     ready = true;
+    return true;
   }
 
-  void tx(ZMQPublishSocket &socket) {
+  bool tx(ZMQPublishSocket &socket) {
+    return true;
   }
 };
 
@@ -111,9 +114,9 @@ public:
     return NO_SERVO;
   }
 
-  void rx(ZMQSubscribeSocket &socket) {
+  bool rx(ZMQSubscribeSocket &socket) {
     ZMQMessage msg;
-    msg.recv(socket);
+    if (msg.recv(socket) == 0) return false;
     ZMQServoMessage *data = (ZMQServoMessage *)msg.data();
 /*    if (verbose) {
       if (data->messageId != ZMQServoMessage::SET_CURVE) {
@@ -132,9 +135,11 @@ public:
       servo(data)->curve(curveData->t,curveData->c0,curveData->c1);
       break;
     }
+    return true;
   }
 
-  void tx(ZMQPublishSocket &socket) {
+  bool tx(ZMQPublishSocket &socket) {
+    bool ok = true;
     for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
       {
 	ZMQMessage msg(sizeof(ZMQServoMessage));
@@ -147,7 +152,7 @@ public:
 /*	if (verbose) {
 	  cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
 	} */
-	msg.send(socket);
+	if (msg.send(socket) == 0) ok = false;
       }
       {
 	ZMQMessage msg(sizeof(ZMQServoMessage));
@@ -160,9 +165,10 @@ public:
 	if (verbose) {
 	  cout << "tx msg id=" << data->messageId << " servo=" << data->servoId << " value=" << data->value << endl;
 	}
-	msg.send(socket);
+	if (msg.send(socket) == 0) ok = false;
       } 
     } 
+    return ok;
   }
 
   void report()
@@ -294,6 +300,8 @@ void args()
 }*/
 
 void run() {
+  safety = CreateSafetyClient(cfg.str("servos.safety.publish"),cfg.str("servos.safety.subscribe"),4);
+  safety->safe(true);
   server = shared_ptr < ZMQServoServer > (new ZMQServoServer());
   placebo = shared_ptr < ZMQServoPlacebo > ( new ZMQServoPlacebo() );
   server->NO_SERVO = servo("fake",999);

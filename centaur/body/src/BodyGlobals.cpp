@@ -21,6 +21,7 @@ SPBody body;
 SPBodyMover mover;
 
 SensorsMessage sensors;
+SafetySP safety;
 
 std::map < int , SPServo > servos;
 

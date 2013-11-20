@@ -1,7 +1,7 @@
 all : libs progs
 
 DEPS=
-DRIVER_DEPS=centaur utilities
+DRIVER_DEPS=centaur utilities zmqpp safety
 
 MY_FLAGS=
 MY_LIBS=

@@ -2,3 +2,4 @@
 
 Configure cfg;
 bool verbose;
+SafetySP safety;

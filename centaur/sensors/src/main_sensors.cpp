@@ -15,18 +15,24 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "CSVSplit.h"
-#include <condition_variable>
+#include "Lock.h"
+#include <string.h>
+#include "ZMQHub.h"
+#include "CreateSafetyClient.h"
 
 using namespace std;
 
 Configure cfg;
 bool verbose;
+SafetySP safety;
 
 class Sensors
 {
 private:
   SensorsMessage data;
-  mutable std::mutex accessMutex;
+  mutable std::mutex access;
+
+public:
 
   void copyTo(SensorsMessage &dest) const
   {
@@ -48,36 +54,38 @@ private:
 
 Sensors current;
 
-class ZMQIO : ZMQHub
+class ZMQIO : public ZMQHub
 {
+public:
+  std::mutex readyMutex;
+  bool ready;
+
   void init() {
-    rxPollTimeout = cfg.num(cfg.num("sensors.rxpolltimeout"));
-    rxTimeout = cfg.num(cfg.num("sensors.rxtimeout"));
-    txTimeout = cfg.num(cfg.num("sensors.txtimeout"));
-    subscribers = cfg.list("sensors.subscribers");
+    rate = 20;
+    rxPollTimeout = cfg.num("sensors.rxpolltimeout");
+    rxTimeout = cfg.num("sensors.rxtimeout");
+    txTimeout = cfg.num("sensors.txtimeout");
     publish = cfg.str("sensors.publish");
   }
 
-  void txWait()
+  void start()
   {
-    std::unique_lock<std::mutex> lock(readyMutex);
-    for (;;) {
-      if (ready || !running) break;
-      readyCondition.wait_for(lock,1000/(2*rate));
-    }
+    init();
+    ZMQHub::start();
   }
 
-  void tx(ZMQPublishSocket &socket)
+  bool rx(ZMQSubscribeSocket &socket)
   {
+    return true;
+  }
+  bool tx(ZMQPublishSocket &socket)
+  {
+    bool ok = true;
+
     ZMQMessage msg(sizeof(SensorsMessage));
-    current.copyTo(msg.data());
-    msg.send();
-    ready=false;
-  }
-
-  void tx()
-  {
-    tx_ready.signal();
+    current.copyTo(*(SensorsMessage*)msg.data());
+    if (msg.send(socket) == 0) ok = false;
+    return ok;
   }
 };
 
@@ -119,31 +127,30 @@ void report()
 
 class ArduinoIO
 {
-  float timeout;
+public:
   double ok;
   int fd;
   string line;
   std::thread *go;
-  bool running = false;
+  bool running;
   float rate;
-
-  ArduinoIO()
-  {
-    rxReady=false;
-    go=0;
-  }
+  float rxTimeout;
+  float rxPollTimeout;
 
   void init()
   {
-    rxReady=false;
+    running = false;
     go=0;
     rate=cfg.num("sensors.rate");
+    rxTimeout=cfg.num("sensors.rxtimeout");
+    rxPollTimeout=cfg.num("sensors.rxpolltimeout");
   }
 
   void start()
   {
+    init();
     if (go == 0) {
-      go = new std::thread(ArduinoIO::update,this);
+      go = new std::thread(&ArduinoIO::run,this);
     }
   }
 
@@ -159,14 +166,14 @@ class ArduinoIO
 
   void close()
   {
-    if (fd >= 0) close(fd);
+    if (fd >= 0) ::close(fd);
     fd = -1;
   }
 
   void open()
   {
     close();
-    fd = open(cfg.str("sensors.dev_path").c_str(),O_NONBLOCK);
+    fd = ::open(cfg.str("sensors.dev_path").c_str(),O_NONBLOCK);
     if (verbose) {
       cout << "open(" << cfg.str("sensors.dev_path") << ")=" << fd << endl;
     }
@@ -175,16 +182,16 @@ class ArduinoIO
 
   void write()
   {
-    SensorMessage copy;
-    current.copyTo(copy);
     char tmp[32];
-    snprintf(sizeof(tmp),tmp,"S0=%d\n",copy.s[0]);
-    write(fd,tmp,sizeof(tmp));
+    snprintf(tmp,sizeof(tmp),"S0=%d\n",safety->safe());
+    ::write(fd,tmp,sizeof(tmp));
+    snprintf(tmp,sizeof(tmp),"S1=%d\n",safety->warn());
+    ::write(fd,tmp,sizeof(tmp));
   }
 
   void process(const std::string &line)
   {
-    SensorsMessage sesnors;
+    SensorsMessage sensors;
 
     sensors.t = now();
     
@@ -216,18 +223,15 @@ class ArduinoIO
       sensors.p[3]=atof(vals[++i].c_str());
       
       ok = ok && (vals[++i] == "S");
-      sensors.f[0]=atoi(vals[++i].c_str());
-      sensors.f[1]=atoi(vals[++i].c_str());
+      sensors.s[0]=atoi(vals[++i].c_str());
+      sensors.s[1]=atoi(vals[++i].c_str());
       
       if (ok) {
 	current.copyFrom(sensors);
-	if (zmqSensors.txSocket) {
-	  zmqSensors.tx(*zmqSensors.txSocket);
-	}
 	if (verbose) { 
 	  report();
 	}
-	okRead = sensors.t;
+	ok = sensors.t;
       }
     }
   }
@@ -272,9 +276,8 @@ class ArduinoIO
 
   void read()
   {
-    write();
     char tmp[80];
-    size_t n=read_timeout(fd,tmp,sizeof(tmp),size_t(1000/(2*rate)));
+    size_t n=read_timeout(fd,tmp,sizeof(tmp),size_t(1000*rxPollTimeout));
     if (n > 0) process(n,tmp);
   }
 
@@ -283,6 +286,7 @@ class ArduinoIO
     open();
     double txTime = now() + 1.0/rate;
     while (running) {
+      if (ok + rxTimeout < now()) { open(); }
       if (txTime < now()) {
 	write();
 	txTime += 1.0/rate;
@@ -295,14 +299,13 @@ class ArduinoIO
 
 ArduinoIO arduinoIO;
 
-
 ZMQIO zmqIO;
 
 void quit(int sig)
 {
-  zmqSensors->stop();
-  zmqSensors->join();
-  arduinoIO->stop();
+  zmqIO.stop();
+  zmqIO.join();
+  arduinoIO.stop();
 }
 
 void config(int argc, char** argv)
@@ -322,6 +325,10 @@ int main(int argc, char** argv)
   signal(SIGTERM, quit);
   signal(SIGQUIT, quit);
 
+  safety = CreateSafetyClient(cfg.str("sensors.safety.publish"),
+			      cfg.str("sensors.safety.subscribe"),
+			      4);
+  safety->safe(true);
   arduinoIO.start();
   zmqIO.start();
   zmqIO.join();

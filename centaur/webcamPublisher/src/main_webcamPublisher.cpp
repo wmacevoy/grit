@@ -41,7 +41,7 @@ void publish_mat(Mat& mat, void* zmq_pub)
 	memcpy(zmq_msg_data(&msg), mat.data, mat.total() * mat.elemSize());
 	if(rc == 0)
 	{
-		int rc = zmq_sendmsg(zmq_pub, &msg, ZMQ_DONTWAIT);
+		zmq_sendmsg(zmq_pub, &msg, ZMQ_DONTWAIT);
 	}
 
 	if(verbose) std::cout << "Sent: " << rc << std::endl;
@@ -70,7 +70,6 @@ int main(int argc, char** argv)
 
 	int hwm = 1;
 	int linger = 25;
-	int rc = 0;
 	int retries = 5;
 	bool CorG = false, connected = false;
 	std::string cascadeName;

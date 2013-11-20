@@ -581,8 +581,8 @@ bool BodyMover::blended(double radius,double x,double y,double z,double xstep,do
   vector<vector<double > > lf;
   lf=createMove(radius,x,y,z,xstep,ystep,zAdder-5.75,left,right,narrow,repeat);
   for (int i=0;i<4;i++) {
-	for (int t=0;t<lf.size();t++) {
-	  int t2=t;
+	for (size_t t=0;t<lf.size();t++) {
+	  size_t t2=t;
 	  while (t2<lf.size() && lf[t2][14+i]<0) {
 		  t2++; // find the time for the end of the step down
 	  }

@@ -177,7 +177,7 @@ struct DynamixelServo : Servo
   {
     if (goalTorque != 0) {
       io.writeWord(id,DXL_GOAL_POSITION_WORD,(goalPosition & 4095));
-      io.writeWord(id,DXL_MOVING_SPEED_WORD,goalSpeed);
+      io.writeWord(id,DXL_MOVING_SPEED_WORD,safety->safe() ? goalSpeed : 0);
       io.writeWord(id,DXL_TORQUE_WORD,goalTorque);
       io.writeWord(id,DXL_TORQUE_ENABLE_BYTE,1);
     } else {
@@ -284,6 +284,9 @@ struct DynamixelServoController : ServoController
     //	  cout << endl;
     //	  cout << "t," << setprecision(15) << t << ",";
     //	}
+
+    bool safe = safety->safe();
+
     for (Servos::iterator k = servos.begin(); k != servos.end(); ++k) {
       int id = k->first;
       if (id>=lower && id<=upper)  {
@@ -340,7 +343,7 @@ struct DynamixelServoController : ServoController
 	    servo->speed(max(fabs(speed),fabs(speed1)));
 	  }
 	  int position = servo->goalPosition & 4095;
-	  int speed = servo->goalSpeed;
+	  int speed = safe ? servo->goalSpeed : 0;
 
 	  //	  cout << "DXL PS," << t << "," << id << "," << position <<  "," << speed << endl;
 	  

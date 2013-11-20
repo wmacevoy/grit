@@ -28,10 +28,10 @@ struct ZMQServoController : ServoController, ZMQHub
     txTime = 0;
   }
 
-  void rx(ZMQSubscribeSocket &socket) 
+  bool rx(ZMQSubscribeSocket &socket) 
   {
     ZMQMessage msg;
-    msg.recv(socket);
+    if (msg.recv(socket) == 0) return false;
     ZMQServoMessage *data = (ZMQServoMessage *)msg.data();
     Servos::iterator j = servos.find(data->servoId);
     if (j != servos.end()) {
@@ -40,10 +40,12 @@ struct ZMQServoController : ServoController, ZMQHub
 	j->second->presentAngle=data->value; break;
       }
     }
+    return true;
   }
 
-  void tx(ZMQPublishSocket &socket) {
+  bool tx(ZMQPublishSocket &socket) {
     double lastTxTime = txTime;
+    bool ok = true;
     txTime = now();
     for (Servos::iterator i = servos.begin(); i!=servos.end(); ++i) {
       if (i->second->curveMode) {
@@ -61,7 +63,7 @@ struct ZMQServoController : ServoController, ZMQHub
 	  data->c1[0] = i->second->c1[0];
 	  data->c1[1] = i->second->c1[1];
 	  data->c1[2] = i->second->c1[2];
-	  msg.send(socket);
+	  if (msg.send(socket) == 0) ok = false;
 	}
       } else {
 	{
@@ -71,7 +73,7 @@ struct ZMQServoController : ServoController, ZMQHub
 	  data->messageId = ZMQServoMessage::SET_ANGLE;
 	  data->servoId = i->first;
 	  data->value = i->second->goalAngle;
-	  msg.send(socket);
+	  if (msg.send(socket) == 0) ok = false;
 	}
 	
 	{
@@ -81,7 +83,7 @@ struct ZMQServoController : ServoController, ZMQHub
 	  data->messageId = ZMQServoMessage::SET_SPEED;
 	  data->servoId = i->first;
 	  data->value = i->second->goalSpeed;
-	  msg.send(socket);
+	  if (msg.send(socket) == 0) ok = false;
 	}
       }
 
@@ -95,7 +97,7 @@ struct ZMQServoController : ServoController, ZMQHub
 	    data->messageId = ZMQServoMessage::SET_TORQUE;
 	    data->servoId = i->first;
 	    data->value = i->second->goalTorque;
-	    msg.send(socket);
+	    if (msg.send(socket) == 0) ok = false;
 	  }
 	  {
 	    ZMQMessage msg(sizeof(ZMQServoMessage));
@@ -104,11 +106,12 @@ struct ZMQServoController : ServoController, ZMQHub
 	    data->messageId = ZMQServoMessage::SET_RATE;
 	    data->servoId = i->first;
 	    data->value = i->second->goalRate;
-	    msg.send(socket);
+	    if (msg.send(socket) == 0) ok = false;
 	  }
 	}
       }
     }
+    return ok;
   }
 
   ZMQServoController(const std::string &me, const std::string &server,int rate_) 

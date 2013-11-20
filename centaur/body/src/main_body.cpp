@@ -27,7 +27,6 @@
 
 #include "CreateZMQServoController.h"
 #include "ZMQHub.h"
-#include "ZMQRx.h"
 #include "CSVRead.h"
 #include "BodyMessage.h"
 #include "Lock.h"
@@ -54,20 +53,23 @@ SPScript py;
 
 using namespace std;
 
-class LeapRx : public ZMQRx
+class LeapRx : public ZMQHub
 {
 public:
   LeapMessage message;
-  float center[3];
+  float origin[3],scale[3];
 
   LeapRx() {
     subscribers.push_back(cfg->str("leap.provider.subscribe"));
-    center[0]=cfg->num("leap.center.x");
-    center[1]=cfg->num("leap.center.y");
-    center[2]=cfg->num("leap.center.z");
+    origin[0]=cfg->num("leap.origin.x");
+    origin[1]=cfg->num("leap.origin.y");
+    origin[2]=cfg->num("leap.origin.z");
+    scale[0]=cfg->num("leap.scale.x");
+    scale[1]=cfg->num("leap.scale.y");
+    scale[2]=cfg->num("leap.scale.z");
     if (verbose) {
       cout << "LeapRx: subscribe to " << subscribers[0] << endl;
-      cout << "LeapRx: center=[" << center[0] << "," << center[1] << "," << center[2] << "]" << endl;
+      cout << "LeapRx: center=[" << origin[0] << "," << origin[1] << "," << origin[2] << "]" << endl;
     }
   }
 
@@ -75,37 +77,43 @@ public:
   {
     mover->left.leapReset();
     mover->right.leapReset();
-    ZMQRx::start();
+    ZMQHub::start();
   }
 
-  void rx(ZMQSubscribeSocket &socket) { 
+  bool rx(ZMQSubscribeSocket &socket) { 
     ZMQMessage msg;
-    msg.recv(socket);
+    if (msg.recv(socket) == 0) return false;
     memcpy(&message,msg.data(),sizeof(LeapMessage));
     for (int i=0; i<3; ++i) {
-      message.left.at[i] += center[i];
-      message.right.at[i] += center[i];
+      message.left.at[i] = origin[i]+scale[i]*message.left.at[i];
+      message.right.at[i] = origin[i]+scale[i]*message.right.at[i];
     }
     mover->left.leapAdjust(message.left);
     mover->right.leapAdjust(message.right);
     if (verbose) {
       cout << "leap adjusted" << endl;
     }
+    return true;
   }
+
+  bool tx(ZMQPublishSocket &socket) { return true; }
 };
 
-class SensorsRx : public ZMQRx
+class SensorsRx : public ZMQHub
 {
 public:
   SensorsRx() {
-    subscribers.push_back(cfg->str("sensors.requester.address"));
+    subscribers.push_back(cfg->str("sensors.subscribe"));
   }
 
-  void rx(ZMQSubscribeSocket &socket) {
+  bool rx(ZMQSubscribeSocket &socket) {
     ZMQMessage msg;
-    msg.recv(socket);
+    if (msg.recv(socket) == 0) return false;
     memcpy(&sensors,msg.data(),sizeof(SensorsMessage));
+    return true;
   }
+
+  bool tx(ZMQPublishSocket &socket) { return true; }
 };
 
 class BodyController : public ZMQHub
@@ -230,7 +238,6 @@ public:
   std::thread* handsThread;
   std::atomic < bool > hands_on;
   void subscribeToHands() {	//Hands thread function
-	int rc;
 	int hwm = 1;
 	double timeOut = 2;
 	int linger = 25;
@@ -1002,6 +1009,22 @@ void leapHand() {
       answer(oss.str());
       }
     }
+    if (head == "safe") {
+      string flag;
+      if (iss >> flag) {
+	if (flag == "on") {
+	  safety->safe(true);
+	  answer("body safety is on");
+	} else if (flag == "off") {
+	  safety->safe(false);
+	  answer("body safety is off");
+	}
+      } else {
+	oss << "safe " << (safety->safe() ? "on" : "off")
+	    << "and warn " << (safety->warn() ? "on" : "off");
+	answer(oss.str());
+      }
+    }
     if (head == "at") {
       set<string> names = cfg->servoNames();
       bool any=false;
@@ -1607,19 +1630,21 @@ void leapHand() {
     }
   }
 
-  void rx(ZMQSubscribeSocket &socket)
+  bool rx(ZMQSubscribeSocket &socket)
   {
     ZMQMessage msg;
-    msg.recv(socket);
+    if (msg.recv(socket) == 0) return false;
     char *data = (char *)msg.data();
     string command((const char *)(data+1),data[0]);
     cout << "got: " << command << endl;
     act(command);
+    return true;
   }
 
-  void tx(ZMQPublishSocket &socket)
+  bool tx(ZMQPublishSocket &socket)
   {
     Lock lock(repliesMutex);
+    bool ok = true;
 
     while (!replies.empty()) {
       string &reply = *replies.begin();
@@ -1630,9 +1655,10 @@ void leapHand() {
       char *data = (char *)msg.data();
       *((uint16_t*)data)=size;
       memcpy(data+2,&reply[0],size);
-      msg.send(socket);
+      if (msg.send(socket) == 0) ok = false;
       replies.pop_back();
     }
+    return ok;
   }
 
   BodyController()
@@ -1700,9 +1726,12 @@ void run()
   bodyController = shared_ptr <BodyController> (new BodyController());
   bodyController->publish = cfg->str("body.commander.publish");
   bodyController->subscribers = cfg->list("body.commander.subscribers");
+  bodyController->rxTimeout = 1e6;
 
   servoController->start();
   bodyController->start();
+  safety=CreateSafetyClient(cfg->str("body.safety.publish"),cfg->str("safety.subscribe"),4);
+  safety->safe(true);
   signal(SIGINT, SigIntHandler);
   signal(SIGTERM, SigIntHandler);
   signal(SIGQUIT, SigIntHandler);
