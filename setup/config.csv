@@ -10,6 +10,8 @@ arms.maxspeed,30,Degrees per second on the servo
 safety.ip,${centaur.ip}
 safety.port,5600
 safety.delayoff,2.5,seconds of warning
+safety.txtimeout,2.0,seconds for stale receives
+safety.rxtimeout,2.0,seconds for stale sends
 safety.rate,4,update rate (hertz)
 safety.verbose,true
 safety.publish,tcp://*:${safety.port}
