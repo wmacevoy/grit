@@ -182,6 +182,9 @@ public:
 
   void write()
   {
+    cout << "write()" << endl;
+    
+
     char tmp[32];
     snprintf(tmp,sizeof(tmp),"S0=%d\n",safety->safe());
     ::write(fd,tmp,sizeof(tmp));
@@ -238,6 +241,7 @@ public:
 
   void process(char c)
   {
+    cout << "process(" << c << ")" << endl;
     if (c == '\n') {
       if (line.length() > 0) process(line);
       line="";

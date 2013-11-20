@@ -182,14 +182,21 @@ void setup()
   ios[nios].value=0;
   ++nios;
 
-  ++nois;
   ios[nios].pin = 12;
-  ios[nois].output = true;
-  ios[nois].analog = false;
-  ios[nois].pullup = true;
-  ios[nois].value = 0;
+  ios[nios].output = true;
+  ios[nios].analog = false;
+  ios[nios].pullup = true;
+  ios[nios].value = 0;
+  ++nios;
 
-  for (int i=0; i<nois; ++i) {
+  ios[nios].pin = 11;
+  ios[nios].output = true;
+  ios[nios].analog = false;
+  ios[nios].pullup = true;
+  ios[nios].value = 0;
+  ++nios;
+
+  for (int i=0; i<nios; ++i) {
     if (ios[i].output) {
       if (ios[i].analog) {
         analogWrite(ios[i].pin,ios[i].value);
