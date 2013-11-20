@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Safety.h"
+#include "Configure.h"
 
-SafetySP CreateSafetyServer(const std::string &publish,const std::vector < std::string > &subscribes, float rate, float delayOff);
+SafetySP CreateSafetyServer(Configure &cfg);
 

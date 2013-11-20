@@ -59,6 +59,8 @@ struct DelayedSafety : Safety
 
 struct SafetyServer : DelayedSafety, ZMQHub
 {
+  Configure &cfg;
+  bool verbose;
   std::vector < bool > safes;
   std::vector < double > timeouts;
   bool rx(ZMQSubscribeSocket &socket) 
@@ -109,15 +111,46 @@ struct SafetyServer : DelayedSafety, ZMQHub
     return ok;
   }
 
-  SafetyServer(const std::string &publish_, const std::vector < std::string > &subscribers_, float rate_, float delayOff_)
-  { 
-    rate=rate_;
-    publish = publish_;
-    subscribers=subscribers_;
-    delayOff=delayOff_;
+  void report()
+  {
+    if (verbose) {
+      string color;
+      if (safe()) {
+	if (warn()) {
+	  color = "yellow";
+	} else {
+	  color = "green";
+	}
+      } else {
+	color = "red";
+      }
+      double t = now();
+      cout << "safety: time=" << t << " color=" << color;
+      for (size_t i=0; i<subscribers.size(); ++i) {
+	if (timeouts[i]+rxTimeout < t) {
+	  cout << " " << subscribers[i] << " stale";
+	} else {
+	  if (safes[i]) {
+	    cout << " " << subscribers[i] << " safe";
+	  } else {
+	    cout << " " << subscribers[i] << " unsafe";
+	  }
+	}
+      }
+      cout << endl;
+    }
+  }
 
-    txTimeout=2.0;
-    rxTimeout=2.0;
+  SafetyServer(Configure &cfg_)
+    : cfg(cfg_)
+  { 
+    rate=cfg.num("safety.rate");
+    publish=cfg.str("safety.publish");
+    subscribers=cfg.list("safety.subscribers");
+    delayOff=cfg.num("safety.delayoff");
+    verbose=cfg.flag("safety.verbose",false);
+    txTimeout=cfg.num("safety.txtimeout");
+    rxTimeout=cfg.num("safety.rxtimeout");
 
     safes.clear();
     safes.resize(subscribers.size(),false);
@@ -133,8 +166,8 @@ struct SafetyServer : DelayedSafety, ZMQHub
   }
 };
 
-SafetySP CreateSafetyServer(const std::string &publish,const std::vector < std::string > &subscribers, float rate, float delayOff)
+SafetySP CreateSafetyServer(Configure &cfg)
 {
-  SafetyServer *p = new SafetyServer(publish,subscribers,rate,delayOff);
+  SafetyServer *p = new SafetyServer(cfg);
   return SafetySP(p);
 }
