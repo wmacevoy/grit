@@ -175,24 +175,24 @@ void setup()
   nios=0;
   
   // safe light
-  ios[nios].pin=13;
+  ios[nios].pin=9;
   ios[nios].output=true;
-  ios[nios].analog=false;
+  ios[nios].analog=true;
   ios[nios].pullup=false;
   ios[nios].value=0;
   ++nios;
 
-  ios[nios].pin = 12;
+  ios[nios].pin = 10;
   ios[nios].output = true;
-  ios[nios].analog = false;
-  ios[nios].pullup = true;
+  ios[nios].analog = true;
+  ios[nios].pullup = false;
   ios[nios].value = 0;
   ++nios;
 
   ios[nios].pin = 11;
   ios[nios].output = true;
-  ios[nios].analog = false;
-  ios[nios].pullup = true;
+  ios[nios].analog = true;
+  ios[nios].pullup = false;
   ios[nios].value = 0;
   ++nios;
 
