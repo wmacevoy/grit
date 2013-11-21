@@ -51,7 +51,7 @@ std::string itoa(const T& t) {
 
 void mouseEvent(int evt, int x, int y, int flags, void* param) {
 	if(evt == CV_EVENT_MOUSEMOVE) {
-		if(x >=0 && x <= 320 && y >= 100 && y <= 110) {
+		if(x >=0 && x <= normalWidth && y >= 100 && y <= 110) {
 			mx = x;
 			my = y;
 			inside = true;
@@ -138,9 +138,12 @@ int main(int argc, char** argv)
 						line(color, pt1, pt2, Scalar(50, 50, 50));
 
 						for(int i = 0; i < normalWidth; ++i) {
-							int y = lidarLine - (lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084 * 2);
-							if(y <= normalHeight && y >= 0) { 							
-								line(color, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084
+							if(ft <= 10) {
+								int y = lidarLine - ft;
+								if(y <= normalHeight && y >= 0) { 							
+									line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+								}
 							}
 						}	
 
@@ -164,9 +167,12 @@ int main(int argc, char** argv)
 						line(gray, pt1, pt2, Scalar(50, 50, 50));
 
 						for(int i = 0; i < normalWidth; ++i) {
-							int y = lidarLine - (lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084 * 2);
-							if(y <= normalHeight && y >= 0) { 							
-								line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084
+							if(ft <= 10) {
+								int y = lidarLine - ft;
+								if(y <= normalHeight && y >= 0) { 							
+									line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+								}
 							}
 						}				
 
