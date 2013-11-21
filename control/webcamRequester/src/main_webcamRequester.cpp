@@ -115,9 +115,20 @@ int main(int argc, char** argv)
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
-	//Line on screen needs to be calibrated with lidar
 	Point pt1(0, lidarLine);
 	Point pt2(normalWidth, lidarLine);
+	
+	Point tick5l1(0, lidarLine - 5);
+	Point tick5l2(10, lidarLine - 5);
+	Point tick5r1(normalWidth, lidarLine - 5);
+	Point tick5r2(normalWidth - 10, lidarLine - 5);
+	
+	
+	Point tick10l1(0, lidarLine - 10);
+	Point tick10l2(5, lidarLine - 10);
+	Point tick10r1(normalWidth, lidarLine - 10);
+	Point tick10r2(normalWidth - 5, lidarLine - 10);	
+	
 	Point textOrg(0, 40);
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
@@ -136,13 +147,17 @@ int main(int argc, char** argv)
 						t1 = time(0);
 						memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
 						line(color, pt1, pt2, Scalar(50, 50, 50));
+						line(color, tick5l1, tick5l2, Scalar(0, 0, 0));
+						line(color, tick5r1, tick5r2, Scalar(0, 0, 0));
+						line(color, tick10l1, tick10l2, Scalar(0, 0, 0));
+						line(color, tick10r1, tick10r2, Scalar(0, 0, 0));
 
 						for(int i = 0; i < normalWidth; ++i) {
-							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084
+							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084;
 							if(ft <= 10) {
 								int y = lidarLine - ft;
 								if(y <= normalHeight && y >= 0) { 							
-									line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+									line(color, Point(i, y), Point(i, y), Scalar(0, 0, 0));
 								}
 							}
 						}	
@@ -165,9 +180,13 @@ int main(int argc, char** argv)
 						t1 = time(0);
 						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
 						line(gray, pt1, pt2, Scalar(50, 50, 50));
+						line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
+						line(gray, tick5r1, tick5r2, Scalar(0, 0, 0));
+						line(gray, tick10l1, tick10l2, Scalar(0, 0, 0));
+						line(gray, tick10r1, tick10r2, Scalar(0, 0, 0));
 
 						for(int i = 0; i < normalWidth; ++i) {
-							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084
+							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084;
 							if(ft <= 10) {
 								int y = lidarLine - ft;
 								if(y <= normalHeight && y >= 0) { 							

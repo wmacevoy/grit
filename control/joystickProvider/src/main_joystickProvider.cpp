@@ -81,11 +81,11 @@ int main(int argc,char **argv)
 					publish(&jm,pub);
 				}
 				else if (event.jaxis.axis==2 && event.jaxis.which==0) { 
-					jm.setX2(event.jaxis.value * jxMappedStep);
+					jm.setX2(event.jaxis.value * jxMappedStep * -1.0);
 					publish(&jm,pub);
 				}
 				else if (event.jaxis.axis==3 && event.jaxis.which==0) {
-					jm.setY2(event.jaxis.value * jyMappedStep); 
+					jm.setY2(event.jaxis.value * jyMappedStep * -1.0); 
 					publish(&jm,pub);
 				} 
 				break;
