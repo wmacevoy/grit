@@ -28,13 +28,13 @@ volatile int my = 0;
 
 const int normalWidth = 320;
 const int normalHeight = 240;
-const int extendedWidth = 640;
-const int extendedHeight = 480;
 
 const int x_min = 34;
 const int x_max = 285;
 const int ind_min = 479;
 const int ind_max = 605;
+
+const int lidarLine = 105;
 
 std::string convstr(const float t) {
 	std::stringstream ftoa;
@@ -87,8 +87,8 @@ int main(int argc, char** argv)
 	int t1 = 0, t2 = 0;
 	bool CorG  = true;
 	float timeOut = 3.0;
-	Mat color(240, 320, CV_8UC3);
-	Mat gray(240, 320, CV_8UC1);
+	Mat color(normalHeight, normalWidth, CV_8UC3);
+	Mat gray(normalHeight, normalWidth, CV_8UC1);
 
 	std::string winName = "ICU";
 	std::string text = "0";
@@ -116,8 +116,8 @@ int main(int argc, char** argv)
 	signal(SIGQUIT, quitproc);
 
 	//Line on screen needs to be calibrated with lidar
-	Point pt1(0, 105);
-	Point pt2(320, 105);
+	Point pt1(0, lidarLine);
+	Point pt2(normalWidth, lidarLine);
 	Point textOrg(0, 40);
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
@@ -131,20 +131,20 @@ int main(int argc, char** argv)
 				switch(CorG) {
 				case false:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
+					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
 					if(rcc == color.total() * color.elemSize()) {
 						t1 = time(0);
 						memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
-						line(color, pt1, pt2, Scalar(0, 0, 0));
+						line(color, pt1, pt2, Scalar(50, 50, 50));
 
 						for(int i = 0; i < normalWidth; ++i) {
-							int y = 20 - (lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084 * 2);
-							if(y <= 20) { 							
-								line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+							int y = lidarLine - (lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084 * 2);
+							if(y <= normalHeight && y >= 0) { 							
+								line(color, Point(i, y), Point(i, y), Scalar(0, 0, 0));
 							}
 						}	
 
 						if(inside) {	
-							zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
 							text = convstr(lidar_data[index] * 0.00328084);
@@ -157,20 +157,20 @@ int main(int argc, char** argv)
 					break;
 				case true:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
+					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
 					if(rcc == gray.total() * gray.elemSize()) {
 						t1 = time(0);
 						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
-						line(gray, pt1, pt2, Scalar(0, 0, 0));
+						line(gray, pt1, pt2, Scalar(50, 50, 50));
 
 						for(int i = 0; i < normalWidth; ++i) {
-							int y = 20 - (lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084 * 2);
-							if(y <= 20) { 							
+							int y = lidarLine - (lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084 * 2);
+							if(y <= normalHeight && y >= 0) { 							
 								line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
 							}
 						}				
 
 						if(inside) {	
-							zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
 							text = convstr(lidar_data[index] * 0.00328084);
