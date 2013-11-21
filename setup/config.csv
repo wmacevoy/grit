@@ -97,7 +97,7 @@ sensors.rxtimeout,5.0
 sensors.readtimeout,5.0
 sensors.txtimeout,5.0
 sensors.rate,10.0
-sensors.dev_path,"/dev/ttyUSB2"
+sensors.dev_path,"/dev/ttyUSB0"
 gloves.publisher.dev_path,"/dev/ttyACM0"
 gloves.publisher.verbose,"false"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
