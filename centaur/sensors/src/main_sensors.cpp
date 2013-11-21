@@ -15,88 +15,117 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include "CSVSplit.h"
-#include "Lock.h"
-#include <string.h>
-#include "ZMQHub.h"
 #include "CreateSafetyClient.h"
+#include <string.h>
 
 using namespace std;
 
 Configure cfg;
-bool verbose;
 SafetySP safety;
+bool verbose;
+volatile bool running = true;
 
-class Sensors
+void *context=0;
+void *pub=0;
+
+SensorsMessage sensors;
+double okRead;
+double readTimeout;
+double okReadTimeout;
+double okWrite;
+double okWriteTimeout;
+
+#define N 4096
+char buffer[N];
+
+int fd=-1;
+string line;
+
+void write_close()
 {
-private:
-  SensorsMessage data;
-  mutable std::mutex access;
-
-public:
-
-  void copyTo(SensorsMessage &dest) const
-  {
-    Lock lock(access);
-    memcpy(&dest,&data,sizeof(SensorsMessage));
+  if (pub != 0) {
+    zmq_close(pub);
+    pub = 0;
   }
+}
 
-  void copyFrom(const SensorsMessage &src)
-  {
-    Lock lock(access);
-    memcpy(&data,&src,sizeof(SensorsMessage));
-  }
-
-  Sensors()
-  {
-    memset(&data,0,sizeof(SensorsMessage));
-  }
-};
-
-Sensors current;
-
-class ZMQIO : public ZMQHub
+void zmqerror()
 {
-public:
-  std::mutex readyMutex;
-  bool ready;
+  int en=zmq_errno();
+  cout << "ZMQ error " 
+       << zmq_strerror(en) 
+       << " (" << en << ")" << endl;
+}
 
-  void init() {
-    rate = 20;
-    rxPollTimeout = cfg.num("sensors.rxpolltimeout");
-    rxTimeout = cfg.num("sensors.rxtimeout");
-    txTimeout = cfg.num("sensors.txtimeout");
-    publish = cfg.str("sensors.publish");
+void write_open()
+{
+  write_close();
+
+  int rc = 0;
+  int hwm = 1;
+  
+  pub = zmq_socket(context,ZMQ_PUB);
+  rc = zmq_setsockopt(pub, ZMQ_SNDHWM, &hwm, sizeof(hwm));
+  if (rc != 0) {
+    zmqerror();
+    write_close();
+  } else {
+    rc = zmq_bind(pub, cfg.str("sensors.publish").c_str());
+    if (rc!=0) {
+      zmqerror();
+      write_close();
+    }
   }
 
-  void start()
-  {
-    init();
-    ZMQHub::start();
+  okWrite = now();
+}
+
+void writeSafe()
+{
+  bool red = !safety->safe();
+  bool yellow = !red && safety->warn();
+  bool green = !red && !yellow;
+
+  int R = (red || yellow) ? 0 : 255;
+  int G = (green || yellow) ? 0 : 255;
+  int B = (false)  ? 0 : 255;
+
+  if (green) { cout << "green(" << R << "," << G << "," << B << ")" << endl; }
+  if (yellow) { cout << "yellow(" << R << "," << G << "," << B << ")" << endl; }
+  if (red) { cout << "red(" << R << "," << G << "," << B << ")" << endl; }
+  
+  char tmp[32];
+
+  snprintf(tmp,sizeof(tmp),"S0=%d\n",G);
+  write(fd,tmp,strlen(tmp));
+
+  snprintf(tmp,sizeof(tmp),"S1=%d\n",B);
+  write(fd,tmp,strlen(tmp));
+
+  snprintf(tmp,sizeof(tmp),"S2=%d\n",R);
+  write(fd,tmp,strlen(tmp));
+}
+
+void write()
+{
+  writeSafe();
+  if (pub == 0 || okWrite+okWriteTimeout < now()) {
+    write_open();
   }
 
-  bool rx(ZMQSubscribeSocket &socket)
-  {
-    return true;
+  if (pub != 0) {
+    int rc = zmq_send(pub,&sensors, sizeof(SensorsMessage), ZMQ_DONTWAIT);
+    if (rc!=0) {
+    } else {
+      okWrite = sensors.t;
+    }
   }
-  bool tx(ZMQPublishSocket &socket)
-  {
-    bool ok = true;
+}
 
-    ZMQMessage msg(sizeof(SensorsMessage));
-    current.copyTo(*(SensorsMessage*)msg.data());
-    if (msg.send(socket) == 0) ok = false;
-    return ok;
-  }
-};
-
-     
 void report()
 {
-  SensorsMessage sensors;
-  current.copyTo(sensors);
-  
   cout << "t=" << sensors.t;
-  
+
   cout << " a=[" 
        << sensors.a[0] << ","
        << sensors.a[1] << ","
@@ -117,199 +146,128 @@ void report()
        << sensors.p[1] << ","
        << sensors.p[2] << ","
        << sensors.p[3] << "]";
-  
-  cout << " s=["
+
+  cout << " s=[" 
        << sensors.s[0] << ","
-       << sensors.s[1] << "]";
+       << sensors.s[1] << ","
+       << sensors.s[2] << "]";
   
   cout << endl;
 }
 
-class ArduinoIO
+void process(const std::string &line)
 {
-public:
-  double ok;
-  int fd;
-  string line;
-  std::thread *go;
-  bool running;
-  float rate;
-  float rxTimeout;
-  float rxPollTimeout;
+  sensors.t = now();
 
-  void init()
-  {
-    running = false;
-    go=0;
-    rate=cfg.num("sensors.rate");
-    rxTimeout=cfg.num("sensors.rxtimeout");
-    rxPollTimeout=cfg.num("sensors.rxpolltimeout");
-  }
+  vector<string> vals;
+  CSVSplit(line,vals);
+  if (vals.size() == 21) {
+    bool ok = true;
+    int i = -1;
 
-  void start()
-  {
-    init();
-    if (go == 0) {
-      go = new std::thread(&ArduinoIO::run,this);
-    }
-  }
+    ok = ok && (vals[++i] == "A");
+    sensors.a[0]=atof(vals[++i].c_str());
+    sensors.a[1]=atof(vals[++i].c_str());
+    sensors.a[2]=atof(vals[++i].c_str());
 
-  void stop()
-  {
-    if (go != 0) {
-      running = false;
-      go->join();
-      delete go;
-      go = 0;
-    }
-  }
+    ok = ok && (vals[++i] == "C");
+    sensors.c[0]=atof(vals[++i].c_str());
+    sensors.c[1]=atof(vals[++i].c_str());
+    sensors.c[2]=atof(vals[++i].c_str());
 
-  void close()
-  {
-    if (fd >= 0) ::close(fd);
-    fd = -1;
-  }
+    ok = ok && (vals[++i] == "G");
+    sensors.g[0]=atof(vals[++i].c_str());
+    sensors.g[1]=atof(vals[++i].c_str());
+    sensors.g[2]=atof(vals[++i].c_str());
 
-  void open()
-  {
-    close();
-    fd = ::open(cfg.str("sensors.dev_path").c_str(),O_NONBLOCK);
-    if (verbose) {
-      cout << "open(" << cfg.str("sensors.dev_path") << ")=" << fd << endl;
-    }
-    ok=now();
-  }
+    ok = ok && (vals[++i] == "L");
+    sensors.p[0]=atof(vals[++i].c_str());
+    sensors.p[1]=atof(vals[++i].c_str());
+    sensors.p[2]=atof(vals[++i].c_str());
+    sensors.p[3]=atof(vals[++i].c_str());
 
-  void write()
-  {
-    cout << "write()" << endl;
-    
+    ok = ok && (vals[++i] == "S");
+    sensors.s[0]=atof(vals[++i].c_str());
+    sensors.s[1]=atof(vals[++i].c_str());
+    sensors.s[2]=atof(vals[++i].c_str());
 
-    char tmp[32];
-    snprintf(tmp,sizeof(tmp),"S0=%d\n",safety->safe());
-    ::write(fd,tmp,sizeof(tmp));
-    snprintf(tmp,sizeof(tmp),"S1=%d\n",safety->warn());
-    ::write(fd,tmp,sizeof(tmp));
-  }
-
-  void process(const std::string &line)
-  {
-    SensorsMessage sensors;
-
-    sensors.t = now();
-    
-    vector<string> vals;
-    CSVSplit(line,vals);
-    if (vals.size() == 20) {
-      bool ok = true;
-      int i = -1;
-      
-      ok = ok && (vals[++i] == "A");
-      sensors.a[0]=atof(vals[++i].c_str());
-      sensors.a[1]=atof(vals[++i].c_str());
-      sensors.a[2]=atof(vals[++i].c_str());
-      
-      ok = ok && (vals[++i] == "C");
-      sensors.c[0]=atof(vals[++i].c_str());
-      sensors.c[1]=atof(vals[++i].c_str());
-      sensors.c[2]=atof(vals[++i].c_str());
-      
-      ok = ok && (vals[++i] == "G");
-      sensors.g[0]=atof(vals[++i].c_str());
-      sensors.g[1]=atof(vals[++i].c_str());
-      sensors.g[2]=atof(vals[++i].c_str());
-      
-      ok = ok && (vals[++i] == "L");
-      sensors.p[0]=atof(vals[++i].c_str());
-      sensors.p[1]=atof(vals[++i].c_str());
-      sensors.p[2]=atof(vals[++i].c_str());
-      sensors.p[3]=atof(vals[++i].c_str());
-      
-      ok = ok && (vals[++i] == "S");
-      sensors.s[0]=atoi(vals[++i].c_str());
-      sensors.s[1]=atoi(vals[++i].c_str());
-      
-      if (ok) {
-	current.copyFrom(sensors);
-	if (verbose) { 
-	  report();
-	}
-	ok = sensors.t;
+    if (ok) {
+      if (verbose) { 
+	report();
       }
+      okRead = sensors.t;
+      write();
     }
   }
+}
 
-  void process(char c)
-  {
-    cout << "process(" << c << ")" << endl;
-    if (c == '\n') {
-      if (line.length() > 0) process(line);
-      line="";
-    } else if (c >= ' ') {
-      line.push_back(c);
-    }
+void process(char c)
+{
+  if (c == '\n') {
+    if (line.length() > 0) process(line);
+    line="";
+  } else if (c >= ' ') {
+    line.push_back(c);
+  }
+}
+
+void process(ssize_t n, char *c)
+{
+  for (ssize_t i = 0; i<n; ++i) {
+    process(c[i]);
+  }
+}
+
+void read_close()
+{
+  if (fd >= 0) close(fd);
+  fd = -1;
+}
+
+void read_open()
+{
+  read_close();
+  fd = open(cfg.str("sensors.dev_path").c_str(),O_RDWR|O_NONBLOCK);
+  if (verbose) {
+    cout << "open(" << cfg.str("sensors.dev_path") << ")=" << fd << endl;
+  }
+  okRead = now();
+}
+
+ssize_t read_timeout(int fd, char *buffer, size_t n, size_t msTimeout)
+{
+  struct timespec ts;
+  ts.tv_sec = msTimeout/1000;
+  ts.tv_nsec = (msTimeout % 1000)*1000000;
+
+  fd_set set;
+  int rv;
+
+  FD_ZERO(&set);
+  FD_SET(fd, &set);
+
+  rv = pselect(fd + 1, &set, NULL, NULL, &ts, NULL);
+
+  if (rv > 0) {
+    return read(fd,buffer,n);
+  } else {
+    return 0;
+  }
+}
+
+void read()
+{
+  if (fd < 0 || okRead+okReadTimeout < now()) {
+    read_open();
   }
 
-  void process(ssize_t n, char *c)
-  {
-    for (ssize_t i = 0; i<n; ++i) {
-      process(c[i]);
-    }
-  }
-
-  ssize_t read_timeout(int fd, char *buffer, size_t n, size_t msTimeout)
-  {
-    struct timespec ts;
-    ts.tv_sec = msTimeout/1000;
-    ts.tv_nsec = (msTimeout % 1000)*1000000;
-    
-    fd_set set;
-    int rv;
-    
-    FD_ZERO(&set);
-    FD_SET(fd, &set);
-    
-    rv = pselect(fd + 1, &set, NULL, NULL, &ts, NULL);
-    
-    if (rv > 0) {
-      return ::read(fd,buffer,n);
-    } else {
-      return 0;
-    }
-  }
-
-  void read()
-  {
-    char tmp[80];
-    size_t n=read_timeout(fd,tmp,sizeof(tmp),size_t(1000*rxPollTimeout));
-    if (n > 0) process(n,tmp);
-  }
-
-  void run()
-  {
-    open();
-    double txTime = now() + 1.0/rate;
-    while (running) {
-      if (ok + rxTimeout < now()) { open(); }
-      if (txTime < now()) {
-	write();
-	txTime += 1.0/rate;
-      }
-      read();
-    }
-    close();
-  }
-};
-
-ArduinoIO arduinoIO;
-
-ZMQIO zmqIO;
+  ssize_t n = read_timeout(fd,buffer,N, 1000*readTimeout);
+  if (n > 0) process(n,buffer);
+}
 
 void quit(int sig)
 {
-  zmqIO.stop();
-  zmqIO.join();
-  arduinoIO.stop();
+  running = false;
 }
 
 void config(int argc, char** argv)
@@ -319,6 +277,10 @@ void config(int argc, char** argv)
   if (argc == 1) cfg.load("config.csv");
   verbose = cfg.flag("sensors.verbose", false);
   if (verbose) cfg.show();
+
+  readTimeout = cfg.num("sensors.readtimeout");
+  okReadTimeout = cfg.num("sensors.rxtimeout");
+  okWriteTimeout = cfg.num("sensors.txtimeout");
 }
 
 int main(int argc, char** argv)
@@ -326,16 +288,22 @@ int main(int argc, char** argv)
   config(argc,argv);
 
   signal(SIGINT, quit);
-  signal(SIGTERM, quit);
   signal(SIGQUIT, quit);
 
-  safety = CreateSafetyClient(cfg.str("sensors.safety.publish"),
-			      cfg.str("sensors.safety.subscribe"),
-			      4);
+  safety = CreateSafetyClient(cfg.str("sensors.safety.publish"),cfg.str("safety.subscribe"),cfg.num("safety.rate"));
   safety->safe(true);
-  arduinoIO.start();
-  zmqIO.start();
-  zmqIO.join();
+
+  context = zmq_ctx_new ();
+
+
+  while(running) { 
+    read();
+  }
+
+  read_close();
+  write_close();
+
+  zmq_ctx_destroy(context);
   
   return 0;
 }
