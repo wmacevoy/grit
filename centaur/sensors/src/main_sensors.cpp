@@ -17,6 +17,7 @@
 #include "CSVSplit.h"
 #include "CreateSafetyClient.h"
 #include <string.h>
+#include "CRC16.h"
 
 using namespace std;
 
@@ -82,28 +83,27 @@ void write_open()
 
 void writeSafe()
 {
+  // color to use
   bool red = !safety->safe();
   bool yellow = !red && safety->warn();
   bool green = !red && !yellow;
 
-  int R = (red || yellow) ? 0 : 255;
-  int G = (green || yellow) ? 0 : 255;
-  int B = (false)  ? 0 : 255;
-
-  if (green) { cout << "green(" << R << "," << G << "," << B << ")" << endl; }
-  if (yellow) { cout << "yellow(" << R << "," << G << "," << B << ")" << endl; }
-  if (red) { cout << "red(" << R << "," << G << "," << B << ")" << endl; }
+  // RGB (0-255) for this color
   
-  char tmp[32];
+  int R = (red || yellow) ? 255 : 0;
+  int G = (green || yellow) ? 255 : 0;
+  int B = (false)  ? 255 : 0;
 
-  snprintf(tmp,sizeof(tmp),"S0=%d\n",G);
-  write(fd,tmp,strlen(tmp));
+  // Msg to send to controller for this color (with checksum)
 
-  snprintf(tmp,sizeof(tmp),"S1=%d\n",B);
+  char tmp[80];
+  snprintf(tmp,sizeof(tmp),"S0=%d,S1=%d,S2=%d",255-R,255-G,255-B);
+  size_t n=strlen(tmp);
+  snprintf(tmp+n,sizeof(tmp)-n,"$%04x\n",CRC16(tmp,n));
   write(fd,tmp,strlen(tmp));
-
-  snprintf(tmp,sizeof(tmp),"S2=%d\n",R);
-  write(fd,tmp,strlen(tmp));
+  if (verbose) {
+    cout << "wrote: " << tmp;
+  }
 }
 
 void write()
@@ -124,6 +124,7 @@ void write()
 
 void report()
 {
+  return;
   cout << "t=" << sensors.t;
 
   cout << " a=[" 
