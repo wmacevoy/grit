@@ -30,5 +30,5 @@ RIGHTARM_BICEP_ROTATE,67,${servos.type},0.0167,0.0167,-3.6875,73.75,1,1,${arms.m
 RIGHTARM_SHOULDER_UD,68,${servos.type},0.0167,0.0167,-3.6875,-25.81,1,1,${arms.minspeed},${arms.maxspeed},-175,175
 RIGHTARM_SHOULDER_IO,69,${servos.type},0.0167,0.0167,-3.6875,0,1,1,${arms.minspeed},${arms.maxspeed},-175,175
 WAIST,91,${servos.type},0.0167,0.0167,3,0,1,1,5,10,-175,175
-NECKUD,94,${servos.type},0.0167,0.0167,-1,0,0.5,0.5,20,200,-175,175
-NECKLR,93,${servos.type},0.0167,0.0167,1,0,0.5,0.5,20,200,-175,175
+NECKUD,94,${servos.type},0.0167,0.0167,-1,0,0.5,0.5,20,25,-175,175
+NECKLR,93,${servos.type},0.0167,0.0167,1,0,0.5,0.5,20,25,-175,175

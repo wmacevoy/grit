@@ -94,6 +94,7 @@ sensors.safety.subscribe,"tcp://${safety.ip}:${safety.port}"
 sensors.verbose,"true"
 sensors.rxpolltimeout,0.5
 sensors.rxtimeout,5.0
+sensors.readtimeout,5.0
 sensors.txtimeout,5.0
 sensors.rate,10.0
 sensors.dev_path,"/dev/ttyUSB0"
