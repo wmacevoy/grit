@@ -85,14 +85,14 @@ void writeSafe()
 {
   // color to use
   bool red = !safety->safe();
-  bool yellow = !red && safety->warn();
-  bool green = !red && !yellow;
+  bool purple = !red && safety->warn();
+  bool green = !red && !purple;
 
   // RGB (0-255) for this color
   
-  int R = (red || yellow) ? 255 : 0;
-  int G = (green || yellow) ? 255 : 0;
-  int B = (false)  ? 255 : 0;
+  int R = (red || purple) ? 255 : 0;
+  int G = (green) ? 255 : 0;
+  int B = (purple)  ? 255 : 0;
 
   // Msg to send to controller for this color (with checksum)
 
