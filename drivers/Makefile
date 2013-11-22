@@ -5,4 +5,5 @@
 	$(MAKE) -C ik $@
 	$(MAKE) -C zmqWrapper $@
 	$(MAKE) -C safety
+	$(MAKE) -C 3d $@
 
