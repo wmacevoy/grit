@@ -8,7 +8,7 @@ class Safety
   virtual bool safe() const=0;
   virtual bool warn() const=0;
   virtual void safe(bool value)=0;
-  ~Safety();
+  virtual ~Safety();
 };
 
 
