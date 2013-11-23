@@ -72,7 +72,7 @@ void draw() {
 	glVertex2d(r * cos(0.0), r * sin(0.0));
 	int i;
 	for (i = circle_points; i >= 0; --i) {
-		r = lidar_data[i];
+		//r = lidar_data[i];
 		if(verbose) printf( "angle = %f \n" , angle1);
 		glVertex2d(r * cos(angle1), r * sin(angle1));
 		angle1 += angle ;
@@ -86,6 +86,11 @@ void draw() {
 	glVertex2f( 1, 1 );
 	glEnd();
 	
+	glBegin(GL_LINES);
+	glVertex2f( 0, 1 );
+	glVertex2f( 0, 2 );
+	glEnd();
+
 	glutSwapBuffers();
 }
 
@@ -98,19 +103,15 @@ void init() {
 
 void keyboard (unsigned char key , int x, int y) {
 	if(key == 27) {
-		glutDestroyWindow(id);
 		glutLeaveMainLoop();
 	}
 }
 
 void quitproc(int param) {
-	glutDestroyWindow(id);
 	glutLeaveMainLoop();
 }
 
 int main( int argc,char **argv) {
-	glutInit(&argc, argv);
-
 	cfg.path("../../setup");
 	cfg.args("glView.subscriber.", argv);
 	if (argc == 1) cfg.load("config.csv");
@@ -132,6 +133,7 @@ int main( int argc,char **argv) {
 		if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
 			if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
 				if(zmq_connect(sub_lidar, address.c_str()) == 0) {
+					glutInit(&argc, argv);
 					glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 					glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
 					glutInitWindowPosition(100, 100);
@@ -145,6 +147,7 @@ int main( int argc,char **argv) {
 					lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 					if(lidar_data) {
 						good = true;					
+						std::cout << "Everthing was successfully initialized" <<std::endl;					
 					}
 				}
 			}
