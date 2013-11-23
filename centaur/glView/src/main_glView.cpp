@@ -78,7 +78,6 @@ void draw() {
 		angle1 += angle ;
 	}
 	glEnd();		
-	glFlush();
 
 	glBegin(GL_LINE_LOOP);
 	glVertex2f( -1, 1 );
