@@ -85,8 +85,10 @@ heartbeat.provider.sleep_time,"100"
 heartbeat.requester.address,"tcp://${centaur.ip}:9800"
 heartbeat.requester.verbose,"false"
 heartbeat.requester.sleep_time,"100"
-glView.subscriber.address,"tcp://127.0.0.1:9809"
+glView.subscriber.addressL,"tcp://127.0.0.1:9809"
+glView.subscriber.addressN,"tcp://127.0.0.1:9810", #actually need to get port
 glView.subscriber.verbose,"false"
+glView.subscriber.sleep_time,100
 sensors.ip,"${centaur.ip}"
 sensors.port,"5506"
 sensors.publish,"tcp://*:${sensors.port}"
