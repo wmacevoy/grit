@@ -72,7 +72,7 @@ void draw() {
 	glVertex2d(r * cos(0.0), r * sin(0.0));
 	int i;
 	for (i = circle_points; i >= 0; --i) {
-		//r = lidar_data[i];
+		r = lidar_data[i] * 0.00328084;
 		if(verbose) printf( "angle = %f \n" , angle1);
 		glVertex2d(r * cos(angle1), r * sin(angle1));
 		angle1 += angle ;
