@@ -230,9 +230,9 @@ public:
       }
       else if(dataNeeded == 2) {
         //Get neck angles and populate array
-	//Servos::iterator i = servos.find();
+	//Servos::iterator i = servos.find(93);
         //neckArr[0] = (int32_t)i->second->angle(); //Yaw
-	//i = servos.find();
+	//i = servos.find(94);
         //neckArr[1] = (int32_t)i->second->angle(); //Pitch
 
         //zmq_send(rep, neckArr, sizeof(int32_t) * 2, ZMQ_DONTWAIT);
