@@ -5,4 +5,6 @@
 	$(MAKE) -C LidarProvider $@
 	$(MAKE) -C sensors $@
 	$(MAKE) -C safetyProvider $@
+	$(MAKE) -C glView $@
+
 

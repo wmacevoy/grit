@@ -296,9 +296,6 @@ void args()
   }
 }
 
-/*I am unfamiliar with this code and need to know where to start and stop this thread.
-}*/
-
 void run() {
   safety = CreateSafetyClient(cfg.str("servos.safety.publish"),cfg.str("servos.safety.subscribe"),4);
   safety->safe(true);
