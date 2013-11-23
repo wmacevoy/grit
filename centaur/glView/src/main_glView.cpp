@@ -12,6 +12,9 @@
 Configure cfg;
 bool verbose = false;
 
+const int SCREENWIDTH = 300;
+const int SCREENHEIGHT = 300;
+
 std::string address = "";
 
 GLint id;
@@ -27,22 +30,64 @@ int sz_lidar_data = 1081;
 int hwm = 1;
 int linger = 25;
 
-// This is the draw function.
+void subLidar() {
+	static float t1 = 0, t2 = 0, timeOut = 0.5;
+	int rcc;
+
+	rcc = zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
+	if(rcc == sz_lidar_data) {
+		t1 = now();
+	}
+
+
+	t2 = now();
+	if(t2 - t1 > timeOut) {
+		zmq_close(sub_lidar);
+		sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);		
+		if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {
+			if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+				if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+					if(zmq_connect(sub_lidar, address.c_str()) == 0) {
+						std::cout << "Connection successfully set/reset" << std::endl;
+						t1 = now();
+					}
+
+				}
+
+			}
+		}
+	}	
+
+	glutPostRedisplay();
+}
+
+// Scale is 10px/ft
 void draw() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	double angle = (3 * M_PI) / (2 * circle_points) ;
 	glColor3f(0.2, 0.5, 0.5 );
+
 	glBegin(GL_POINTS);
 	double angle1 = 7 * M_PI / 4;
 	glVertex2d(r * cos(0.0), r * sin(0.0));
 	int i;
 	for (i = circle_points; i >= 0; --i) {
-		printf( "angle = %f \n" , angle1);
+		r = lidar_data[i];
+		if(verbose) printf( "angle = %f \n" , angle1);
 		glVertex2d(r * cos(angle1), r * sin(angle1));
 		angle1 += angle ;
 	}
 	glEnd();		
 	glFlush();
+
+	glBegin(GL_LINE_LOOP);
+	glVertex2f( -1, 1 );
+	glVertex2f( -1, -1 );
+	glVertex2f( 1, -1 );
+	glVertex2f( 1, 1 );
+	glEnd();
+	
+	glutSwapBuffers();
 }
 
 void init() {
@@ -57,34 +102,6 @@ void keyboard (unsigned char key , int x, int y) {
 		glutDestroyWindow(id);
 		glutLeaveMainLoop();
 	}
-}
-
-void subLidar(int value) {
-	static float t1 = 0, t2 = 0, timeOut = 0.5;
-	int rcc;
-
-	rcc = zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
-	if(rcc) {
-		t1 = now();
-	}
-
-
-	t2 = now();
-	if(t2 - t1 > timeOut) {
-		zmq_close(sub_lidar);
-		sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);		
-		if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {
-			if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-				if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-					if(zmq_connect(sub_lidar, address.c_str()) == 0) {
-						t1 = now();
-					}
-
-				}
-
-			}
-		}
-	}	
 }
 
 void quitproc(int param) {
@@ -116,13 +133,13 @@ int main( int argc,char **argv) {
 		if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
 			if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
 				if(zmq_connect(sub_lidar, address.c_str()) == 0) {
-					glutInitDisplayMode(GLUT_SINGLE |GLUT_RGB);
-					glutInitWindowSize(260, 260);
+					glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+					glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
 					glutInitWindowPosition(100, 100);
 					glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
-					id = glutCreateWindow("circleGL");
+					id = glutCreateWindow("roboViewGL");
 					init();
-					glutTimerFunc(100, subLidar, 0);
+					glutIdleFunc(subLidar);
 					glutKeyboardFunc(keyboard);
 					glutDisplayFunc(draw);
 
