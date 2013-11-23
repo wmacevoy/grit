@@ -1,3 +1,19 @@
+/*
+ *  Layout:
+ *
+ *               15F 
+ *            _______
+ *            |     |
+ *       -15L |  B  | 15R    
+ *            |     |
+ *            _______
+ *              -15B
+ *
+ * Buddy is always orientated towards F
+ * his neck (red line) can orient +-175 L and R
+ *
+*/
+
 //#define GLUT_DISABLE_ATEXIT_HACK
 #include <GL/freeglut.h>
 #include <stdio.h>
@@ -21,7 +37,6 @@ const int SCREENHEIGHT = 300;
 std::string addressL = "";
 std::string addressN = "";
 
-GLint id;
 GLint circle_points = 1081;
 double r = 5;
 
@@ -43,7 +58,7 @@ const double arcStep = (3 * M_PI) / (2 * circle_points);
 const double neckAdjust = 3 * M_PI / 4;
 
 void getData() {
-	static float tl1 = 0, tl2 = 0, tn1 = 0, tn2 = 0, timeOut = 0.5;
+	static float tl1 = 0, tl2 = 0, tn1 = 0, tn2 = 0, timeOut = 0.6;
 	int rcc;
 
 	rcc = zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
@@ -106,7 +121,7 @@ void draw() {
 	neckYaw = (neck_data[0] * (M_PI / 180)) + (M_PI / 2);
 	double angle = neckYaw - neckAdjust;	
 
-	glColor3f(0.2, 0.5, 0.5);
+	glColor3f(0.2, 0.5, 0.5); //Blue
 	glBegin(GL_POINTS);
 	
 	for (i = circle_points; i >= 0; --i) {
@@ -117,7 +132,7 @@ void draw() {
 	}
 	glEnd();		
 
-	glColor3f(0.2, 0.5, 0.0);
+	glColor3f(0.2, 0.5, 0.0); //Green-ish
 	glBegin(GL_LINE_LOOP);
 	glVertex2f( -1, 1 );
 	glVertex2f( -1, -1 );
@@ -130,7 +145,7 @@ void draw() {
 	glVertex2f( 0, 2 );
 	glEnd();
 
-	glColor3f(0.8, 0.0, 0.0);
+	glColor3f(0.8, 0.0, 0.0); //Red
 	glBegin(GL_LINES);
 	glVertex2f( 0, 0 );
 	glVertex2f( 2 * cos(neckYaw), 2 * sin(neckYaw) );
@@ -187,7 +202,7 @@ int main( int argc,char **argv) {
 					glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
 					glutInitWindowPosition(100, 100);
 					glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
-					id = glutCreateWindow("roboViewGL");
+					glutCreateWindow("roboViewGL");
 					init();
 					glutIdleFunc(getData);
 					glutKeyboardFunc(keyboard);
