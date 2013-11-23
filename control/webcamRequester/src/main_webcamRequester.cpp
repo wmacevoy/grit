@@ -236,7 +236,7 @@ int main(int argc, char** argv)
 		if(t2 - t1 > timeOut) {
 			zmq_close(req_mat);
 			zmq_close(sub_lidar);
-			req_mat = zmq_socket(context_mat, ZMQ_REQ);
+			req_mat = zmq_socket(context_lidar, ZMQ_REQ);
 			sub_lidar = zmq_socket(context_mat, ZMQ_SUB);
 		
 			if(zmq_setsockopt(req_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
