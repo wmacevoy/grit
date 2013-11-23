@@ -48,6 +48,10 @@ void getData() {
 		tl1 = now();
 	}
 
+	//rcc = zmq_recv(sub_neck, , , ZMQ_DONTWAIT);
+	//if(rcc = ) {
+	//	tn1 = now();
+	//}
 	neckAngle = M_PI / 2; //getNeckAngle() * M_PI / 180;
 
 
@@ -108,7 +112,7 @@ void draw() {
 	glBegin(GL_POINTS);
 	
 	for (i = circle_points; i >= 0; --i) {
-		//r = lidar_data[i] * 0.00328084;
+		r = lidar_data[i] * 0.00328084;
 		if(verbose) printf( "angle = %f \n" , angle);
 		glVertex2d(r * cos(angle), r * sin(angle));
 		angle += arcStep ;
