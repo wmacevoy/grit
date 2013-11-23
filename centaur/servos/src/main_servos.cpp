@@ -191,13 +191,30 @@ public:
   void infoUpdate() {
     int32_t dataNeeded;
     int rc, j, size = 34 * 2, sleep_time = 50;
-    int32_t msgArr[size];
-    
+    int32_t tempArr[size];
+    int32_t neckArr[2];
+    int hwm = 1;
+    int linger = 25;    
+    bool connected = false;
+
     void* context = zmq_ctx_new ();
-    void* rep = zmq_socket(context, ZMQ_REP);
-    rc = zmq_bind(rep, "tcp://*:9001");
-    assert(rc == 0);
-    
+    void* rep;
+
+    rep = zmq_socket(context, ZMQ_REP);
+
+    while(!connected) {
+        if(zmq_setsockopt(rep_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+            if(zmq_setsockopt(rep_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+   	        if(zmq_bind(rep, "tcp://*:9001") == 0) {
+                    connected = true;
+                } else {
+                    zmq_close(rep);
+                    rep = zmq_socket(context, ZMQ_REP);
+                }
+            }
+        }
+    }
+
     while(infoRunning) {
       zmq_recv(rep, &dataNeeded, sizeof(int32_t), ZMQ_DONTWAIT);
       j = 0;		
@@ -205,11 +222,18 @@ public:
       if(dataNeeded == 1) {
 	//Get temps and populate array
 	for (Servos::iterator i=servos.begin(); i != servos.end(); ++i) {
-	  msgArr[j++] = (int32_t)i->first; //Servo ID
-	  msgArr[j++] = (int32_t)i->second->temp(); //Servo temp
+	  tempArr[j++] = (int32_t)i->first; //Servo ID
+	  tempArr[j++] = (int32_t)i->second->temp(); //Servo temp
 	}
 	
-	zmq_send(rep, msgArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
+	zmq_send(rep, tempArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
+      }
+      else if(dataNeeded == 2) {
+        //Get neck angles and populate array
+        //neckArr[0] = (int32_t)i->second->angle(); //Yaw
+        //neckArr[1] = (int32_t)i->second->angle(); //Pitch
+
+        //zmq_send(rep, neckArr, sizeof(int32_t) * 2, ZMQ_DONTWAIT);
       }
       
       std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
