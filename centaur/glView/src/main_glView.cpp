@@ -1,13 +1,31 @@
-#define GLUT_DISABLE_ATEXIT_HACK
-#include <GL/gl.h>
-#include <GL/glut.h>
+//#define GLUT_DISABLE_ATEXIT_HACK
+#include <GL/freeglut.h>
 #include <stdio.h>
-
+#include <iostream>
+#include <zmq.h>
 #include <math.h>
+#include <string>
+#include <signal.h>
+#include "now.h"
+#include "Configure.h"
+
+Configure cfg;
+bool verbose = false;
+
+std::string address = "";
 
 GLint id;
 GLint circle_points = 1081;
 double r = 5;
+
+void* context_lidar;
+void* sub_lidar;
+
+int64_t* lidar_data = NULL;
+int sz_lidar_data = 1081;
+
+int hwm = 1;
+int linger = 25;
 
 // This is the draw function.
 void draw() {
@@ -18,7 +36,7 @@ void draw() {
 	double angle1 = 7 * M_PI / 4;
 	glVertex2d(r * cos(0.0), r * sin(0.0));
 	int i;
-	for (i = 0; i < circle_points; ++i) {
+	for (i = circle_points; i >= 0; --i) {
 		printf( "angle = %f \n" , angle1);
 		glVertex2d(r * cos(angle1), r * sin(angle1));
 		angle1 += angle ;
@@ -37,19 +55,94 @@ void init() {
 void keyboard (unsigned char key , int x, int y) {
 	if(key == 27) {
 		glutDestroyWindow(id);
-		exit(0);
+		glutLeaveMainLoop();
 	}
+}
+
+void subLidar(int value) {
+	static float t1 = 0, t2 = 0, timeOut = 0.5;
+	int rcc;
+
+	rcc = zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
+	if(rcc) {
+		t1 = now();
+	}
+
+
+	t2 = now();
+	if(t2 - t1 > timeOut) {
+		zmq_close(sub_lidar);
+		sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);		
+		if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {
+			if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+				if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+					if(zmq_connect(sub_lidar, address.c_str()) == 0) {
+						t1 = now();
+					}
+
+				}
+
+			}
+		}
+	}	
+}
+
+void quitproc(int param) {
+	glutDestroyWindow(id);
+	glutLeaveMainLoop();
 }
 
 int main( int argc,char **argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_SINGLE |GLUT_RGB);
-	glutInitWindowSize(260, 260);
-	glutInitWindowPosition(100, 100);
-	id = glutCreateWindow("circleGL");
-	init();
-	glutKeyboardFunc(keyboard);
-	glutDisplayFunc(draw);
-	glutMainLoop();
+
+	cfg.path("../../setup");
+	cfg.args("glView.subscriber.", argv);
+	if (argc == 1) cfg.load("config.csv");
+	verbose = cfg.flag("glView.subscriber.verbose", false);
+	if (verbose) cfg.show();
+
+	address = cfg.str("glView.subscriber.address").c_str();
+
+	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
+	signal(SIGQUIT, quitproc);
+
+	bool good = false;
+
+	context_lidar = zmq_ctx_new ();
+	sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
+
+	if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {
+		if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+			if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+				if(zmq_connect(sub_lidar, address.c_str()) == 0) {
+					glutInitDisplayMode(GLUT_SINGLE |GLUT_RGB);
+					glutInitWindowSize(260, 260);
+					glutInitWindowPosition(100, 100);
+					glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
+					id = glutCreateWindow("circleGL");
+					init();
+					glutTimerFunc(100, subLidar, 0);
+					glutKeyboardFunc(keyboard);
+					glutDisplayFunc(draw);
+
+					lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
+					if(lidar_data) {
+						good = true;					
+					}
+				}
+			}
+		}
+	}
+
+	if(good) glutMainLoop();
+
+	std::cout << std::endl << "Quitting..." << std::endl;
+	std::cout << "freeing memory..." << std::endl;
+	if(lidar_data) free(lidar_data);
+	std::cout << "closing and destroying zmq..." << std::endl;
+	zmq_close(sub_lidar);
+	zmq_ctx_destroy(context_lidar);
+	std::cout << "--done!" << std::endl;
 	return 0; 
 }
