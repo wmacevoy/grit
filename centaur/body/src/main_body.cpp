@@ -415,6 +415,42 @@ public:
       mover->bStep(wp);
   }
   
+  void stepIn() {
+	double step=4.0;
+    WalkParameters wp1(2.5,17.25,12.0,-15.,step,90.0,2.0);
+    wp1.y3-=step;  // move back legs back 
+    wp1.y4-=step;    
+    WalkParameters wp2(2.5,12.0,17.25,-15.,step,90.0,2.0);
+    wp2.y3-=step;  // move back legs back 
+    wp2.y4-=step;
+    mover->stepMerge(wp1,wp2);
+  }
+  
+  void stepOut() {
+	double step=4.0;
+    WalkParameters wp1(2.5,12.0,17.25,-15.,step,90.0,2.0);
+    wp1.y3-=step;  // move back legs back 
+    wp1.y4-=step;    
+    WalkParameters wp2(2.5,17.25,12.00,-15.,step,90.0,2.0);
+    wp2.y3-=step;  // move back legs back 
+    wp2.y4-=step;
+    mover->stepMerge(wp1,wp2);
+  }
+  
+  void doRaise(double step) {
+    WalkParameters wp1(2.5,12.0,17.25,-15.,step,90.0,2.0);
+    wp1.y3-=step;  // move back legs back 
+    wp1.y4-=step;
+    mover->changeZ(wp1,-20.0);    
+  }
+  
+  void doSqwat(double step) {
+    WalkParameters wp1(2.5,12.0,17.25,-20.,step,90.0,2.0);
+    wp1.y3-=step;  // move back legs back 
+    wp1.y4-=step;
+    mover->changeZ(wp1,-15.0);
+  }
+  
   void balancedForward(int repeat=4)
   {
 	double step=4.0;
@@ -1318,6 +1354,22 @@ void leapHand() {
       oss << "Step r=4 xstep=0 ystep=4 :ok."; 
       answer(oss.str());
     }
+    if (head=="raise") {
+	  doRaise(4.0);
+	  answer("Performing Raise");
+	}
+	if (head=="sqwat") {
+	  doSqwat(4.0);
+	  answer("Performing Sqwat");
+	}
+    if (head=="stepin") {
+	  stepIn();
+	  answer("Performing StepIn");
+	}
+	if (head=="stepout") {
+	  stepOut();
+	  answer("Performing StepOut");
+	}
     if (head == "bf") {  // forward
       int repeat=4;
       iss >> repeat;

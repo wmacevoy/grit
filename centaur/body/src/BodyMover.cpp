@@ -204,6 +204,7 @@ void BodyMover::fromTips(vector<vector <double> > data) {
     waist.setup(t2waist,simTime,simTime+T);	
 }
 
+
 vector<vector<double> > BodyMover::createMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {
   vector<vector<double>> data;
 //  x-=xstep/2.0;
@@ -602,6 +603,82 @@ bool BodyMover::blended(double radius,double x,double y,double z,double xstep,do
   logPosition(lf);
   fromTips(lf);
   return true;
+}
+
+
+std::vector<std::vector<double> > BodyMover::stepMerge(std::vector<std::vector <double> > start,std::vector<std::vector <double> > end) {
+  std::vector<std::vector<double> > data;
+  bool ldown[]={false,false,false,false};
+  for (int i=0;i<start.size();i++) {
+	vector<double> temp;
+	temp.push_back(start[i][0]);
+	for (int j=0;j<4;j++) {
+	  if (!ldown[j]) {
+	    temp.push_back(start[i][1+j*3]);
+	    temp.push_back(start[i][2+j*3]);
+	    temp.push_back(start[i][3+j*3]);
+	  } else {
+	    temp.push_back(end[i][1+j*3]);
+	    temp.push_back(end[i][2+j*3]);
+	    temp.push_back(end[i][3+j*3]);
+	  }
+    }
+	temp.push_back(start[i][13]); // Waist
+	temp.push_back(start[i][14]);
+	temp.push_back(start[i][15]);
+	temp.push_back(start[i][16]);
+	temp.push_back(start[i][17]);
+	if (i>0 && start[i-1][14]==1 && start[i][14]<0) ldown[0]=true;
+	if (i>0 && start[i-1][15]==1 && start[i][15]<0) ldown[1]=true;
+	if (i>0 && start[i-1][16]==1 && start[i][16]<0) ldown[2]=true;
+	if (i>0 && start[i-1][17]==1 && start[i][17]<0) ldown[3]=true;
+    data.push_back(temp);
+  }
+  return data;
+}
+
+void BodyMover::changeZ(WalkParameters start,double newZ){
+  std::vector<std::vector<double> > data;
+  double T =20.0; 
+  double timeDivider=10.0;
+  double steps=T*timeDivider; 
+  double dt=0.1;
+  double t=0.0;
+  double startZ=start.z;
+  double endZ=newZ;
+  double dz=(endZ-startZ)/steps;
+  double z=startZ;
+  while (t<T) {
+    vector<double> p;
+    p.push_back(t);
+    p.push_back(start.x1); p.push_back(start.y1); p.push_back(z);
+    p.push_back(start.x2); p.push_back(start.y2); p.push_back(z);
+    p.push_back(start.x3); p.push_back(start.y3); p.push_back(z);
+    p.push_back(start.x4); p.push_back(start.y4); p.push_back(z);
+    p.push_back(0);// waist
+    p.push_back(0);// Leg is not going up or down
+    p.push_back(0);
+    p.push_back(0);
+    p.push_back(0);
+    data.push_back(p);
+    z+=dz;
+	t+=dt;
+  }
+  logPosition(data);
+  fromTips(data);
+}
+
+void BodyMover::stepMerge(WalkParameters start,WalkParameters end) {
+  vector<vector<double>> moveStart;
+  vector<vector<double>> moveEnd;
+  vector<vector<double>> move;
+  start.repeat=1;
+  end.repeat=1;
+  moveStart=bMove(start);
+  moveEnd=bMove(end);
+  move=stepMerge(moveStart,moveEnd);
+  logPosition(move);
+  fromTips(move);
 }
 
 bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow,int repeat) {

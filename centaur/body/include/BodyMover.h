@@ -44,6 +44,9 @@ class BodyMover
   bool blended(double radius,double x,double y,double z,double xstep,double ystep,double zAdder,double left,double right,bool narrow=false,int repeat=1);
 //  bool bStep(double radius,double x,double y,double z,double step,double directionDegrees,double zStep,int repeat=1,float rotation=0.0,float zoffset=0.0);
   bool bStep(WalkParameters wp);
+  std::vector<std::vector<double> > stepMerge(std::vector<std::vector <double> > start,std::vector<std::vector <double> > end);
+  void changeZ(WalkParameters start,double newZ);
+  void stepMerge(WalkParameters start,WalkParameters end);
   void logPosition(std::vector<std::vector <double> > data);
   void fromTips(std::vector<std::vector <double> > data);  
   void move(Body &body);

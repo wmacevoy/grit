@@ -38,14 +38,13 @@ std::string addressN = "";
 void* context_lidar;
 void* context_neck;
 void* sub_lidar;
-void* req_neck;
+void* sub_neck;
 
 int hwm = 1;
 int linger = 25;
 
 int64_t* lidar_data = NULL;
 int sz_lidar_data = 1081;
-int32_t dataNeeded = 2;
 int32_t neck_data[2];
 
 double r = 5.0;
@@ -63,9 +62,9 @@ void getData() {
 		tl1 = now();
 	}
 
-	rcc = zmq_send(req_neck, &dataNeeded, sizeof(int32_t), ZMQ_DONTWAIT);
-	rcc = zmq_recv(req_neck, neck_data, sizeof(int32_t) * 2, ZMQ_DONTWAIT);
+	rcc = zmq_recv(sub_neck, neck_data, sizeof(int32_t) * 2, ZMQ_DONTWAIT);
 	if(rcc == sizeof(int32_t) * 2) {
+		std::cout << neck_data[0] << " : " << neck_data[1] << std::endl;
 		tn1 = now();
 	}
 
@@ -90,11 +89,11 @@ void getData() {
 	//Reset sub_neck if no valid packet is received in 0.5 seconds
 	tn2 = now();
 	if(tn2 - tn1 > timeOut) {
-		zmq_close(req_neck);
-		req_neck = zmq_socket(context_neck, ZMQ_REQ);		
-		if(zmq_setsockopt(req_neck, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-			if(zmq_setsockopt(req_neck, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-				if(zmq_connect(req_neck, addressN.c_str()) == 0) {
+		zmq_close(sub_neck);
+		sub_neck = zmq_socket(context_neck, ZMQ_REQ);		
+		if(zmq_setsockopt(sub_neck, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+			if(zmq_setsockopt(sub_neck, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+				if(zmq_connect(sub_neck, addressN.c_str()) == 0) {
 					std::cout << "Connection to neck successfully set/reset" << std::endl;
 					tn1 = now();
 				}
@@ -172,7 +171,7 @@ void init() {
 }
 
 void keyboard (unsigned char key , int x, int y) {
-	if(key == 27) {
+	if(key == 27 || key == 'q') {
 		glutLeaveMainLoop();
 	}
 }
@@ -197,16 +196,17 @@ int main( int argc,char **argv) {
 	signal(SIGQUIT, quitproc);
 
 	bool good = false;
+	dataNeeded[0] = 'b';
 
 	context_lidar = zmq_ctx_new ();
 	context_neck = zmq_ctx_new ();
 	sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
-	req_neck = zmq_socket(context_neck, ZMQ_SUB);
+	sub_neck = zmq_socket(context_neck, ZMQ_SUB);
 
-	if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0 && zmq_setsockopt(req_neck, ZMQ_SUBSCRIBE, "", 0) == 0) {
-		if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0 && zmq_setsockopt(req_neck, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-			if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0 && zmq_setsockopt(req_neck, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-				if(zmq_connect(sub_lidar, addressL.c_str()) == 0 && zmq_connect(req_neck, addressN.c_str()) == 0) {
+	if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0 && zmq_setsockopt(sub_neck, ZMQ_SUBSCRIBE, "", 0) == 0) {
+		if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0 && zmq_setsockopt(sub_neck, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+			if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0 && zmq_setsockopt(sub_neck, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+				if(zmq_connect(sub_lidar, addressL.c_str()) == 0 && zmq_connect(sub_neck, addressN.c_str()) == 0) {
 					glutInit(&argc, argv);
 					glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 					glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
@@ -237,7 +237,9 @@ int main( int argc,char **argv) {
 	if(lidar_data) free(lidar_data);
 	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(sub_lidar);
+	zmq_close(sub_neck);
 	zmq_ctx_destroy(context_lidar);
+	zmq_ctx_destroy(context_neck);
 	std::cout << "--done!" << std::endl;
 	return 0; 
 }
