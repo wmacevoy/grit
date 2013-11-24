@@ -13,8 +13,6 @@
  * his neck (red line) can orient +-175 L and R
  *
 */
-
-//#define GLUT_DISABLE_ATEXIT_HACK
 #include <GL/freeglut.h>
 #include <stdio.h>
 #include <iostream>
@@ -37,23 +35,22 @@ const int SCREENHEIGHT = 300;
 std::string addressL = "";
 std::string addressN = "";
 
-GLint circle_points = 1081;
-double r = 5;
-
 void* context_lidar;
 void* context_neck;
 void* sub_lidar;
 void* req_neck;
+
+int hwm = 1;
+int linger = 25;
 
 int64_t* lidar_data = NULL;
 int sz_lidar_data = 1081;
 int32_t dataNeeded = 2;
 int32_t neck_data[2];
 
-int hwm = 1;
-int linger = 25;
-
+double r = 5.0;
 double neckYaw;
+const GLint circle_points = 1081;
 const double arcStep = (3 * M_PI) / (2 * circle_points);
 const double neckAdjust = 3 * M_PI / 4;
 
@@ -111,26 +108,39 @@ void getData() {
 	std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 }
 
-// Scale is 10px/ft
+//Scale is 10px/ft
 //Red line is orientation of the neck/head
 //Green object in center is buddy, positioned always at (0,0) and oriented 'forward'
+//Black rays get drawn to the point of detection, screen does not refresh.  This way
+//a map of what the bot is seeing and has seen is made
 void draw() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 
 	int i;
 	neckYaw = (neck_data[0] * (M_PI / 180)) + (M_PI / 2);
-	double angle = neckYaw - neckAdjust;	
-
-	glColor3f(0.2, 0.5, 0.5); //Blue
-	glBegin(GL_POINTS);
+	double angle = neckYaw - neckAdjust;
+	double rcos, rsin;	
 	
 	for (i = circle_points; i >= 0; --i) {
 		r = lidar_data[i] * 0.00328084;
 		if(verbose) printf( "angle = %f \n" , angle);
-		glVertex2d(r * cos(angle), r * sin(angle));
+
+		rcos = r * cos(angle);
+		rsin = r * sin(angle);		
+
+		glColor3f(0.0, 0.0, 0.0); //Black
+		glBegin(GL_LINES);
+		glVertex2d(0, 0);
+		glVertex2d(rcos, rsin);
+		glEnd();
+
+		glColor3f(0.2, 0.5, 0.5); //Blue
+		glBegin(GL_POINTS);
+		glVertex2d(rcos, rsin);
+		glEnd();
+
 		angle += arcStep ;
-	}
-	glEnd();		
+	}		
 
 	glColor3f(0.2, 0.5, 0.0); //Green-ish
 	glBegin(GL_LINE_LOOP);
