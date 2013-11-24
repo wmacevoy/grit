@@ -59,7 +59,7 @@ void getData() {
 	int rcc;
 
 	rcc = zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
-	if(rcc == sz_lidar_data) {
+	if(rcc > 0) {
 		tl1 = now();
 	}
 
@@ -121,7 +121,7 @@ void draw() {
 	double angle = neckYaw - neckAdjust;
 	double rcos, rsin;	
 	
-	for (i = circle_points; i >= 0; --i) {
+	for (i = 0; i < circle_points; ++i) {
 		r = lidar_data[i] * 0.00328084;
 		if(verbose) printf( "angle = %f \n" , angle);
 
