@@ -1,9 +1,8 @@
-all : bin/gui.py
+DRIVER_DEPS=utilities
 
-clean :
-	/bin/rm -rf tmp/* bin/* lib/*
+MY_FLAGS=`pkg-config gtkmm-2.4 --cflags`
+MY_LIBS=`pkg-config gtkmm-2.4 --libs`
 
-bin/%.py : src/%.py
-	cp $< $@
-	chmod +x $@
+all : libs progs
 
+include ../rules.mk

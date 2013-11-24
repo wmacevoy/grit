@@ -6,7 +6,7 @@
     <property name="can_focus">False</property>
     <property name="border_width">2</property>
     <property name="window_position">center-on-parent</property>
-    <signal name="destroy" handler="gtk_main_quit()" swapped="no"/>
+    <signal name="destroy" handler="quitproc" swapped="no"/>
     <child>
       <object class="GtkVBox" id="fullBox">
         <property name="visible">True</property>
@@ -805,7 +805,7 @@
                     <property name="receives_default">True</property>
                     <property name="use_stock">True</property>
                     <property name="image_position">right</property>
-                    <signal name="clicked" handler="quit" swapped="no"/>
+                    <signal name="clicked" handler="quitproc" swapped="no"/>
                   </object>
                   <packing>
                     <property name="x">67</property>
