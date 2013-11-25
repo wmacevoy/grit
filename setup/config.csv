@@ -13,7 +13,7 @@ safety.delayoff,2.5,seconds of warning
 safety.txtimeout,2.0,seconds for stale receives
 safety.rxtimeout,2.0,seconds for stale sends
 safety.rate,4,update rate (hertz)
-safety.verbose,true
+safety.verbose,false
 safety.publish,tcp://*:${safety.port}
 safety.subscribe,tcp://${safety.ip}:${safety.port}
 safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port}"
@@ -28,7 +28,10 @@ servos.deviceindex,1
 servos.baudnum,3
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
 servos.dynamixel.rate.tx,20.0
-servos.publish,tcp://*:5500
+servos.publish.ip,${centaur.ip}
+servos.publish.port,5500
+servos.publish,tcp://*:${servos.publish.port}
+servos.subscribe,tcp://${servos.publish.ip}:${servos.publish.port}
 servos.subscribers,"tcp://127.0.0.1:5501,tcp://127.0.0.1:5503"
 servos.map,../../setup/servomap.csv
 body.ip,${centaur.ip}
@@ -43,15 +46,15 @@ body.commander.publish,tcp://*:${body.commander.port}
 body.commander.subscribers,"tcp://${commander.ip}:${commander.port}"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
 body.commander.neckAddress,"tcp://${control.ip}:5556"
-body.verbose,false
+body.verbose,true
 commander.ip,${control.ip}
 commander.port,5504
 commander.publish,"tcp://*:${commander.port}"
 commander.subscribers,"tcp://${body.ip}:${body.commander.port}"
 lidar.provider.address,"tcp://*:9997"
 lidar.provider.dev_path,"/dev/ttyACM0"
-lidar.provider.sleep_time,"100"
-lidar.provider.verbose,"true"
+lidar.provider.sleep_time,"10"
+lidar.provider.verbose,"false"
 gui.requester.address_t,"tcp://${centaur.ip}:9001"
 gui.requester.verbose,"false"
 gui.requester.address_s,"tcp://${centaur.ip:5506"
@@ -88,10 +91,9 @@ heartbeat.provider.sleep_time,"100"
 heartbeat.requester.address,"tcp://${centaur.ip}:9800"
 heartbeat.requester.verbose,"false"
 heartbeat.requester.sleep_time,"100"
-glView.subscriber.addressL,"tcp://127.0.0.1:9997"
-glView.subscriber.addressN,"tcp://127.0.0.1:5501", #actually need to get port
+glView.subscriber.addressL,"tcp://${xcentaur.ip}:9997"
 glView.subscriber.verbose,"false"
-glView.subscriber.sleep_time,100
+glView.subscriber.sleep_time,25
 sensors.ip,"${centaur.ip}"
 sensors.port,"5506"
 sensors.publish,"tcp://*:${sensors.port}"
