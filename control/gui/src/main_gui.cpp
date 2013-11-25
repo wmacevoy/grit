@@ -101,8 +101,9 @@ public:
 		sev_colors[0].set_rgb(255,0,0);
 		sev_colors[1].set_rgb(0,255,0);
 		sev_colors[2].set_rgb(125,125,0);
-		sev_colors[3].set_rgb(0,0,0);		
+		sev_colors[3].set_rgb(0,0,0);	
 	}
+
 	~RobotWatcher(){}
 
 	bool subscribe_temperatures(int32_t temps[])
@@ -267,6 +268,16 @@ public:
 			builder->get_widget(btn_string.c_str(),pressure_button[i]);
 			//temp_button[i]->set_sensitive(false);			
 		}
+
+		w->signal_delete_event().connect(sigc::mem_fun(this, &RobotWatcher::end1));
+
+	}
+
+	bool end1(GdkEventAny *)
+	{
+		Gtk::Main::quit(); 
+		die = true;   
+		return true;
 	}
 
        thread *update_temp_thread;
