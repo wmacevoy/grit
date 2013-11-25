@@ -259,8 +259,7 @@ public:
 		}
 
 		w->signal_delete_event().connect(sigc::mem_fun(this, &RobotWatcher::end1));
-		Glib::signal_timeout().connect(sigc::mem_fun(this, &RobotWatcher::on_timer),
-          SLEEP_TIME );
+		Glib::signal_timeout().connect(sigc::mem_fun(this, &RobotWatcher::on_timer), SLEEP_TIME );
 
 	}
 
@@ -277,12 +276,14 @@ public:
 		return true;
 	}
 
+	//X button on window is clicked
 	bool end1(GdkEventAny *)
 	{
 		Gtk::Main::quit();  
 		return true;
 	}
 
+	//Signal handler
 	void end2()
 	{
 		Gtk::Main::quit();
