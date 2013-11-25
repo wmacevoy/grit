@@ -5,6 +5,7 @@
 #include <signal.h>
 #include <thread>
 #include <chrono>
+#include <mutex>
 
 #include "Configure.h"
 #include "now.h"
@@ -14,6 +15,8 @@ bool verbose = false;
 bool die = false;
 
 const int NUM_SERVOS = 68;
+
+std::mutex lockBuffer;
 
 using namespace std;
 
@@ -37,11 +40,11 @@ private:
 	Gtk::Main kit;
 	Gtk::ColorButton *temp_button[200];
 	Gtk::ColorButton *pressure_button[4];
+	Gdk::Color sev_colors[4];
 	void *temp_context;
 	void *temp_sub;
         string address_t;
         string address_s;
- 	Gdk::Color sev_colors[4];
 	int hwm, linger, rcc;
 	float t1, t2, timeOut;
  	int SLEEP_TIME;
@@ -69,6 +72,7 @@ public:
 		SLEEP_TIME = (int)(cfg.num("gui.requester.sleep_t"));
 
 		builder = Gtk::Builder::create();
+		
 		temp_context = zmq_ctx_new ();
 		temp_sub = zmq_socket(temp_context, ZMQ_SUB);
 		zmq_setsockopt(temp_sub, ZMQ_SUBSCRIBE, "", 0);
@@ -93,7 +97,9 @@ public:
 		zmq_msg_init (&msg);
 		
 		if(zmq_recvmsg(temp_sub, &msg, ZMQ_DONTWAIT) > 0) {
+			lockBuffer.lock();
 			memcpy(temps, zmq_msg_data(&msg), zmq_msg_size(&msg));
+			lockBuffer.unlock();			
 			ret = true;
 			t1=now();
 		}
@@ -117,6 +123,7 @@ public:
 
 	void update_colors(int temps[], int size)
 	{
+		lockBuffer.lock();
 		for (int i = 0; i < size - 2; i+=2)
 		{
 			int sev = 3;
@@ -131,6 +138,7 @@ public:
 
 			temp_button[temps[i]]->set_color(sev_colors[sev]);
 		}
+		lockBuffer.unlock();
 	}
 
 	void init()
@@ -202,7 +210,7 @@ public:
 		while (!die){
 			bool got = request_temperatures(temps);
 			if (got)
-			  update_colors(temps,NUM_SERVOS);
+			  update_colors(temps, NUM_SERVOS);
 			std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
 		}
 		end();
