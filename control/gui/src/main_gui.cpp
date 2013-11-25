@@ -257,7 +257,7 @@ public:
 				sev = 3;
 
 			
-			im = buttons.find(i);
+			im = buttons.find(sensors[i]);
 			if(im != buttons.end())
 				buttons[i]->set_color(sev_colors[sev]);
 		}
@@ -266,11 +266,11 @@ public:
 	bool on_timer()
 	{
 		bool got = subscribe_temperatures(temps);
-		//if (got)
+		if (got)
 		  update_colors_temps(temps, NUM_SERVOS);
 	
 		got = subscribe_sensors(sensors);
-		//if (got)
+		if (got)
 		  update_colors_pressure(sensors);
 
 		return true;
