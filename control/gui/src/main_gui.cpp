@@ -12,7 +12,7 @@
 
 Configure cfg;
 bool verbose = false;
-bool die = false;
+volatile bool die = false;
 
 const int NUM_SERVOS = 68;
 const int NUM_SENSORS = 14;
