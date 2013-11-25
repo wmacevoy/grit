@@ -189,7 +189,7 @@ public:
   bool infoRunning;
   
   void infoUpdate() {
-    int rc, j, size = 68, sleep_time = 10;
+    int rc, j, size = 68, sleep_time = 50;
     int32_t tempArr[size];
     int hwm = 1;
     int linger = 25;    
@@ -219,12 +219,12 @@ public:
     while(infoRunning) {
       j = 0;		
       
-	//Get temps and populate array
-	for(i=servos.begin(); i != servos.end(); ++i) {
-	  tempArr[j++] = (int32_t)i->first; //Servo ID
-	  tempArr[j++] = (int32_t)i->second->temp(); //Servo temp
-        }
-        zmq_send(pubTemp, tempArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
+      //Get temps and populate array
+      for(i=servos.begin(); i != servos.end(); ++i) {
+        tempArr[j++] = (int32_t)i->first; //Servo ID
+        tempArr[j++] = (int32_t)i->second->temp(); //Servo temp
+      }
+      zmq_send(pubTemp, tempArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
 
       std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
     }
