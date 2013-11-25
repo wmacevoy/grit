@@ -80,8 +80,8 @@ public:
 		}
 
 		sev_colors[0].set_rgb(USHRT_MAX,0,0);
-		sev_colors[1].set_rgb(0,USHRT_MAX,0);
-		sev_colors[2].set_rgb(USHRT_MAX/2,USHRT_MAX/2,0);
+		sev_colors[2].set_rgb(USHRT_MAX,USHRT_MAX,0);
+		sev_colors[2].set_rgb(0,USHRT_MAX,0);
 		sev_colors[3].set_rgb(0,0,0);
 
 		for (int i = 0; i < 200; ++i)
@@ -231,7 +231,7 @@ public:
 		for (int i = 0; i < size; i+=2)
 		{
 			if(temps[i+1] > max) max = temps[i+1];
-			if (temps[i+1] > 65)
+			if (temps[i+1] > 60)
 				sev = 0;
 			else if (temps[i+1] > 45)
 				sev = 1;
@@ -260,6 +260,7 @@ public:
 			else
 				sev = 3;
 
+			
 			if(pressure_button[i] != NULL)
 				pressure_button[i]->set_color(sev_colors[sev]);
 		}
