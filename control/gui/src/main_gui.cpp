@@ -11,7 +11,6 @@
 
 Configure cfg;
 bool verbose = false;
-volatile bool die = false;
 
 const int NUM_SERVOS = 68;
 const int NUM_SENSORS = 14;
@@ -24,10 +23,6 @@ string NumberToString ( T Number )
   ostringstream ss;
   ss << Number;
   return ss.str();
-}
-
-void quitproc(int param) {
-	die = true;
 }
 
 class RobotWatcher
@@ -60,10 +55,6 @@ public:
 		t1=0;
 		t2=0;
 		timeOut=0.5;
-
-		signal(SIGINT, quitproc);
-		signal(SIGTERM, quitproc);
-		signal(SIGQUIT, quitproc);
 
 		cfg.path("../../setup");
 		cfg.args("gui.requester.", argv);
@@ -288,9 +279,13 @@ public:
 
 	bool end1(GdkEventAny *)
 	{
-		Gtk::Main::quit(); 
-		die = true;   
+		Gtk::Main::quit();  
 		return true;
+	}
+
+	void end2()
+	{
+		Gtk::Main::quit();
 	}
 
 	void run()
@@ -311,10 +306,20 @@ public:
 	}
 };
 
+RobotWatcher* r;
+
+void quitproc(int param) {
+	r->end2();
+}
 
 int main(int argc, char *argv[])
 {
+	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
+	signal(SIGQUIT, quitproc);
+
 	RobotWatcher gui(argc,argv);
+	r = &gui;
 	gui.init();
 	gui.run();
 	return 0;
