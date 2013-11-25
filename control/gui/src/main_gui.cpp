@@ -193,7 +193,7 @@ public:
 	{
 		int sev = 3;
 		lockSBuffer.lock();
-		for(int i = 0; i < size; i++)
+		for(int i = 9; i < size; i++)
 		{
 			if (sensors[i] > 900)
 				sev = 0;
@@ -292,7 +292,7 @@ public:
 		while(!die){
 			bool got = subscribe_sensors(sensors);
 			if (got)
-			  
+			  update_colors_pressure(sensors, NUM_SENSORS);
 			std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
 		}
 
