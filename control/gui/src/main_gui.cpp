@@ -193,7 +193,7 @@ public:
 	{
 		int sev = 3;
 		lockSBuffer.lock();
-		for(int i = 9; i < size; i++)
+		for(int i = 10; i < size; i++)
 		{
 			if (sensors[i] > 900)
 				sev = 0;
