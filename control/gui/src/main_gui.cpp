@@ -30,7 +30,7 @@ class RobotWatcher : public Gtk::Window
 protected:
 	Glib::RefPtr<Gtk::Builder> builder;
 	Gtk::ColorButton *temp_button[200];
-	Gtk::ColorButton *pressure_button[5];
+	Gtk::ColorButton *pressure_button[NUM_SENSORS];
 	Gdk::Color sev_colors[4];
 	Gtk::Label *lblTop, *lblTemp;
 	void *temp_context;
@@ -83,6 +83,12 @@ public:
 		sev_colors[1].set_rgb(0,USHRT_MAX,0);
 		sev_colors[2].set_rgb(USHRT_MAX/2,USHRT_MAX/2,0);
 		sev_colors[3].set_rgb(0,0,0);
+
+		for (int i = 0; i < 200; ++i)
+			temp_button[i] = NULL;
+
+		for (int i = 0; i < NUM_SENSORS; ++i)
+			pressure_button[i] = NULL;
 
 		for (int i = 0; i < NUM_SERVOS; i++)
 		  temps[i]=0;
@@ -141,7 +147,7 @@ public:
 		for (int i =1; i < 5; i++)
 		{
 			string btn_string = "sigL" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),pressure_button[i]);
+			builder->get_widget(btn_string.c_str(),pressure_button[9 + i]);
 			//temp_button[i]->set_sensitive(false);			
 		}
 		builder->get_widget("lblTop", lblTop);
@@ -234,7 +240,8 @@ public:
 			else
 				sev = 3;
 
-			temp_button[temps[i]]->set_color(sev_colors[sev]);			
+			if(temps[i] < 200 && temp_button[temps[i]] != NULL)
+				temp_button[temps[i]]->set_color(sev_colors[sev]);			
 			lblTop->set_text("Top: " + NumberToString(temps[i+1]));
 		}
 	}
@@ -253,7 +260,8 @@ public:
 			else
 				sev = 3;
 
-			pressure_button[i]->set_color(sev_colors[sev]);
+			if(pressure_button[i] != NULL)
+				pressure_button[i]->set_color(sev_colors[sev]);
 		}
 	}
 
