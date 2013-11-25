@@ -191,28 +191,23 @@ public:
   void infoUpdate() {
     int rc, j, size = 68, sleep_time = 10;
     int32_t tempArr[size];
-    int32_t neckArr[2];
     int hwm = 1;
     int linger = 25;    
     bool connected = false;
     Servos::iterator i;
 
     void* contextTemp = zmq_ctx_new ();
-    void* contextAngle = zmq_ctx_new ();
     void* pubTemp;
-    void* pubAngle;
 
     while(!connected) {
         pubTemp = zmq_socket(contextTemp, ZMQ_PUB);
-	pubAngle = zmq_socket(contextAngle, ZMQ_PUB);
-        if(zmq_setsockopt(pubTemp, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0 && zmq_setsockopt(pubAngle, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-            if(zmq_setsockopt(pubTemp, ZMQ_LINGER, &linger, sizeof(linger)) == 0 && zmq_setsockopt(pubAngle, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-   	        if(zmq_bind(pubTemp, "tcp://*:9001") == 0 && zmq_bind(pubAngle, "tcp://*:9002") == 0) {
+        if(zmq_setsockopt(pubTemp, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+            if(zmq_setsockopt(pubTemp, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+   	        if(zmq_bind(pubTemp, "tcp://*:9001") == 0) {
 		    std::cout << "infoUpdate thread running" << std::endl;
                     connected = true;
                 } else {
 			zmq_close(pubTemp);
-			zmq_close(pubAngle);
 		}
             }
         }
@@ -220,7 +215,6 @@ public:
     }
 
     for(int i=0; i < size; ++i) tempArr[i] = 0;
-    for(int i=0; i < 2; ++i) neckArr[i] = 0;
 
     while(infoRunning) {
       j = 0;		
@@ -236,9 +230,7 @@ public:
     }
     
     zmq_close(pubTemp);
-    zmq_close(pubAngle);
     zmq_ctx_destroy(contextTemp);
-    zmq_ctx_destroy(contextAngle);
   }
 
   void infoOn()
