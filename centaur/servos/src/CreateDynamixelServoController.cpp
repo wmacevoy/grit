@@ -113,6 +113,9 @@ struct DynamixelServo : Servo
     if (value < minAngle) value = minAngle;
     else if (value > maxAngle) value = maxAngle;
     goalPosition = value*(2048/180.0)+2048;
+    if (rxPositionRate == 0) {
+      presentPosition = goalPosition;
+    }
     //    cout << "dynamixel servo=" << id << " goal position=" << goalPosition << endl;
   }
   void angle(float value) {

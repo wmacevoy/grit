@@ -22,39 +22,40 @@
 #include <signal.h>
 #include <thread>
 #include <chrono>
+#include <memory>
 #include "now.h"
 #include "Configure.h"
+#include "CreateZMQServoListener.h"
 
 Configure cfg;
 bool verbose = false;
 int sleep_time;
+std::shared_ptr<ServoController> servos;
+Servo *neckud;
+Servo *necklr;
 
 const int SCREENWIDTH = 300;
 const int SCREENHEIGHT = 300;
 
 std::string addressL = "";
-std::string addressN = "";
 
 void* context_lidar;
-void* context_neck;
 void* sub_lidar;
-void* sub_neck;
 
 int hwm = 1;
 int linger = 25;
 
 int64_t* lidar_data = NULL;
 int sz_lidar_data = 1081;
-int32_t neck_data[2];
 
 double r = 5.0;
-double neckYaw;
+double neckAngle;
 const GLint circle_points = 1081;
 const double arcStep = (3 * M_PI) / (2 * circle_points);
 const double neckAdjust = 3 * M_PI / 4;
 
 void getData() {
-	static float tl1 = 0, tl2 = 0, tn1 = 0, tn2 = 0, timeOut = 0.6;
+	static float tl1 = 0, tl2 = 0, timeOut = 0.6;
 	int rcc;
 
 	rcc = zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
@@ -62,44 +63,24 @@ void getData() {
 		tl1 = now();
 	}
 
-	rcc = zmq_recv(sub_neck, neck_data, sizeof(int32_t) * 2, ZMQ_DONTWAIT);
-	if(rcc == sizeof(int32_t) * 2) {
-		std::cout << neck_data[0] << " : " << neck_data[1] << std::endl;
-		tn1 = now();
-	}
-
+	neckAngle = necklr->angle();
 
 	//Reset sub_lidar if no valid packet is received in 0.5 seconds
 	tl2 = now();
 	if(tl2 - tl1 > timeOut) {
 		zmq_close(sub_lidar);
-		sub_lidar = zmq_socket(context_lidar, ZMQ_REQ);		
-		if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-			if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-				if(zmq_connect(sub_lidar, addressL.c_str()) == 0) {
-					std::cout << "Connection to lidar successfully set/reset" << std::endl;
-					tl1 = now();
+		sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
+		if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {	
+			if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+				if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+					if(zmq_connect(sub_lidar, addressL.c_str()) == 0) {
+						std::cout << "Connection to lidar successfully set/reset" << std::endl;
+						tl1 = now();
+					}
+
 				}
 
 			}
-
-		}
-	}	
-
-	//Reset sub_neck if no valid packet is received in 0.5 seconds
-	tn2 = now();
-	if(tn2 - tn1 > timeOut) {
-		zmq_close(sub_neck);
-		sub_neck = zmq_socket(context_neck, ZMQ_REQ);		
-		if(zmq_setsockopt(sub_neck, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-			if(zmq_setsockopt(sub_neck, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-				if(zmq_connect(sub_neck, addressN.c_str()) == 0) {
-					std::cout << "Connection to neck successfully set/reset" << std::endl;
-					tn1 = now();
-				}
-
-			}
-
 		}
 	}	
 
@@ -116,12 +97,13 @@ void draw() {
 	//glClear(GL_COLOR_BUFFER_BIT);
 
 	int i;
-	neckYaw = (neck_data[0] * (M_PI / 180)) + (M_PI / 2);
+	double neckYaw = (neckAngle * (M_PI / 180)) + (M_PI / 2);
 	double angle = neckYaw - neckAdjust;
 	double rcos, rsin;	
 	
 	for (i = 0; i < circle_points; ++i) {
 		r = lidar_data[i] * 0.00328084;
+
 		if(verbose) printf( "angle = %f \n" , angle);
 
 		rcos = r * cos(angle);
@@ -143,10 +125,10 @@ void draw() {
 
 	glColor3f(0.2, 0.5, 0.0); //Green-ish
 	glBegin(GL_LINE_LOOP);
-	glVertex2f( -1, 1 );
-	glVertex2f( -1, -1 );
-	glVertex2f( 1, -1 );
-	glVertex2f( 1, 1 );
+	glVertex2f( -1.4, 1.4 );
+	glVertex2f( -1.4, -1.4 );
+	glVertex2f( 1.4, -1.4 );
+	glVertex2f( 1.4, 1.4 );
 	glEnd();
 	
 	glBegin(GL_LINES);
@@ -187,8 +169,13 @@ int main( int argc,char **argv) {
 	verbose = cfg.flag("glView.subscriber.verbose", false);
 	if (verbose) cfg.show();
 
+	servos = std::shared_ptr < ServoController > (CreateZMQServoListener(cfg.str("servos.subscribe")));
+	neckud=servos->servo(94);
+	necklr=servos->servo(93);
+	servos->start();
+
 	addressL = cfg.str("glView.subscriber.addressL").c_str();
-	addressN = cfg.str("glView.subscriber.addressN").c_str();
+	//	addressN = cfg.str("glView.subscriber.addressN").c_str();
 	sleep_time = (int)cfg.num("glView.subscriber.sleep_time");
 
 	signal(SIGINT, quitproc);
@@ -196,17 +183,14 @@ int main( int argc,char **argv) {
 	signal(SIGQUIT, quitproc);
 
 	bool good = false;
-	dataNeeded[0] = 'b';
 
 	context_lidar = zmq_ctx_new ();
-	context_neck = zmq_ctx_new ();
 	sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
-	sub_neck = zmq_socket(context_neck, ZMQ_SUB);
 
-	if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0 && zmq_setsockopt(sub_neck, ZMQ_SUBSCRIBE, "", 0) == 0) {
-		if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0 && zmq_setsockopt(sub_neck, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-			if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0 && zmq_setsockopt(sub_neck, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-				if(zmq_connect(sub_lidar, addressL.c_str()) == 0 && zmq_connect(sub_neck, addressN.c_str()) == 0) {
+	if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {
+	  if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+	    if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+	      if(zmq_connect(sub_lidar, addressL.c_str()) == 0) {
 					glutInit(&argc, argv);
 					glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 					glutInitWindowSize(SCREENWIDTH, SCREENHEIGHT);
@@ -218,8 +202,8 @@ int main( int argc,char **argv) {
 					glutKeyboardFunc(keyboard);
 					glutDisplayFunc(draw);
 
-					neck_data[0] = 0;
-					neck_data[1] = 0;
+					/*					neck_data[0] = 0; */
+					/* neck_data[1] = 0; */
 					lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 					if(lidar_data) {
 						good = true;					
@@ -237,9 +221,7 @@ int main( int argc,char **argv) {
 	if(lidar_data) free(lidar_data);
 	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(sub_lidar);
-	zmq_close(sub_neck);
 	zmq_ctx_destroy(context_lidar);
-	zmq_ctx_destroy(context_neck);
 	std::cout << "--done!" << std::endl;
 	return 0; 
 }

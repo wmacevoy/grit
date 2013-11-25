@@ -210,13 +210,17 @@ public:
    	        if(zmq_bind(pubTemp, "tcp://*:9001") == 0 && zmq_bind(pubAngle, "tcp://*:9002") == 0) {
 		    std::cout << "infoUpdate thread running" << std::endl;
                     connected = true;
-                }
+                } else {
+			zmq_close(pubTemp);
+			zmq_close(pubAngle);
+		}
             }
         }
-	zmq_close(pubTemp);
-	zmq_close(pubAngle);
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
+
+    for(int i=0; i < size; ++i) tempArr[i] = 0;
+    for(int i=0; i < 2; ++i) neckArr[i] = 0;
 
     while(infoRunning) {
       j = 0;		
@@ -226,7 +230,7 @@ public:
 	  tempArr[j++] = (int32_t)i->first; //Servo ID
 	  tempArr[j++] = (int32_t)i->second->temp(); //Servo temp
         }
-        std::cout << zmq_send(pubTemp, tempArr, sizeof(int32_t) * size, ZMQ_DONTWAIT) << std::endl;
+        zmq_send(pubTemp, tempArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
 
       //Get neck angles and populate array
         i = servos.find(93);
@@ -238,8 +242,8 @@ public:
 	if(i != servos.end()) {
           neckArr[1] = (int32_t)i->second->angle(); //Pitch
         }
-        std::cout << zmq_send(pubAngle, neckArr, sizeof(int32_t) * 2, ZMQ_DONTWAIT) << std::endl;
-      
+        zmq_send(pubAngle, neckArr, sizeof(int32_t) * 2, ZMQ_DONTWAIT);
+	cout << "neckArr[0]" << neckArr[0]  << "neckArr[1]" << neckArr[1] << endl;
       std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
     }
     
