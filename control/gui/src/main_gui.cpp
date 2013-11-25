@@ -79,13 +79,13 @@ public:
 		  cout << "Error initializing 0mq, temp requester: " << address_s << endl;
 		}
 
-		sev_colors[0].set_rgb(255,0,0);
-		sev_colors[1].set_rgb(0,255,0);
-		sev_colors[2].set_rgb(125,125,0);
+		sev_colors[0].set_rgb(USHRT_MAX,0,0);
+		sev_colors[1].set_rgb(0,USHRT_MAX,0);
+		sev_colors[2].set_rgb(USHRT_MAX/2,USHRT_MAX/2,0);
 		sev_colors[3].set_rgb(0,0,0);
 
 		for (int i = 0; i < NUM_SERVOS; i++)
-		  temps[i]=100;
+		  temps[i]=0;
 
 		for (int i = 0; i < NUM_SENSORS; i++)
 		  sensors[i] = 0;
@@ -234,7 +234,7 @@ public:
 			else
 				sev = 3;
 
-			temp_button[temps[i]]->set_color(sev_colors[sev]);
+			temp_button[temps[i]]->set_color(sev_colors[sev]);			
 			lblTop->set_text("Top: " + NumberToString(temps[i+1]));
 		}
 	}
