@@ -5,7 +5,6 @@
 #include <signal.h>
 #include <thread>
 #include <chrono>
-#include <mutex>
 
 #include "Configure.h"
 #include "now.h"
@@ -16,8 +15,6 @@ volatile bool die = false;
 
 const int NUM_SERVOS = 68;
 const int NUM_SENSORS = 14;
-
-std::mutex lockTBuffer, lockSBuffer;
 
 using namespace std;
 
@@ -51,6 +48,9 @@ private:
 	int hwm, linger, rcc;
 	float t1, t2, timeOut;
  	int SLEEP_TIME;
+	int32_t sensors[NUM_SENSORS];
+	int32_t temps[NUM_SERVOS];
+	
 public:
 	RobotWatcher(int argc, char *argv[])
 		: kit(argc, argv)
@@ -101,7 +101,13 @@ public:
 		sev_colors[0].set_rgb(255,0,0);
 		sev_colors[1].set_rgb(0,255,0);
 		sev_colors[2].set_rgb(125,125,0);
-		sev_colors[3].set_rgb(0,0,0);	
+		sev_colors[3].set_rgb(0,0,0);
+
+		for (int i = 0; i < NUM_SERVOS; i++)
+		  temps[i]=0;
+
+		for (int i = 0; i < NUM_SENSORS; i++)
+		  sensors[i] = 0;
 	}
 
 	~RobotWatcher(){}
@@ -113,9 +119,7 @@ public:
 		zmq_msg_init (&msg);
 		
 		if(zmq_recvmsg(temp_sub, &msg, ZMQ_DONTWAIT) > 0) {
-			lockTBuffer.lock();
-			memcpy(temps, zmq_msg_data(&msg), zmq_msg_size(&msg));
-			lockTBuffer.unlock();			
+			memcpy(temps, zmq_msg_data(&msg), zmq_msg_size(&msg));			
 			ret = true;
 			t1=now();
 		}
@@ -145,9 +149,7 @@ public:
 		zmq_msg_init (&msg);
 		
 		if(zmq_recvmsg(sensor_sub, &msg, ZMQ_DONTWAIT) > 0) {
-			lockSBuffer.lock();
-			memcpy(sensors, zmq_msg_data(&msg), zmq_msg_size(&msg));
-			lockSBuffer.unlock();			
+			memcpy(sensors, zmq_msg_data(&msg), zmq_msg_size(&msg));		
 			ret = true;
 			t1=now();
 		}
@@ -173,7 +175,6 @@ public:
 	void update_colors_temps(int32_t temps[], int size)
 	{
 		int sev = 3;
-		lockTBuffer.lock();
 		for (int i = 0; i < size; i+=2)
 		{
 			if (temps[i+1] > 65)
@@ -187,13 +188,11 @@ public:
 
 			temp_button[temps[i]]->set_color(sev_colors[sev]);
 		}
-		lockTBuffer.unlock();
 	}
 
 	void update_colors_pressure(int32_t sensors[], int size) 
 	{
 		int sev = 3;
-		lockSBuffer.lock();
 		for(int i = 10; i < size; i++)
 		{
 			if (sensors[i] > 900)
@@ -207,7 +206,6 @@ public:
 
 			pressure_button[i]->set_color(sev_colors[sev]);
 		}
-		lockSBuffer.unlock();
 	}
 
 	void init()
@@ -270,7 +268,22 @@ public:
 		}
 
 		w->signal_delete_event().connect(sigc::mem_fun(this, &RobotWatcher::end1));
+		Glib::signal_timeout().connect(sigc::mem_fun(this, &RobotWatcher::on_timer),
+          SLEEP_TIME );
 
+	}
+
+	bool on_timer()
+	{
+		bool got = subscribe_temperatures(temps);
+		if (got)
+		  update_colors_temps(temps, NUM_SERVOS);
+	
+		got = subscribe_sensors(sensors);
+		if (got)
+		  update_colors_pressure(sensors, NUM_SENSORS);
+		
+		return true;
 	}
 
 	bool end1(GdkEventAny *)
@@ -280,46 +293,9 @@ public:
 		return true;
 	}
 
-       thread *update_temp_thread;
-       void updateTemp()
-       {
-		int32_t temps[NUM_SERVOS];
-		for (int i = 0; i < NUM_SERVOS; i++)
-		  temps[i]=0;
-		while (!die){
-			bool got = subscribe_temperatures(temps);
-			if (got)
-			  update_colors_temps(temps, NUM_SERVOS);
-			std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
-		}
-         }
-
-	thread *update_sensor_thread;
-	void updateSensors()
-        {
-		int32_t sensors[NUM_SENSORS];
-		for (int i = 0; i < NUM_SENSORS; i++)
-		  sensors[i] = 0;
-		while(!die){
-			bool got = subscribe_sensors(sensors);
-			if (got)
-			  update_colors_pressure(sensors, NUM_SENSORS);
-			std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
-		}
-
-        }
-
 	void run()
 	{
-	  update_temp_thread = NULL;
-	  update_sensor_thread = NULL;
-	  update_temp_thread = new thread(&RobotWatcher::updateTemp,this);
-  	  update_sensor_thread = new thread(&RobotWatcher::updateSensors,this);
 	  kit.run(*w);
-	  update_temp_thread->join();
-	  update_sensor_thread->join();
-	  delete update_temp_thread;
-	  delete update_sensor_thread;
 	  end();
 	}
 
