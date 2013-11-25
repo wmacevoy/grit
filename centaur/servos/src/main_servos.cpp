@@ -232,18 +232,6 @@ public:
         }
         zmq_send(pubTemp, tempArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
 
-      //Get neck angles and populate array
-        i = servos.find(93);
-	if(i != servos.end()) {
-          neckArr[0] = (int32_t)i->second->angle(); //Yaw
-        }
-
-	i = servos.find(94);
-	if(i != servos.end()) {
-          neckArr[1] = (int32_t)i->second->angle(); //Pitch
-        }
-        zmq_send(pubAngle, neckArr, sizeof(int32_t) * 2, ZMQ_DONTWAIT);
-	cout << "neckArr[0]" << neckArr[0]  << "neckArr[1]" << neckArr[1] << endl;
       std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
     }
     
