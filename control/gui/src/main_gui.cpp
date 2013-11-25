@@ -15,8 +15,9 @@ bool verbose = false;
 bool die = false;
 
 const int NUM_SERVOS = 68;
+const int NUM_SENSORS = 14;
 
-std::mutex lockBuffer;
+std::mutex lockTBuffer, lockSBuffer;
 
 using namespace std;
 
@@ -42,7 +43,9 @@ private:
 	Gtk::ColorButton *pressure_button[4];
 	Gdk::Color sev_colors[4];
 	void *temp_context;
+	void *sensor_context;
 	void *temp_sub;
+	void *sensor_sub;
         string address_t;
         string address_s;
 	int hwm, linger, rcc;
@@ -69,6 +72,7 @@ public:
 		if (verbose) cfg.show();
 		
 		address_t = cfg.str("gui.requester.address_t").c_str();
+		address_s = cfg.str("gui.requester.address_s").c_str();
 		SLEEP_TIME = (int)(cfg.num("gui.requester.sleep_t"));
 
 		builder = Gtk::Builder::create();
@@ -78,11 +82,22 @@ public:
 		zmq_setsockopt(temp_sub, ZMQ_SUBSCRIBE, "", 0);
 		zmq_setsockopt(temp_sub,ZMQ_RCVHWM,&hwm,sizeof(hwm));
 		zmq_setsockopt(temp_sub,ZMQ_LINGER,&linger,sizeof(linger));
+
+		sensor_context = zmq_ctx_new ();
+		sensor_sub = zmq_socket(temp_context, ZMQ_SUB);
+		zmq_setsockopt(sensor_sub, ZMQ_SUBSCRIBE, "", 0);
+		zmq_setsockopt(sensor_sub,ZMQ_RCVHWM,&hwm,sizeof(hwm));
+		zmq_setsockopt(sensor_sub,ZMQ_LINGER,&linger,sizeof(linger));
 		
 		if (zmq_connect(temp_sub, address_t.c_str()) != 0)
 		{
 		  cout << "Error initializing 0mq, temp requester: " << address_t << endl;
 		}
+		if (zmq_connect(sensor_sub, address_t.c_str()) != 0)
+		{
+		  cout << "Error initializing 0mq, temp requester: " << address_s << endl;
+		}
+
 		sev_colors[0].set_rgb(255,0,0);
 		sev_colors[1].set_rgb(0,255,0);
 		sev_colors[2].set_rgb(125,125,0);
@@ -90,16 +105,16 @@ public:
 	}
 	~RobotWatcher(){}
 
-	bool request_temperatures(int32_t temps[])
+	bool subscribe_temperatures(int32_t temps[])
 	{
 	  bool ret = false;
 		zmq_msg_t msg;
 		zmq_msg_init (&msg);
 		
 		if(zmq_recvmsg(temp_sub, &msg, ZMQ_DONTWAIT) > 0) {
-			lockBuffer.lock();
+			lockTBuffer.lock();
 			memcpy(temps, zmq_msg_data(&msg), zmq_msg_size(&msg));
-			lockBuffer.unlock();			
+			lockTBuffer.unlock();			
 			ret = true;
 			t1=now();
 		}
@@ -108,12 +123,13 @@ public:
 		t2 = now();
 		if(t2 - t1 > timeOut) {
 			zmq_close(temp_sub);
-			temp_sub = zmq_socket(temp_context, ZMQ_REQ);
-		
-			if(zmq_setsockopt(temp_sub, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-				if(zmq_setsockopt(temp_sub, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-					if(zmq_setsockopt(temp_sub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-						rcc = zmq_connect(temp_sub, address_t.c_str());
+			temp_sub = zmq_socket(temp_context, ZMQ_SUB);
+			if(zmq_setsockopt(temp_sub, ZMQ_SUBSCRIBE, "", 0) == 0) {
+				if(zmq_setsockopt(temp_sub, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+					if(zmq_setsockopt(temp_sub, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+						if(zmq_setsockopt(temp_sub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+							rcc = zmq_connect(temp_sub, address_t.c_str());
+						}
 					}
 				}
 			}
@@ -121,12 +137,44 @@ public:
 		return ret;
 	}
 
-	void update_colors(int temps[], int size)
+	bool subscribe_sensors(int32_t sensors[])
 	{
-		lockBuffer.lock();
-		for (int i = 0; i < size - 2; i+=2)
+	  bool ret = false;
+		zmq_msg_t msg;
+		zmq_msg_init (&msg);
+		
+		if(zmq_recvmsg(sensor_sub, &msg, ZMQ_DONTWAIT) > 0) {
+			lockSBuffer.lock();
+			memcpy(sensors, zmq_msg_data(&msg), zmq_msg_size(&msg));
+			lockSBuffer.unlock();			
+			ret = true;
+			t1=now();
+		}
+		zmq_msg_close(&msg);	
+
+		t2 = now();
+		if(t2 - t1 > timeOut) {
+			zmq_close(sensor_sub);
+			sensor_sub = zmq_socket(sensor_context, ZMQ_SUB);
+			if(zmq_setsockopt(sensor_sub, ZMQ_SUBSCRIBE, "", 0) == 0) {
+				if(zmq_setsockopt(sensor_sub, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
+					if(zmq_setsockopt(sensor_sub, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
+						if(zmq_setsockopt(sensor_sub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
+							rcc = zmq_connect(sensor_sub, address_s.c_str());
+						}
+					}
+				}
+			}
+		}
+		return ret;
+	}
+
+	void update_colors_temps(int32_t temps[], int size)
+	{
+		int sev = 3;
+		lockTBuffer.lock();
+		for (int i = 0; i < size; i+=2)
 		{
-			int sev = 3;
 			if (temps[i+1] > 65)
 				sev = 0;
 			else if (temps[i+1] > 45)
@@ -138,7 +186,27 @@ public:
 
 			temp_button[temps[i]]->set_color(sev_colors[sev]);
 		}
-		lockBuffer.unlock();
+		lockTBuffer.unlock();
+	}
+
+	void update_colors_pressure(int32_t sensors[], int size) 
+	{
+		int sev = 3;
+		lockSBuffer.lock();
+		for(int i = 0; i < size; i++)
+		{
+			if (sensors[i] > 900)
+				sev = 0;
+			else if (sensors[i] > 750)
+				sev = 1;
+			else if (sensors[i] >= 0)
+				sev = 2;
+			else
+				sev = 3;
+
+			pressure_button[i]->set_color(sev_colors[sev]);
+		}
+		lockSBuffer.unlock();
 	}
 
 	void init()
@@ -201,35 +269,58 @@ public:
 		}
 	}
 
-       thread *update_thread;
-       void updategui()
+       thread *update_temp_thread;
+       void updateTemp()
        {
 		int32_t temps[NUM_SERVOS];
 		for (int i = 0; i < NUM_SERVOS; i++)
 		  temps[i]=0;
 		while (!die){
-			bool got = request_temperatures(temps);
+			bool got = subscribe_temperatures(temps);
 			if (got)
-			  update_colors(temps, NUM_SERVOS);
+			  update_colors_temps(temps, NUM_SERVOS);
 			std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
 		}
-		end();
          }
+
+	thread *update_sensor_thread;
+	void updateSensors()
+        {
+		int32_t sensors[NUM_SENSORS];
+		for (int i = 0; i < NUM_SENSORS; i++)
+		  sensors[i] = 0;
+		while(!die){
+			bool got = subscribe_sensors(sensors);
+			if (got)
+			  
+			std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME));
+		}
+
+        }
 
 	void run()
 	{
-	  update_thread = NULL;
-	  update_thread = new thread(&RobotWatcher::updategui,this);
+	  update_temp_thread = NULL;
+	  update_sensor_thread = NULL;
+	  update_temp_thread = new thread(&RobotWatcher::updateTemp,this);
+  	  update_sensor_thread = new thread(&RobotWatcher::updateSensors,this);
 	  kit.run(*w);
-	  update_thread->join();
-	  delete update_thread;
+	  update_temp_thread->join();
+	  update_sensor_thread->join();
+	  delete update_temp_thread;
+	  delete update_sensor_thread;
+	  end();
 	}
 
 	void end()
 	{
+		std::cout << std::endl << "Quitting..." << std::endl;
 		delete w;
 		zmq_close(temp_sub);
+		zmq_close(sensor_sub);
 		zmq_ctx_destroy(temp_context);
+		zmq_ctx_destroy(sensor_context);
+		std::cout << "--done!" << std::endl;
 	}
 };
 
