@@ -531,6 +531,9 @@ vector<vector<double> > BodyMover::bMove(WalkParameters wp) {
   l2d+=wp.rotation*3.0*M_PI_2;
   l3d+=wp.rotation*M_PI;
   l4d+=wp.rotation*M_PI_2;
+
+  zRise = wp.zOffset * wp.step / (y1 - y4);
+
   for (int q=0;q<wp.repeat;q++) {
     for(double a=0;a<fullCircle;a+=da) {
 	  float l1a=a;
@@ -542,19 +545,19 @@ vector<vector<double> > BodyMover::bMove(WalkParameters wp) {
       { // leg 1
         p.push_back(circulateX(wp.x1,wp.radius,a)+stepX(wp.step,l1d,l1a)); 
         p.push_back(circulateY(wp.y1,wp.radius,a) +stepY(wp.step,l1d,l1a)); 
-        p.push_back(lift(l1z,1.0,a+M_PI_2)+raise(wp.zStep,l1a)+stepZ(wp.zOffset,l1a)-wp.zOffset/2.0);
+        p.push_back(lift(l1z,1.0,a+M_PI_2)+raise(wp.zStep,l1a)+stepZ(zRise,l1a)-wp.zOffset/2.0);
       } { // leg 2
         p.push_back(circulateX(wp.x2,wp.radius,a) +stepX(wp.step,l2d,l2a)); 
         p.push_back(circulateY(wp.y2,wp.radius,a) +stepY(wp.step,l2d,l2a)); 
-        p.push_back(lift(l2z,1.0,a)       +raise(wp.zStep,l2a)+stepZ(wp.zOffset,l2a)-wp.zOffset/2.0);
+        p.push_back(lift(l2z,1.0,a)       +raise(wp.zStep,l2a)+stepZ(zRise,l2a)-wp.zOffset/2.0);
       } { // leg 3 
         p.push_back(circulateX(wp.x3,wp.radius,a) +stepX(wp.step,l3d,l3a)); 
         p.push_back(circulateY(wp.y3,wp.radius,a)+stepY(wp.step,l3d,l3a)); 
-        p.push_back(lift(l3z,1.0,a+M_PI_2)+raise(wp.zStep,l3a)-stepZ(wp.zOffset,l3a)+wp.zOffset/2.0);
+        p.push_back(lift(l3z,1.0,a+M_PI_2)+raise(wp.zStep,l3a)-stepZ(zRise,l3a)+wp.zOffset/2.0);
       } { // leg 4
         p.push_back(circulateX(wp.x4,wp.radius,a)+stepX(wp.step,l4d,l4a)); 
         p.push_back(circulateY(wp.y4,wp.radius,a)+stepY(wp.step,l4d,l4a)); 
-        p.push_back(lift(l4z,1.0,a)       +raise(wp.zStep,l4a)-stepZ(wp.zOffset,l4a)+wp.zOffset/2.0);
+        p.push_back(lift(l4z,1.0,a)       +raise(wp.zStep,l4a)-stepZ(zRise,l4a)+wp.zOffset/2.0);
       }         
       p.push_back(waist); 
       p.push_back(legDirection(l1a)); 
