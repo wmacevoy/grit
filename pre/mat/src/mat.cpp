@@ -1,4 +1,5 @@
 #include "mat.h"
+#include <assert.h>
 
 using namespace symbolic;
 using namespace std;
@@ -17,6 +18,53 @@ E::E(double x)
   : std::shared_ptr < symbolic::Expression >(new symbolic::Constant(x))
 {
 }
+
+Vec operator*(const E &c, const Vec &a)
+{
+  Vec ans(a.size(),num(0));
+  for (size_t i=0; i != a.size(); ++i) {
+    ans[i]=c*a[i];
+  }
+  return ans;
+}
+
+Vec operator+(const Vec &a, const Vec &b)
+{
+  assert(a.size() == b.size());
+  Vec ans(a.size(),num(0));
+  for (size_t i=0; i != a.size(); ++i) {
+    ans[i]=a[i]+b[i];
+  }
+  return ans;
+}
+Vec operator-(const Vec &a, const Vec &b)
+{
+  assert(a.size() == b.size());
+  Vec ans(a.size(),num(0));
+  for (size_t i=0; i != a.size(); ++i) {
+    ans[i]=a[i]-b[i];
+  }
+  return ans;
+}
+Vec operator-(const Vec &a)
+{
+  Vec ans(a.size(),num(0));
+  for (size_t i=0; i != a.size(); ++i) {
+    ans[i]=-a[i];
+  }
+  return ans;
+}
+
+E dot(const Vec &a, const Vec &b)
+{
+  assert(a.size() == b.size());
+  E ans=num(0);
+  for (size_t i=0; i != a.size(); ++i) {
+    ans=ans+(a[i]*b[i]);
+  }
+  return ans;
+}
+
 
 bool is_const(const E &a) { 
   return isconstant(&*a);
@@ -222,12 +270,12 @@ Mat transpose(const Mat &a)
 
 Mat translate(const Vec &d)
 {
-  int nrm=d.size();
-  int ncm=d.size();
+  size_t nrm=d.size();
+  size_t ncm=d.size();
   Mat m(nrm,Vec(ncm,num(0)));
 
-  for (int r=0; r<nrm; ++r) {
-    for (int c=0; c<ncm; ++c) {
+  for (size_t r=0; r<nrm; ++r) {
+    for (size_t c=0; c<ncm; ++c) {
       if (c == d.size()-1) {
         m[r][c]=d[r];
       } else {

@@ -8,13 +8,10 @@
 #include <memory>
 #include <set>
 #include <string.h>
+#include "coptgen.hpp"
+#include "formatter.hpp"
 
 using namespace std;
-
-class GIK
-{
-
-};
 
 Mat leg()
 {
@@ -47,6 +44,7 @@ Mat leg()
   return m;
 }
 
+
 Mat head()
 {
   Mat m = eye(4,4);
@@ -55,15 +53,37 @@ Mat head()
   E dbase2waist=12.0;
   E waist=-(pi/180.0)*(var("waist"));
   E dwaist2neck=13.5;
-  Vec neck2necklr(0.0,0.0,2.0);
+  Vec neck2necklr=vec(0.0,0.0,1.5/2.0+1.75);
   E necklr=(pi/180.0)*var("necklr");
-  E dnecklr2neckud=2.0;
+  Vec necklr2neckud=vec(0.0,0.0,1.75);
   E neckud=(pi/180.0)*var("neckud");
+  Vec neckud2head=vec(0.0,0.0,1.0+3.0/8.0);
 
   m=m*translate(0.0,0.0,dbase2waist);
   m=m*rotate(ex,waist);
   m=m*translate(0.0,0.0,dwaist2neck);
-  m=m*translate(
+  m=m*translate(neck2necklr);
+  m=m*rotate(ez,necklr);
+  m=m*translate(necklr2neckud);
+  m=m*rotate(ex,neckud);
+  m=m*translate(neckud2head);
+  return m;
+}
+
+Mat lidar()
+{
+  Mat m=head();
+  Vec head2lidar=vec(0.0,-1.50,1.75);
+  m=m*translate(head2lidar);
+  return m;
+}
+
+Mat camera()
+{
+  Mat m=head();
+  Vec head2camera=vec(0.0,1.0+5.0/8.0,5.0/8.0);
+  m=m*translate(head2camera);
+  return m;
 }
 
 Mat arm(string side)
@@ -124,6 +144,102 @@ Vec parameters(const Vec &eq, const Vec &x)
   }
 
   return p;
+}
+
+void gfk_head()
+{
+  string dir=string("../../drivers/ik");
+
+  {
+    ofstream out(dir + "/include/fk_head.h");
+    out << "#pragma once" << endl;
+    out << "#include \"Mat3d.h\"" << endl;
+    out << "Mat3d fk_head(float waist, float necklr, float neckud);" << endl;
+  }
+
+  {
+    ofstream out(dir + "/src/fk_head.cpp");
+    out << "#include \"fk_head.h\"" << endl;
+    out << "#include <math.h>" << endl;
+    out << "Mat3d fk_head(float waist, float necklr, float neckud)" << endl;
+    out << "{" << endl;
+    out << "  Mat3d ans;" << endl;
+    symbolic::COptGen coptgen;
+    coptgen.type="float";
+    coptgen.format = &symbolic::format_c_single;
+    Mat pose=head();
+    for (int r=0; r<3; ++r) {
+      for (int c=0; c<4; ++c) {
+	ostringstream oss;
+	oss << "ans(" << r << "," << c << ")";
+	coptgen.assign(oss.str(),&*pose[r][c]);
+      }
+    }
+    out << coptgen;
+    out << "  return ans;" << endl;
+    out << "}";
+  }
+}
+
+void gsolve_ik_lidar()
+{
+  string dir=string("../../drivers/ik");
+  string inifile=dir + "/ik_lidar.ini";
+
+  Vec p=vec(var("px"),var("py"),var("pz"));
+
+  Mat pose=lidar();
+
+  Vec eq,x;
+
+  Vec ex=vec(pose[0][0],pose[0][1],pose[0][2]);
+  Vec ey=vec(pose[1][0],pose[1][1],pose[1][2]);
+  Vec ez=vec(pose[2][0],pose[2][1],pose[2][2]);
+  Vec o=vec(pose[3][0],pose[3][1],pose[3][2]);
+
+  eq.push_back(dot(ex,p-o));
+  eq.push_back(dot(ez,p-o));
+
+  E necklr=var("necklr");
+  E neckud=var("neckud");
+
+  x.push_back(necklr);
+  x.push_back(neckud);
+
+  Vec _x;
+  for (size_t i=0; i != x.size(); ++i) {
+    _x.push_back(var(string("_")+name(x[i])));
+  }
+
+  Vec parms;
+  set<string> s;
+
+  for (size_t i=0; i != eq.size(); ++i) {
+    eq[i]->symbols(s);
+  }
+
+  for (size_t i=0; i != x.size(); ++i) {
+    s.erase(name(x[i]));
+    parms.push_back(var(name(x[i])));
+  }
+
+  for (set<string>::const_iterator i=s.begin(); i != s.end(); ++i) {
+    parms.push_back(var(*i));
+  }
+
+  map<string,const symbolic::Expression *> bar;
+
+  for (size_t i=0; i != x.size(); ++i) {
+    bar[name(x[i])]=&*_x[i];
+  }
+
+  for (size_t i=0; i != eq.size(); ++i) {
+    eq[i]=E(substitute(bar,&*eq[i]));
+  }
+
+  cout << "generating '" << inifile << "'" << endl;
+  ofstream out(inifile.c_str());
+  gsolve(out,"lidar",eq,x,parms);
 }
 
 void gsolve_ik_arm(string side)
@@ -255,16 +371,20 @@ void gsolve_leg()
 int main(int argc, char *argv[])
 {
   for (int argi=1; argi < argc; ++argi) {
-    if (strcmp(argv[argi],"leftarm")==0) {
+    if (strcmp(argv[argi],"ik_leftarm")==0) {
       gsolve_ik_arm("left");
       continue;
     }
-    if (strcmp(argv[argi],"rightarm")==0) {
+    if (strcmp(argv[argi],"ik_rightarm")==0) {
       gsolve_ik_arm("right");
       continue;
     }
-    if (strcmp(argv[argi],"leg")==0) {
-      gsolve_leg();
+    if (strcmp(argv[argi],"fk_head")==0) {
+      gfk_head();
+      continue;
+    }
+    if (strcmp(argv[argi],"ik_lidar")==0) {
+      gsolve_ik_lidar();
       continue;
     }
     cout << "unknown argument '" << argv[argi] << "'" << endl;

@@ -15,6 +15,12 @@ class E : public std::shared_ptr < symbolic::Expression > {
 typedef std::vector < E > Vec;
 typedef std::vector < Vec > Mat;
 
+Vec operator*(const E &c, const Vec &a);
+Vec operator+(const Vec &a, const Vec &b);
+Vec operator-(const Vec &a, const Vec &b);
+Vec operator-(const Vec &a);
+E dot(const Vec &a, const Vec &b);
+
 bool is_const(const E &a);
 bool is_var(const E & a);
 std::string name(const E &a);
