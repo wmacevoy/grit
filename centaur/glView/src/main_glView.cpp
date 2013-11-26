@@ -54,6 +54,22 @@ const GLint circle_points = 1081;
 const double arcStep = (3 * M_PI) / (2 * circle_points);
 const double neckAdjust = 3 * M_PI / 4;
 
+/*
+struct Point {
+ double x, y;
+ Point(double _X, double _Y) {
+	x = _X; y = _Y;
+ }
+};
+
+struct Bot {
+ Point tl(-1.4, 1.4);
+ Point bl(-1.4, -1.4);
+ Point br(1.4, -1.4);
+ Point tr(1.4, 1.4);
+};
+*/
+
 void getData() {
 	static float tl1 = 0, tl2 = 0, timeOut = 0.6;
 	int rcc;
@@ -93,6 +109,7 @@ void getData() {
 //Green object in center is buddy, positioned always at (0,0) and oriented 'forward'
 //Black rays get drawn to the point of detection, screen does not refresh.  This way
 //a map of what the bot is seeing and has seen is made
+//glVertex2d coordinates are given in feet.
 void draw() {
 	//glClear(GL_COLOR_BUFFER_BIT);
 
@@ -202,8 +219,6 @@ int main( int argc,char **argv) {
 					glutKeyboardFunc(keyboard);
 					glutDisplayFunc(draw);
 
-					/*					neck_data[0] = 0; */
-					/* neck_data[1] = 0; */
 					lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 					if(lidar_data) {
 						good = true;					
