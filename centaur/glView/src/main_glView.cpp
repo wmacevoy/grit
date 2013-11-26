@@ -54,7 +54,6 @@ const GLint circle_points = 1081;
 const double arcStep = (3 * M_PI) / (2 * circle_points);
 const double neckAdjust = 3 * M_PI / 4;
 
-/*
 struct Point {
  double x, y;
  Point(double _X, double _Y) {
@@ -63,12 +62,13 @@ struct Point {
 };
 
 struct Bot {
- Point tl(-1.4, 1.4);
- Point bl(-1.4, -1.4);
- Point br(1.4, -1.4);
- Point tr(1.4, 1.4);
+ Point tl;
+ Point bl;
+ Point br;
+ Point tr;
+ Bot() : tl(-1.4, 1.4), bl(-1.4, -1.4), br(1.4, -1.4), tr(1.4, 1.4){}
 };
-*/
+
 
 void getData() {
 	static float tl1 = 0, tl2 = 0, timeOut = 0.6;
