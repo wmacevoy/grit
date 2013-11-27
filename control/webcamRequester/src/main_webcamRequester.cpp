@@ -11,6 +11,8 @@
 #include <iomanip>
 #include <time.h>
 #include "Configure.h"
+#include "LidarMessage.h"
+#include "fk_lidar.h"
 
 using namespace cv;
 
@@ -20,8 +22,9 @@ volatile bool die = false;
 bool inside = false;
 bool verbose = false;
 
-int64_t* lidar_data;
-const int sz_lidar_data  = 1081;
+LidarMessage lidarMessage;
+//int64_t* lidar_data;
+//const int sz_lidar_data  = 1081;
 
 volatile int mx = 0;
 volatile int my = 0;
@@ -47,6 +50,23 @@ std::string itoa(const T& t) {
 	std::stringstream itoa;
 	itoa << t;
 	return itoa.str();
+}
+
+std::string at(const LidarMessage &lidarMessage, int index)
+{
+  if (index >= 0 && index < LidarMessage::SIZE) {
+    ::Mat3d pose = fk_lidar(lidarMessage.waist,lidarMessage.necklr,lidarMessage.neckud);
+    float r = lidarMessage.data[index];
+    float theta = (M_PI/180.0)*(270.0/(LidarMessage::SIZE/2))*(index-LidarMessage::SIZE/2);
+    ::Vec3d p(r*sin(theta),r*sin(theta),0.0);
+    ::Vec3d q=pose*p;
+    
+    std::ostringstream oss;
+    oss << q;
+    return oss.str();
+  } else {
+    return "";
+  }
 }
 
 void mouseEvent(int evt, int x, int y, int flags, void* param) {
@@ -108,8 +128,8 @@ int main(int argc, char** argv)
 	void* req_mat = zmq_socket(context_mat, ZMQ_REQ);
 	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);	
 
-	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
-	assert(lidar_data != NULL);
+	//	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
+	//	assert(lidar_data != NULL);
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
@@ -142,7 +162,8 @@ int main(int argc, char** argv)
 				switch(CorG) {
 				case false:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
+					//					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
+					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);	
 					if(rcc == color.total() * color.elemSize()) {
 						t1 = time(0);
 						memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
@@ -153,7 +174,7 @@ int main(int argc, char** argv)
 						line(color, tick10r1, tick10r2, Scalar(0, 0, 0));
 
 						for(int i = 0; i < normalWidth; ++i) {
-							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084;
+						  int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
 							if(ft <= 10) {
 								int y = lidarLine - ft;
 								if(y <= normalHeight && y >= 0) { 							
@@ -162,10 +183,10 @@ int main(int argc, char** argv)
 							}
 						}	
 
-						if(inside) {	
+						if(inside) {
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-							//index = 380 + mx;
-							text = convstr(lidar_data[index] * 0.00328084);
+							text = at(lidarMessage,index);
+							// text = convstr(lidar_data[index] * 0.00328084);
 							putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index <<
 									"  sleep_time: " << sleep_time << std::endl;
@@ -175,7 +196,8 @@ int main(int argc, char** argv)
 					break;
 				case true:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
+					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
+					//					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
 					if(rcc == gray.total() * gray.elemSize()) {
 						t1 = time(0);
 						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
@@ -186,7 +208,8 @@ int main(int argc, char** argv)
 						line(gray, tick10r1, tick10r2, Scalar(0, 0, 0));
 
 						for(int i = 0; i < normalWidth; ++i) {
-							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084;
+						  //							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084;
+						  int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
 							if(ft <= 10) {
 								int y = lidarLine - ft;
 								if(y <= normalHeight && y >= 0) { 							
@@ -198,7 +221,8 @@ int main(int argc, char** argv)
 						if(inside) {	
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
-							text = convstr(lidar_data[index] * 0.00328084);
+							text = at(lidarMessage,index);
+							//							text = convstr(lidar_data[index] * 0.00328084);
 							putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
 									"  sleep_time: " << sleep_time << std::endl;
