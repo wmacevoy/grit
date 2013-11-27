@@ -1,8 +1,8 @@
 name,value
-xcontrol.ip,192.168.2.113
-control.ip,127.0.0.1
-xcentaur.ip,192.168.2.101
-centaur.ip,127.0.0.1
+control.ip,192.168.2.113
+xcontrol.ip,127.0.0.1
+centaur.ip,192.168.2.101
+xcentaur.ip,127.0.0.1
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,15,Degrees per second on the servo
