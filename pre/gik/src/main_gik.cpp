@@ -56,7 +56,7 @@ Mat head()
   Vec neck2necklr=vec(0.0,0.0,1.5/2.0+1.75);
   E necklr=(pi/180.0)*var("necklr");
   Vec necklr2neckud=vec(0.0,0.0,1.75);
-  E neckud=(pi/180.0)*var("neckud");
+  E neckud=-(pi/180.0)*var("neckud");
   Vec neckud2head=vec(0.0,0.0,1.0+3.0/8.0);
 
   m=m*translate(0.0,0.0,dbase2waist);
@@ -168,6 +168,41 @@ void gfk_head()
     coptgen.type="float";
     coptgen.format = &symbolic::format_c_single;
     Mat pose=head();
+    for (int r=0; r<3; ++r) {
+      for (int c=0; c<4; ++c) {
+	ostringstream oss;
+	oss << "ans(" << r << "," << c << ")";
+	coptgen.assign(oss.str(),&*pose[r][c]);
+      }
+    }
+    out << coptgen;
+    out << "  return ans;" << endl;
+    out << "}";
+  }
+}
+
+void gfk_lidar()
+{
+  string dir=string("../../drivers/ik");
+
+  {
+    ofstream out(dir + "/include/fk_lidar.h");
+    out << "#pragma once" << endl;
+    out << "#include \"Mat3d.h\"" << endl;
+    out << "Mat3d fk_lidar(float waist, float necklr, float neckud);" << endl;
+  }
+
+  {
+    ofstream out(dir + "/src/fk_lidar.cpp");
+    out << "#include \"fk_lidar.h\"" << endl;
+    out << "#include <math.h>" << endl;
+    out << "Mat3d fk_lidar(float waist, float necklr, float neckud)" << endl;
+    out << "{" << endl;
+    out << "  Mat3d ans;" << endl;
+    symbolic::COptGen coptgen;
+    coptgen.type="float";
+    coptgen.format = &symbolic::format_c_single;
+    Mat pose=lidar();
     for (int r=0; r<3; ++r) {
       for (int c=0; c<4; ++c) {
 	ostringstream oss;
@@ -381,6 +416,10 @@ int main(int argc, char *argv[])
     }
     if (strcmp(argv[argi],"fk_head")==0) {
       gfk_head();
+      continue;
+    }
+    if (strcmp(argv[argi],"fk_lidar")==0) {
+      gfk_lidar();
       continue;
     }
     if (strcmp(argv[argi],"ik_lidar")==0) {
