@@ -17,5 +17,5 @@ class SensorsMessage
   int32_t p[4];
 
   // status -- safe(output), warn(output)
-  int16_t s[2];
+  int16_t s[3];
 };

@@ -53,6 +53,7 @@ class ZMQHub
   ZMQHub();
 
   virtual void report();
+  virtual bool rx(ZMQSubscribeSocket &socket, size_t who);
   virtual bool rx(ZMQSubscribeSocket &socket)=0;
   virtual bool tx(ZMQPublishSocket &socket)=0;
   virtual ~ZMQHub();

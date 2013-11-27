@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\CreateDynamixelServoController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CreateFakeServoController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CreateZMQServoController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DXLIO.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ScaledServo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Servo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ServoController.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ZMQServo.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ZMQServoMessage.h">
+      <Filter>include</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CreateDynamixelServoController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CreateFakeServoController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CreateZMQServoController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DXLIO.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main_servos.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main_wiggle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ScaledServo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Servo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ServoController.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\test_servos.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ZMQServo.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

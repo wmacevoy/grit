@@ -6,7 +6,7 @@
 class Arc
 {
  public:
-  // ez->out, ex->p1,o->center
+  // ez->axis, ex->p1,o->center
   Mat3d frame;
   float radius;
   float theta0,theta1;

@@ -78,6 +78,11 @@ void ZMQHub::rxOpen()
   rxOk = now();
 }
 
+bool ZMQHub::rx(ZMQSubscribeSocket &socket, size_t who)
+{
+  return rx(socket);
+}
+
 void ZMQHub::rxLoop() 
 {
   rxOpen();
@@ -89,7 +94,7 @@ void ZMQHub::rxLoop()
     for (size_t i=0; i != rxSockets.size(); ++i) {
       if ((rxPollItems[i].revents & ZMQ_POLLIN) != 0) {
 	++rxCount;
-	if (!rx(*rxSockets[i])) ok = false;
+	if (!rx(*rxSockets[i],i)) ok = false;
 	rxPollItems[i].revents = 0;
       }
     }

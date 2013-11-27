@@ -63,16 +63,11 @@ struct SafetyServer : DelayedSafety, ZMQHub
   bool verbose;
   std::vector < bool > safes;
   std::vector < double > timeouts;
-  bool rx(ZMQSubscribeSocket &socket) 
+  bool rx(ZMQSubscribeSocket &socket) { assert(false); }
+
+  bool rx(ZMQSubscribeSocket &socket, size_t who) 
   {
     double t=now();
-    // who called
-    size_t who = 0;
-    while (who != rxSockets.size()) {
-      if (&*rxSockets[who] == &socket) break;
-      ++who;
-    }
-    if (who == rxSockets.size()) return false;
 
     ZMQMessage msg;
     if (msg.recv(socket) == 0) return false;
