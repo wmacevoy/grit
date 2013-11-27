@@ -532,7 +532,7 @@ vector<vector<double> > BodyMover::bMove(WalkParameters wp) {
   l3d+=wp.rotation*M_PI;
   l4d+=wp.rotation*M_PI_2;
 
-  zRise = wp.zOffset * wp.step / (y1 - y4);
+  double zRise = wp.zOffset * wp.step / (wp.y1 - wp.y4);
 
   for (int q=0;q<wp.repeat;q++) {
     for(double a=0;a<fullCircle;a+=da) {

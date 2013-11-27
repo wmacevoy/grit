@@ -13,9 +13,18 @@
 #include <zmq.h>
 #include "urg_ctrl.h"
 #include "Configure.h"
+#include "LidarMessage.h"
+#include "CreateZMQServoListener.h"
+#include "now.h"
 
 Configure cfg;
 bool verbose;
+SPServoController servos;
+Servo *waist;
+Servo *neckud;
+Servo *necklr;
+
+LidarMessage message;
 
 volatile int die = 0;
 int sz_lidar_data = 1081;
@@ -31,6 +40,12 @@ int main(int argc, char** argv)
 	if (argc == 1) cfg.load("config.csv");
 	verbose = cfg.flag("lidar.provider.verbose", false);
 	if (verbose) cfg.show();
+
+	servos = std::shared_ptr < ServoController > (CreateZMQServoListener(cfg.str("servos.subscribe")));
+	waist=servos->servo(91);
+	neckud=servos->servo(94);
+	necklr=servos->servo(93);
+	servos->start();
 	
 	std::string address = cfg.str("lidar.provider.address").c_str();
 	std::string lidar_path = cfg.str("lidar.provider.dev_path").c_str();
@@ -54,8 +69,8 @@ int main(int argc, char** argv)
 
 	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
 	if(!lidar_data) {
-		std::cout << "Could not allocate memory for lidar data..." << std::endl;
-		die = true;
+	  std::cout << "Could not allocate memory for lidar data..." << std::endl;
+	  die = true;
 	}
 	
 	urg_connect(&urg, lidar_path.c_str(), 115200);
@@ -68,8 +83,17 @@ int main(int argc, char** argv)
 				rcl = urg_requestData(&urg, URG_GD, URG_FIRST, URG_LAST);
 				rcl = urg_receiveData(&urg, lidar_data, sz_lidar_data);
 
+				message.t=now();
+				message.waist=waist->angle();
+				message.neckud=neckud->angle();
+				message.necklr=necklr->angle();
+				for (int i=0; i != LidarMessage::SIZE; ++i) {
+				  message.data[i]=lidar_data[i]/25.4;
+				}
+
 				if(verbose) printf("sending lidar data...\n");
-				int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
+				//				int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
+				int rc = zmq_send(pub_lidar, &message,sizeof(message), ZMQ_DONTWAIT);
 				if(verbose && rc > 0) printf("sent lidat data!\n");
 
 				if(rc > 0) {

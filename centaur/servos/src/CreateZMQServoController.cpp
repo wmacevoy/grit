@@ -15,7 +15,7 @@
 #include "now.h"
 #include "math.h"
 
-struct ZMQServoController : ServoController, ZMQHub
+struct ZMQServoController : ZMQHub, ServoController
 {
   typedef std::map < int , ZMQServo* > Servos;
   Servos servos;
