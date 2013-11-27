@@ -52,17 +52,17 @@ std::string itoa(const T& t) {
 	return itoa.str();
 }
 
-std::string at(const LidarMessage &lidarMessage, int index)
+std::string at(int index)
 {
   if (index >= 0 && index < LidarMessage::SIZE) {
     ::Mat3d pose = fk_lidar(lidarMessage.waist,lidarMessage.necklr,lidarMessage.neckud);
     float r = lidarMessage.data[index];
-    float theta = (M_PI/180.0)*(270.0/(LidarMessage::SIZE/2))*(index-LidarMessage::SIZE/2);
-    ::Vec3d p(r*sin(theta),r*sin(theta),0.0);
+    float theta = -(270.0/(LidarMessage::SIZE))*(index-LidarMessage::SIZE/2);
+    ::Vec3d p(r*sin((M_PI/180.0)*theta),r*cos((M_PI/180.0)*theta),0.0);
     ::Vec3d q=pose*p;
-    
+
     std::ostringstream oss;
-    oss << q;
+    oss << std::setprecision(2) << std::fixed << r/12.0 << "ft " << " " << std::setprecision(1) << q << "in";
     return oss.str();
   } else {
     return "";
@@ -163,7 +163,13 @@ int main(int argc, char** argv)
 				case false:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
 					//					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
-					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);	
+					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);
+					if (verbose) {
+					  std::cout << "t=" << lidarMessage.t << " waist=" <<
+					    lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
+					    " data[0]=" << lidarMessage.data[0] << std::endl;
+					}
+
 					if(rcc == color.total() * color.elemSize()) {
 						t1 = time(0);
 						memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
@@ -185,7 +191,7 @@ int main(int argc, char** argv)
 
 						if(inside) {
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-							text = at(lidarMessage,index);
+							text = at(index);
 							// text = convstr(lidar_data[index] * 0.00328084);
 							putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index <<
@@ -197,6 +203,12 @@ int main(int argc, char** argv)
 				case true:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
 					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
+					if (verbose) {
+					  std::cout << "t=" << lidarMessage.t << " waist=" <<
+					    lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
+					    
+					    " data[0]=" << lidarMessage.data[0] << std::endl;
+					}
 					//					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
 					if(rcc == gray.total() * gray.elemSize()) {
 						t1 = time(0);
@@ -221,7 +233,7 @@ int main(int argc, char** argv)
 						if(inside) {	
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
-							text = at(lidarMessage,index);
+							text = at(index);
 							//							text = convstr(lidar_data[index] * 0.00328084);
 							putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
