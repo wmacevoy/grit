@@ -67,10 +67,6 @@ public:
     scale[0]=cfg->num("leap.scale.x");
     scale[1]=cfg->num("leap.scale.y");
     scale[2]=cfg->num("leap.scale.z");
-    if (verbose) {
-      cout << "LeapRx: subscribe to " << subscribers[0] << endl;
-      cout << "LeapRx: center=[" << origin[0] << "," << origin[1] << "," << origin[2] << "]" << endl;
-    }
   }
 
   void start()

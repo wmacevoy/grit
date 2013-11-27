@@ -174,12 +174,12 @@ commit()
 
 start()
 {
-    start_apps safetyProvider servos body sensors webcamPublisher LidarProvider
+    start_apps safetyProvider servos proxyservos body sensors proxysensors webcamPublisher LidarProvider
 }
 
 stop()
 {
-    stop_apps body sensors webcamPublisher LidarProvider servos safetyProvider
+    stop_apps body sensors proxysensors webcamPublisher LidarProvider proxyservos servos safetyProvider
 }
 
 commander()

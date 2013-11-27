@@ -1,6 +1,6 @@
 all : libs progs
 
-DRIVER_DEPS=utilities zmqpp safety
+DRIVER_DEPS=utilities zmqpp zmqservos safety
 MY_FLAGS=
 MY_LIBS=
 
