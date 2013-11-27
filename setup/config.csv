@@ -1,8 +1,8 @@
 name,value
-control.ip,192.168.2.113
-xcontrol.ip,127.0.0.1
-centaur.ip,192.168.2.101
-xcentaur.ip,127.0.0.1
+xcontrol.ip,192.168.2.113
+control.ip,127.0.0.1
+xcentaur.ip,192.168.2.101
+centaur.ip,127.0.0.1
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,15,Degrees per second on the servo
@@ -18,12 +18,20 @@ safety.publish,tcp://*:${safety.port}
 safety.subscribe,tcp://${safety.ip}:${safety.port}
 safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port}"
 xsafety.subscribers,"tcp://${servos.ip}:${servos.safety.port}"
+gui.ip,${control.ip}
+gui.safety.port,5604
+gui.safety.publish,"tcp://*:${gui.safety.port}"
+gui.verbose,true
+gui.address_t,"tcp://${centaur.ip}:9001"
+gui.address_s,"tcp://${centaur.ip}:5506"
+gui.sleep_t,"200"
 servos.ip,${centaur.ip}
 servos.safety.port,5601
 servos.safety.publish,tcp://*:${servos.safety.port}
 servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
 servos.verbose,false
-servos.type,real
+xservos.type,real
+servos.type,fake
 servos.deviceindex,1
 servos.baudnum,3
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
@@ -34,6 +42,13 @@ servos.publish,tcp://*:${servos.publish.port}
 servos.subscribe,tcp://${servos.publish.ip}:${servos.publish.port}
 servos.subscribers,"tcp://127.0.0.1:5501,tcp://127.0.0.1:5503"
 servos.map,../../setup/servomap.csv
+proxyservos.port,5599
+proxyservos.ip,${centaur.ip}
+proxyservos.publish,tcp://*:${proxyservos.port}
+proxyservos.subscribe,tcp://${proxyservos.ip}:${proxyservos.port}
+proxyservos.anglerate,0.25
+proxyservos.temprate,0.0167
+proxyservos.verbose,true
 body.ip,${centaur.ip}
 body.safety.port,5602
 body.safety.publish,tcp://*:${body.safety.port}
@@ -55,10 +70,6 @@ lidar.provider.address,"tcp://*:9997"
 lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"10"
 lidar.provider.verbose,"false"
-gui.requester.address_t,"tcp://${centaur.ip}:9001"
-gui.requester.verbose,"false"
-gui.requester.address_s,"tcp://${centaur.ip}:5506"
-gui.requester.sleep_t,"200"
 webcam.requester.verbose,"false"
 webcam.requester.addressW,"tcp://${centaur.ip}:9993"
 webcam.requester.addressL,"tcp://${centaur.ip}:9997"
@@ -109,6 +120,12 @@ sensors.readtimeout,5.0
 sensors.txtimeout,5.0
 sensors.rate,10.0
 sensors.dev_path,"/dev/ttyUSB0"
+proxysensors.port,5596
+proxysensors.ip,${centaur.ip}
+proxysensors.publish,tcp://*:${proxysensors.port}
+proxysensors.subscribe,tcp://${proxysensors.ip}:${proxysensors.port}
+proxysensors.rate,1.0
+proxyservos.verbose,true
 gloves.publisher.dev_path,"/dev/ttyACM0"
 gloves.publisher.verbose,"false"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
