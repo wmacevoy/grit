@@ -155,3 +155,9 @@ std::ostream& operator<< (std::ostream &out, const Mat3d &m)
 {
   out << "[" << m.ex() << "," << m.ey() << "," << m.ez() << "," << m.o() << "]";
 }
+
+
+Vec3d operator*(const Mat3d &a, const Vec3d &b)
+{
+  return b.x()*a.ex()+b.y()*a.ey()+b.z()*a.ez()+a.o();
+}
