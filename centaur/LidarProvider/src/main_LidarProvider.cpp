@@ -91,10 +91,13 @@ int main(int argc, char** argv)
 				  message.data[i]=lidar_data[i]/25.4;
 				}
 
-				if(verbose) printf("sending lidar data...\n");
+				if (verbose) {
+				  std::cout << "t=" << message.t << " waist=" << message.waist << " neckud=" << message.neckud << " necklr=" << message.necklr << " data[0]=" << message.data[0] << std::endl; 
+				}
+				//				if(verbose) printf("sending lidar data...\n");
 				//				int rc = zmq_send(pub_lidar, lidar_data, sizeof(int64_t) * sz_lidar_data, ZMQ_DONTWAIT);
 				int rc = zmq_send(pub_lidar, &message,sizeof(message), ZMQ_DONTWAIT);
-				if(verbose && rc > 0) printf("sent lidat data!\n");
+				if(verbose && rc > 0) printf("sent lidar data!\n");
 
 				if(rc > 0) {
 					t1 = time(0);
