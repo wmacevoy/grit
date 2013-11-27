@@ -7,7 +7,7 @@
 
 using namespace std;
 
-struct SafetyClient : Safety, ZMQHub
+struct SafetyClient : ZMQHub, Safety
 {
   bool getSafe;
   bool setSafe;
