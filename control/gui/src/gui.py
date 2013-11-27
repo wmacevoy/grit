@@ -10,9 +10,14 @@ import threading
 import subprocess
 
 import utilities
+import safety
 
 pygtk.require('2.0')
 cfg = utilities.Configure()
+cfg.path("../../setup");
+cfg.load("config.csv");
+safetyClient=safety.CreateSafetyClient(cfg.str("gui.safety.publish"),cfg.str("safety.subscribe"),int(cfg.num("safety.rate")));
+
 running = True
 
 class Monitored:
@@ -73,6 +78,7 @@ class Health:
         if running:
             value = self.health.value
             print "health: " + value
+            print "safe: " + safety.safe()
             self.text.get_buffer().set_text(value)
             gobject.timeout_add_seconds(1,self.update)
 
@@ -138,12 +144,8 @@ class GUI:
         # All PyGTK applications must have a gtk.main(). Control ends here
         # and waits for an event to occur (like a key press or mouse event).
 
-#        cfg.path("../../setup");
-#        cfg.args("gui.".encode('utf-8'),sys.argv);
-#        if (argv.length == 1):
-#            print "load csv..."
-#            cfg.load("config.csv");
-#        if (cfg.flag("gui.verbose",False)):
+        
+
 #            cfg.show();
 
         gtk.main()

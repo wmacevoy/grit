@@ -7,14 +7,40 @@
 #include <chrono>
 #include <map>
 
+#include "CreateZMQServoListener.h"
 #include "Configure.h"
 #include "now.h"
+#include "SensorsMessage.h"
+#include "ZMQHub.h"
 
 Configure cfg;
 bool verbose = false;
 
-const int NUM_SERVOS = 68;
-const int NUM_SENSORS = 14;
+SPServoController servoController;
+std::map<int,Servo*> servos;
+SensorsMessage sensors;
+
+class SensorsRx : public ZMQHub
+{
+public:
+  SensorsRx() {
+    subscribers.push_back(cfg.str("proxysensors.subscribe"));
+    start();
+  }
+
+  bool rx(ZMQSubscribeSocket &socket) {
+    ZMQMessage msg;
+    if (msg.recv(socket) == 0) return false;
+    memcpy(&sensors,msg.data(),sizeof(SensorsMessage));
+    if (verbose) {
+      std::cout << "a=[" << sensors.a[0] << "," << sensors.a[1] << "," << sensors.a[2] << "]" << std::endl;
+    }
+    return true;
+  }
+  bool tx(ZMQPublishSocket &socket) { return true; }
+};
+
+std::shared_ptr < SensorsRx > sensorsRx;
 
 using namespace std;
 
@@ -29,297 +55,226 @@ string NumberToString ( T Number )
 class RobotWatcher : public Gtk::Window
 {
 protected:
-	Glib::RefPtr<Gtk::Builder> builder;
-	std::map<int, Gtk::ColorButton*> buttons;
-	std::map<int, Gtk::ColorButton*>::iterator im;
-	Gdk::Color sev_colors[4];
-	Gtk::Label *lblTop, *lblTemp;
-	void *temp_context;
-	void *sensor_context;
-	void *temp_sub;
-	void *sensor_sub;
-        string address_t;
-        string address_s;
-	int hwm, linger, rcc;
-	float t1, t2, timeOut;
- 	int SLEEP_TIME;
-	int32_t sensors[NUM_SENSORS];
-	int32_t temps[NUM_SERVOS];
+  Glib::RefPtr<Gtk::Builder> builder;
+  std::map<int, Gtk::ColorButton*> buttons;
+  std::map<int, Gtk::ColorButton*>::iterator im;
+  Gdk::Color sev_colors[4];
+  Gtk::Label *lblTop, *lblTemp;
+  int SLEEP_TIME;
 	
 public:
-	RobotWatcher(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade) : Gtk::Window(cobject), builder(refGlade)
-	{
-		hwm = 1;
-		linger = 25;
-		t1=0;
-		t2=0;
-		timeOut=0.5;
+  RobotWatcher(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade) : Gtk::Window(cobject), builder(refGlade)
+  {
+    SLEEP_TIME = (int)(cfg.num("gui.sleep_t"));
 		
-		address_t = cfg.str("gui.requester.address_t").c_str();
-		address_s = cfg.str("gui.requester.address_s").c_str();
-		SLEEP_TIME = (int)(cfg.num("gui.requester.sleep_t"));
-		
-		temp_context = zmq_ctx_new ();
-		temp_sub = zmq_socket(temp_context, ZMQ_SUB);
-		zmq_setsockopt(temp_sub, ZMQ_SUBSCRIBE, "", 0);
-		zmq_setsockopt(temp_sub,ZMQ_RCVHWM,&hwm,sizeof(hwm));
-		zmq_setsockopt(temp_sub,ZMQ_LINGER,&linger,sizeof(linger));
+    sev_colors[0].set_rgb(USHRT_MAX,0,0);
+    sev_colors[2].set_rgb(USHRT_MAX,USHRT_MAX,0);
+    sev_colors[2].set_rgb(0,USHRT_MAX,0);
+    sev_colors[3].set_rgb(0,0,0);
+	  
+    for (int i =11; i < 14; i++)
+      {
+	string btn_string = "sig" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
 
-		sensor_context = zmq_ctx_new ();
-		sensor_sub = zmq_socket(temp_context, ZMQ_SUB);
-		zmq_setsockopt(sensor_sub, ZMQ_SUBSCRIBE, "", 0);
-		zmq_setsockopt(sensor_sub,ZMQ_RCVHWM,&hwm,sizeof(hwm));
-		zmq_setsockopt(sensor_sub,ZMQ_LINGER,&linger,sizeof(linger));
-		
-		if (zmq_connect(temp_sub, address_t.c_str()) != 0)
-		{
-		  cout << "Error initializing 0mq, temp requester: " << address_t << endl;
-		}
-		if (zmq_connect(sensor_sub, address_t.c_str()) != 0)
-		{
-		  cout << "Error initializing 0mq, temp requester: " << address_s << endl;
-		}
+    for (int i =21; i < 24; i++)
+      {
+	string btn_string = "sig" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
+    for (int i =31; i < 34; i++)
+      {
+	string btn_string = "sig" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
 
-		sev_colors[0].set_rgb(USHRT_MAX,0,0);
-		sev_colors[2].set_rgb(USHRT_MAX,USHRT_MAX,0);
-		sev_colors[2].set_rgb(0,USHRT_MAX,0);
-		sev_colors[3].set_rgb(0,0,0);
+	  
+    for (int i =41; i < 44; i++)
+      {
+	string btn_string = "sig" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
 
-		for (int i = 0; i < NUM_SERVOS; i++)
-		  temps[i]=100;
-
-		for (int i = 0; i < NUM_SENSORS; i++)
-		  sensors[i] = 100;
-
-		for (int i =11; i < 14; i++)
-		{
-			string btn_string = "sig" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		for (int i =21; i < 24; i++)
-		{
-			string btn_string = "sig" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		for (int i =31; i < 34; i++)
-		{
-			string btn_string = "sig" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		for (int i =41; i < 44; i++)
-		{
-			string btn_string = "sig" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		for (int i =51; i < 60; i++)
-		{
-			string btn_string = "sig" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		for (int i =61; i < 70; i++)
-		{
-			string btn_string = "sig" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		for (int i =91; i < 92; i++)
-		{
-			string btn_string = "sig" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		for (int i =93; i < 95; i++)
-		{
-			string btn_string = "sig" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		for (int i =1; i < 5; i++)
-		{
-			string btn_string = "sigL" + NumberToString(i);
-			builder->get_widget(btn_string.c_str(),buttons[i]);
-			//temp_button[i]->set_sensitive(false);			
-		}
-		builder->get_widget("lblTop", lblTop);
-		builder->get_widget("lblTemp", lblTemp);
+    for (int i =51; i < 60; i++)
+      {
+	string btn_string = "sig" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
+    for (int i =61; i < 70; i++)
+      {
+	string btn_string = "sig" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
+    for (int i =91; i < 92; i++)
+      {
+	string btn_string = "sig" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
+    for (int i =93; i < 95; i++)
+      {
+	string btn_string = "sig" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
+    for (int i =1; i < 5; i++)
+      {
+	string btn_string = "sigL" + NumberToString(i);
+	builder->get_widget(btn_string.c_str(),buttons[i]);
+	//temp_button[i]->set_sensitive(false);			
+      }
+    builder->get_widget("lblTop", lblTop);
+    builder->get_widget("lblTemp", lblTemp);
 	
-		lblTop->set_text("Top: N/A");
+    lblTop->set_text("Top: N/A");
 
-		Glib::signal_timeout().connect(sigc::mem_fun(*this, &RobotWatcher::on_timer), SLEEP_TIME );
+    Glib::signal_timeout().connect(sigc::mem_fun(*this, &RobotWatcher::on_timer), SLEEP_TIME );
 
-	}
+  }
 
-	~RobotWatcher(){}
+  ~RobotWatcher(){}
 
-	bool subscribe_temperatures(int32_t temps[])
-	{
-	  bool ret = false;
-		zmq_msg_t msg;
-		zmq_msg_init (&msg);
-		
-		if(zmq_recvmsg(temp_sub, &msg, ZMQ_DONTWAIT) > 0) {
-			memcpy(temps, zmq_msg_data(&msg), zmq_msg_size(&msg));			
-			ret = true;
-			t1=now();
-			for(int i=0; i < NUM_SERVOS; ++i) std::cout << temps[i] << " ";
-			std::cout << std::endl;
-		}
-		zmq_msg_close(&msg);	
+  void update_colors_temps(int32_t temps[], int size)
+  {
+    int sev = 3, max = 0;
+    for (int i = 0; i < size; i+=2)
+      {
+	if(temps[i+1] > max) max = temps[i+1];
+	if (temps[i+1] > 60)
+	  sev = 0;
+	else if (temps[i+1] > 45)
+	  sev = 1;
+	else if (temps[i+1] > 0)
+	  sev = 2;
+	else
+	  sev = 3;
 
-		t2 = now();
-		if(t2 - t1 > timeOut) {
-			zmq_close(temp_sub);
-			temp_sub = zmq_socket(temp_context, ZMQ_SUB);
-			if(zmq_setsockopt(temp_sub, ZMQ_SUBSCRIBE, "", 0) == 0) {
-				if(zmq_setsockopt(temp_sub, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-					if(zmq_setsockopt(temp_sub, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-						if(zmq_setsockopt(temp_sub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-							rcc = zmq_connect(temp_sub, address_t.c_str());
-						}
-					}
-				}
-			}
-		}
-		return ret;
-	}
+	im = buttons.find(temps[i]);
+	if(im != buttons.end())
+	  buttons[temps[i]]->set_color(sev_colors[sev]);			
+	lblTop->set_text("Top: " + NumberToString(temps[i+1]));
+      }
+  }
 
-	bool subscribe_sensors(int32_t sensors[])
-	{
-	  bool ret = false;
-		zmq_msg_t msg;
-		zmq_msg_init (&msg);
-		
-		if(zmq_recvmsg(sensor_sub, &msg, ZMQ_DONTWAIT) > 0) {
-			memcpy(sensors, zmq_msg_data(&msg), zmq_msg_size(&msg));		
-			ret = true;
-			t1=now();
-			for(int i=0; i < NUM_SENSORS; ++i) std::cout << sensors[i] << " ";
-			std::cout << std::endl;
-		}
-		zmq_msg_close(&msg);	
+  void update_servos()
+  {
+    std::vector <int32_t > temps(2*servos.size(),0);
+    int count=0;
+    for (std::map<int,Servo*>::iterator i=servos.begin(); i != servos.end(); ++i) {
+      temps[count++]=i->first;
+      temps[count++]=i->second->temp();
+    }
+    update_colors_temps(&temps[0],2*servos.size());
+  }
 
-		t2 = now();
-		if(t2 - t1 > timeOut) {
-			zmq_close(sensor_sub);
-			sensor_sub = zmq_socket(sensor_context, ZMQ_SUB);
-			if(zmq_setsockopt(sensor_sub, ZMQ_SUBSCRIBE, "", 0) == 0) {
-				if(zmq_setsockopt(sensor_sub, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-					if(zmq_setsockopt(sensor_sub, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-						if(zmq_setsockopt(sensor_sub, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-							rcc = zmq_connect(sensor_sub, address_s.c_str());
-						}
-					}
-				}
-			}
-		}
-		return ret;
-	}
 
-	void update_colors_temps(int32_t temps[], int size)
-	{
-		int sev = 3, max = 0;
-		for (int i = 0; i < size; i+=2)
-		{
-			if(temps[i+1] > max) max = temps[i+1];
-			if (temps[i+1] > 60)
-				sev = 0;
-			else if (temps[i+1] > 45)
-				sev = 1;
-			else if (temps[i+1] > 0)
-				sev = 2;
-			else
-				sev = 3;
-
-			im = buttons.find(temps[i]);
-			if(im != buttons.end())
-				buttons[temps[i]]->set_color(sev_colors[sev]);			
-			lblTop->set_text("Top: " + NumberToString(temps[i+1]));
-		}
-	}
-
-	void update_colors_pressure(int32_t sensors[]) 
-	{
-		int sev = 3;
-		for(int i = 1; i < 5; i++)
-		{
-			if (sensors[i] > 900)
-				sev = 0;
-			else if (sensors[i] > 750)
-				sev = 1;
-			else if (sensors[i] >= 0)
-				sev = 2;
-			else
-				sev = 3;
-
-			
-			im = buttons.find(sensors[i]);
-			if(im != buttons.end())
-				buttons[i]->set_color(sev_colors[sev]);
-		}
-	}
-
-	bool on_timer()
-	{
-		bool got = subscribe_temperatures(temps);
-		if (got)
-		  update_colors_temps(temps, NUM_SERVOS);
+  void update_colors_pressure(int32_t sensors[]) 
+  {
+    int sev = 3;
+    for(int i = 1; i < 5; i++)
+      {
+	if (sensors[i] > 900)
+	  sev = 0;
+	else if (sensors[i] > 750)
+	  sev = 1;
+	else if (sensors[i] >= 0)
+	  sev = 2;
+	else
+	  sev = 3;
 	
-		got = subscribe_sensors(sensors);
-		if (got)
-		  update_colors_pressure(sensors);
+	
+	im = buttons.find(sensors[i]);
+	if(im != buttons.end())
+	  buttons[i]->set_color(sev_colors[sev]);
+      }
+  }
 
-		return true;
-	}
+  void update_sensors()
+  {
+    std::vector < int32_t > data;
+    data.push_back(sensors.a[0]);
+    data.push_back(sensors.a[1]);
+    data.push_back(sensors.a[2]);
 
-	//Signal handler
-	void end2()
-	{
-		Gtk::Main::quit();
-	}
+    data.push_back(sensors.c[0]);
+    data.push_back(sensors.c[1]);
+    data.push_back(sensors.c[2]);
 
-	void end()
-	{
-		std::cout << std::endl << "Quitting..." << std::endl;
-		zmq_close(temp_sub);
-		zmq_close(sensor_sub);
-		zmq_ctx_destroy(temp_context);
-		zmq_ctx_destroy(sensor_context);
-		std::cout << "--done!" << std::endl;
-	}
+    data.push_back(sensors.g[0]);
+    data.push_back(sensors.g[1]);
+    data.push_back(sensors.g[2]);
+
+    data.push_back(sensors.p[0]);
+    data.push_back(sensors.p[1]);
+    data.push_back(sensors.p[2]);
+
+    data.push_back(sensors.s[0]);
+    data.push_back(sensors.s[1]);
+    data.push_back(sensors.s[2]);
+    update_colors_pressure(&data[0]);
+  }
+  
+  bool on_timer()
+  {
+    update_servos();
+    update_sensors();
+    return true;
+  }
+
+  //Signal handler
+  void end2()
+  {
+    Gtk::Main::quit();
+  }
+  
+  void end()
+  {
+    std::cout << "done." << std::endl;
+  }
 };
 
-RobotWatcher* r;
+RobotWatcher* gui;
 
 void quitproc(int param) {
-	r->end2();
+  gui->end2();
 }
 
 int main(int argc, char *argv[])
 {
-	cfg.path("../../setup");
-	cfg.args("gui.requester.", argv);
-	if (argc == 1) cfg.load("config.csv");
-	verbose = cfg.flag("gui.requester.verbose", false);
-	if (verbose) cfg.show();
+  cfg.path("../../setup");
+  cfg.args("gui.", argv);
+  if (argc == 1) cfg.load("config.csv");
+  cfg.servos();
+  verbose = cfg.flag("gui.verbose", false);
+  if (verbose) cfg.show();
+
+  servoController = SPServoController(CreateZMQServoListener(cfg.str("proxyservos.subscribe")));
+  std::set<std::string> names = cfg.servoNames();
+  for (std::set<std::string>::iterator i=names.begin(); i!=names.end(); ++i) {
+    int id=atoi(cfg.servo(*i,"id").c_str());
+    servos[id]=servoController->servo(id);
+  }
+  servoController->start();
+
+  sensorsRx = std::shared_ptr < SensorsRx > (new SensorsRx());
 	
-	signal(SIGINT, quitproc);
-	signal(SIGTERM, quitproc);
-	signal(SIGQUIT, quitproc);
+  signal(SIGINT, quitproc);
+  signal(SIGTERM, quitproc);
+  signal(SIGQUIT, quitproc);
 
-	Gtk::Main kit(argc,argv);
-	Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("main.xml");
+  Gtk::Main kit(argc,argv);
+  Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("src/main.xml");
 
-	RobotWatcher *gui = 0;
-	r = gui;
-	builder->get_widget_derived("winStatus", gui);
-	kit.run(*gui);
-	gui->end();
+  builder->get_widget_derived("winStatus", gui);
+  kit.run(*gui);
+  gui->end();
 
-
-	return 0;
+  return 0;
 }

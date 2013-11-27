@@ -215,12 +215,12 @@ commander()
 
 start()
 {
-    start_apps leapPublisher glovePublisher webcamRequester heartBeatRequester joystickProvider
+    start_apps leapPublisher glovePublisher webcamRequester heartBeatRequester joystickProvider gui
 }
 
 stop()
 {
-    stop_apps leapPublisher glovePublisher webcamRequester heartBeatRequester joystickProvider
+    stop_apps leapPublisher glovePublisher webcamRequester heartBeatRequester joystickProvider gui
 }
 
 synctime()
