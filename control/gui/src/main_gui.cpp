@@ -59,7 +59,7 @@ protected:
   std::map<int, Gtk::ColorButton*> buttons;
   std::map<int, Gtk::ColorButton*>::iterator im;
   Gdk::Color sev_colors[4];
-  Gtk::Label *lblTop, *lblTemp;
+  Gtk::Label *lblTop, *lblTemp, *lblAccel, *lblGyro, *lblCompass, *lblSafety;
   int SLEEP_TIME;
 	
 public:
@@ -124,14 +124,18 @@ public:
 	builder->get_widget(btn_string.c_str(),buttons[i]);
 	//temp_button[i]->set_sensitive(false);			
       }
-    for (int i =1; i < 5; i++)
+    for (int i =101; i <= 116; i++)
       {
-	string btn_string = "sigL" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+        string btn_string = "sen" + NumberToString(i);
+        builder->get_widget(btn_string.c_str(),buttons[i]);
       }
     builder->get_widget("lblTop", lblTop);
     builder->get_widget("lblTemp", lblTemp);
+
+    builder->get_widget("lblAccel", lblAccel);
+    builder->get_widget("lblGyro", lblGyro);
+    builder->get_widget("lblCompass", lblCompass);
+    builder->get_widget("lblSafety", lblSafety);
 	
     lblTop->set_text("Top: N/A");
 
@@ -158,7 +162,7 @@ public:
 
 	im = buttons.find(temps[i]);
 	if(im != buttons.end())
-	  buttons[temps[i]]->set_color(sev_colors[sev]);			
+	  im->second->set_color(sev_colors[sev]);			
 	lblTop->set_text("Top: " + NumberToString(temps[i+1]));
       }
   }
@@ -178,7 +182,7 @@ public:
   void update_colors_pressure(int32_t sensors[]) 
   {
     int sev = 3;
-    for(int i = 1; i < 5; i++)
+    for(int i = 1; i <= 16; i++)
       {
 	if (sensors[i] > 900)
 	  sev = 0;
@@ -190,31 +194,38 @@ public:
 	  sev = 3;
 	
 	
-	im = buttons.find(sensors[i]);
+	im = buttons.find(i + 100);
 	if(im != buttons.end())
-	  buttons[i]->set_color(sev_colors[sev]);
+	  im->second->set_color(sev_colors[sev]);
       }
   }
 
   void update_sensors()
   {
     std::vector < int32_t > data;
+
+    //Sen 101-103
     data.push_back(sensors.a[0]);
     data.push_back(sensors.a[1]);
     data.push_back(sensors.a[2]);
 
+    //Sen 104-106
     data.push_back(sensors.c[0]);
     data.push_back(sensors.c[1]);
     data.push_back(sensors.c[2]);
 
+    //Sen 107-109
     data.push_back(sensors.g[0]);
     data.push_back(sensors.g[1]);
     data.push_back(sensors.g[2]);
 
+    //Sen 113-116
     data.push_back(sensors.p[0]);
     data.push_back(sensors.p[1]);
     data.push_back(sensors.p[2]);
+    data.push_back(sensors.p[3]);
 
+    //Sen 110-112
     data.push_back(sensors.s[0]);
     data.push_back(sensors.s[1]);
     data.push_back(sensors.s[2]);
