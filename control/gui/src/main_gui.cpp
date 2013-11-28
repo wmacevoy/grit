@@ -62,6 +62,7 @@ protected:
   std::map<int, Gtk::ColorButton*>::iterator im;
   Gdk::Color sev_colors[5];
   Gtk::Label *lblTop, *lblTemp, *lblAccel, *lblGyro, *lblCompass, *lblSafety;
+  Gtk::Label *lblA0, *lblA1, *lblA2, *lblG0, *lblG1, *lblG2, *lblC0, *lblC1, *lblC2;
   int SLEEP_TIME;
 	
 public:
@@ -78,56 +79,47 @@ public:
     for (int i =11; i < 14; i++)
       {
 	string btn_string = "sig" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+	builder->get_widget(btn_string.c_str(),buttons[i]);		
       }
 
     for (int i =21; i < 24; i++)
       {
 	string btn_string = "sig" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+	builder->get_widget(btn_string.c_str(),buttons[i]);			
       }
     for (int i =31; i < 34; i++)
       {
 	string btn_string = "sig" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+	builder->get_widget(btn_string.c_str(),buttons[i]);			
       }
-
 	  
     for (int i =41; i < 44; i++)
       {
 	string btn_string = "sig" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+	builder->get_widget(btn_string.c_str(),buttons[i]);		
       }
 
     for (int i =51; i < 60; i++)
       {
 	string btn_string = "sig" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+	builder->get_widget(btn_string.c_str(),buttons[i]);		
       }
     for (int i =61; i < 70; i++)
       {
 	string btn_string = "sig" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+	builder->get_widget(btn_string.c_str(),buttons[i]);			
       }
     for (int i =91; i < 92; i++)
       {
 	string btn_string = "sig" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+	builder->get_widget(btn_string.c_str(),buttons[i]);			
       }
     for (int i =93; i < 95; i++)
       {
 	string btn_string = "sig" + NumberToString(i);
-	builder->get_widget(btn_string.c_str(),buttons[i]);
-	//temp_button[i]->set_sensitive(false);			
+	builder->get_widget(btn_string.c_str(),buttons[i]);		
       }
-    for (int i =101; i <= 114; i++)
+    for (int i =101; i <= 105; i++)
       {
         string btn_string = "sen" + NumberToString(i);
         builder->get_widget(btn_string.c_str(),buttons[i]);
@@ -139,6 +131,16 @@ public:
     builder->get_widget("lblGyro", lblGyro);
     builder->get_widget("lblCompass", lblCompass);
     builder->get_widget("lblSafety", lblSafety);
+    builder->get_widget("lblA0", lblA0);
+    builder->get_widget("lblA1", lblA1);
+    builder->get_widget("lblA2", lblA2);
+    builder->get_widget("lblG0", lblG0);
+    builder->get_widget("lblG1", lblG1);
+    builder->get_widget("lblG2", lblG2);
+    builder->get_widget("lblC0", lblC0);
+    builder->get_widget("lblC1", lblC1);
+    builder->get_widget("lblC2", lblC2);
+	
 	
     lblTop->set_text("Top: N/A");
 
@@ -187,22 +189,27 @@ public:
     int sev = 3;
 
     //Update accel, gyro, compass 
-    for(int i = 1; i <= 9; i++)
-      {
-        im = buttons.find(i + 100);
-	if(im != buttons.end())
-	  im->second->set_color(sev_colors[sev]);
-      }
+    lblA0->set_text("A[0]: " + NumberToString(sensors[0]));
+    lblA1->set_text("A[1]: " + NumberToString(sensors[1]));
+    lblA2->set_text("A[2]: " + NumberToString(sensors[2]));
+
+    lblG0->set_text("G[0]: " + NumberToString(sensors[3]));
+    lblG1->set_text("G[1]: " + NumberToString(sensors[4]));
+    lblG2->set_text("G[2]: " + NumberToString(sensors[5]));
+
+    lblC0->set_text("C[0]: " + NumberToString(sensors[6]));
+    lblC1->set_text("C[1]: " + NumberToString(sensors[7]));
+    lblC2->set_text("C[2]: " + NumberToString(sensors[8]));
 
     //Update safety
-    im = buttons.find(110);
+    im = buttons.find(105);
 	if(im != buttons.end()) {
-	  sev_colors[4].set_rgb(sensors[12] * colorMapper, sensors[13] * colorMapper, sensors[14] * colorMapper);
+	  sev_colors[4].set_rgb(sensors[13] * colorMapper, sensors[14] * colorMapper, sensors[15] * colorMapper);
           im->second->set_color(sev_colors[4]);
         }
 
     //Update leg pressures
-    for(int i = 11; i <= 14; i++)
+    for(int i = 9; i <= 12; i++)
       {
 	if (sensors[i] > 900)
 	  sev = 0;
@@ -214,7 +221,7 @@ public:
 	  sev = 3;
 	
 	
-	im = buttons.find(i + 100);
+	im = buttons.find(i + 92);
 	if(im != buttons.end())
 	  im->second->set_color(sev_colors[sev]);
       }
@@ -245,7 +252,7 @@ public:
     data.push_back(sensors.p[2]);
     data.push_back(sensors.p[3]);
 
-    //Sen 110, index 12-14
+    //Sen 110, index 13-15
     data.push_back(sensors.s[0]);
     data.push_back(sensors.s[1]);
     data.push_back(sensors.s[2]);
@@ -267,7 +274,7 @@ public:
   
   void end()
   {
-    std::cout << "--done!" << std::endl;
+    std::cout << std::endl << "--done!" << std::endl;
   }
 };
 
