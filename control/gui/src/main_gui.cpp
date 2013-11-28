@@ -185,6 +185,8 @@ public:
   void update_colors_pressure(int32_t sensors[]) 
   {
     int sev = 3;
+
+    //Update accel, gyro, compass 
     for(int i = 1; i <= 9; i++)
       {
         im = buttons.find(i + 100);
@@ -265,7 +267,7 @@ public:
   
   void end()
   {
-    std::cout << "done." << std::endl;
+    std::cout << "--done!" << std::endl;
   }
 };
 
