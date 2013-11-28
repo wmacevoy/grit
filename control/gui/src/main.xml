@@ -748,7 +748,7 @@
 
 		<child>
                   <object class="GtkLabel" id="lblGyro">
-                    <property name="width_request">70</property>
+                    <property name="width_request">80</property>
                     <property name="height_request">20</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -756,8 +756,8 @@
 		  </property>
                   </object>
                   <packing>
-                    <property name="x">5</property>
-                    <property name="y">450</property>
+                    <property name="x">160</property>
+                    <property name="y">380</property>
                   </packing>
                 </child>
 
@@ -775,8 +775,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">5</property>
-                    <property name="y">470</property>
+                    <property name="x">165</property>
+                    <property name="y">400</property>
                   </packing>
                 </child>
 
@@ -794,8 +794,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">30</property>
-                    <property name="y">470</property>
+                    <property name="x">190</property>
+                    <property name="y">400</property>
                   </packing>
                 </child>
 
@@ -813,14 +813,14 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">55</property>
-                    <property name="y">470</property>
+                    <property name="x">215</property>
+                    <property name="y">400</property>
                   </packing>
                 </child>
 
 		<child>
                   <object class="GtkLabel" id="lblCompass">
-                    <property name="width_request">100</property>
+                    <property name="width_request">85</property>
                     <property name="height_request">20</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -828,7 +828,7 @@
 		  </property>
                   </object>
                   <packing>
-                    <property name="x">150</property>
+                    <property name="x">300</property>
                     <property name="y">380</property>
                   </packing>
                 </child>
@@ -847,7 +847,7 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">155</property>
+                    <property name="x">305</property>
                     <property name="y">400</property>
                   </packing>
                 </child>
@@ -866,7 +866,7 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">180</property>
+                    <property name="x">330</property>
                     <property name="y">400</property>
                   </packing>
                 </child>
@@ -884,80 +884,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">205</property>
+                    <property name="x">355</property>
                     <property name="y">400</property>
-                  </packing>
-                </child>
-
-		<child>
-                  <object class="GtkLabel" id="lblSafety">
-                    <property name="width_request">100</property>
-                    <property name="height_request">20</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Safety
-		  </property>
-                  </object>
-                  <packing>
-                    <property name="x">150</property>
-                    <property name="y">450</property>
-                  </packing>
-                </child>
-
-		<child>
-                  <object class="GtkColorButton" id="sen110">
-                    <property name="width_request">25</property>
-                    <property name="height_request">25</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="receives_default">True</property>
-                    <property name="relief">none</property>
-                    <property name="focus_on_click">False</property>
-                    <property name="xalign">0</property>
-                    <property name="yalign">0</property>
-                    <property name="color">#000000000000</property>
-                  </object>
-                  <packing>
-                    <property name="x">155</property>
-                    <property name="y">470</property>
-                  </packing>
-                </child>
-
-		<child>
-                  <object class="GtkColorButton" id="sen111">
-                    <property name="width_request">25</property>
-                    <property name="height_request">25</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="receives_default">True</property>
-                    <property name="relief">none</property>
-                    <property name="focus_on_click">False</property>
-                    <property name="xalign">0</property>
-                    <property name="yalign">0</property>
-                    <property name="color">#000000000000</property>
-                  </object>
-                  <packing>
-                    <property name="x">180</property>
-                    <property name="y">470</property>
-                  </packing>
-                </child>
-
-		<child>
-                  <object class="GtkColorButton" id="sen112">
-                    <property name="width_request">25</property>
-                    <property name="height_request">25</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="receives_default">True</property>
-                    <property name="relief">none</property>
-                    <property name="focus_on_click">False</property>
-                    <property name="xalign">0</property>
-                    <property name="yalign">0</property>
-                    <property name="color">#000000000000</property>
-                  </object>
-                  <packing>
-                    <property name="x">205</property>
-                    <property name="y">470</property>
                   </packing>
                 </child>
 
@@ -1004,7 +932,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
-                  <object class="GtkColorButton" id="sen113">
+                  <object class="GtkColorButton" id="sen111">
                     <property name="width_request">25</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
@@ -1023,7 +951,7 @@
                 </child>
 
                 <child>
-                  <object class="GtkColorButton" id="sen114">
+                  <object class="GtkColorButton" id="sen112">
                     <property name="width_request">25</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
@@ -1042,7 +970,7 @@
                 </child>
 
 		<child>
-                  <object class="GtkColorButton" id="sen115">
+                  <object class="GtkColorButton" id="sen113">
                     <property name="width_request">25</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
@@ -1061,7 +989,7 @@
                 </child>
 
                 <child>
-                  <object class="GtkColorButton" id="sen116">
+                  <object class="GtkColorButton" id="sen114">
                     <property name="width_request">25</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
@@ -1076,6 +1004,40 @@
                   <packing>
                     <property name="x">40</property>
                     <property name="y">145</property>
+                  </packing>
+                </child>
+
+		<child>
+                  <object class="GtkLabel" id="lblSafety">
+                    <property name="width_request">100</property>
+                    <property name="height_request">20</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Safety
+		  </property>
+                  </object>
+                  <packing>
+                    <property name="x">35</property>
+                    <property name="y">210</property>
+                  </packing>
+                </child>
+
+		<child>
+                  <object class="GtkColorButton" id="sen110">
+                    <property name="width_request">25</property>
+                    <property name="height_request">25</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="receives_default">True</property>
+                    <property name="relief">none</property>
+                    <property name="focus_on_click">False</property>
+                    <property name="xalign">0</property>
+                    <property name="yalign">0</property>
+                    <property name="color">#000000000000</property>
+                  </object>
+                  <packing>
+                    <property name="x">110</property>
+                    <property name="y">205</property>
                   </packing>
                 </child>
 

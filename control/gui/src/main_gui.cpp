@@ -16,6 +16,8 @@
 Configure cfg;
 bool verbose = false;
 
+const double colorMapper = USHRT_MAX / 255;
+
 SPServoController servoController;
 std::map<int,Servo*> servos;
 SensorsMessage sensors;
@@ -58,7 +60,7 @@ protected:
   Glib::RefPtr<Gtk::Builder> builder;
   std::map<int, Gtk::ColorButton*> buttons;
   std::map<int, Gtk::ColorButton*>::iterator im;
-  Gdk::Color sev_colors[4];
+  Gdk::Color sev_colors[5];
   Gtk::Label *lblTop, *lblTemp, *lblAccel, *lblGyro, *lblCompass, *lblSafety;
   int SLEEP_TIME;
 	
@@ -71,6 +73,7 @@ public:
     sev_colors[2].set_rgb(USHRT_MAX,USHRT_MAX,0);
     sev_colors[2].set_rgb(0,USHRT_MAX,0);
     sev_colors[3].set_rgb(0,0,0);
+    sev_colors[4].set_rgb(0,0,0); //Used for safety light only
 	  
     for (int i =11; i < 14; i++)
       {
@@ -124,7 +127,7 @@ public:
 	builder->get_widget(btn_string.c_str(),buttons[i]);
 	//temp_button[i]->set_sensitive(false);			
       }
-    for (int i =101; i <= 116; i++)
+    for (int i =101; i <= 114; i++)
       {
         string btn_string = "sen" + NumberToString(i);
         builder->get_widget(btn_string.c_str(),buttons[i]);
@@ -182,7 +185,22 @@ public:
   void update_colors_pressure(int32_t sensors[]) 
   {
     int sev = 3;
-    for(int i = 1; i <= 16; i++)
+    for(int i = 1; i <= 9; i++)
+      {
+        im = buttons.find(i + 100);
+	if(im != buttons.end())
+	  im->second->set_color(sev_colors[sev]);
+      }
+
+    //Update safety
+    im = buttons.find(110);
+	if(im != buttons.end()) {
+	  sev_colors[4].set_rgb(sensors[12] * colorMapper, sensors[13] * colorMapper, sensors[14] * colorMapper);
+          im->second->set_color(sev_colors[4]);
+        }
+
+    //Update leg pressures
+    for(int i = 11; i <= 14; i++)
       {
 	if (sensors[i] > 900)
 	  sev = 0;
@@ -204,28 +222,28 @@ public:
   {
     std::vector < int32_t > data;
 
-    //Sen 101-103
+    //Sen 101-103, index 0-2
     data.push_back(sensors.a[0]);
     data.push_back(sensors.a[1]);
     data.push_back(sensors.a[2]);
 
-    //Sen 104-106
+    //Sen 104-106, index 3-5
     data.push_back(sensors.c[0]);
     data.push_back(sensors.c[1]);
     data.push_back(sensors.c[2]);
 
-    //Sen 107-109
+    //Sen 107-109, index 6-8
     data.push_back(sensors.g[0]);
     data.push_back(sensors.g[1]);
     data.push_back(sensors.g[2]);
 
-    //Sen 113-116
+    //Sen 111-114, index 9-12
     data.push_back(sensors.p[0]);
     data.push_back(sensors.p[1]);
     data.push_back(sensors.p[2]);
     data.push_back(sensors.p[3]);
 
-    //Sen 110-112
+    //Sen 110, index 12-14
     data.push_back(sensors.s[0]);
     data.push_back(sensors.s[1]);
     data.push_back(sensors.s[2]);
