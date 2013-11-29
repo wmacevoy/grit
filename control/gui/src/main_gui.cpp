@@ -124,6 +124,12 @@ public:
         string btn_string = "sen" + NumberToString(i);
         builder->get_widget(btn_string.c_str(),buttons[i]);
       }
+    for (im = buttons.begin(); im != buttons.end(); ++im)
+      {
+        im->second->set_has_tooltip();
+	im->second->signal_query_tooltip().connect(sigc::mem_fun(*this, &RobotWatcher::on_qt));
+      }
+
     builder->get_widget("lblTop", lblTop);
     builder->get_widget("lblTemp", lblTemp);
 
@@ -145,7 +151,11 @@ public:
     lblTop->set_text("Top: N/A");
 
     Glib::signal_timeout().connect(sigc::mem_fun(*this, &RobotWatcher::on_timer), SLEEP_TIME );
+  }
 
+  bool on_qt(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip) {
+     std::cout << "in tt callback" << std::endl;
+     return true;
   }
 
   ~RobotWatcher(){}
@@ -222,8 +232,10 @@ public:
 	
 	
 	im = buttons.find(i + 92);
-	if(im != buttons.end())
+	if(im != buttons.end()) {
 	  im->second->set_color(sev_colors[sev]);
+          im->second->set_tooltip_text("Pressure");
+	}
       }
   }
 
