@@ -63,6 +63,7 @@ protected:
   Gdk::Color sev_colors[5];
   Gtk::Label *lblTop, *lblTemp, *lblAccel, *lblGyro, *lblCompass, *lblSafety;
   Gtk::Label *lblA0, *lblA1, *lblA2, *lblG0, *lblG1, *lblG2, *lblC0, *lblC1, *lblC2;
+  Glib::ustring tooltipText;
   int SLEEP_TIME;
 	
 public:
@@ -127,7 +128,6 @@ public:
     for (im = buttons.begin(); im != buttons.end(); ++im)
       {
         im->second->set_has_tooltip();
-	im->second->set_has_window(false);
 	im->second->signal_query_tooltip().connect(sigc::mem_fun(*this, &RobotWatcher::on_qt));
       }
 
@@ -155,7 +155,7 @@ public:
   }
 
   bool on_qt(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip) {
-   std::cout << " in TT " << std::endl;
+   tooltip->set_text(tooltipText);
    return true;
   }
 
