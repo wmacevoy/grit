@@ -127,6 +127,7 @@ public:
     for (im = buttons.begin(); im != buttons.end(); ++im)
       {
         im->second->set_has_tooltip();
+	im->second->set_has_window(false);
 	im->second->signal_query_tooltip().connect(sigc::mem_fun(*this, &RobotWatcher::on_qt));
       }
 
@@ -154,8 +155,8 @@ public:
   }
 
   bool on_qt(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip) {
-     std::cout << "in tt callback" << std::endl;
-     return true;
+   std::cout << " in TT " << std::endl;
+   return true;
   }
 
   ~RobotWatcher(){}
@@ -176,8 +177,9 @@ public:
 	  sev = 3;
 
 	im = buttons.find(temps[i]);
-	if(im != buttons.end())
-	  im->second->set_color(sev_colors[sev]);			
+	if(im != buttons.end()) {
+	  im->second->set_color(sev_colors[sev]);	
+	}		
 	lblTop->set_text("Top: " + NumberToString(temps[i+1]));
       }
   }
@@ -234,7 +236,6 @@ public:
 	im = buttons.find(i + 92);
 	if(im != buttons.end()) {
 	  im->second->set_color(sev_colors[sev]);
-          im->second->set_tooltip_text("Pressure");
 	}
       }
   }
