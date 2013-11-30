@@ -62,8 +62,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">184</property>
-                    <property name="y">287</property>
+                    <property name="x">225</property>
+                    <property name="y">300</property>
                   </packing>
                 </child>
 
@@ -80,8 +80,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">170</property>
-                    <property name="y">252</property>
+                    <property name="x">180</property>
+                    <property name="y">290</property>
                   </packing>
                 </child>
 
@@ -99,8 +99,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">154</property>
-                    <property name="y">239</property>
+                    <property name="x">165</property>
+                    <property name="y">285</property>
                   </packing>
                 </child>
 
@@ -118,8 +118,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">54</property>
-                    <property name="y">288</property>
+                    <property name="x">55</property>
+                    <property name="y">300</property>
                   </packing>
                 </child>
 
@@ -137,8 +137,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">77</property>
-                    <property name="y">255</property>
+                    <property name="x">95</property>
+                    <property name="y">290</property>
                   </packing>
                 </child>
 		
@@ -156,8 +156,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">85</property>
-                    <property name="y">240</property>
+                    <property name="x">110</property>
+                    <property name="y">285</property>
                   </packing>
                 </child>	
 
@@ -175,7 +175,7 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">216</property>
+                    <property name="x">220</property>
                     <property name="y">255</property>
                   </packing>
                 </child>
@@ -194,8 +194,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">182</property>
-                    <property name="y">220</property>
+                    <property name="x">190</property>
+                    <property name="y">265</property>
                   </packing>
                 </child>
 
@@ -213,8 +213,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">171</property>
-                    <property name="y">210</property>
+                    <property name="x">170</property>
+                    <property name="y">265</property>
                   </packing>
                 </child>
                
@@ -232,8 +232,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">32</property>
-                    <property name="y">252</property>
+                    <property name="x">55</property>
+                    <property name="y">255</property>
                   </packing>
                 </child>
 
@@ -251,8 +251,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">72</property>
-                    <property name="y">225</property>
+                    <property name="x">85</property>
+                    <property name="y">265</property>
                   </packing>
                 </child>
 
@@ -270,8 +270,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">82</property>
-                    <property name="y">214</property>
+                    <property name="x">105</property>
+                    <property name="y">265</property>
                   </packing>
                 </child>
 
@@ -365,8 +365,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">232</property>
-                    <property name="y">191</property>
+                    <property name="x">215</property>
+                    <property name="y">200</property>
                   </packing>
                 </child>
 
@@ -384,8 +384,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">223</property>
-                    <property name="y">152</property>
+                    <property name="x">210</property>
+                    <property name="y">177</property>
                   </packing>
                 </child>
 
@@ -403,8 +403,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">209</property>
-                    <property name="y">119</property>
+                    <property name="x">195</property>
+                    <property name="y">155</property>
                   </packing>
                 </child>
 
@@ -422,8 +422,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">205</property>
-                    <property name="y">96</property>
+                    <property name="x">190</property>
+                    <property name="y">135</property>
                   </packing>
                 </child>
 
@@ -441,8 +441,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">182</property>
-                    <property name="y">85</property>
+                    <property name="x">165</property>
+                    <property name="y">135</property>
                   </packing>
                 </child>
                 
@@ -536,8 +536,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">35</property>
-                    <property name="y">196</property>
+                    <property name="x">65</property>
+                    <property name="y">200</property>
                   </packing>
                 </child>
 
@@ -555,8 +555,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">54</property>
-                    <property name="y">159</property>
+                    <property name="x">77</property>
+                    <property name="y">177</property>
                   </packing>
                 </child>
 
@@ -574,8 +574,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">57</property>
-                    <property name="y">128</property>
+                    <property name="x">90</property>
+                    <property name="y">155</property>
                   </packing>
                 </child>
 
@@ -593,8 +593,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">63</property>
-                    <property name="y">99</property>
+                    <property name="x">90</property>
+                    <property name="y">135</property>
                   </packing>
                 </child>
 
@@ -612,8 +612,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">82</property>
-                    <property name="y">85</property>
+                    <property name="x">115</property>
+                    <property name="y">135</property>
                   </packing>
                 </child>
 
@@ -631,8 +631,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">129</property>
-                    <property name="y">210</property>
+                    <property name="x">142</property>
+                    <property name="y">250</property>
                   </packing>
                 </child>
 
@@ -650,8 +650,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">132</property>
-                    <property name="y">76</property>
+                    <property name="x">140</property>
+                    <property name="y">126</property>
                   </packing>
                 </child>
               
@@ -669,8 +669,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">132</property>
-                    <property name="y">56</property>
+                    <property name="x">140</property>
+                    <property name="y">106</property>
                   </packing>
                 </child>
 
