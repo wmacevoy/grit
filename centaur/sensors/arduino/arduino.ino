@@ -63,29 +63,6 @@ unsigned short crcsum(const unsigned char* message, unsigned long length,
   return crc;
 }
 
-int crcverify(const unsigned char* message, unsigned long length)
-{
-  /*
-   * Returns true if the last two bytes in a message is the crc of the
-   * preceding bytes.
-   */
-  unsigned short expected;
-
-  expected = crcsum(message, length - 2, CRC_INIT);
-  return (expected & 0xff) == message[length - 2] &&
-    ((expected >> 8) & 0xff) == message[length - 1];
-}
-
-void crcappend(unsigned char* message, unsigned long length)
-{
-  unsigned long crc;
-
-  crc = crcsum(message, length, CRC_INIT);
-  message[length] = (unsigned char)(crc & 0xff);
-  message[length+1] = (unsigned char)((crc >> 8) & 0xff);
-}
-
-
 #define GYROADDR 0x68
 #define COMPASSADDR 0x1e
 #define ACCELADDR 0x53
@@ -238,13 +215,17 @@ typedef struct {
 int nios=0;
 io_t ios[8]; // at least as many as are setup()
 
+unsigned long nextWrite;
+
 void setup()
 {
-  Serial.begin(9600);  // start serial for output
+  Serial.begin(115200);  // start serial for output
   Wire.begin();        // join i2c bus (address optional for master)
   setupCompass(COMPASSADDR);
   setupAccel(ACCELADDR);
   setupGyro(GYROADDR);
+
+  nextWrite = millis();
 
   nios=0;
   
@@ -364,6 +345,7 @@ bool check(char *mark)
   return (crc0 == crc1);
 }
 
+
 void read()
 {
   while (Serial.available()) {
@@ -390,7 +372,7 @@ void read()
   }
 }
 
-void loop()
+void write()
 {
   union XYZBuffer compass,gyro,accel;
   int l1,l2,l3,l4;
@@ -410,12 +392,10 @@ void loop()
   l3=analogRead(2);
   l4=analogRead(3);
 
-  read();
-
   readAccel(ACCELADDR,&accel);
   readCompass(COMPASSADDR,&compass);
   readGyro(GYROADDR,&gyro);
-  
+
   Serial.print("A,");
   output(accel);
   Serial.print(",C,");
@@ -439,3 +419,13 @@ void loop()
   }
   Serial.println();
 }
+
+void loop()
+{
+  read();
+  if (millis() > nextWrite) {
+    write();
+    nextWrite=millis() + 50;
+  }
+}
+

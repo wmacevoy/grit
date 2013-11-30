@@ -122,9 +122,12 @@ void write()
   }
 }
 
+double nextReportTime=0;
 void report()
 {
-  return;
+  if (sensors.t < nextReportTime) return;
+  nextReportTime = sensors.t+1.0;
+
   cout << "t=" << sensors.t;
 
   cout << " a=[" 
