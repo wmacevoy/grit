@@ -185,6 +185,7 @@ public:
     cout << setprecision(5);
   }
 
+#if 0
   std::thread *goInfo;
   bool infoRunning;
   
@@ -250,16 +251,17 @@ public:
       goInfo = 0;
     }
   }
+#endif
 
   ZMQServoServer()
   {
-    goInfo = 0;
-    infoOn();
+    //    goInfo = 0;
+    //    infoOn();
   }
 
   ~ZMQServoServer()
   {
-    infoOff();
+    //    infoOff();
   }
 };
 
