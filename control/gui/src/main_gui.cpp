@@ -196,82 +196,50 @@ public:
   }
 
 
-  void update_colors_pressure(int32_t sensors[]) 
+  void update_sensors()
   {
     int sev = 3;
 
     //Update accel, gyro, compass 
-    lblA0->set_text("A[0]: " + NumberToString(sensors[0]));
-    lblA1->set_text("A[1]: " + NumberToString(sensors[1]));
-    lblA2->set_text("A[2]: " + NumberToString(sensors[2]));
+    lblA0->set_text("A[0]: " + NumberToString(sensors.a[0]));
+    lblA1->set_text("A[1]: " + NumberToString(sensors.a[1]));
+    lblA2->set_text("A[2]: " + NumberToString(sensors.a[2]));
 
-    lblG0->set_text("G[0]: " + NumberToString(sensors[3]));
-    lblG1->set_text("G[1]: " + NumberToString(sensors[4]));
-    lblG2->set_text("G[2]: " + NumberToString(sensors[5]));
+    lblG0->set_text("G[0]: " + NumberToString(sensors.g[3]));
+    lblG1->set_text("G[1]: " + NumberToString(sensors.g[4]));
+    lblG2->set_text("G[2]: " + NumberToString(sensors.g[5]));
 
-    lblC0->set_text("C[0]: " + NumberToString(sensors[6]));
-    lblC1->set_text("C[1]: " + NumberToString(sensors[7]));
-    lblC2->set_text("C[2]: " + NumberToString(sensors[8]));
+    lblC0->set_text("C[0]: " + NumberToString(sensors.c[6]));
+    lblC1->set_text("C[1]: " + NumberToString(sensors.c[7]));
+    lblC2->set_text("C[2]: " + NumberToString(sensors.c[8]));
 
     //Update safety
     im = buttons.find(105);
-	if(im != buttons.end()) {
-	  sev_colors[4].set_rgb(sensors[13] * colorMapper, sensors[14] * colorMapper, sensors[15] * colorMapper);
-          im->second->set_color(sev_colors[4]);
-        }
-
+    if(im != buttons.end()) {
+      int r=255-sensors.s[0],g=255-sensors.s[1],b=255-sensors.s[2];
+      sev_colors[4].set_rgb(256*r,256*g,256*b); 
+      im->second->set_color(sev_colors[4]);
+    }
+    
     //Update leg pressures
-    for(int i = 9; i <= 12; i++)
+    for(int i = 0; i <= 4; i++)
       {
-	if (sensors[i] > 900)
+	if (sensors.p[i] > 900)
 	  sev = 0;
-	else if (sensors[i] > 750)
+	else if (sensors.p[i] > 750)
 	  sev = 1;
-	else if (sensors[i] >= 0)
+	else if (sensors.p[i] >= 0)
 	  sev = 2;
 	else
 	  sev = 3;
 	
-	
-	im = buttons.find(i + 92);
+	im = buttons.find(i + 101);
 	if(im != buttons.end()) {
 	  im->second->set_color(sev_colors[sev]);
 	}
       }
   }
 
-  void update_sensors()
-  {
-    std::vector < int32_t > data;
-
-    //Sen 101-103, index 0-2
-    data.push_back(sensors.a[0]);
-    data.push_back(sensors.a[1]);
-    data.push_back(sensors.a[2]);
-
-    //Sen 104-106, index 3-5
-    data.push_back(sensors.c[0]);
-    data.push_back(sensors.c[1]);
-    data.push_back(sensors.c[2]);
-
-    //Sen 107-109, index 6-8
-    data.push_back(sensors.g[0]);
-    data.push_back(sensors.g[1]);
-    data.push_back(sensors.g[2]);
-
-    //Sen 111-114, index 9-12
-    data.push_back(sensors.p[0]);
-    data.push_back(sensors.p[1]);
-    data.push_back(sensors.p[2]);
-    data.push_back(sensors.p[3]);
-
-    //Sen 110, index 13-15
-    data.push_back(sensors.s[0]);
-    data.push_back(sensors.s[1]);
-    data.push_back(sensors.s[2]);
-    update_colors_pressure(&data[0]);
-  }
-  
   bool on_timer()
   {
     update_servos();
