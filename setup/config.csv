@@ -13,7 +13,7 @@ safety.delayoff,2.5,seconds of warning
 safety.txtimeout,2.0,seconds for stale receives
 safety.rxtimeout,2.0,seconds for stale sends
 safety.rate,4,update rate (hertz)
-safety.verbose,false
+safety.verbose,true
 safety.publish,tcp://*:${safety.port}
 safety.subscribe,tcp://${safety.ip}:${safety.port}
 safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port}"
@@ -30,8 +30,8 @@ servos.safety.port,5601
 servos.safety.publish,tcp://*:${servos.safety.port}
 servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
 servos.verbose,false
-xservos.type,real
-servos.type,fake
+servos.type,real
+xservos.type,fake
 servos.deviceindex,1
 servos.baudnum,3
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
