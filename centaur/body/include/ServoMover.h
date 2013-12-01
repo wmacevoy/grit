@@ -28,6 +28,7 @@ public:
   float angle();
   float speed();
   void at(float *angle, float *speed);
+  void clear();
   void move(Servo &servo);
   void setup(const std::map < float , float > &angles_,
 	     double simTime0_=0, double simTime1_=1e99);

@@ -33,6 +33,7 @@
 #include "now.h"
 #include "BodyMover.h"
 #include "glovestruct.h"
+#include "HandTape.h"
 
 
 #define USE_PY 0
@@ -1597,6 +1598,18 @@ void leapHand() {
       }
       answer(oss.str());
     }
+    if (head == "clench") {
+      HandTape left("LEFTARM");
+      HandTape right("RIGHTARM");
+      left.grip(simTime+2.0);
+      right.grip(simTime+2.0);
+      left.same(simTime+4.0);
+      right.same(simTime+4.0);
+      left.open(simTime+6.0);
+      right.open(simTime+6.0);
+      left.write(*mover);
+      right.write(*mover);
+    }
     if (head == "help") {
       oss << "laio|raio|laud|raud|lae|rae|lab|rab|laf|raf";
       answer(oss.str());
@@ -1634,6 +1647,7 @@ void leapHand() {
       answer(out.str());
     }
   }
+
 
   void update()
   {

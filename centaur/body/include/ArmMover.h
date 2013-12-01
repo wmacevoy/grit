@@ -32,6 +32,7 @@ class ArmMover
   float lastLeapForearm;
 
   void leapAdjust(LeapHandMessage &leapHandMessage);
+
   virtual ~ArmMover();
   ArmMover(ArmGeometry *geometry_);
 };

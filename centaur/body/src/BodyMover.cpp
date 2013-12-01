@@ -612,7 +612,7 @@ bool BodyMover::blended(double radius,double x,double y,double z,double xstep,do
 std::vector<std::vector<double> > BodyMover::stepMerge(std::vector<std::vector <double> > start,std::vector<std::vector <double> > end) {
   std::vector<std::vector<double> > data;
   bool ldown[]={false,false,false,false};
-  for (int i=0;i<start.size();i++) {
+  for (size_t i=0;i<start.size();i++) {
 	vector<double> temp;
 	temp.push_back(start[i][0]);
 	for (int j=0;j<4;j++) {
