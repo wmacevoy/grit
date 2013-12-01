@@ -6,6 +6,13 @@
 
 using namespace std;
 
+void Curve::clear()
+{
+  n=0;
+  knots.clear();
+  at.clear();
+}
+
 void Curve::setup(const std::map < float , float > &points)
 {
   size_t k;
@@ -135,6 +142,14 @@ void Curve::interval(float x, int &k0, int &k1)
       if (k1 < n-1) ++k1;
     }
   }
+}
+
+float Curve::minX() const {
+  return (n > 0) ? knots[0].x : 0;
+}
+
+float Curve::maxX() const {
+  return (n > 0) ? knots[n-1].x : 0;
 }
 
 void Curve::expand(float x, float &x0, float &x1, float c[3])
