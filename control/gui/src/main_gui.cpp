@@ -72,7 +72,7 @@ public:
     SLEEP_TIME = (int)(cfg.num("gui.sleep_t"));
 		
     sev_colors[0].set_rgb(USHRT_MAX,0,0);
-    sev_colors[2].set_rgb(USHRT_MAX,USHRT_MAX,0);
+    sev_colors[1].set_rgb(USHRT_MAX,USHRT_MAX,0);
     sev_colors[2].set_rgb(0,USHRT_MAX,0);
     sev_colors[3].set_rgb(0,0,0);
     sev_colors[4].set_rgb(0,0,0); //Used for safety light only
@@ -180,7 +180,7 @@ public:
 	if(im != buttons.end()) {
 	  im->second->set_color(sev_colors[sev]);	
 	}		
-	lblTop->set_text("Top: " + NumberToString(temps[i+1]));
+	lblTop->set_text("Top: " + NumberToString(max));
       }
   }
 
@@ -192,6 +192,7 @@ public:
       temps[count++]=i->first;
       temps[count++]=i->second->temp();
     }
+    std::cout << std::endl;
     update_colors_temps(&temps[0],2*servos.size());
   }
 
@@ -217,19 +218,19 @@ public:
     im = buttons.find(105);
     if(im != buttons.end()) {
       int r=255-sensors.s[0],g=255-sensors.s[1],b=255-sensors.s[2];
-      sev_colors[4].set_rgb(256*r,256*g,256*b); 
+      sev_colors[4].set_rgb(255*r,255*g,255*b); 
       im->second->set_color(sev_colors[4]);
     }
     
     //Update leg pressures
-    for(int i = 0; i <= 4; i++)
+    for(int i = 0; i < 4; i++)
       {
 	if (sensors.p[i] > 900)
-	  sev = 0;
+	  sev = 2;
 	else if (sensors.p[i] > 750)
 	  sev = 1;
 	else if (sensors.p[i] >= 0)
-	  sev = 2;
+	  sev = 0;
 	else
 	  sev = 3;
 	
