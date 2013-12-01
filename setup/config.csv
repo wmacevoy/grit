@@ -47,7 +47,7 @@ proxyservos.ip,${centaur.ip}
 proxyservos.publish,tcp://*:${proxyservos.port}
 proxyservos.subscribe,tcp://${proxyservos.ip}:${proxyservos.port}
 proxyservos.anglerate,0.25
-proxyservos.temprate,0.0167
+proxyservos.temprate,0.25,0.0167
 proxyservos.verbose,true
 body.ip,${centaur.ip}
 body.safety.port,5602
@@ -103,7 +103,7 @@ heartbeat.provider.sleep_time,"100"
 heartbeat.requester.address,"tcp://${centaur.ip}:9800"
 heartbeat.requester.verbose,"false"
 heartbeat.requester.sleep_time,"100"
-glView.subscriber.addressL,"tcp://${xcentaur.ip}:9997"
+glView.subscriber.addressL,"tcp://${centaur.ip}:9997"
 glView.subscriber.verbose,"false"
 glView.subscriber.sleep_time,25
 sensors.ip,"${centaur.ip}"
@@ -125,7 +125,7 @@ proxysensors.ip,${centaur.ip}
 proxysensors.publish,tcp://*:${proxysensors.port}
 proxysensors.subscribe,tcp://${proxysensors.ip}:${proxysensors.port}
 proxysensors.rate,1.0
-proxyservos.verbose,true
+proxysensors.verbose,true
 gloves.publisher.dev_path,"/dev/ttyACM0"
 gloves.publisher.verbose,"false"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
