@@ -111,12 +111,12 @@ public:
       m_tempTimeout = now() + 1.0/m_tempRate;
       ZMQMessage msg(sizeof(ZMQServoMessage));
       ZMQServoMessage *data = (ZMQServoMessage*)msg.data();
-      data->messageId = ZMQServoMessage::GET_ANGLE;
+      data->messageId = ZMQServoMessage::GET_TEMP;
       data->servoId = m_id;
       data->value = m_temp;
       if (msg.send(socket) == 0) ok = false;
       if (verbose) {
-	std::cout << "tx temp=" << m_temp << (ok?" ok":" fail")  << std::endl;
+	std::cout << "tx id=" << m_id << " temp=" << m_temp << (ok?" ok":" fail")  << std::endl;
       }
     }
     return ok;
