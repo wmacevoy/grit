@@ -40,7 +40,7 @@ struct ZMQServoListener : ZMQHub, ServoController
 	j->second->presentTemp=data->value; break;
       }
     }
-    std::cout << "got id=" << data->messageId << " value=" << data->value << std::endl;
+    std::cout << "got svo id" << data->servoId << " msg id=" << data->messageId << " value=" << data->value << std::endl;
     return true;
   }
 
