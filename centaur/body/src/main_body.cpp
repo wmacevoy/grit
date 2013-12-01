@@ -1054,7 +1054,7 @@ void leapHand() {
 	}
       } else {
 	oss << "safe " << (safety->safe() ? "on" : "off")
-	    << "and warn " << (safety->warn() ? "on" : "off");
+	    << " and warn " << (safety->warn() ? "on" : "off");
 	answer(oss.str());
       }
     }
@@ -1600,15 +1600,11 @@ void leapHand() {
     }
     if (head == "clench") {
       HandTape left("LEFTARM");
-      HandTape right("RIGHTARM");
+      left.opened(simTime);
       left.grip(simTime+2.0);
-      right.grip(simTime+2.0);
-      left.same(simTime+4.0);
-      right.same(simTime+4.0);
+      left.gripped(simTime+4.0);
       left.open(simTime+6.0);
-      right.open(simTime+6.0);
       left.write(*mover);
-      right.write(*mover);
     }
     if (head == "help") {
       oss << "laio|raio|laud|raud|lae|rae|lab|rab|laf|raf";

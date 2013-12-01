@@ -1,6 +1,7 @@
 #include "Tape.h"
 
 #include <math.h>
+#include <iostream>
 
 using namespace std;
 
@@ -14,6 +15,11 @@ void Tape::write(BodyMover &mover) const
       float simTime0 = path.size() > 0 ? path.begin()->first : 0.0;
       float simTime1 = path.size() > 0 ? path.rbegin()->first : 0.0;
       servoMover->setup(path,simTime0,simTime1);
+      cout << "tape " << name << ": ";
+      for (Path::const_iterator j=path.begin(); j != path.end(); ++j) {
+	cout << " " << j->first << "->" << j->second;
+      }
+      cout << endl;
     }
   }
 }
