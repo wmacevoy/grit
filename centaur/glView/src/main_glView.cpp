@@ -26,6 +26,7 @@
 #include "now.h"
 #include "Configure.h"
 #include "CreateZMQServoListener.h"
+#include "LidarMessage.h"
 
 Configure cfg;
 bool verbose = false;
@@ -45,8 +46,7 @@ void* sub_lidar;
 int hwm = 1;
 int linger = 25;
 
-int64_t* lidar_data = NULL;
-int sz_lidar_data = 1081;
+LidarMessage lidarMessage;
 
 double r = 5.0;
 double neckAngle;
@@ -74,7 +74,7 @@ void getData() {
 	static float tl1 = 0, tl2 = 0, timeOut = 0.6;
 	int rcc;
 
-	rcc = zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
+	rcc = zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);	
 	if(rcc > 0) {
 		tl1 = now();
 	}
@@ -119,7 +119,7 @@ void draw() {
 	double rcos, rsin;	
 	
 	for (i = 0; i < circle_points; ++i) {
-		r = lidar_data[i] * 0.00328084;
+		r = lidarMessage.data[i] / 12.0;
 
 		if(verbose) printf( "angle = %f \n" , angle);
 
@@ -199,8 +199,6 @@ int main( int argc,char **argv) {
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
-	bool good = false;
-
 	context_lidar = zmq_ctx_new ();
 	sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
 
@@ -218,22 +216,14 @@ int main( int argc,char **argv) {
 					glutIdleFunc(getData);
 					glutKeyboardFunc(keyboard);
 					glutDisplayFunc(draw);
-
-					lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
-					if(lidar_data) {
-						good = true;					
-						std::cout << "Everthing was successfully initialized" <<std::endl;					
-					}
 				}
 			}
 		}
 	}
 
-	if(good) glutMainLoop();
+	glutMainLoop();
 
 	std::cout << std::endl << "Quitting..." << std::endl;
-	std::cout << "freeing memory..." << std::endl;
-	if(lidar_data) free(lidar_data);
 	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(sub_lidar);
 	zmq_ctx_destroy(context_lidar);
