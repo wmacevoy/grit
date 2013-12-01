@@ -34,9 +34,6 @@ public:
     ZMQMessage msg;
     if (msg.recv(socket) == 0) return false;
     memcpy(&sensors,msg.data(),sizeof(SensorsMessage));
-    if (verbose) {
-      std::cout << "a=[" << sensors.a[0] << "," << sensors.a[1] << "," << sensors.a[2] << "]" << std::endl;
-    }
     return true;
   }
   bool tx(ZMQPublishSocket &socket) { return true; }
@@ -124,6 +121,10 @@ public:
         string btn_string = "sen" + NumberToString(i);
         builder->get_widget(btn_string.c_str(),buttons[i]);
       }
+    for (im = buttons.begin(); im != buttons.end(); ++im)
+      {
+        im->second->signal_clicked().connect(sigc::mem_fun(*this, &RobotWatcher::btn_click));
+      }
 
     builder->get_widget("lblTop", lblTop);
     builder->get_widget("lblTemp", lblTemp);
@@ -149,6 +150,10 @@ public:
   }
 
   ~RobotWatcher(){}
+  
+  void btn_click() {
+    std::cout << "clicked" << std::endl;
+  }
 
   void update_colors_temps(int32_t temps[], int size)
   {
@@ -168,7 +173,6 @@ public:
 	im = buttons.find(temps[i]);
 	if(im != buttons.end()) {
 	  im->second->set_color(sev_colors[sev]);	
-	  im->second->set_title(NumberToString(temps[i+1]));
 	}		
 	lblTop->set_text("Top: " + NumberToString(max));
       }
@@ -182,10 +186,8 @@ public:
       temps[count++]=i->first;
       temps[count++]=i->second->temp();
     }
-    std::cout << std::endl;
     update_colors_temps(&temps[0],2*servos.size());
   }
-
 
   void update_sensors()
   {
@@ -196,13 +198,13 @@ public:
     lblA1->set_text("A[1]: " + NumberToString(sensors.a[1]));
     lblA2->set_text("A[2]: " + NumberToString(sensors.a[2]));
 
-    lblG0->set_text("G[0]: " + NumberToString(sensors.g[3]));
-    lblG1->set_text("G[1]: " + NumberToString(sensors.g[4]));
-    lblG2->set_text("G[2]: " + NumberToString(sensors.g[5]));
+    lblG0->set_text("G[0]: " + NumberToString(sensors.g[0]));
+    lblG1->set_text("G[1]: " + NumberToString(sensors.g[1]));
+    lblG2->set_text("G[2]: " + NumberToString(sensors.g[2]));
 
-    lblC0->set_text("C[0]: " + NumberToString(sensors.c[6]));
-    lblC1->set_text("C[1]: " + NumberToString(sensors.c[7]));
-    lblC2->set_text("C[2]: " + NumberToString(sensors.c[8]));
+    lblC0->set_text("C[0]: " + NumberToString(sensors.c[0]));
+    lblC1->set_text("C[1]: " + NumberToString(sensors.c[1]));
+    lblC2->set_text("C[2]: " + NumberToString(sensors.c[2]));
 
     //Update safety
     im = buttons.find(105);

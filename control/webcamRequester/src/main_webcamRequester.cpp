@@ -162,7 +162,7 @@ int main(int argc, char** argv)
 				switch(CorG) {
 				case false:
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-					//					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
+					//zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
 					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);
 					if (verbose) {
 					  std::cout << "t=" << lidarMessage.t << " waist=" <<
