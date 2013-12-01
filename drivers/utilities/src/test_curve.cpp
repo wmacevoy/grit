@@ -122,11 +122,40 @@ void test1()
 	 << c[0] << ","<< c[1] << ","<< c[2] << endl;
   }
 }
+
+void test3()
+{
+  map<float,float> p;
+  p[8.60142]=0;
+  p[9.60142]=360;
+  p[12.6014]=360;
+  p[14.6014]=0;
+
+  curve.setup(p);
+  curve.sharpen();
+
+  float xmin=p.begin()->first;
+  float xmax=p.rbegin()->first;
+  int n=20;
+
+  cout << "x,y,f,x0,x1,c0,c1,c2" << endl;
+  for (int i=-n; i<=12*n+n; ++i) {
+    float x=xmin+(xmax-xmin)*float(i)/float(12*n);
+    float x0,x1,c[3];
+    curve.expand(x,x0,x1,c);
+    float y=c[0]+c[1]*(x-x0)+c[2]*pow(x-x0,2)/2.0;
+
+    cout << x << "," << y << "," << "0" << "," 
+	 << x0 << "," << x1 << "," 
+	 << c[0] << ","<< c[1] << ","<< c[2] << endl;
+  }
+}
   
 
 int main(int argc, char *argv[])
 {
   // test1();
-  test2();
+  //test2();
+  test3();
   return 0;
 }
