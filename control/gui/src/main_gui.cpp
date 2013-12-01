@@ -63,7 +63,6 @@ protected:
   Gdk::Color sev_colors[5];
   Gtk::Label *lblTop, *lblTemp, *lblAccel, *lblGyro, *lblCompass, *lblSafety;
   Gtk::Label *lblA0, *lblA1, *lblA2, *lblG0, *lblG1, *lblG2, *lblC0, *lblC1, *lblC2;
-  Glib::ustring tooltipText;
   int SLEEP_TIME;
 	
 public:
@@ -125,11 +124,6 @@ public:
         string btn_string = "sen" + NumberToString(i);
         builder->get_widget(btn_string.c_str(),buttons[i]);
       }
-    for (im = buttons.begin(); im != buttons.end(); ++im)
-      {
-        im->second->set_has_tooltip();
-	im->second->signal_query_tooltip().connect(sigc::mem_fun(*this, &RobotWatcher::on_qt));
-      }
 
     builder->get_widget("lblTop", lblTop);
     builder->get_widget("lblTemp", lblTemp);
@@ -154,11 +148,6 @@ public:
     Glib::signal_timeout().connect(sigc::mem_fun(*this, &RobotWatcher::on_timer), SLEEP_TIME );
   }
 
-  bool on_qt(int x, int y, bool keyboard_tooltip, const Glib::RefPtr<Gtk::Tooltip>& tooltip) {
-   tooltip->set_text(tooltipText);
-   return true;
-  }
-
   ~RobotWatcher(){}
 
   void update_colors_temps(int32_t temps[], int size)
@@ -179,6 +168,7 @@ public:
 	im = buttons.find(temps[i]);
 	if(im != buttons.end()) {
 	  im->second->set_color(sev_colors[sev]);	
+	  im->second->set_title(NumberToString(temps[i+1]));
 	}		
 	lblTop->set_text("Top: " + NumberToString(max));
       }
