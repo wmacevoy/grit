@@ -108,7 +108,7 @@ void test1()
   }
 
   curve.setup(p);
-  curve.sharpen();
+  //  curve.sharpen();
 
   cout << "x,y,f,x0,x1,c0,c1,c2" << endl;
   for (int i=-n; i<=12*n+n; ++i) {
@@ -132,7 +132,7 @@ void test3()
   p[14.6014]=0;
 
   curve.setup(p);
-  curve.sharpen();
+  //  curve.sharpen();
 
   float xmin=p.begin()->first;
   float xmax=p.rbegin()->first;

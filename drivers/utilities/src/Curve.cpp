@@ -40,7 +40,7 @@ void Curve::setup(const std::map < float , float > &points)
 
   float xmin = knots[0].x;
   float xmax = knots[n-1].x;
-  
+
   k=0;
   for (size_t i=0; i<n; ++i) {
     double t = double(i)/double(n);
@@ -187,6 +187,7 @@ void Curve::expand(float x, float &x0, float &x1, float c[3])
     if (i >= n) i=n-1;
     if (i < 0)  i=0;
     k0=at[i];
+    while (k0 < n-1 && knots[k0].x < x) ++k0;
     while (k0 > 0 && knots[k0].x >= x) --k0;
     if (k0 == n-1) --k0;
     k1=k0+1;
@@ -197,6 +198,8 @@ void Curve::expand(float x, float &x0, float &x1, float c[3])
     assert(knots[k0].x <= x);
     assert(knots[k1].x >= x);
   }
+
+  //  cout << " x=" << x << " k0=" << k0 << " k1=" << k1 << endl;
 
   if (k1>=k0+2) {
     float dx0=knots[k0+1].x-knots[k0+0].x;
