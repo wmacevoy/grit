@@ -14,8 +14,13 @@ void Tape::write(BodyMover &mover) const
     if (servoMover != 0) {
       float simTime0 = path.size() > 0 ? path.begin()->first : 0.0;
       float simTime1 = path.size() > 0 ? path.rbegin()->first : 0.0;
-      servoMover->setup(path,simTime0,simTime1);
+      std::map < float , float > path0;
+      for (Path::const_iterator j = path.begin(); j != path.end(); ++j) {
+	path0[j->first-simTime0]=j->second;
+      }
+      servoMover->setup(path0,simTime0,simTime1);
       cout << "tape " << name << ": ";
+      cout << "s=[" << simTime0 << "," << simTime1 << "]";
       for (Path::const_iterator j=path.begin(); j != path.end(); ++j) {
 	cout << " " << j->first << "->" << j->second;
       }

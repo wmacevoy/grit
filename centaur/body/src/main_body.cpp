@@ -1619,9 +1619,9 @@ void leapHand() {
       if (side == "LEFTARM" || side == "RIGHTARM") {
 	HandTape hand(side);
 	hand.opened(simTime);
-	hand.grip(simTime+2.0);
-	hand.gripped(simTime+4.0);
-	hand.open(simTime+6.0);
+	hand.grip(simTime+5.0);
+	hand.gripped(simTime+10.0);
+	hand.open(simTime+15.0);
 	hand.write(*mover);
 	answer(string("clenched ") + side);
       }
@@ -1632,6 +1632,7 @@ void leapHand() {
       iss >> name >> arccommand;
       if (arccommand == "fromPoints") {
 	Vec3d p1,p2,p3;
+	while (isblank(iss.peek())) iss.get();
 	if (iss.peek() == '[') {
 	  iss >> p1;
 	} else {
@@ -1639,6 +1640,7 @@ void leapHand() {
 	  iss >> p1name;
 	  p1 = vecs[p1name];
 	}
+	while (isblank(iss.peek())) iss.get();
 	if (iss.peek() == '[') {
 	  iss >> p2;
 	} else {
@@ -1646,6 +1648,7 @@ void leapHand() {
 	  iss >> p2name;
 	  p2 = vecs[p2name];
 	}
+	while (isblank(iss.peek())) iss.get();
 	if (iss.peek() == '[') {
 	  iss >> p3;
 	} else {

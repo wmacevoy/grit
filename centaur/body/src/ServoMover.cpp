@@ -96,8 +96,8 @@ void ServoMover::curve(double t[2], float c0[3], float c1[3])
 void ServoMover::setup(const map < float , float > &angles_,
 		       double simTime0_, double simTime1_) {
   if (verbose) {
+    cout << "s=[" << simTime0_ << "," << simTime1_ << "]" << endl;
     for (map<float,float>::const_iterator i=angles_.begin(); i!=angles_.end(); ++i) {
-      cout << "s=[" << simTime0_ << "," << simTime1_ << "]" << endl;
       cout << "ServoMover@" << (void*) this << "[" << i->first << "]=" << i->second << endl;
     }
   }
