@@ -113,7 +113,7 @@ sensors.subscribe,"tcp://${sensors.ip}:${sensors.port}"
 sensors.safety.port,5603
 sensors.safety.publish,"tcp://*:${sensors.safety.port}
 sensors.safety.subscribe,"tcp://${safety.ip}:${safety.port}"
-sensors.verbose,"true"
+sensors.verbose,"false"
 sensors.rxpolltimeout,0.5
 sensors.rxtimeout,5.0
 sensors.readtimeout,5.0
@@ -125,7 +125,7 @@ proxysensors.ip,${centaur.ip}
 proxysensors.publish,tcp://*:${proxysensors.port}
 proxysensors.subscribe,tcp://${proxysensors.ip}:${proxysensors.port}
 proxysensors.rate,1.0
-proxysensors.verbose,true
+proxysensors.verbose,false
 gloves.publisher.dev_path,"/dev/ttyACM0"
 gloves.publisher.verbose,"false"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
