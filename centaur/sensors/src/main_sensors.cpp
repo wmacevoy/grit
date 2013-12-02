@@ -282,6 +282,12 @@ void config(int argc, char** argv)
   verbose = cfg.flag("sensors.verbose", false);
   if (verbose) cfg.show();
 
+  string sys="stty -F ";
+  sys += cfg.str("sensors.dev_path");
+  sys += " 115200";
+  int status=system(sys.c_str());
+  cout << "system(\"" << sys << "\")=" << status << endl;
+
   readTimeout = cfg.num("sensors.readtimeout");
   okReadTimeout = cfg.num("sensors.rxtimeout");
   okWriteTimeout = cfg.num("sensors.txtimeout");
