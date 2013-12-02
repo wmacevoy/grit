@@ -169,7 +169,7 @@ void Curve::expand(float x, float &x0, float &x1, float c[3])
   while (k1-k0+1<3 && !knots[k1].sharp) ++k1;
   while (k1-k0+1<3 && !knots[k0].sharp) --k0;
 
-  cout << " x=" << x << " k0=" << k0 << " k1=" << k1 << endl;
+  //  cout << " x=" << x << " k0=" << k0 << " k1=" << k1 << endl;
 
   if (k1==k0+2) {
     float dx0=knots[k0+1].x-knots[k0+0].x;

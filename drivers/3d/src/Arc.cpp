@@ -65,9 +65,9 @@ void Arc::fromPoints(const Vec3d &p1, const Vec3d &p2, const Vec3d &p3)
   }
 
   assert((t1 < t2 && t2 < t3) || (t1 > t2 && t2 > t3));
-  assert(dist(o+cos((M_PI/180)*t1)*ex+sin((M_PI/180)*t1)*ey,p1) < 1e-3);
-  assert(dist(o+cos((M_PI/180)*t2)*ex+sin((M_PI/180)*t2)*ey,p2) < 1e-3);
-  assert(dist(o+cos((M_PI/180)*t3)*ex+sin((M_PI/180)*t3)*ey,p3) < 1e-3);
+  assert(dist(o+radius*cos((M_PI/180)*t1)*ex+radius*sin((M_PI/180)*t1)*ey,p1) < 1e-3);
+  assert(dist(o+radius*cos((M_PI/180)*t2)*ex+radius*sin((M_PI/180)*t2)*ey,p2) < 1e-3);
+  assert(dist(o+radius*cos((M_PI/180)*t3)*ex+radius*sin((M_PI/180)*t3)*ey,p3) < 1e-3);
 
   theta0=t1;
   theta1=t3;
