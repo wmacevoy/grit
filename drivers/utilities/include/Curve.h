@@ -6,6 +6,8 @@
 
 class Curve
 {
+ private:
+  void ats();
  public:
   struct Knot {
     float x,y;
@@ -31,7 +33,7 @@ class Curve
 
   // explicit x->(y,sharp) map
   void setup(const std::map < float , std::pair<float,bool> > &points);
-  void interval(float x, int &k0, int &k1);
+  void interval(float x, size_t &k0, size_t &k1);
   void expand(float x,float &x0, float &x1,float c[3]);
 };  
 

@@ -132,7 +132,7 @@ void test3()
   p[14.6014]=0;
 
   curve.setup(p);
-  //  curve.sharpen();
+  curve.sharpen(0.0);
 
   float xmin=p.begin()->first;
   float xmax=p.rbegin()->first;

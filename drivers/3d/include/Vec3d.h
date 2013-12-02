@@ -37,3 +37,4 @@ Vec3d unit(const Vec3d &a);
 float dist(const Vec3d &a,const Vec3d &b);
 
 std::ostream& operator<< (std::ostream &out, const Vec3d &v);
+std::istream& operator>> (std::istream &in, Vec3d &v);

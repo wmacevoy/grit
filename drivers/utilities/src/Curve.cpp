@@ -13,6 +13,21 @@ void Curve::clear()
   at.clear();
 }
 
+void Curve::ats()
+{
+  at.resize(knots.size());
+  size_t k = 0;
+  float xmin = knots[0].x;
+  float xmax = knots[n-1].x;
+
+  for (size_t i=0; i<n; ++i) {
+    double t = double(i)/double(n);
+    float x = xmin*(1-t)+xmax*t;
+    while (k+1 < n && knots[k+1].x <= x) ++k;
+    at[i]=k;
+  }
+}
+
 void Curve::setup(const std::map < float , float > &points)
 {
   size_t k;
@@ -37,17 +52,7 @@ void Curve::setup(const std::map < float , float > &points)
   }
   knots[0].sharp=true;
   knots[n-1].sharp=true;
-
-  float xmin = knots[0].x;
-  float xmax = knots[n-1].x;
-
-  k=0;
-  for (size_t i=0; i<n; ++i) {
-    double t = double(i)/double(n);
-    float x = xmin*(1-t)+xmax*t;
-    while (k+1 < n && knots[k].x < x) ++k;
-    at[i]=k;
-  }
+  ats();
 }
 
 void Curve::setup(const std::map < float , std::pair < float , bool > > &points)
@@ -75,16 +80,7 @@ void Curve::setup(const std::map < float , std::pair < float , bool > > &points)
   knots[0].sharp=true;
   knots[n-1].sharp=true;
 
-  float xmin = knots[0].x;
-  float xmax = knots[n-1].x;
-  
-  k=0;
-  for (size_t i=0; i<n; ++i) {
-    double t = double(i)/double(n);
-    float x = xmin*(1-t)+xmax*t;
-    while (k+1 < n && knots[k].x < x) ++k;
-    at[i]=k;
-  }
+  ats();
 }
 
 void Curve::sharpen(float cutoff)
@@ -116,7 +112,7 @@ void Curve::sharpen(float cutoff)
   }
 }
 
-void Curve::interval(float x, int &k0, int &k1)
+void Curve::interval(float x, size_t &k0, size_t &k1)
 {
   if (n <= 1) {
     k0=0;
@@ -125,21 +121,18 @@ void Curve::interval(float x, int &k0, int &k1)
     float xmin=knots[0].x;
     float xmax=knots[n-1].x;
     double t=(x-xmin)/(xmax-xmin);
+    ssize_t i = t*n;
     
     if (t <= 0) {
       k0=0;
-      k1=1;
+      k1=0;
     } else if (t >= 1) {
       k0=n-1;
       k1=n-1;
     } else {
-      ssize_t i = t*n;
-      if (i >= n) i=n-1;
-      if (i < 0)  i=0;
       k0=at[i];
-      while (k0 > 0 && knots[k0].x >= x) --k0;
-      k1=k0;
-      if (k1 < n-1) ++k1;
+      while (k0+1 < n && knots[k0+1].x < x) ++k0;
+      k1 = (k0+1 < n) ? k0+1 : k0;
     }
   }
 }
@@ -159,7 +152,7 @@ void Curve::expand(float x, float &x0, float &x1, float c[3])
     c[1]=0;
     c[2]=0;
     x0=x;
-    x1=x+1e9;
+    x1=x;
     return;
   }
   if (n == 1) {
@@ -167,41 +160,18 @@ void Curve::expand(float x, float &x0, float &x1, float c[3])
     c[1]=0;
     c[2]=0;
     x0=x;
-    x1=x+1e9;
+    x1=x;
     return;
   }
   
-  float xmin=knots[0].x;
-  float xmax=knots[n-1].x;
-  double t=(x-xmin)/(xmax-xmin);
-  ssize_t k0,k1;
+  size_t k0,k1;
+  interval(x,k0,k1);
+  while (k1-k0+1<3 && !knots[k1].sharp) ++k1;
+  while (k1-k0+1<3 && !knots[k0].sharp) --k0;
 
-  if (t <= 0) {
-    k0=0;
-    k1=(n > 1) ? 1 : 0;
-  } else if (t >= 1) {
-    k0=(n > 1) ? n-2 : n-1;
-    k1=n-1;
-  } else {
-    ssize_t i = t*n;
-    if (i >= n) i=n-1;
-    if (i < 0)  i=0;
-    k0=at[i];
-    while (k0 < n-1 && knots[k0].x < x) ++k0;
-    while (k0 > 0 && knots[k0].x >= x) --k0;
-    if (k0 == n-1) --k0;
-    k1=k0+1;
-    while (k1-k0+1<3 && !knots[k1].sharp) ++k1;
-    while (k1-k0+1<3 && !knots[k0].sharp) --k0;
-    assert(k0 >= 0 && k0 < n);
-    assert(k1 >= 0 && k1 < n);
-    assert(knots[k0].x <= x);
-    assert(knots[k1].x >= x);
-  }
+  cout << " x=" << x << " k0=" << k0 << " k1=" << k1 << endl;
 
-  //  cout << " x=" << x << " k0=" << k0 << " k1=" << k1 << endl;
-
-  if (k1>=k0+2) {
+  if (k1==k0+2) {
     float dx0=knots[k0+1].x-knots[k0+0].x;
     float dx1=knots[k0+2].x-knots[k0+1].x;
     float dx2=knots[k0+2].x-knots[k0+0].x;
@@ -216,14 +186,14 @@ void Curve::expand(float x, float &x0, float &x1, float c[3])
     x0=knots[k0+1].x;
     x1=knots[k0+2].x;
   } else if (k1==k0+1) {
-    float dx0=knots[k0+1].x-knots[k0+0].x;
-    float dy0=knots[k0+1].y-knots[k0+0].y;
+    float dx0=knots[k1].x-knots[k0+0].x;
+    float dy0=knots[k1].y-knots[k0+0].y;
 
-    c[0]=knots[k0+1].y;
+    c[0]=knots[k1].y;
     c[1]=dy0/dx0;
     c[2]=0;
 
-    x0=knots[k0+1].x;
+    x0=knots[k1].x;
     x1=x0;
   } else {
     c[0]=knots[k1].y;

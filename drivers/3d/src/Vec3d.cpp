@@ -1,5 +1,7 @@
 #include <math.h>
 #include <string.h>
+#include <stdio.h>
+#include <ctype.h>
 
 #include "Vec3d.h"
 
@@ -82,4 +84,24 @@ std::ostream& operator<< (std::ostream &out, const Vec3d &v)
 {
   out << "[" << v(0) << "," << v(1) << "," << v(2) << "]";
   return out;
+}
+
+std::istream& operator>> (std::istream &in, Vec3d &v)
+{
+  while (isblank(in.peek())) in.get();
+  if (in.peek() != '[') { in.setstate(istream::failbit); return in; }
+  else in.get();
+  if (!(in >> v.x())) return in;
+  while (isblank(in.peek())) in.get();
+  if (in.peek() != ',') { in.setstate(istream::failbit); return in; }
+  else in.get();
+  if (!(in >> v.y())) return in;  
+  while (isblank(in.peek())) in.get();
+  if (in.peek() != ',') { in.setstate(istream::failbit); return in; }
+  else in.get();
+  if (!(in >> v.z())) return in;  
+  while (isblank(in.peek())) in.get();
+  if (in.peek() != ']') { in.setstate(istream::failbit); return in; }
+  else in.get();
+  return in;
 }
