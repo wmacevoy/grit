@@ -94,7 +94,7 @@ LegMover::LegMover(LegsMover *legs_, int number_)
 void LegMover::bricks(Leg &leg)
 {  
   float femurAngle,femurSpeed;
-  int k0,k1;
+  size_t k0,k1;
   float lift0,lift1;
 
   {

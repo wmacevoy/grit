@@ -34,7 +34,9 @@
 #include "BodyMover.h"
 #include "glovestruct.h"
 #include "HandTape.h"
-
+#include "Vec3d.h"
+#include "Arc.h"
+#include "Mat3d.h"
 
 #define USE_PY 0
 
@@ -116,6 +118,9 @@ public:
 class BodyController : public ZMQHub
 {
 public:
+  std::map < std::string , Vec3d > vecs;
+  std::map < std::string , Arc > arcs;
+
   list < string > replies;
   string last;
   map < string , string > saved;
@@ -833,6 +838,16 @@ void leapHand() {
       }
       saved[name]=instruction;
       oss << "named '" << instruction << "' as " << name;
+      answer(oss.str());
+    }
+
+    if (head == "vec") {
+      string name;
+      char eq;
+      iss >> name;
+      iss >> eq;
+      iss >> vecs[name];
+      oss << "vec " << name << "=" << vecs[name];
       answer(oss.str());
     }
     
@@ -1599,13 +1614,52 @@ void leapHand() {
       answer(oss.str());
     }
     if (head == "clench") {
-      HandTape left("LEFTARM");
-      left.opened(simTime);
-      left.grip(simTime+2.0);
-      left.gripped(simTime+4.0);
-      left.open(simTime+6.0);
-      left.write(*mover);
+      string side;
+      iss >> side;
+      if (side == "LEFTARM" || side == "RIGHTARM") {
+	HandTape hand(side);
+	hand.opened(simTime);
+	hand.grip(simTime+2.0);
+	hand.gripped(simTime+4.0);
+	hand.open(simTime+6.0);
+	hand.write(*mover);
+	answer(string("clenched ") + side);
+      }
     }
+    if (head == "arc") {
+      string name;
+      string arccommand;
+      iss >> name >> arccommand;
+      if (arccommand == "fromPoints") {
+	Vec3d p1,p2,p3;
+	if (iss.peek() == '[') {
+	  iss >> p1;
+	} else {
+	  string p1name;
+	  iss >> p1name;
+	  p1 = vecs[p1name];
+	}
+	if (iss.peek() == '[') {
+	  iss >> p2;
+	} else {
+	  string p2name;
+	  iss >> p2name;
+	  p2 = vecs[p2name];
+	}
+	if (iss.peek() == '[') {
+	  iss >> p3;
+	} else {
+	  string p3name;
+	  iss >> p3name;
+	  p3 = vecs[p3name];
+	}
+	arcs[name].fromPoints(p1,p2,p3);
+	oss << "arc " << name << ".fromPoints(p1=" << p1 << ",p2=" << p2 << ",p3=" << p3 <<")";
+	answer(oss.str());
+      }
+    }
+
+
     if (head == "help") {
       oss << "laio|raio|laud|raud|lae|rae|lab|rab|laf|raf";
       answer(oss.str());
