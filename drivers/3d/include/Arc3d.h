@@ -1,9 +1,10 @@
 #pragma once
+#include <iostream>
 
 #include "Vec3d.h"
 #include "Mat3d.h"
 
-class Arc
+class Arc3d
 {
  public:
   // ez->axis, ex->p1,o->center
@@ -13,3 +14,7 @@ class Arc
   Mat3d pose(float s) const;
   void fromPoints(const Vec3d &p1, const Vec3d &p2, const Vec3d &p3);
 };
+
+std::ostream& operator<<(std::ostream& out , const Arc3d &arc);
+
+

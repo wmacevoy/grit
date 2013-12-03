@@ -1,4 +1,4 @@
-#include "Arc.h"
+#include "Arc3d.h"
 #include <math.h>
 #include "Vec3d.h"
 #include "Mat3d.h"
@@ -6,7 +6,7 @@
 
 using namespace std;
 
-Mat3d Arc::pose(float s) const
+Mat3d Arc3d::pose(float s) const
 {
   float t=(theta0*(1-s)+theta1*s);
 
@@ -21,7 +21,7 @@ Mat3d Arc::pose(float s) const
   return m;
 }
 
-void Arc::fromPoints(const Vec3d &p1, const Vec3d &p2, const Vec3d &p3)
+void Arc3d::fromPoints(const Vec3d &p1, const Vec3d &p2, const Vec3d &p3)
 {
   Vec3d t = p2-p1;
   Vec3d u = p3-p1;
@@ -75,3 +75,8 @@ void Arc::fromPoints(const Vec3d &p1, const Vec3d &p2, const Vec3d &p3)
   frame=Mat3d(ex,ey,ez,o);
 }
 
+std::ostream& operator<<(std::ostream& out , const Arc3d &arc)
+{
+  out << "{frame=" << arc.frame << " radius=" << arc.radius << " theta0=" << arc.theta0 << " theta1=" << arc.theta1 << "}";
+  return out;
+}

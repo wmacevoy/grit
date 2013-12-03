@@ -128,6 +128,28 @@ Mat3d operator+(const Mat3d &a, const Mat3d &b)
   return ans;
 }
 
+Mat3d operator-(const Mat3d &a, const Mat3d &b)
+{
+  Mat3d ans;
+  for (int r=0; r<3; ++r) {
+    for (int c=0; c<4; ++c) {
+      ans.data[r][c]=a.data[r][c]-b.data[r][c];
+    }
+  }
+  return ans;
+}
+
+Mat3d operator-(const Mat3d &a)
+{
+  Mat3d ans;
+  for (int r=0; r<3; ++r) {
+    for (int c=0; c<4; ++c) {
+      ans.data[r][c]=-a.data[r][c];
+    }
+  }
+  return ans;
+}
+
 Mat3d operator*(const Mat3d &a, const Mat3d &b)
 {
   Mat3d ans;
@@ -151,6 +173,17 @@ Mat3d operator*(const Mat3d &a, const Mat3d &b)
   return ans;
 }
 
+Mat3d operator*(float a, const Mat3d &b)
+{
+  Mat3d ans;
+  for (int r=0; r<3; ++r) {
+    for (int c=0; c<4; ++c) {
+      ans.data[r][c]=a*b.data[r][c];
+    }
+  }
+  return ans;
+}
+
 std::ostream& operator<< (std::ostream &out, const Mat3d &m)
 {
   out << "[" << m.ex() << "," << m.ey() << "," << m.ez() << "," << m.o() << "]";
@@ -160,4 +193,57 @@ std::ostream& operator<< (std::ostream &out, const Mat3d &m)
 Vec3d operator*(const Mat3d &a, const Vec3d &b)
 {
   return b.x()*a.ex()+b.y()*a.ey()+b.z()*a.ez()+a.o();
+}
+
+Mat3d inverse(const Mat3d &a_)
+{
+  Mat3d a(a_);
+  Mat3d b(Mat3d::identity());
+  int p[3];
+
+  for (int k=0; k<3; ++k) {
+    double ap=0;
+    int cp=k;
+    for (int c=k; c<3; ++c) {
+      if (fabs(a.data[k][c]) >= fabs(ap)) {
+	ap=a.data[k][c];
+	cp=c;
+      }
+    }
+
+    p[k]=cp;
+    double iap=1.0/ap;
+    for (int c=0; c<4; ++c) {
+      b.data[k][c] *= iap;
+      a.data[k][c] *= iap;
+    }
+
+    for (int r=0; r<3; ++r) {
+      if (r != k) {
+	float s=-a.data[r][cp];
+	for (int c=0; c<4; ++c) {
+	  a.data[r][c]=a.data[r][c]+s*a.data[k][c];
+	  b.data[r][c]=b.data[r][c]+s*b.data[k][c];
+	}
+      }
+    }
+  }
+
+  for (int k=0; k<3; ++k) {
+    if (p[k] != k) {
+      int r=p[k];
+      for (int c=0; c<4; ++c) {
+	float tmp=a.data[k][c];
+	a.data[k][c]=a.data[r][c];
+	a.data[r][c]=tmp;
+      }
+    }
+  }
+
+  for (int r=0; r<3; ++r) {
+    b.data[r][3]=-a.data[r][3];
+    a.data[r][3]=0;
+  }
+
+  return b;
 }

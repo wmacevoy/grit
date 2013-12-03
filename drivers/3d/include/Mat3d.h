@@ -25,8 +25,13 @@ Mat3d rotate(const Vec3d &o, const Vec3d &u, float theta_deg);
 Mat3d scale(const Vec3d &s);
 
 Mat3d operator+(const Mat3d &a, const Mat3d &b);
+Mat3d operator-(const Mat3d &a, const Mat3d &b);
+Mat3d operator-(const Mat3d &a);
 Mat3d operator*(const Mat3d &a, const Mat3d &b);
+Mat3d operator*(float a, const Mat3d &b);
 Vec3d operator*(const Mat3d &a, const Vec3d &b);
+
+Mat3d inverse(const Mat3d &a);
 
 //Mat3d inverse(const Mat3d &a);
 

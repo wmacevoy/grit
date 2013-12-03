@@ -2,7 +2,7 @@
 #include <math.h>
 
 #include "Vec3d.h"
-#include "Arc.h"
+#include "Arc3d.h"
 
 using namespace std;
 
@@ -10,7 +10,7 @@ using namespace std;
 
 void test1()
 {
-  Arc arc;
+  Arc3d arc;
   Vec3d p1(1,1,0);
   Vec3d p2(0,0,0);
   Vec3d p3(-1,1,0);
