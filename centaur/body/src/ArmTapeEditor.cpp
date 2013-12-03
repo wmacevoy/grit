@@ -32,8 +32,11 @@ void ArmTapeEditor::pose(const Mat3d &frame)
   Vec3d up=frame.ez();
   Vec3d point=frame.ey();
 
+
   if (up.z() < 0) { up = -up; }
   if (point.y() < 0) { point = -point; }
+
+  std::cout << "ArmTapeEditor::pose(s=" << s << ",at=" << at << ",up=" << up << ",point=" << point << ")" << std::endl;
 
   geometry->compute(at.x(),at.y(),at.z(),point.x(),-up.x(),
 		    paths(shoulderio)[s],

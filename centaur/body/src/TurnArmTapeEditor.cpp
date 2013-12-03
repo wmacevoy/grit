@@ -83,9 +83,9 @@ void TurnArmTapeEditor::restart()
   if (n < n1) n=n1;
   if (n < n2) n=n2;
 	  
-   for (int i=n; i >= 0; --i) {
+  for (int i=1; i <= n; ++i) {
     float u=float(i)/float(n);
-    s=s0+(s1-s0)*u; pose(arc1.pose(u));
+    s=s0+(s1-s0)*(1-u); pose(arc1.pose(1-u));
   }
 }
 
