@@ -13,6 +13,13 @@ double simSpeed;
 double realTime;
 double lastRealTime;
 
+std::map < std::string , double > strs;
+std::map < std::string , double > nums;
+std::map < std::string , Vec3d >  vecs;
+std::map < std::string , Mat3d >  mats;
+std::map < std::string , Arc3d >  arcs;
+
+
 std::shared_ptr < Configure > cfg;
 
 SPServoController servoController;

@@ -23,6 +23,9 @@
 #include "BodyMover.h"
 #include "SensorsMessage.h"
 #include "CreateSafetyClient.h"
+#include "Vec3d.h"
+#include "Mat3d.h"
+#include "Arc3d.h"
 
 extern bool verbose;
 extern double simTime;
@@ -30,6 +33,13 @@ extern double lastSimTime;
 extern double simSpeed;
 extern double realTime;
 extern double lastRealTime;
+
+extern std::map < std::string , double > strs;
+extern std::map < std::string , double > nums;
+extern std::map < std::string , Vec3d >  vecs;
+extern std::map < std::string , Mat3d >  mats;
+extern std::map < std::string , Arc3d >    arcs;
+
 extern std::shared_ptr < Configure > cfg;
 
 extern SPServoController servoController;

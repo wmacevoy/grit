@@ -33,9 +33,10 @@
 #include "now.h"
 #include "BodyMover.h"
 #include "glovestruct.h"
-#include "HandTape.h"
+#include "Tape.h"
+#include "TurnArmTapeEditor.h"
 #include "Vec3d.h"
-#include "Arc.h"
+#include "Arc3d.h"
 #include "Mat3d.h"
 
 #define USE_PY 0
@@ -118,9 +119,6 @@ public:
 class BodyController : public ZMQHub
 {
 public:
-  std::map < std::string , Vec3d > vecs;
-  std::map < std::string , Arc > arcs;
-
   list < string > replies;
   string last;
   map < string , string > saved;
@@ -841,16 +839,6 @@ void leapHand() {
       answer(oss.str());
     }
 
-    if (head == "vec") {
-      string name;
-      char eq;
-      iss >> name;
-      iss >> eq;
-      iss >> vecs[name];
-      oss << "vec " << name << "=" << vecs[name];
-      answer(oss.str());
-    }
-    
     if (head == "lik") {
       LeftArmGeometry geometry;
       map<string,int> parameterMap;
@@ -1617,51 +1605,97 @@ void leapHand() {
       string side;
       iss >> side;
       if (side == "LEFTARM" || side == "RIGHTARM") {
-	HandTape hand(side);
-	hand.opened(simTime);
-	hand.grip(simTime+5.0);
-	hand.gripped(simTime+10.0);
-	hand.open(simTime+15.0);
-	hand.write(*mover);
+	Tape tape;
+	HandTapeEditor ed(side);
+	ed.tape(&tape);
+	ed.close();
+	ed.s += 5;
+	ed.open();
+	tape.write(*mover);
 	answer(string("clenched ") + side);
       }
     }
-    if (head == "arc") {
-      string name;
-      string arccommand;
-      iss >> name >> arccommand;
-      if (arccommand == "fromPoints") {
-	Vec3d p1,p2,p3;
-	while (isblank(iss.peek())) iss.get();
-	if (iss.peek() == '[') {
-	  iss >> p1;
+
+    if (head == "turn") {
+      bool ok = true;
+      Tape tape;
+      TurnArmTapeEditor led("LEFTARM",arcs["turnleft"]);
+      led.tape(&tape);
+      TurnArmTapeEditor red("RIGHTARM",arcs["turnright"]);
+      red.tape(&tape);
+
+      TurnArmTapeEditor *ped = 0;
+      
+      string cmd;
+      while (ok && iss >> cmd) {
+	if (cmd == "left") {
+	  ped = &led;
+	} else if (cmd == "right") {
+	  ped = &red;
+	} else if (cmd == "sync") {
+	  if (led.s < red.s) led.wait(red.s-led.s);
+	  else if (led.s > red.s) red.wait(led.s-red.s);
 	} else {
-	  string p1name;
-	  iss >> p1name;
-	  p1 = vecs[p1name];
+	  ok = (ped != 0) && ped->parse(cmd,iss);
 	}
-	while (isblank(iss.peek())) iss.get();
-	if (iss.peek() == '[') {
-	  iss >> p2;
-	} else {
-	  string p2name;
-	  iss >> p2name;
-	  p2 = vecs[p2name];
-	}
-	while (isblank(iss.peek())) iss.get();
-	if (iss.peek() == '[') {
-	  iss >> p3;
-	} else {
-	  string p3name;
-	  iss >> p3name;
-	  p3 = vecs[p3name];
-	}
-	arcs[name].fromPoints(p1,p2,p3);
-	oss << "arc " << name << ".fromPoints(p1=" << p1 << ",p2=" << p2 << ",p3=" << p3 <<")";
-	answer(oss.str());
+      }
+
+      if (ok) {
+	tape.write(*mover);
+	answer("turning");
       }
     }
 
+    if (head == "vec") {
+      TapeEditor ed;
+      string name;
+      if (ed.parseId(iss,name)) {
+	while (isblank(iss.peek())) iss.get();
+	if (iss.peek() == '=') {
+	  iss.get();
+	  Vec3d vec;
+	  if (ed.parse(iss,vec)) {
+	    vecs[name]=vec;
+	    oss << "vec " << name << "=" << vec;
+	    answer(oss.str());
+	  }
+	}
+      }
+    }
+
+    if (head == "num") {
+      TapeEditor ed;
+      string name;
+      if (ed.parseId(iss,name)) {
+	while (isblank(iss.peek())) iss.get();
+	if (iss.peek() == '=') {
+	  iss.get();
+	  float num;
+	  if (ed.parse(iss,num)) {
+	    nums[name]=num;
+	    oss << "num " << name << "=" << num;
+	    answer(oss.str());
+	  }
+	}
+      }
+    }
+
+    if (head == "arc") {
+      TapeEditor ed;
+      string name;
+      if (ed.parseId(iss,name)) {
+	while (isblank(iss.peek())) iss.get();
+	if (iss.peek() == '=') {
+	  iss.get();
+	  Arc3d arc;
+	  if (ed.parse(iss,arc)) {
+	    arcs[name]=arc;
+	    oss << "arc " << name << "=" << arc;
+	    answer(oss.str());
+	  }
+	}
+      }
+    }
 
     if (head == "help") {
       oss << "laio|raio|laud|raud|lae|rae|lab|rab|laf|raf";
@@ -1866,6 +1900,13 @@ int main(int argc, char *argv[])
   simTime = 0;
   simSpeed = 1;
   realTime = now();
+
+  vecs["ex"]=Vec3d::ex;
+  vecs["ey"]=Vec3d::ey;
+  vecs["ez"]=Vec3d::ez;
+  vecs["o"]=Vec3d::o;
+  mats["O"]=Mat3d(Vec3d::o,Vec3d::o,Vec3d::o,Vec3d::o);
+  mats["I"]=Mat3d(Vec3d::ex,Vec3d::ey,Vec3d::ez,Vec3d::o);
 
   cfg = shared_ptr < Configure > ( new Configure() );
   cfg->path("../../setup");
