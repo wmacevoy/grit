@@ -1646,10 +1646,29 @@ void leapHand() {
       }
     }
 
+    if (head == "num") {
+      TapeEditor ed;
+      string name;
+      while (ed.parseId(iss,name)) {
+	while (isblank(iss.peek())) iss.get();
+	if (iss.peek() == '=') {
+	  iss.get();
+	  float num;
+	  if (ed.parse(iss,num)) {
+	    nums[name]=num;
+	    oss << "set num " << name << "=" << num;
+	  }
+	} else if (nums.find(name) != nums.end()) {
+	  oss << " num " << name << "=" << nums[name];
+	}
+      }
+      answer(oss.str());
+    }
+
     if (head == "vec") {
       TapeEditor ed;
       string name;
-      if (ed.parseId(iss,name)) {
+      while (ed.parseId(iss,name)) {
 	while (isblank(iss.peek())) iss.get();
 	if (iss.peek() == '=') {
 	  iss.get();
@@ -1657,33 +1676,38 @@ void leapHand() {
 	  if (ed.parse(iss,vec)) {
 	    vecs[name]=vec;
 	    oss << "vec " << name << "=" << vec;
-	    answer(oss.str());
 	  }
+	} else if (vecs.find(name) != vecs.end()) {
+	  oss << "vec " << name << "=" << vecs[name];
 	}
       }
+      answer(oss.str());
     }
 
-    if (head == "num") {
+    if (head == "mat") {
       TapeEditor ed;
       string name;
-      if (ed.parseId(iss,name)) {
+      while (ed.parseId(iss,name)) {
 	while (isblank(iss.peek())) iss.get();
 	if (iss.peek() == '=') {
 	  iss.get();
-	  float num;
-	  if (ed.parse(iss,num)) {
-	    nums[name]=num;
-	    oss << "num " << name << "=" << num;
-	    answer(oss.str());
+	  Mat3d mat;
+	  if (ed.parse(iss,mat)) {
+	    mats[name]=mat;
+	    oss << "mat " << name << "=" << mat;
 	  }
+	} else if (mats.find(name) != mats.end()) {
+	  oss << "mat " << name << "=" << mats[name];
 	}
       }
+      answer(oss.str());
+
     }
 
     if (head == "arc") {
       TapeEditor ed;
       string name;
-      if (ed.parseId(iss,name)) {
+      while (ed.parseId(iss,name)) {
 	while (isblank(iss.peek())) iss.get();
 	if (iss.peek() == '=') {
 	  iss.get();
@@ -1691,10 +1715,12 @@ void leapHand() {
 	  if (ed.parse(iss,arc)) {
 	    arcs[name]=arc;
 	    oss << "arc " << name << "=" << arc;
-	    answer(oss.str());
 	  }
+	} else if (mats.find(name) != mats.end()) {
+	  oss << "arc " << name << "=" << arcs[name];
 	}
       }
+      answer(oss.str());
     }
 
     if (head == "help") {

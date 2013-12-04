@@ -1,5 +1,7 @@
 #include "TapeEditor.h"
 #include "BodyGlobals.h"
+#include "fk_leftarm.h"
+#include "fk_rightarm.h"
 
 #include <math.h>
 
@@ -93,7 +95,7 @@ bool TapeEditor::parse(std::istream &in, float &value)
 {
   while (isblank(in.peek())) in.get();
   int ch = in.peek();
-  if (ch >= '0' && ch <= '9' || ch == '-') {
+  if ((ch >= '0' && ch <= '9') || ch == '-') {
     if (in >> value) return true;
   } else {
     std::string name;
@@ -112,23 +114,179 @@ bool TapeEditor::parse(std::istream &in, Vec3d &value)
   while (isblank(in.peek())) in.get();
   int ch = in.peek();
   if (ch == '[') {
-    if (in >> value) return true;
-  } else {
-    std::string name;
-    if (in >> name) {
-      if (vecs.find(name) != vecs.end()) {
-	value = vecs[name];
-	return true;
-      }
-    }
+    in.get();
+    if (!parse(in,value.data[0])) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ',') return false;
+    in.get();
+    if (!parse(in,value.data[1])) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ',') return false;
+    in.get();
+    if (!parse(in,value.data[2])) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ']') return false;
+    in.get();
+    return true;
   }
+  std::string name;
+  if (!parseId(in,name)) return false;
+  if (name == "col") {
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != '(') return false; else in.get();
+    Mat3d mat;
+    if (!parse(in,mat)) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ',') return false; else in.get();
+    float k;
+    if (!parse(in,k) || k != floor(k) || k < 0 || k > 3) return false;
+    int i=k;
+    value.data[0]=mat.data[0][i];
+    value.data[1]=mat.data[1][i];
+    value.data[2]=mat.data[2][i];
+    return true;
+  }
+
+  if (name == "prod") {
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != '(') return false; else in.get();
+    Mat3d a;
+    if (!parse(in,a)) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ',') return false; else in.get();
+    Vec3d b;
+    if (!parse(in,b)) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ')') return false; else in.get();
+    value=a*b;
+    return true;
+  }
+
+  if (vecs.find(name) != vecs.end()) {
+    value = vecs[name];
+    return true;
+  }
+
   return false;
 }
 
 bool TapeEditor::parse(std::istream &in, Mat3d &value)
 {
+  while (isblank(in.peek())) in.get();
+  int ch = in.peek();
+  if (ch == '[') {
+    in.get();
+    Vec3d ex;
+    if (!parse(in,ex)) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ',') return false;
+    in.get();
+    Vec3d ey;
+    if (!parse(in,ey)) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ',') return false;
+    in.get();
+    Vec3d ez;
+    if (!parse(in,ez)) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ',') return false;
+    in.get();
+    Vec3d o;
+    if (!parse(in,o)) return false;
+    while (isblank(in.peek())) in.get();
+    if (in.peek() != ']') return false;
+    in.get();
+    value=Mat3d(ex,ey,ez,o);
+    return true;
+  }
   string name;
   if (parseId(in,name)) {
+    if (name == "rotate") {
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != '(') return false; else in.get();
+      Vec3d origin;
+      if (!parse(in,origin)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ',') return false; else in.get();
+      Vec3d axis;
+      if (!parse(in,axis)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ',') return false; else in.get();
+      float angle;
+      if (!parse(in,angle)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ')') return false; else in.get();
+      value=rotate(origin,axis,angle);
+      return true;
+    }
+    if (name == "translate") {
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != '(') return false; else in.get();
+      Vec3d delta;
+      if (!parse(in,delta)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ')') return false; else in.get();
+      value=translate(delta);
+      return true;
+    }
+    if (name == "inverse") {
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != '(') return false; else in.get();
+      Mat3d of;
+      if (!parse(in,of)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ')') return false; else in.get();
+      value=inverse(of);
+      return true;
+    }
+    if (name == "prod") {
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != '(') return false; else in.get();
+      Mat3d ans=Mat3d::identity();
+      bool first = true;
+      for (;;) {
+	while (isblank(in.peek())) in.get();
+	if (first) first = false;
+	else {
+	  if (in.peek() != ',') {
+	    if (in.peek() == ')') { in.get(); value = ans; return true; }
+	    return false;
+	  }
+	  in.get();
+	}
+	Mat3d term;
+	if (!parse(in,term)) return false;
+	value = value*term;
+      }
+    }
+    if (name == "pose") {
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != '(') return false; else in.get();
+      string of;
+      if (!parseId(in,of)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ')') return false; else in.get();
+      
+      if (of == "left") {
+	value = fk_leftarm(mover->waist.angle(),
+			   mover->left.inOut.angle(),
+			   mover->left.upDown.angle(),
+			   mover->left.bicep.angle(),
+			   mover->left.elbow.angle(),
+			   mover->left.forearm.angle());
+	return true;
+      }
+      if (of == "right") {
+	value = fk_rightarm(mover->waist.angle(),
+			   mover->right.inOut.angle(),
+			   mover->right.upDown.angle(),
+			   mover->right.bicep.angle(),
+			   mover->right.elbow.angle(),
+			   mover->right.forearm.angle());
+	return true;
+      }
+      return false;
+    }
     if (mats.find(name) != mats.end()) {
       value = mats[name];
       return true;
