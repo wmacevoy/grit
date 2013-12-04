@@ -1784,7 +1784,8 @@ void leapHand() {
     ZMQMessage msg;
     if (msg.recv(socket) == 0) return false;
     char *data = (char *)msg.data();
-    string command((const char *)(data+1),data[0]);
+    size_t size = *(uint16_t*)data;
+    string command((const char *)(data+2),size);
     cout << "got: " << command << endl;
     act(command);
     return true;

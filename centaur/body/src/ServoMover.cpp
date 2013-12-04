@@ -148,7 +148,13 @@ void ServoMover::move(Servo &servo)
   double t[2];
   float c0[3],c1[3];
   curve(t,c0,c1);
-  servo.curve(t,c0,c1);
+  if (isfinite(t[0]) && isfinite(t[1]) && 
+      isfinite(c0[0]) && isfinite(c0[1]) && isfinite(c0[2]) &&
+      isfinite(c1[0]) && isfinite(c1[1]) && isfinite(c1[2])) {
+    servo.curve(t,c0,c1);
+  } else {
+    cout << "ServoMover@" << ((void*)this) << "::move() skipped bad move." << endl;
+  }
   servo.torque(torque);
 }
 

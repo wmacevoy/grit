@@ -38,13 +38,13 @@ using namespace std;
 
 struct DynamixelServo : Servo
 {
+public:
+  std::mutex access;
   DXLIO &io;
   int id;
   int presentPosition;
-  int minAngle;
-  int maxAngle;
-  int presentSpeed;
-  int presentTorque;
+  float minAngle;
+  float maxAngle;
   int goalPosition;
   int goalSpeed;
   int goalTorque;
@@ -52,7 +52,6 @@ struct DynamixelServo : Servo
   float maxSpeed;
   float minTorque;
   float maxTorque;
-  bool verbose;
   uint8_t presentTemp;
   bool enabled;
   bool curveMode;
@@ -60,6 +59,8 @@ struct DynamixelServo : Servo
   float c0[3],c1[3];
   float rxTempRate;
   float rxPositionRate;
+
+public:
 
   DynamixelServo(DXLIO &io_, int id_) 
     : io(io_),id(id_), presentPosition(2048), goalPosition(2048) 
@@ -71,7 +72,7 @@ struct DynamixelServo : Servo
     maxTorque = atof(cfg.servo(id,"maxtorque").c_str());
     minAngle = atof(cfg.servo(id,"minangle").c_str());
     maxAngle = atof(cfg.servo(id,"maxangle").c_str());
-    verbose = cfg.flag("servos.verbose",false);
+
 
     angle(0.0);
     speed(atof(cfg.servo(id,"minspeed").c_str()));
@@ -80,6 +81,11 @@ struct DynamixelServo : Servo
     positionRate(atof(cfg.servo(id,"rxpositionrate").c_str()));
     presentTemp = 0;
     curveMode = false;
+
+    if (verbose) {
+      cout << "DynamixelServo(id=" << id << ",minSpeed=" << minSpeed << ",maxSpeed=" << maxSpeed << ",minTorque=" << minTorque << ",maxTorque=" << maxTorque << ",minAngle=" << minAngle << ",maxAngle=" << maxAngle << ",tempRate=" << tempRate() << ",positionRate=" << positionRate() << ")" << endl;
+    }
+
 #if USE_BROADCAST != 1
     update();
 #endif
@@ -110,7 +116,7 @@ struct DynamixelServo : Servo
   }
 
   void angle0(float value) {
-    if (value < minAngle) value = minAngle;
+    if (value < minAngle || !isfinite(value)) value = minAngle;
     else if (value > maxAngle) value = maxAngle;
     goalPosition = value*(2048/180.0)+2048;
     if (rxPositionRate == 0) {
@@ -132,14 +138,14 @@ struct DynamixelServo : Servo
     //      else value = minSpeed;
     //    }
     value = fabs(value);
-    if (value < minSpeed) { value = minSpeed; }
+    if (value < minSpeed || !isfinite(value)) { value = minSpeed; }
     else if (value > maxSpeed) { value = maxSpeed; }
     goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*SPEED_FACTOR;
     if (goalSpeed > 480) goalSpeed = 480;
   }
 
   float speed() const {
-    return presentSpeed/((60.0/360.0)*(1023/117.07));
+    return goalSpeed/((60.0/360.0)*(1023/117.07));
   }
 
   void torque(float value) {
@@ -155,11 +161,16 @@ struct DynamixelServo : Servo
   }
 
   float torque() const {
-    return presentTorque/1023.0;
+    return goalTorque/1023.0;
   }
 
   void rate(float value) {
     positionRate(value);
+  }
+
+  float positionRate()
+  {
+    return rxPositionRate;
   }
 
   void positionRate(float value) {
@@ -167,6 +178,11 @@ struct DynamixelServo : Servo
     if (rxPositionRate > 0) {
       rxPositionTime = min(rxPositionTime,now()+1.0/rxPositionRate);
     }
+  }
+
+  float tempRate()
+  {
+    return rxTempRate;
   }
 
   void tempRate(float value) {
@@ -297,8 +313,6 @@ struct DynamixelServoController : ServoController
 	  DynamixelServo *servo = &*k->second;
 	  
 	  if (servo->curveMode) {
-	    double t0=servo->t[0];
-
 	    double dt;
 	    if (t < servo->t[1]) {
 	      dt = t-servo->t[0];
@@ -306,17 +320,17 @@ struct DynamixelServoController : ServoController
 	      dt = servo->t[1]-servo->t[0];
 	      //	      cout << "servo " << id << " stale " << t - servo->t[1] << " seconds" << endl;
 	    }
-	    float angle;
+	    //	    float angle;
 	    float speed;
 	    {
-	      double dtsq = dt*dt;
+	      //	      double dtsq = dt*dt;
 	      float *c = (dt <= 0) ? servo->c0 : servo->c1;
 #if USE_SERVO_LINEAR == 1
-	      angle = c[0];
+	      //	      angle = c[0];
 	      speed = c[1];
 
 #else
-	      angle = c[0]+c[1]*dt+c[2]*dtsq/2.0;
+	      //	      angle = c[0]+c[1]*dt+c[2]*dtsq/2.0;
 	      speed = c[1]+c[2]*dt;
 #endif
 	    }
@@ -343,7 +357,8 @@ struct DynamixelServoController : ServoController
 	    }
 
 	    servo->angle0(angle1);
-	    servo->speed(max(fabs(speed),fabs(speed1)));
+	    float speedIn = max(fabs(speed),fabs(speed1));
+	    servo->speed(speedIn);
 	  }
 	  int position = servo->goalPosition & 4095;
 	  int speed = safe ? 1 : servo->goalSpeed;
@@ -497,7 +512,7 @@ struct DynamixelServoController : ServoController
 	for (Servos::iterator i = servos.begin(); i != servos.end(); ++i) {
 	  DynamixelServo &servo = *(i->second);
 	  if (servo.id > 20 && servo.id < 30) {
-	    cout << "," << servo.id << "," << servo.presentPosition << "," << servo.goalPosition << "," << servo.presentSpeed << "," << servo.goalSpeed;
+	    cout << "," << servo.id << "," << servo.presentPosition << "," << servo.goalPosition << "," << servo.goalSpeed;
 	  }
 	}
 	cout << endl;

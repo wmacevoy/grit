@@ -185,83 +185,12 @@ public:
     cout << setprecision(5);
   }
 
-#if 0
-  std::thread *goInfo;
-  bool infoRunning;
-  
-  void infoUpdate() {
-    int rc, j, size = 68, sleep_time = 50;
-    int32_t tempArr[size];
-    int hwm = 1;
-    int linger = 25;    
-    bool connected = false;
-    Servos::iterator i;
-
-    void* contextTemp = zmq_ctx_new ();
-    void* pubTemp;
-
-    while(!connected) {
-        pubTemp = zmq_socket(contextTemp, ZMQ_PUB);
-        if(zmq_setsockopt(pubTemp, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-            if(zmq_setsockopt(pubTemp, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-   	        if(zmq_bind(pubTemp, "tcp://*:9001") == 0) {
-		    std::cout << "infoUpdate thread running" << std::endl;
-                    connected = true;
-                } else {
-			zmq_close(pubTemp);
-		}
-            }
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
-    }
-
-    for(int i=0; i < size; ++i) tempArr[i] = 0;
-
-    while(infoRunning) {
-      j = 0;		
-      
-      //Get temps and populate array
-      for(i=servos.begin(); i != servos.end(); ++i) {
-        tempArr[j++] = (int32_t)i->first; //Servo ID
-        tempArr[j++] = (int32_t)i->second->temp(); //Servo temp
-      }
-      zmq_send(pubTemp, tempArr, sizeof(int32_t) * size, ZMQ_DONTWAIT);
-
-      std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
-    }
-    
-    zmq_close(pubTemp);
-    zmq_ctx_destroy(contextTemp);
-  }
-
-  void infoOn()
-  {
-    if (!infoRunning) {
-      infoRunning = true;
-      goInfo = new thread(&ZMQServoServer::infoUpdate,this);
-    }
-  }
-
-  void infoOff()
-  {
-    if (goInfo != 0) {
-      infoRunning = false;
-      goInfo->join();
-      delete goInfo;
-      goInfo = 0;
-    }
-  }
-#endif
-
   ZMQServoServer()
   {
-    //    goInfo = 0;
-    //    infoOn();
   }
 
   ~ZMQServoServer()
   {
-    //    infoOff();
   }
 };
 
