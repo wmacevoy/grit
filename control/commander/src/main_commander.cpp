@@ -50,11 +50,11 @@ public:
 
     while (!sends.empty()) {
       string &message = *sends.begin();
-      uint8_t size = (message.size() < BODY_MESSAGE_MAXLEN) ? message.size() : BODY_MESSAGE_MAXLEN;
-      ZMQMessage msg(size+1);
+      uint16_t size = (message.size() < BODY_MESSAGE_MAXLEN) ? message.size() : BODY_MESSAGE_MAXLEN;
+      ZMQMessage msg(size+2);
       char *data = (char*)msg.data();
-      data[0]=size;
-      memcpy(data+1,&message[0],size);
+      *(uint16_t*)data = size;
+      memcpy(data+2,&message[0],size);
       if (msg.send(socket) == 0) ok=false;
       sends.pop_front();
     }
