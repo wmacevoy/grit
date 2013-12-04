@@ -5,8 +5,8 @@ centaur.ip,192.168.2.101
 xcentaur.ip,127.0.0.1
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
-arms.minspeed,15,Degrees per second on the servo
-arms.maxspeed,30,Degrees per second on the servo 
+arms.minspeed,20,Degrees per second on the servo
+arms.maxspeed,40,Degrees per second on the servo 
 safety.ip,${centaur.ip}
 safety.port,5600
 safety.delayoff,2.5,seconds of warning
@@ -29,7 +29,7 @@ servos.ip,${centaur.ip}
 servos.safety.port,5601
 servos.safety.publish,tcp://*:${servos.safety.port}
 servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
-servos.verbose,false
+servos.verbose,true
 servos.type,real
 xservos.type,fake
 servos.deviceindex,1
