@@ -8,6 +8,7 @@
 #include <memory>
 #include <set>
 #include <string.h>
+#include <assert.h>
 #include "coptgen.hpp"
 #include "formatter.hpp"
 
@@ -88,6 +89,7 @@ Mat camera()
 
 Mat arm(string side)
 {
+  assert(side == "left" || side == "right");
   string SIDE=utilities::toupper(side);
   E sigma = (side == "left") ? -1 : 1;
   
@@ -277,10 +279,43 @@ void gsolve_ik_lidar()
   gsolve(out,"lidar",eq,x,parms);
 }
 
+
+void gfk_arm(string side)
+{
+  string dir=string("../../drivers/ik");
+  {
+    ofstream out(dir + "/include/fk_" + side + "arm.h");
+    out << "#pragma once" << endl;
+    out << "#include \"Mat3d.h\"" << endl;
+    out << "Mat3d fk_" + side +"arm(float waist,float shoulderio, float shoulderud, float bicep, float elbow, float forearm);" << endl;
+  }
+
+  {
+    ofstream out(dir + "/src/fk_" + side + "arm.cpp");
+    out << "#include \"fk_" + side + "arm.h\"" << endl;
+    out << "#include <math.h>" << endl;
+    out << "Mat3d fk_" + side +"arm(float waist,float shoulderio, float shoulderud, float bicep, float elbow, float forearm)" << endl;
+    out << "{" << endl;
+    out << "  Mat3d ans;" << endl;
+    symbolic::COptGen coptgen;
+    coptgen.type="float";
+    coptgen.format = &symbolic::format_c_single;
+    Mat pose=arm(side);
+    for (int r=0; r<3; ++r) {
+      for (int c=0; c<4; ++c) {
+	ostringstream oss;
+	oss << "ans(" << r << "," << c << ")";
+	coptgen.assign(oss.str(),&*pose[r][c]);
+      }
+    }
+    out << coptgen;
+    out << "  return ans;" << endl;
+    out << "}";
+  }
+}
 void gsolve_ik_arm(string side)
 {
   E pi=var("%pi");
-  string SIDE=utilities::toupper(side);
   string dir=string("../../drivers/ik");
   string inifile=dir + "/ik_" + side + "arm.ini";
 
@@ -410,8 +445,16 @@ int main(int argc, char *argv[])
       gsolve_ik_arm("left");
       continue;
     }
+    if (strcmp(argv[argi],"fk_leftarm")==0) {
+      gfk_arm("left");
+      continue;
+    }
     if (strcmp(argv[argi],"ik_rightarm")==0) {
       gsolve_ik_arm("right");
+      continue;
+    }
+    if (strcmp(argv[argi],"fk_rightarm")==0) {
+      gfk_arm("right");
       continue;
     }
     if (strcmp(argv[argi],"fk_head")==0) {
