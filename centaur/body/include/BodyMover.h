@@ -49,6 +49,7 @@ class BodyMover
   void stepMerge(WalkParameters start,WalkParameters end);
   void logPosition(std::vector<std::vector <double> > data);
   void fromTips(std::vector<std::vector <double> > data);  
+  void dynamicWalk();
   void move(Body &body);
   bool load(const std::string &file);
   bool play(const std::string &file);

@@ -1,12 +1,15 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <thread>
+#include <atomic>
 
 #include "BodyMover.h"
 #include "CSVRead.h"
 #include "BodyGlobals.h"
 #include "split.h"
 #include "Sawtooth.h"
+#include "now.h"
 #include <cmath>
 #include <sstream>
 
@@ -691,6 +694,111 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   fromTips(data);
   return true;
 }
+
+//EXPERIMENT - DO NOT RUN
+std::thread *walkThread;
+std::atomic<bool> walking;
+
+void BodyMover::dynamicWalk() {
+  //Need to populate walk parameters dynamically in here
+  WalkParameters wp(0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+
+  vector<vector<double>> data;
+  double direction=(wp.direction*M_PI)/180.0;
+  double T =20.0; 
+  double timeDivider=10.0;
+  double steps=T*timeDivider; 
+  double fullCircle=2.0*M_PI;
+  double da=fullCircle/steps;
+  double waist=0.0;
+  double dt=0.1;
+  double t=0.0;
+  double a = 0.0; //Current index of a regular walk, same as in the original -- for(double a=0;a<fullCircle;a+=da)
+  double l1d=direction; // All same direction is a translation
+  double l2d=direction;
+  double l3d=direction;
+  double l4d=direction;
+  double l1z=wp.z/*+zoffset/2.0*/;
+  double l2z=wp.z/*+zoffset/2.0*/;
+  double l3z=wp.z/*-zoffset/2.0*/;
+  double l4z=wp.z/*-zoffset/2.0*/;
+  l2d+=wp.rotation*3.0*M_PI_2;
+  l3d+=wp.rotation*M_PI;
+  l4d+=wp.rotation*M_PI_2;
+
+  double zRise = wp.zOffset * wp.step / (wp.y1 - wp.y4);
+
+  //Keep track of the wall clock time passing
+  double t1 = 0.0, t2 = 0.0, framerate = 0.2;
+
+  float l1a;
+  float l2a;
+  float l3a;
+  float l4a;
+
+  while(walking) {
+      vector<double> p;
+      /*Check bots sensors to determine next move
+            Function to check leg pressures, determine which legs should have pressure and adjust if needed
+            Function to check accelerometers and level chassis accordingly using zOffset
+      */
+      l1a=a;
+      l2a=a+M_PI_2;
+      l3a=a+M_PI;
+      l4a=a+3*M_PI_2;
+
+			//Regulate how fast moves are generated. This may need to be placed elsewhere if at all needed?
+      t1 = now();
+      if(t1 - t2 >= framerate) {
+
+		    p.push_back(t);
+		    { // leg 1
+		      p.push_back(circulateX(wp.x1,wp.radius,a)+stepX(wp.step,l1d,l1a)); 
+		      p.push_back(circulateY(wp.y1,wp.radius,a) +stepY(wp.step,l1d,l1a)); 
+		      p.push_back(lift(l1z,1.0,a+M_PI_2)+raise(wp.zStep,l1a)+stepZ(zRise,l1a)-wp.zOffset/2.0);
+		    } { // leg 2
+		      p.push_back(circulateX(wp.x2,wp.radius,a) +stepX(wp.step,l2d,l2a)); 
+		      p.push_back(circulateY(wp.y2,wp.radius,a) +stepY(wp.step,l2d,l2a)); 
+		      p.push_back(lift(l2z,1.0,a)       +raise(wp.zStep,l2a)+stepZ(zRise,l2a)-wp.zOffset/2.0);
+		    } { // leg 3 
+		      p.push_back(circulateX(wp.x3,wp.radius,a) +stepX(wp.step,l3d,l3a)); 
+		      p.push_back(circulateY(wp.y3,wp.radius,a)+stepY(wp.step,l3d,l3a)); 
+		      p.push_back(lift(l3z,1.0,a+M_PI_2)+raise(wp.zStep,l3a)-stepZ(zRise,l3a)+wp.zOffset/2.0);
+		    } { // leg 4
+		      p.push_back(circulateX(wp.x4,wp.radius,a)+stepX(wp.step,l4d,l4a)); 
+		      p.push_back(circulateY(wp.y4,wp.radius,a)+stepY(wp.step,l4d,l4a)); 
+		      p.push_back(lift(l4z,1.0,a)       +raise(wp.zStep,l4a)-stepZ(zRise,l4a)+wp.zOffset/2.0);
+		    }         
+
+		    p.push_back(waist); 
+		    p.push_back(legDirection(l1a)); 
+		    p.push_back(legDirection(l2a)); 
+		    p.push_back(legDirection(l3a)); 
+		    p.push_back(legDirection(l4a));
+
+		    data.push_back(p);
+				
+				t2 = now();
+      }
+
+      //Check if enough data is in the vector to create a curve
+      //If so, push it to from tips
+      if(data.size() == 3) {
+        logPosition(data);
+        fromTips(data);
+
+        //Erase first move to allow for next move to be pushed
+        data.erase(data.begin());
+      }
+      
+      t+=dt;
+
+      a+=da;
+      if(a>=fullCircle) { a=0.0; }
+  }
+}
+
+//END EXPERIMENT
 
 ServoMover* BodyMover::getMover(const std::string &name)
 {
