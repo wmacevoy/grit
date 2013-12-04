@@ -35,7 +35,7 @@ void test1()
 
 void test2()
 {
-  Arc arc;
+  Arc3d arc;
   Vec3d p1(5.6,24.3,16.3);
   Vec3d p2(3.95,19.3,17.5);
   Vec3d p3(4.9,18.3,14.5);
@@ -71,7 +71,7 @@ void test3()
   Vec3d p3=m*Vec3d(15*cos(M_PI/180*(-30)),15*sin(M_PI/180*(-30)),0);
 
   cout << "p1=" << p1 << " p2=" << p2 << " p3=" << p3 << endl;
-  Arc arc;
+  Arc3d arc;
 
   arc.fromPoints(p1,p2,p3);
 
@@ -104,7 +104,7 @@ void test4()
   Vec3d p3=m*Vec3d(15*cos(M_PI/180*(-30)),15*sin(M_PI/180*(30)),0);
 
   cout << "p1=" << p1 << " p2=" << p2 << " p3=" << p3 << endl;
-  Arc arc;
+  Arc3d arc;
 
   arc.fromPoints(p1,p2,p3);
 

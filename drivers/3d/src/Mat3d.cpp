@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <armadillo>
 
 using namespace std;
 
@@ -195,8 +196,33 @@ Vec3d operator*(const Mat3d &a, const Vec3d &b)
   return b.x()*a.ex()+b.y()*a.ey()+b.z()*a.ez()+a.o();
 }
 
-Mat3d inverse(const Mat3d &a_)
+Mat3d inverse(const Mat3d &a)
 {
+  Mat3d b;
+  arma::Mat<float> a3(3,3);
+  arma::Mat<float> t3(3,1);
+
+  for (int r=0; r<3; ++r) {
+    for (int c=0; c<3; ++c) {
+      a3(r,c)=a.data[r][c];
+    }
+    t3(r,0)=a.data[r][3];
+  }
+
+  arma::Mat<float> b3 = inv(a3);
+  arma::Mat<float> c3 = b3*t3;
+
+  for (int r=0; r<3; ++r) {
+    for (int c=0; c<3; ++c) {
+      b(r,c)=b3(r,c);
+    }
+    b(r,3)=-c3(r,0);
+  }
+
+  return b;
+
+#if 0
+
   Mat3d a(a_);
   Mat3d b(Mat3d::identity());
   int p[3];
@@ -244,6 +270,8 @@ Mat3d inverse(const Mat3d &a_)
     b.data[r][3]=-a.data[r][3];
     a.data[r][3]=0;
   }
+
+#endif
 
   return b;
 }
