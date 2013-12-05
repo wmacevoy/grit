@@ -161,9 +161,9 @@ public:
     for (int i = 0; i < size; i+=2)
       {
 	if(temps[i+1] > max) max = temps[i+1];
-	if (temps[i+1] > 60)
+	if (temps[i+1] >= 55)
 	  sev = 0;
-	else if (temps[i+1] > 45)
+	else if (temps[i+1] > 40)
 	  sev = 1;
 	else if (temps[i+1] > 0)
 	  sev = 2;
@@ -174,7 +174,7 @@ public:
 	if(im != buttons.end()) {
 	  im->second->set_color(sev_colors[sev]);	
 	}		
-	lblTop->set_text("Top: " + NumberToString(max));
+	lblTop->set_text("Top: ID>" + NumberToString(temps[i]) + "  Temp> " + NumberToString(max));
       }
   }
 

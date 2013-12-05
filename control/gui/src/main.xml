@@ -871,15 +871,15 @@
 
                 <child>
                   <object class="GtkLabel" id="lblTop">
-                    <property name="width_request">103</property>
+                    <property name="width_request">150</property>
                     <property name="height_request">20</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Top: </property>
                   </object>
                   <packing>
-                    <property name="x">35</property>
-                    <property name="y">85</property>
+                    <property name="x">5</property>
+                    <property name="y">55</property>
                   </packing>
                 </child>
               </object>
