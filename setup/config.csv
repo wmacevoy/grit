@@ -126,8 +126,8 @@ proxysensors.publish,tcp://*:${proxysensors.port}
 proxysensors.subscribe,tcp://${proxysensors.ip}:${proxysensors.port}
 proxysensors.rate,1.0
 proxysensors.verbose,false
-gloves.publisher.dev_path,"/dev/ttyACM0"
-gloves.publisher.verbose,"false"
+gloves.publisher.dev_path,"/dev/ttyACM1"
+gloves.publisher.verbose,"true"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
 leg1.touchpressure,900
 leg2.touchpressure,900
