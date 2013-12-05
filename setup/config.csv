@@ -1,8 +1,10 @@
 name,value
 control.ip,192.168.2.113
 xcontrol.ip,127.0.0.1
+control.user,mojavaton
 centaur.ip,192.168.2.101
 xcentaur.ip,127.0.0.1
+centaur.user,fit-pc
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,20,Degrees per second on the servo
