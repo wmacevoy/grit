@@ -103,6 +103,7 @@ prioritize()
 start_app()
 {
   app=$1
+  app=${app%%/}
   app_pid=$(pid $app)
   if [ $app_pid -ne -1 ]
   then
@@ -172,14 +173,29 @@ commit()
   done
 }
 
+
 start()
 {
-    start_apps safetyProvider servos proxyservos body sensors proxysensors webcamPublisher LidarProvider
+    if [ $# -gt 0 ] ; then
+	start_apps "$@"
+    else
+	start_apps safetyProvider servos proxyservos body sensors proxysensors webcamPublisher LidarProvider
+    fi
 }
 
 stop()
 {
-    stop_apps body sensors proxysensors webcamPublisher LidarProvider proxyservos servos safetyProvider
+    if [ $# -gt 0 ] ; then
+	stop_apps "$@"
+    else
+	stop_apps body sensors proxysensors webcamPublisher LidarProvider proxyservos servos safetyProvider
+    fi
+}
+
+restart()
+{
+    stop "$@"
+    start "$@"
 }
 
 commander()

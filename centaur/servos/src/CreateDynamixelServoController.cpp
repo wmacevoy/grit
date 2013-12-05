@@ -221,6 +221,7 @@ public:
     if (io.readByte(id,DXL_PRESENT_TEMP_BYTE,&inp)) {
       presentTemp = inp;
     } else {
+      presentTemp = 0;
       cout << "comm rx temp error" << endl;
     }
     rxTempTime = now() + 1.0/rxTempRate;
