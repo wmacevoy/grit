@@ -152,7 +152,7 @@ setup()
 
 update()
 {
-  for dir in setup libs drivers centaur control
+  for dir in setup libs pre drivers centaur control
   do
       svn update $MOJAVATON_DIR/$dir
   done
@@ -160,7 +160,7 @@ update()
 
 build()
 {
-  for dir in libs pre drivers centaur
+  for dir in setup libs pre drivers centaur
   do
       make -C $MOJAVATON_DIR/$dir "$@"
   done
