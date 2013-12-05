@@ -53,7 +53,7 @@ update()
 
 build()
 {
-  for dir in libs pre drivers centaur control
+  for dir in setup libs pre drivers centaur control
   do
       make -C $MOJAVATON_DIR/$dir "$@"
   done
