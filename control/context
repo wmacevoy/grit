@@ -117,6 +117,7 @@ prioritize()
 start_app()
 {
   app=$1
+  app=${app%%/}
   app_pid=$(pid $app)
 
   if [ $app_pid -ne -1 ]
