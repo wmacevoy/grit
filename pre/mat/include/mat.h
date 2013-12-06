@@ -47,6 +47,7 @@ int nr(const Mat &a);
 int nc(const Mat &a);
 Mat operator*(const E &a, const Mat &b);
 Mat operator*(const Mat &a, const Mat &b);
+Vec operator*(const Mat &a, const Vec &b);
 Mat operator+(const Mat &a, const Mat &b);
 Mat operator-(const Mat &a, const Mat &b);
 Mat transpose(const Mat &a);

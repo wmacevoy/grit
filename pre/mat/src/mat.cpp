@@ -222,6 +222,34 @@ Mat operator*(const Mat &a, const Mat &b)
   return ans;
 }
 
+Vec operator*(const Mat &a, const Vec &b)
+{
+  int nr_a = nr(a);
+  int nc_a = nc(a);
+  int nr_b = b.size();
+  int nc_b = 1;
+
+  if (nc_a != nr_b) {
+    Expression::UnsupportedOperation error;
+    error.message = "matrix inner dimensions must agree";
+    throw error;
+  }
+
+  Vec ans(nr_a,num(0));
+
+  int n = nc_a;
+
+  for (int r=0; r < nr_a; ++r) {
+    E sum=num(0);
+    for (int k=0; k<n; ++k) {
+      sum = sum + a[r][k]*b[k];
+    }
+    ans[r]=sum;
+  }
+
+  return ans;
+}
+
 Mat operator+ (const Mat &a, const Mat &b)
 {
   int nr_a = nr(a);

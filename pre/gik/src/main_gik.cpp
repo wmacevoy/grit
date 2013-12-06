@@ -108,7 +108,7 @@ Mat arm(string side)
   E shoulderud=(pi/180.0)*(var("shoulderud")-45.0);
   E bicep=-sigma*(pi/180.0)*var("bicep");
   E elbow=-(pi/180.0)*(var("elbow")-45.0);
-  E forearm=-sigma*(pi/180.0)*(var("forearm")-40.0);
+  E forearm=-sigma*(pi/180.0)*(var("forearm")-65.0);
 
   m=m*translate(0.0,0.0,dbase2waist);
   m=m*rotate(ex,waist);

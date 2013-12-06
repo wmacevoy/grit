@@ -1,19 +1,51 @@
 #include "mat.h"
 #include <iostream>
 #include <assert.h>
+#include <math.h>
 
 using namespace std;
 
-void counterclockwise()
+void eq(const Vec &a, const Vec &b)
 {
-  // turn counter-clockwise as I look in the direction of the turning axis.
-  Mat R=rotate(o,ez,var("%pi")/2.0);
-  assert(eval(R[1][0]) > 0);
+  for (size_t i=0; i<a.size(); ++i) {
+    cout << "a[" << i << "]=" << a[i] << endl;
+  }
+  for (size_t i=0; i<a.size(); ++i) {
+    cout << "b[" << i << "]=" << b[i] << endl;
+  }
+  for (size_t i=0; i<a.size(); ++i) {
+    cout << "a[" << i << "]=" << a[i] << endl;
+    assert(fabs(eval(a[i]-b[i]))<1e-6);
+  }
+}
+
+ostream& operator<<(ostream &out, const Vec &v)
+{
+  out << "[";
+  for (size_t i=0; i!=v.size(); ++i) {
+    if (i > 0) out << ",";
+    out << v[i];
+  }
+  out << "]";
+  return out;
+}
+
+void rotations()
+{
+  // turn counter-clockwise as the axis faces me
+
+  Mat Rx=rotate(o,ex,var("%pi")/num(2));
+  Mat Ry=rotate(o,ey,var("%pi")/num(2));
+  Mat Rz=rotate(o,ez,var("%pi")/num(2));
+
+  eq(Rz*ex,ey);
+  eq(Rx*ey,ez);
+  eq(Ry*ez,ex);
 }
 
 int main()
 {
-  counterclockwise();
+  rotations();
   E pi=var("%pi");
 
   E tx=var("tx");
