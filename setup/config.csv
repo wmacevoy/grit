@@ -32,8 +32,8 @@ servos.safety.port,5601
 servos.safety.publish,tcp://*:${servos.safety.port}
 servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
 servos.verbose,true
-servos.type,real
-xservos.type,fake
+xservos.type,real
+servos.type,fake
 servos.deviceindex,1
 servos.baudnum,3
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
