@@ -784,6 +784,49 @@ void leapHand() {
     }
   }
 
+  bool done(const std::string &part)
+  {
+    if (part == "all" || part == "body") {
+      return mover->done();
+    }
+    if (part == "legs") {
+      return mover->legs.done();
+    }
+    if (part == "leg1") {
+      return mover->legs.legMovers[LEG1]->done();
+    }
+    if (part == "leg2") {
+      return mover->legs.legMovers[LEG2]->done();
+    }
+    if (part == "leg3") {
+      return mover->legs.legMovers[LEG3]->done();
+    }
+    if (part == "leg4") {
+      return mover->legs.legMovers[LEG4]->done();
+    }
+    if (part == "arms") {
+      return mover->left.done() 
+	&& mover->right.done();
+    }
+    if (part == "left" || part == "leftarm") {
+      return mover->left.done();
+    }
+    if (part == "right" || part == "rightarm") {
+      return mover->right.done();
+    }
+    if (part == "head" || part == "neck") {
+      return mover->neck.done();
+    }
+    if (part == "waist") {
+      return mover->waist.done();
+    }
+    ServoMover *servoMover=mover->getMover(part);
+    if (servoMover != 0) {
+      return servoMover->done();
+    }
+    return true;
+  }
+
   void act(string command)
   {
     if (command == "last") {
@@ -1614,6 +1657,29 @@ void leapHand() {
 	tape.write(*mover);
 	answer(string("clenched ") + side);
       }
+    }
+
+    if (head == "wait") {
+      float maxwait=10;
+      string part;
+      double t0=now();
+      while (iss >> part) {
+	if (part == "max") {
+	  iss >> maxwait;
+	  continue;
+	}
+	
+	if (!done(part) && now() < t0+maxwait) {
+	  answer(string("waiting on ")+part+("..."));
+	  while (!done(part) && now() < t0+maxwait) {
+	    usleep(0.10*1e6);
+	  }
+	  if (!done(part)) {
+	    answer(string("timed out waiting for ") + part + ".");
+	  }
+	}
+      }
+      answer("ok.");
     }
 
     if (head == "turn") {

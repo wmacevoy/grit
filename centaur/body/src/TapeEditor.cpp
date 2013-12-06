@@ -97,6 +97,7 @@ bool TapeEditor::parse(std::istream &in, float &value)
   int ch = in.peek();
   if ((ch >= '0' && ch <= '9') || ch == '-') {
     if (in >> value) return true;
+    else return false;
   } else {
     std::string name;
     if (parseId(in,name)) {
@@ -242,14 +243,17 @@ bool TapeEditor::parse(std::istream &in, Mat3d &value)
     if (name == "prod") {
       while (isblank(in.peek())) in.get();
       if (in.peek() != '(') return false; else in.get();
-      Mat3d ans=Mat3d::identity();
+      value=Mat3d::identity();
       bool first = true;
       for (;;) {
 	while (isblank(in.peek())) in.get();
 	if (first) first = false;
 	else {
 	  if (in.peek() != ',') {
-	    if (in.peek() == ')') { in.get(); value = ans; return true; }
+	    if (in.peek() == ')') { 
+	      in.get();
+	      return true; 
+	    }
 	    return false;
 	  }
 	  in.get();
@@ -257,7 +261,22 @@ bool TapeEditor::parse(std::istream &in, Mat3d &value)
 	Mat3d term;
 	if (!parse(in,term)) return false;
 	value = value*term;
+	return true;
       }
+    }
+    if (name == "arc") {
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != '(') return false; else in.get();
+      Arc3d arc;
+      if (!parse(in,arc)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ',') return false; else in.get();
+      float u;
+      if (!parse(in,u)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ')') return false; else in.get();
+      value = arc.pose(u);
+      return true;
     }
     if (name == "pose") {
       while (isblank(in.peek())) in.get();
