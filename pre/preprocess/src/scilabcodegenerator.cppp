@@ -19,7 +19,6 @@
 #!public:
 #!  string file;
 #!  string prefix;
-#!  size_t dim;
 #!
 #!  std::string format(const std::string &s) const { 
 #!    symbolic::Expression *e=parse(s);
@@ -94,7 +93,7 @@ function $(prefix)y=$(prefix)f($(prefix)parameters,$(prefix)x)
 $(format(i->first))=$(format(i->second));
 #!    }
 #!
-$(prefix)y=zeros($dim,1);
+$(prefix)y=zeros($(nequations()),1);
 #!    { int count=1; FOREACH_EQUATION(i) {
 $(prefix)y($count)=$(format(i->first));
 #!	++count;
@@ -133,7 +132,7 @@ d$(format(ri))_d$(format(xj))=$(format(dy_dx));
 #!    }
 #!
 // place derivatives in dy
-$(prefix)dy=zeros($dim,$dim);
+$(prefix)dy=zeros($(nequations()),$(nvariables()));
 #!    {int counti=1; FOREACH_EQUATION(i) {
 #!	{int countj=1; FOREACH_VARIABLE(j) {
 $(prefix)dy($counti,$countj)=d$(format(i->first))_d$(format(*j));
@@ -160,14 +159,14 @@ $(prefix)residual=0;
 
 // initialize unknowns from parameters
 
-$(prefix)x=zeros($dim,1);
+$(prefix)x=zeros($(nvariables()),1);
 #!    FOREACH_INITIALIZER(i) {
 $(format(i->first))=$(format(i->second));
 #!    }
 
 // setup unknown vector x
 
-$(prefix)x=zeros($dim,1);
+$(prefix)x=zeros($(nvariables()),1);
 #!    { int count=1; FOREACH_VARIABLE(i) {
 $(prefix)x($count)=$(format(*i));
 #!	++count;
@@ -177,7 +176,13 @@ $(prefix)x($count)=$(format(*i));
 for step=1:steps
   $(prefix)y=$(prefix)f($(prefix)parameters,$(prefix)x);
   $(prefix)dy=$(prefix)df($(prefix)parameters,$(prefix)x);
+#! if (nequations() < nvariables()) {
+  $(prefix)dyt=$(prefix)dy'
+  $(prefix)dydyt=$(prefix)dy*$(prefix)dyt;
+  $(prefix)x=$(prefix)x-$(prefix)dyt*($(prefix)dydyt\$(prefix)y);  
+#! } else {
   $(prefix)x=$(prefix)x-$(prefix)dy\$(prefix)y;
+#! }
   $(prefix)residual=norm($(prefix)y);
   if ($(prefix)residual <= epsilon) then
     break;
@@ -397,7 +402,6 @@ endfunction
 #!    }
 #!
 #!    prefix=configuration->flags["prefix"];
-#!    dim=configuration->equations.size();
 #!    indent=0;
 #!
 #!    declare_globals();

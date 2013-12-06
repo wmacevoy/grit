@@ -1,3 +1,6 @@
+#!
+#! assert(nequations() <= nvariables());
+#!
 // damped newton solver
 
   $(target) void $(prefix)solve(
@@ -17,13 +20,47 @@
       $(type) y[$(nvariables())];
       $(type) dx[$(nvariables())];
       $(type) dy[$(nequations()*nvariables())];
+#!if (nequations() < nvariables()) {
+      $(type) tmp[$(nequations())];
+      $(type) dyt[$(nvariables()*nequations())];
+      $(type) dydyt[$(nequations()*nequations())];
+#!}
       int iwork[$(nequations())];
   
       $(prefix)f($(cuda_args)globals,parameters,x,y);
       residual = $(prefix)$(cudaprefix)norm($(nequations()),y);
       $(prefix)df($(cuda_args)globals,parameters,x,dy);
 
-      $(prefix)$(cudaprefix)linear_solve($(nvariables()),iwork,dy,y,dx);
+#!if (nequations() < nvariables()) {
+     for (int i=0; i<$(nequations()); ++i) {
+       for (int j=0; j<$(nvariables()); ++j) {
+         dyt[j+$(nvariables())*i]=dy[i+$(nequations())*j];
+       }
+     }
+
+     for (int i=0; i<$(nequations()); ++i) {
+       for (int j=0; j<$(nequations()); ++j) {
+         $(type) sum=0;
+         for (int k=0; k<$(nvariables()); ++k) {
+            sum += dy[i+$(nequations())*k]*dyt[k+$(nvariables())*j];
+         }
+         dydyt[i+$(nequations())*j]=sum;
+       }
+     }
+
+      $(prefix)$(cudaprefix)linear_solve($(nequations()),iwork,dydyt,y,tmp);
+
+     for (int i=0; i<$(nvariables()); ++i) {
+       $(type) sum=0;
+       for (int k=0; k<$(nequations()); ++k) {
+          sum += dyt[i+$(nvariables())*k]*tmp[k];
+       }
+       dx[i]=sum;
+     }
+#!}else {
+      $(prefix)$(cudaprefix)linear_solve($(nequations()),iwork,dy,y,dx);
+#!}
+      
       for (int k=0; k<$(nvariables()); ++k) { x[k] -= dx[k]; }
 
       for (int damping=0; damping < steps; ++damping) {

@@ -321,9 +321,9 @@ public:
 	if (!check_expression("[equations]",i->second, ok_syms)) ok=false;
       }
       if (res.size() != variables.size()) {
-	cerr << "[equations]: undetermined or overdetermined system: " << res.size() << " variables in " << variables.size() << " unknowns." << endl;
-	ok=false;
-      }
+	cerr << "warning [equations]: undetermined or overdetermined system: " << res.size() << " variables in " << variables.size() << " unknowns." << endl;
+	//	ok=false;
+	}
     }
 
     // check for formulation of differential

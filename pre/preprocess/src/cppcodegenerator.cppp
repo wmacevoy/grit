@@ -23,7 +23,7 @@
 #!  string prefix;
 #!  string precision;
 #!  string type;
-#!  size_t dim;
+#!//  size_t dim;
 #!  enum { SOURCE=0x01, HEADER=0x02 };
 #!  int mode;
 #!
@@ -67,7 +67,6 @@
 #!
 #!    configuration->flags["type"]=type;
 #!
-#!    dim=nequations();
 #!    linearAlgebra.generator=this;
 #!    linearAlgebra.configure();
 #!  }
@@ -126,7 +125,7 @@ namespace $(flag("namespace")) {
 #!    o() << "// jacobian aliases (fortran order)" << endl;
 #!    { int icount=0; FOREACH_EQUATION(i) {
 #!      { int jcount=0; FOREACH_VARIABLE(j) {
-#!          o() << "#define " << "d" << format(i->first) << "_d" << format(*j) << " " << prefix << "dy[" << (dim*jcount+icount) << "]" << endl;
+#!          o() << "#define " << "d" << format(i->first) << "_d" << format(*j) << " " << prefix << "dy[" << (nequations()*jcount+icount) << "]" << endl;
 #!          ++jcount;
 #!        }}
 #!      ++icount;
@@ -272,9 +271,6 @@ void $(prefix)solve(
 #!    string solver=flag("solver","newton");
 #!    string cuda_args="";
 #!    string cuda_declare_args="";
-#!    if (solver=="newton") {
-#!#include "solve_newton.hpp"
-#!    }
 #!    if (solver=="damped_newton") {
 #!#include "solve_damped_newton.hpp"
 #!    }
@@ -318,7 +314,7 @@ void $(prefix)update(
 #!  {
 #!prototype_update();
 {
-  $(type) $(prefix)x[$dim];
+  $(type) $(prefix)x[$(nvariables())];
   $(prefix)solve($(prefix)globals,$(prefix)parameters,$(prefix)x);
 #! define_aliases();
 #!    FOREACH_UPDATE(k) {
@@ -481,8 +477,8 @@ $(prefix)test_data_t $(prefix)test_data[] = {
   $(type) $(prefix)max_y_error=0;
   $(type) $(prefix)y_error=0;
 
-  $(type) $(prefix)x_test[$(dim)];
-  $(type) $(prefix)y_test[$(dim)];
+  $(type) $(prefix)x_test[$(nvariables())];
+  $(type) $(prefix)y_test[$(nequations())];
 
   for (int $(prefix)case_count=0; $(prefix)case_count < $(ntests()); ++$(prefix)case_count) {
     if ($(prefix)name == "all" || $(prefix)name == $(prefix)test_data[$(prefix)case_count].$(prefix)name) {
@@ -493,8 +489,8 @@ $(prefix)test_data_t $(prefix)test_data[] = {
 
        $(prefix)solve($(prefix)globals,$(prefix)parameters,$(prefix)x_test);
        $(prefix)f($(prefix)globals,$(prefix)parameters,$(prefix)x_test,$(prefix)y_test);
-       $(prefix)x_error=$(prefix)dist($dim,$(prefix)x,$(prefix)x_test);
-       $(prefix)y_error=$(prefix)norm($dim,$(prefix)y_test);
+       $(prefix)x_error=$(prefix)dist($(nvariables()),$(prefix)x,$(prefix)x_test);
+       $(prefix)y_error=$(prefix)norm($(nequations()),$(prefix)y_test);
 
        if ($(prefix)x_error > $(prefix)max_x_error) {
          $(prefix)max_x_error=$(prefix)x_error;
@@ -558,7 +554,7 @@ $(prefix)run_data_t $(prefix)run_data[] = {
       const char *$(prefix)case_name=$(prefix)run_data[$(prefix)case_count].$(prefix)name;
       $(type) *$(prefix)globals=$(prefix)run_data[$(prefix)case_count].$(prefix)globals;
       $(type) *$(prefix)parameters=$(prefix)run_data[$(prefix)case_count].$(prefix)parameters;
-      $(type) $(prefix)x[$(dim)];
+      $(type) $(prefix)x[$(nvariables())];
 
       $(prefix)solve($(prefix)globals,$(prefix)parameters,$(prefix)x);
       std::cout << "[case] # " << ($(prefix)case_count+1) << std::endl;
