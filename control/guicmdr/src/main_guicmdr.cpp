@@ -283,6 +283,7 @@ int main(int argc, char** argv) {
       exit(-1);
 
     case 0: /* Child */
+			int holder;
       assert(-1!=dup2( parentToChild[ READ_FD  ], STDIN_FILENO ) );
       assert(-1!=dup2( childToParent[ WRITE_FD ], STDOUT_FILENO ) );
       assert(-1!=dup2( childToParent[ WRITE_FD ], STDERR_FILENO ) );
@@ -295,6 +296,8 @@ int main(int argc, char** argv) {
 
     default: /* Parent */
 			std::cout << "Child " << pid << " process running..." << std::endl;
+
+			fcntl(childToParent[ READ_FD ], F_SETFL, fcntl(childToParent[ READ_FD ], F_GETFL) | O_NONBLOCK);
 
 			builder->get_widget_derived("main_window", gui);
 			kit.run(*gui);
