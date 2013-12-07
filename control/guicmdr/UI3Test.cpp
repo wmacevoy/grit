@@ -48,7 +48,7 @@ int main(int argc,char **argv)
       assert(0==close( childToParent [ READ_FD  ] ) );
 
           /*   file,  arg0,  arg1,   arg2 */
-      execlp(  "./Surrogate", "./Surrogate", NULL );
+      execlp(  "commander", "commander", NULL );
 
       cerr << "This line should never be reached!!!";
       exit(-1);

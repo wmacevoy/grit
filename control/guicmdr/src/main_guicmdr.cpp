@@ -8,6 +8,12 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include <stdlib.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <cassert>
+#include <sys/wait.h>
 
 #include "Configure.h"
 #include "now.h"
@@ -20,6 +26,26 @@ bool verbose = false;
 const int CHARSPERLINE = 64;
 
 SensorsMessage sensors;
+
+enum PIPE_FILE_DESCRIPTERS
+{
+  READ_FD  = 0,
+  WRITE_FD = 1
+};
+
+enum CONSTANTS
+{
+  BUFFER_SIZE = 100
+};
+
+int       parentToChild[2];
+int       childToParent[2];
+pid_t     pid;
+std::string    dataReadFromChild;
+char      buffer[ BUFFER_SIZE + 1 ];
+size_t    readResult;
+int       status;
+int       count=0;
 
 template <typename T>
 std::string NumberToString ( T Number )
@@ -52,6 +78,7 @@ class guicmdr : public Gtk::Window
 {
 protected:
   Glib::RefPtr<Gtk::Builder> builder;
+	Gtk::Window *w;
   Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h, *hpf, *hpb, *hyl, *hyr;
   Gtk::ColorButton *btn_safe;
 	Glib::RefPtr<Gtk::EntryBuffer> cmdBuf;
@@ -65,6 +92,7 @@ protected:
 
 public:
   guicmdr(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade) : Gtk::Window(cobject), builder(refGlade) {
+		w = this;
 		builder->get_widget("send", send);
 		builder->get_widget("btn_f", f);
 		builder->get_widget("btn_b", b);
@@ -100,12 +128,26 @@ public:
 
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
+		signal_key_press_event().connect(sigc::mem_fun(*this,&guicmdr::on_window_key_press_event), false);
+
 		hp = 0;
 		hy = 0;
 
 	}
 
-	~guicmdr(){}
+	~guicmdr() {
+		std::string exitCommand("exit\n");
+		write(parentToChild[WRITE_FD],exitCommand.c_str(),exitCommand.size());
+		assert( pid==waitpid(pid, & status, 0) );
+	}
+
+	bool on_window_key_press_event(GdkEventKey *Key) {
+		if(verbose) std::cout << Key->keyval << std::endl;
+		if(Key->keyval == 65293) {
+			on_button_send_clicked();
+		}
+		return true;
+	}
 
 	bool on_timer() {
 		updateSafety();
@@ -113,8 +155,19 @@ public:
 	}
 
 	void updateSafety() {
-		int r=255-sensors.s[0],g=255-sensors.s[1],b=255-sensors.s[2];
-		clr_safe.set_rgb(255*r,255*g,255*b);
+		int r=255-sensors.s[0], g=255-sensors.s[1], b=255-sensors.s[2];
+		clr_safe.set_rgb(255*r, 255*g, 255*b);
+	}
+
+	void on_button_send_clicked() {
+		if(verbose) std::cout << "btn_send clicked" << std::endl;
+		text = ent_cmd->get_text();
+		if(text != "") {
+			tb_old->insert_at_cursor(" " + text);
+			tv_old->set_buffer(tb_old);
+			write(parentToChild[WRITE_FD], text.c_str(), text.size());
+			count++;
+		}
 	}
 
 	void on_button_hpf_clicked() {
@@ -139,13 +192,6 @@ public:
 		if(verbose) std::cout << "btn_hyr clicked" << std::endl;
 		hy++;
 		ent_cmd->set_text("hy " + NumberToString(hy));
-	}
-
-	void on_button_send_clicked() {
-		if(verbose) std::cout << "btn_send clicked" << std::endl;
-		text = ent_cmd->get_text();
-		tb_old->insert_at_cursor(" " + text);
-		tv_old->set_buffer(tb_old);
 	}
 
 	void on_button_f_clicked() {
@@ -216,12 +262,41 @@ int main(int argc, char** argv) {
 
 	sensorsRx = std::shared_ptr < SensorsRx > (new SensorsRx());
 
+	assert(0==pipe(parentToChild));
+  assert(0==pipe(childToParent));
+
   Gtk::Main kit(argc,argv);
   Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("src/MojUI.glade");
 
-  builder->get_widget_derived("main_window", gui);
-  kit.run(*gui);
-  gui->end();
+	switch ( pid = fork() )
+  {
+    case -1:
+      std::cerr << "Fork failed";
+      exit(-1);
+
+    case 0: /* Child */
+      assert(-1!=dup2( parentToChild[ READ_FD  ], STDIN_FILENO  ) );
+      assert(-1!=dup2( childToParent[ WRITE_FD ], STDOUT_FILENO ) );
+      assert(-1!=dup2( childToParent[ WRITE_FD ], STDERR_FILENO ) );
+      assert(0==close( parentToChild [ WRITE_FD ] ) );
+      assert(0==close( childToParent [ READ_FD  ] ) );
+
+      /*   file,  arg0,  arg1,   arg2 */
+      execlp( "commander", "commander", NULL );
+
+      std::cerr << "This line should never be reached!!!";
+      exit(-1);
+
+    default: /* Parent */
+			std::cout << "Child " << pid << " process running..." << std::endl;
+		
+			assert(0==close( parentToChild [ READ_FD  ] ) );
+      assert(0==close( childToParent [ WRITE_FD ] ) );
+
+			builder->get_widget_derived("main_window", gui);
+			kit.run(*gui);
+			gui->end();
+	}
 
 	return 0;
 }
