@@ -8,22 +8,47 @@
 #include <map>
 
 #include "Configure.h"
+#include "now.h"
+#include "SensorsMessage.h"
+#include "ZMQHub.h"
 
 Configure cfg;
 bool verbose = false;
 
 const int CHARSPERLINE = 64;
 
+SensorsMessage sensors;
+
+class SensorsRx : public ZMQHub
+{
+public:
+  SensorsRx() {
+    subscribers.push_back(cfg.str("proxysensors.subscribe"));
+    start();
+  }
+
+  bool rx(ZMQSubscribeSocket &socket) {
+    ZMQMessage msg;
+    if (msg.recv(socket) == 0) return false;
+    memcpy(&sensors,msg.data(),sizeof(SensorsMessage));
+    return true;
+  }
+  bool tx(ZMQPublishSocket &socket) { return true; }
+};
+
+std::shared_ptr < SensorsRx > sensorsRx;
+
 class guicmdr : public Gtk::Window
 {
 protected:
   Glib::RefPtr<Gtk::Builder> builder;
   Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h;
+  Gtk::ColorButton *btn_safe;
 	Glib::RefPtr<Gtk::EntryBuffer> cmdBuf;
 	Gtk::Entry *ent_cmd;
 	Glib::RefPtr<Gtk::TextBuffer> tb_old, tb_resp;
 	Gtk::TextView *tv_old, *tv_resp;
-	Gtk::Image *img_on, *img_off;
+	Gdk::Color clr_safe;
 	Glib::ustring text;
 
 public:
@@ -39,8 +64,7 @@ public:
 		builder->get_widget("command", ent_cmd);
 		builder->get_widget("oldCommands", tv_old);
 		builder->get_widget("response", tv_resp);
-		builder->get_widget("safeOn", img_on);
-		builder->get_widget("safeOff", img_off);
+		builder->get_widget("btn_safe", btn_safe);
 
 		tb_old = Gtk::TextBuffer::create();
 		tb_resp = Gtk::TextBuffer::create();
@@ -54,11 +78,21 @@ public:
 		sl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_sl_clicked) );
 		h->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_h_clicked) );
 
-		img_off->hide();
-		img_on->hide();
+		Glib::signal_timeout().connect(sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
+
 	}
 
 	~guicmdr(){}
+
+	bool on_timer() {
+		updateSafety();
+		return true;
+	}
+
+	void updateSafety() {
+		int r=255-sensors.s[0],g=255-sensors.s[1],b=255-sensors.s[2];
+		clr_safe.set_rgb(255*r,255*g,255*b);
+	}
 
 	void on_button_send_clicked() {
 		if(verbose) std::cout << "btn_send clicked" << std::endl;
@@ -132,6 +166,8 @@ int main(int argc, char** argv) {
   signal(SIGINT, quitproc);
   signal(SIGTERM, quitproc);
   signal(SIGQUIT, quitproc);
+
+	sensorsRx = std::shared_ptr < SensorsRx > (new SensorsRx());
 
   Gtk::Main kit(argc,argv);
   Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("src/MojUI.glade");
