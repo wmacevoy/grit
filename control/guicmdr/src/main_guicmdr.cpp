@@ -1,5 +1,6 @@
 #include <gtkmm.h>
 #include <zmq.h>
+#include <fcntl.h>
 #include <string>
 #include <iostream>
 #include <signal.h>
@@ -13,6 +14,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <cassert>
+#include <unistd.h>
 #include <sys/wait.h>
 
 #include "Configure.h"
@@ -35,7 +37,7 @@ enum PIPE_FILE_DESCRIPTERS
 
 enum CONSTANTS
 {
-  BUFFER_SIZE = 100
+  BUFFER_SIZE = 1000
 };
 
 int       parentToChild[2];
@@ -46,7 +48,6 @@ char      buffer[ BUFFER_SIZE + 1 ];
 size_t    readResult;
 size_t    writeResult;
 int       status;
-int       count=0;
 
 template <typename T>
 std::string NumberToString ( T Number )
@@ -166,9 +167,13 @@ public:
 		if(text != "") {
 			tb_old->insert_at_cursor(" " + text);
 			tv_old->set_buffer(tb_old);
+
 			writeResult = write(parentToChild[WRITE_FD], text.c_str(), text.size());
-			count++;
-			if(verbose) std::cout << "Wrote " << writeResult << "bytes to pid " << pid << std::endl;
+			if(verbose) std::cout << "Wrote " << writeResult << "bytes to pid " << pid << std::endl;			
+	
+			readResult = read( childToParent[ READ_FD ], buffer, BUFFER_SIZE );			
+			tb_resp->set_text(buffer);
+			tv_resp->set_buffer(tb_resp);			
 		}
 	}
 
@@ -277,11 +282,9 @@ int main(int argc, char** argv) {
       exit(-1);
 
     case 0: /* Child */
-      assert(-1!=dup2( parentToChild[ READ_FD  ], STDIN_FILENO  ) );
+      assert(-1!=dup2( parentToChild[ READ_FD  ], STDIN_FILENO ) );
       assert(-1!=dup2( childToParent[ WRITE_FD ], STDOUT_FILENO ) );
       assert(-1!=dup2( childToParent[ WRITE_FD ], STDERR_FILENO ) );
-      assert(0==close( parentToChild [ WRITE_FD ] ) );
-      assert(0==close( childToParent [ READ_FD  ] ) );
 
       /*   file,  arg0,  arg1,   arg2 */
       execlp( "commander", "commander", NULL );
@@ -291,9 +294,6 @@ int main(int argc, char** argv) {
 
     default: /* Parent */
 			std::cout << "Child " << pid << " process running..." << std::endl;
-		
-			assert(0==close( parentToChild [ READ_FD  ] ) );
-      assert(0==close( childToParent [ WRITE_FD ] ) );
 
 			builder->get_widget_derived("main_window", gui);
 			kit.run(*gui);
