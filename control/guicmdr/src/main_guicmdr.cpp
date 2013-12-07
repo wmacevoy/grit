@@ -80,7 +80,6 @@ class guicmdr : public Gtk::Window
 {
 protected:
   Glib::RefPtr<Gtk::Builder> builder;
-	Gtk::Window *w;
   Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h, *hpf, *hpb, *hyl, *hyr;
   Gtk::ColorButton *btn_safe;
 	Glib::RefPtr<Gtk::EntryBuffer> cmdBuf;
@@ -94,7 +93,6 @@ protected:
 
 public:
   guicmdr(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade) : Gtk::Window(cobject), builder(refGlade) {
-		w = this;
 		builder->get_widget("send", send);
 		builder->get_widget("btn_f", f);
 		builder->get_widget("btn_b", b);
@@ -135,6 +133,9 @@ public:
 		hp = 0;
 		hy = 0;
 
+		readResult = read( childToParent[ READ_FD ], buffer, BUFFER_SIZE + 2000);			
+		tb_resp->set_text(buffer);
+		tv_resp->set_buffer(tb_resp);
 	}
 
 	~guicmdr() {
