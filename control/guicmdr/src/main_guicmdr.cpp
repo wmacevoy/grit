@@ -44,6 +44,7 @@ pid_t     pid;
 std::string    dataReadFromChild;
 char      buffer[ BUFFER_SIZE + 1 ];
 size_t    readResult;
+size_t    writeResult;
 int       status;
 int       count=0;
 
@@ -137,7 +138,7 @@ public:
 
 	~guicmdr() {
 		std::string exitCommand("exit\n");
-		write(parentToChild[WRITE_FD],exitCommand.c_str(),exitCommand.size());
+		writeResult = write(parentToChild[WRITE_FD],exitCommand.c_str(),exitCommand.size());
 		assert( pid==waitpid(pid, & status, 0) );
 	}
 
@@ -165,8 +166,9 @@ public:
 		if(text != "") {
 			tb_old->insert_at_cursor(" " + text);
 			tv_old->set_buffer(tb_old);
-			write(parentToChild[WRITE_FD], text.c_str(), text.size());
+			writeResult = write(parentToChild[WRITE_FD], text.c_str(), text.size());
 			count++;
+			if(verbose) std::cout << "Wrote " << writeResult << "bytes to pid " << pid << std::endl;
 		}
 	}
 
