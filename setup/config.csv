@@ -73,7 +73,7 @@ lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"10"
 lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
-webcam.requester.addressW,"tcp://${centaur.ip}:9993"
+webcam.requester.addressW,"tcp://${xcentaur.ip}:9993"
 webcam.requester.addressL,"tcp://${centaur.ip}:9997"
 webcam.requester.calibration,"true"
 webcam.requester.sleep_time_color,"100"
@@ -108,6 +108,7 @@ heartbeat.requester.sleep_time,"100"
 glView.subscriber.addressL,"tcp://${centaur.ip}:9997"
 glView.subscriber.verbose,"false"
 glView.subscriber.sleep_time,25
+guicmdr.verbose,"true"
 sensors.ip,"${centaur.ip}"
 sensors.port,"5506"
 sensors.publish,"tcp://*:${sensors.port}"
@@ -128,7 +129,7 @@ proxysensors.publish,tcp://*:${proxysensors.port}
 proxysensors.subscribe,tcp://${proxysensors.ip}:${proxysensors.port}
 proxysensors.rate,1.0
 proxysensors.verbose,false
-gloves.publisher.dev_path,"/dev/ttyACM1"
+gloves.publisher.dev_path,"/dev/ttyACM0"
 gloves.publisher.verbose,"true"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
 leg1.touchpressure,900
