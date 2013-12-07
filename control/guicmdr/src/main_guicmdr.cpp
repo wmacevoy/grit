@@ -6,6 +6,8 @@
 #include <thread>
 #include <chrono>
 #include <map>
+#include <string>
+#include <sstream>
 
 #include "Configure.h"
 #include "now.h"
@@ -18,6 +20,14 @@ bool verbose = false;
 const int CHARSPERLINE = 64;
 
 SensorsMessage sensors;
+
+template <typename T>
+std::string NumberToString ( T Number )
+{
+  std::ostringstream ss;
+  ss << Number;
+  return ss.str();
+}
 
 class SensorsRx : public ZMQHub
 {
@@ -42,7 +52,7 @@ class guicmdr : public Gtk::Window
 {
 protected:
   Glib::RefPtr<Gtk::Builder> builder;
-  Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h;
+  Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h, *hpf, *hpb, *hyl, *hyr;
   Gtk::ColorButton *btn_safe;
 	Glib::RefPtr<Gtk::EntryBuffer> cmdBuf;
 	Gtk::Entry *ent_cmd;
@@ -50,6 +60,8 @@ protected:
 	Gtk::TextView *tv_old, *tv_resp;
 	Gdk::Color clr_safe;
 	Glib::ustring text;
+
+	int hp, hy;
 
 public:
   guicmdr(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade) : Gtk::Window(cobject), builder(refGlade) {
@@ -61,6 +73,10 @@ public:
 		builder->get_widget("btn_sr", sr);
 		builder->get_widget("btn_sl", sl);
 		builder->get_widget("btn_h", h);
+		builder->get_widget("btn_hp_f", hpf);
+		builder->get_widget("btn_hp_b", hpb);
+		builder->get_widget("btn_hy_l", hyl);
+		builder->get_widget("btn_hy_r", hyr);
 		builder->get_widget("command", ent_cmd);
 		builder->get_widget("oldCommands", tv_old);
 		builder->get_widget("response", tv_resp);
@@ -77,8 +93,15 @@ public:
 		sr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_sr_clicked) );
 		sl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_sl_clicked) );
 		h->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_h_clicked) );
+		hpf->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hpf_clicked) );
+		hpb->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hpb_clicked) );
+		hyl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyl_clicked) );
+		hyr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyr_clicked) );
 
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
+
+		hp = 0;
+		hy = 0;
 
 	}
 
@@ -92,6 +115,30 @@ public:
 	void updateSafety() {
 		int r=255-sensors.s[0],g=255-sensors.s[1],b=255-sensors.s[2];
 		clr_safe.set_rgb(255*r,255*g,255*b);
+	}
+
+	void on_button_hpf_clicked() {
+		if(verbose) std::cout << "btn_hpf clicked" << std::endl;
+		hp--;
+		ent_cmd->set_text("hp " + NumberToString(hp));
+	}
+
+	void on_button_hpb_clicked() {
+		if(verbose) std::cout << "btn_hpb clicked" << std::endl;
+		hp++;
+		ent_cmd->set_text("hp " + NumberToString(hp));
+	}
+
+	void on_button_hyl_clicked() {
+		if(verbose) std::cout << "btn_hyl clicked" << std::endl;
+		hy--;
+		ent_cmd->set_text("hy " + NumberToString(hy));
+	}
+
+	void on_button_hyr_clicked() {
+		if(verbose) std::cout << "btn_hyr clicked" << std::endl;
+		hy++;
+		ent_cmd->set_text("hy " + NumberToString(hy));
 	}
 
 	void on_button_send_clicked() {
