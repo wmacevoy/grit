@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkImage" id="img_b_btn">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">go-down</property>
-  </object>
   <object class="GtkImage" id="img_f_btn">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">go-up</property>
-  </object>
-  <object class="GtkImage" id="img_h_btn">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">media-playback-stop</property>
-  </object>
-  <object class="GtkImage" id="img_l_btn">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">edit-undo</property>
   </object>
   <object class="GtkImage" id="img_r_btn">
     <property name="visible">True</property>
@@ -31,10 +16,45 @@
     <property name="can_focus">False</property>
     <property name="icon_name">go-previous</property>
   </object>
+  <object class="GtkImage" id="img_b_btn">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-down</property>
+  </object>
+  <object class="GtkImage" id="img_h_btn">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">media-playback-stop</property>
+  </object>
+  <object class="GtkImage" id="img_hp_f">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-up</property>
+  </object>
+  <object class="GtkImage" id="img_hy_l">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-previous</property>
+  </object>
+  <object class="GtkImage" id="img_hy_r">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-previous</property>
+  </object>
+  <object class="GtkImage" id="img_l_btn">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">edit-undo</property>
+  </object>
   <object class="GtkImage" id="img_sr_btn">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">go-next</property>
+  </object>
+  <object class="GtkImage" id="img_hp_b">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-down</property>
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="width_request">500</property>
@@ -302,6 +322,97 @@
               <packing>
                 <property name="x">85</property>
                 <property name="y">95</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lbl_walk">
+                <property name="width_request">100</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="xalign">0.40000000596046448</property>
+                <property name="label" translatable="yes">Walk controls:</property>
+              </object>
+              <packing>
+                <property name="x">55</property>
+                <property name="y">10</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lbl_head">
+                <property name="width_request">100</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Neck controls:</property>
+              </object>
+              <packing>
+                <property name="x">55</property>
+                <property name="y">140</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_hp_f">
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_hp_f</property>
+              </object>
+              <packing>
+                <property name="x">85</property>
+                <property name="y">160</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_hp_b">
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_hp_b</property>
+              </object>
+              <packing>
+                <property name="x">85</property>
+                <property name="y">200</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_hy_l">
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_hy_l</property>
+              </object>
+              <packing>
+                <property name="x">50</property>
+                <property name="y">180</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_hy_r">
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_hy_r</property>
+              </object>
+              <packing>
+                <property name="x">120</property>
+                <property name="y">180</property>
               </packing>
             </child>
           </object>

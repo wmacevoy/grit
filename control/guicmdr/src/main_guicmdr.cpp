@@ -78,7 +78,7 @@ public:
 		sl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_sl_clicked) );
 		h->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_h_clicked) );
 
-		Glib::signal_timeout().connect(sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
+		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
 	}
 
