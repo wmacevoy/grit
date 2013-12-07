@@ -220,7 +220,7 @@ int main(int argc, char** argv)
 						line(gray, tick10r1, tick10r2, Scalar(0, 0, 0));
 
 						for(int i = 0; i < normalWidth; ++i) {
-						  //							int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084;
+						  //int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084;
 						  int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
 							if(ft <= 10) {
 								int y = lidarLine - ft;
@@ -234,7 +234,7 @@ int main(int argc, char** argv)
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
 							text = at(index);
-							//							text = convstr(lidar_data[index] * 0.00328084);
+							//text = convstr(lidar_data[index] * 0.00328084);
 							putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
 									"  sleep_time: " << sleep_time << std::endl;
