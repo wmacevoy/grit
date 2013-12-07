@@ -23,6 +23,7 @@ protected:
 	Gtk::Entry *ent_cmd;
 	Glib::RefPtr<Gtk::TextBuffer> tb_old, tb_resp;
 	Gtk::TextView *tv_old, *tv_resp;
+	Gtk::Image *img_on, *img_off;
 	Glib::ustring text;
 
 public:
@@ -38,6 +39,8 @@ public:
 		builder->get_widget("command", ent_cmd);
 		builder->get_widget("oldCommands", tv_old);
 		builder->get_widget("response", tv_resp);
+		builder->get_widget("safeOn", img_on);
+		builder->get_widget("safeOff", img_off);
 
 		tb_old = Gtk::TextBuffer::create();
 		tb_resp = Gtk::TextBuffer::create();
@@ -51,7 +54,8 @@ public:
 		sl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_sl_clicked) );
 		h->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_h_clicked) );
 
-
+		img_off->hide();
+		img_on->hide();
 	}
 
 	~guicmdr(){}
