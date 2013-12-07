@@ -121,10 +121,6 @@ public:
         string btn_string = "sen" + NumberToString(i);
         builder->get_widget(btn_string.c_str(),buttons[i]);
       }
-    for (im = buttons.begin(); im != buttons.end(); ++im)
-      {
-        im->second->signal_clicked().connect(sigc::mem_fun(*this, &RobotWatcher::btn_click));
-      }
 
     builder->get_widget("lblTop", lblTop);
     builder->get_widget("lblTemp", lblTemp);
@@ -150,10 +146,6 @@ public:
   }
 
   ~RobotWatcher(){}
-  
-  void btn_click() {
-    std::cout << "clicked" << std::endl;
-  }
 
   void update_colors_temps(int32_t temps[], int size)
   {
