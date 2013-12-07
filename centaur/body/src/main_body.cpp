@@ -1583,7 +1583,7 @@ void leapHand() {
       oss << "RightArmForeArm " << angle << " :ok."; 
       answer(oss.str());
     }    
-    if (head == "headPitch") {
+    if (head == "headPitch" || head == "hp") {
       float angle;
       iss >> angle;
       ostringstream oss;
