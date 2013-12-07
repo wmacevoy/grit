@@ -184,6 +184,7 @@
                       <object class="GtkTextView" id="response">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="editable">False</property>
                       </object>
                       <packing>
                         <property name="resize">True</property>
