@@ -98,11 +98,11 @@ Mat arm(string side)
   E pi=var("%pi");
   E dbase2waist=12.0;
   E waist=-(pi/180.0)*(var("waist")); // check
-  E dwaist2neck=13.5; // check
+  E dwaist2neck=14.0; // 13.5; // check
   E dxneck2shoulder=(9.0+3.0/4.0)/2.0;
   E dyneck2shoulder=2.0+3.0/8.0;
   E dshoulderio2ud=3.0+5.0/8.0;
-  E dshoulderud2elbow=9.0;
+  E dshoulderud2elbow=8.5; // 9.0;
   E delbow2palm=14.0;
   E shoulderio=sigma*(pi/180.0)*(var("shoulderio")-45.0);
   E shoulderud=(pi/180.0)*(var("shoulderud")-45.0);
