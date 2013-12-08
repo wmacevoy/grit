@@ -128,7 +128,7 @@ public:
 
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
-		signal_key_press_event().connect(sigc::mem_fun(*this,&guicmdr::on_window_key_press_event), false);
+		//signal_key_press_event().connect(sigc::mem_fun(*this,&guicmdr::on_window_key_press_event), false);
 
 		hp = 0;
 		hy = 0;
