@@ -14,6 +14,7 @@
 #include "ZMQHub.h"
 #include "Lock.h"
 #include "Configure.h"
+#include "CreateSafetyClient.h"
 
 #include <gtkmm.h>
 #include <zmq.h>
@@ -39,6 +40,7 @@
 
 Configure cfg;
 bool verbose = false;
+SafetySP safety;
 
 class Commander : public ZMQHub
 {
@@ -196,12 +198,14 @@ public:
 
 	void on_button_safe_on_clicked() {
 		if(verbose) std::cout << "safe_on clicked" << std::endl;
-		ent_cmd->set_text("safe on");
+		safety->safe(true);
+		//		ent_cmd->set_text("safe on");
 	}
 
 	void on_button_safe_off_clicked() {
 		if(verbose) std::cout << "safe_on clicked" << std::endl;
-		ent_cmd->set_text("safe off");
+		safety->safe(false);
+		//		ent_cmd->set_text("safe off");
 	}
 
 	void on_button_hpf_clicked() {
@@ -293,6 +297,9 @@ int main(int argc, char** argv) {
   if (verbose) cfg.show();
 
   commander = std::shared_ptr < Commander > (new Commander());
+
+  safety=CreateSafetyClient(cfg.str("guicmdr.safety.publish"),cfg.str("safety.subscribe"),2);
+  safety->safe(false);
 
   commander->publish = cfg.str("commander.publish");
   commander->subscribers = cfg.list("commander.subscribers");
