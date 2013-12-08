@@ -142,6 +142,7 @@ public:
 	~guicmdr() {
 		std::string exitCommand("exit\n");
 		writeResult = write(parentToChild[WRITE_FD],exitCommand.c_str(),exitCommand.size());
+		kill(pid, SIGTERM);
 		assert( pid==waitpid(pid, &status, 0) );
 	}
 
