@@ -320,7 +320,7 @@ void gsolve_ik_arm(string side)
   string inifile=dir + "/ik_" + side + "arm.ini";
 
   Vec p=vec(var("px"),var("py"),var("pz"));
-  E pointx = var("pointx");
+  /*  E pointx = var("pointx"); */
   E downx = var("downx");
 
   Mat pose=arm(side);
@@ -331,7 +331,7 @@ void gsolve_ik_arm(string side)
   eq.push_back(pose[1][3]-p[1]);
   eq.push_back(pose[2][3]-p[2]);
 
-  eq.push_back(pose[0][1]-pointx);
+  //  eq.push_back(pose[0][1]-pointx);
   eq.push_back(pose[0][2]+downx);
 
   E shoulderio=var("shoulderio");

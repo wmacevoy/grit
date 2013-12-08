@@ -406,7 +406,7 @@ extern const char *$(prefix)parameter_names[$(nparameters())];
 enum { $(prefix)variable_count=$(nvariables()) };
 extern const char *$(prefix)variable_names[$(nvariables())];
 
-enum { $(prefix)equation_count=$(nvariables()) };
+enum { $(prefix)equation_count=$(nequations()) };
 extern const char *$(prefix)equation_names[$(nequations())];
 #!  }
 #!
