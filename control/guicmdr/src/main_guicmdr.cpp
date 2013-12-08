@@ -1,3 +1,20 @@
+#include <iostream>
+#include <list>
+#include <map>
+#include <thread>
+#include <mutex>
+#include <string>
+#include <string.h>
+#include <csignal>
+#include <signal.h>
+#include <assert.h>
+
+#include "BodyMessage.h"
+#include "CSVRead.h"
+#include "ZMQHub.h"
+#include "Lock.h"
+#include "Configure.h"
+
 #include <gtkmm.h>
 #include <zmq.h>
 #include <fcntl.h>
@@ -23,27 +40,67 @@
 Configure cfg;
 bool verbose = false;
 
-const int CHARSPERLINE = 64;
-
-enum PIPE_FILE_DESCRIPTERS
+class Commander : public ZMQHub
 {
-  READ_FD  = 0,
-  WRITE_FD = 1
+public:
+  std::mutex sendsMutex;
+  std::mutex recvsMutex;
+  std::list < std::string > sends;
+  std::list < std::string > recvs;
+  
+  void send(const std::string &content)
+  {
+    Lock lock(sendsMutex);
+    sends.push_back(content);
+  }
+
+  bool recv(std::string &content)
+  {
+    Lock lock(recvsMutex);
+    if (!recvs.empty()) {
+      content=recvs.front();
+      recvs.pop_front();
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool rx(ZMQSubscribeSocket &socket)
+  {
+    ZMQMessage msg;
+    if (msg.recv(socket) == 0) return false;
+    char *data = (char*) msg.data();
+    size_t size = *(uint16_t*)data;
+    std::string reply(data+2,size);
+    { 
+      Lock lock(recvsMutex);
+      recvs.push_back(reply);
+    }
+    return true;
+  }
+
+  bool tx(ZMQPublishSocket &socket)
+  {
+    Lock lock(sendsMutex);
+    bool ok=true;
+
+    while (!sends.empty()) {
+      std::string &message = *sends.begin();
+      uint16_t size = (message.size() < BODY_MESSAGE_MAXLEN) ? message.size() : BODY_MESSAGE_MAXLEN;
+      ZMQMessage msg(size+2);
+      char *data = (char*)msg.data();
+      *(uint16_t*)data = size;
+      memcpy(data+2,&message[0],size);
+      if (msg.send(socket) == 0) ok=false;
+      sends.pop_front();
+    }
+    return ok;
+  }
 };
 
-enum CONSTANTS
-{
-  BUFFER_SIZE = 1000
-};
+std::shared_ptr < Commander > commander;
 
-int       parentToChild[2];
-int       childToParent[2];
-pid_t     pid;
-std::string    dataReadFromChild;
-char      buffer[ BUFFER_SIZE + 1 ];
-size_t    readResult;
-size_t    writeResult;
-int       status;
 
 template <typename T>
 std::string NumberToString ( T Number )
@@ -103,7 +160,7 @@ public:
 		hyl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyl_clicked) );
 		hyr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyr_clicked) );
 
-		//Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
+		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
 		//signal_key_press_event().connect(sigc::mem_fun(*this,&guicmdr::on_window_key_press_event), false);
 
@@ -111,34 +168,25 @@ public:
 		hy = 0;
 	}
 
+  void on_timer()
+  {
+    std::string reply;
+    while (commander->recv(reply)) {
+      tb_resp->insert_at_cursor((reply+"\n").c_str());
+      tv_resp->set_buffer(tb_resp);
+    }
+  }
+
 	~guicmdr() {}
 
-	bool on_window_key_press_event(GdkEventKey *Key) {
-		if(verbose) std::cout << Key->keyval << std::endl;
-		if(Key->keyval == 65293) {
-			on_button_send_clicked();
-		}
-		return true;
-	}
-
-	void updateSafety() {
-		int r=255-sensors.s[0], g=255-sensors.s[1], b=255-sensors.s[2];
-		clr_safe.set_rgb(255*r, 255*g, 255*b);
-	}
 
 	void on_button_send_clicked() {
 		if(verbose) std::cout << "btn_send clicked" << std::endl;
 		text = ent_cmd->get_text();
 		if(text != "") {
-			tb_old->insert_at_cursor(" " + text);
-			tv_old->set_buffer(tb_old);
-
-			if(verbose) std::cout << "Wrote " << writeResult << "bytes to pid " << pid << std::endl;			
-		
-			if(readResult > 0) {			
-				tb_resp->set_text(buffer);
-				tv_resp->set_buffer(tb_resp);			
-			}
+		  commander->send(text);
+		  tb_old->insert_at_cursor(" " + text);
+		  tv_old->set_buffer(tb_old);
 		}
 	}
 
@@ -214,10 +262,12 @@ public:
 
 };
 
+
 guicmdr* gui;
 
 void quitproc(int param) {
   gui->end2();
+  commander.reset();
 }
 
 int main(int argc, char** argv) {
@@ -228,6 +278,13 @@ int main(int argc, char** argv) {
   verbose = cfg.flag("guicmdr.verbose", false);
   if (verbose) cfg.show();
 
+  commander = std::shared_ptr < Commander > (new Commander());
+
+  commander->publish = cfg.str("commander.publish");
+  commander->subscribers = cfg.list("commander.subscribers");
+  commander->rxTimeout = 1e6;
+  commander->start();
+
   signal(SIGINT, quitproc);
   signal(SIGTERM, quitproc);
   signal(SIGQUIT, quitproc);
@@ -236,11 +293,11 @@ int main(int argc, char** argv) {
   Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("src/MojUI.glade");
 
 
-	builder->get_widget_derived("main_window", gui);
-	kit.run(*gui);
-	gui->end();
-	delete gui;
-	}
+  builder->get_widget_derived("main_window", gui);
+  kit.run(*gui);
+  gui->end();
+  delete gui;
 
-	return 0;
+  return 0;
 }
+
