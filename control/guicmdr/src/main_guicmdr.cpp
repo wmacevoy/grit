@@ -38,6 +38,8 @@
 #include "Configure.h"
 #include "now.h"
 
+using namespace std;
+
 Configure cfg;
 bool verbose = false;
 SafetySP safety;
@@ -53,6 +55,7 @@ public:
   void send(const std::string &content)
   {
     Lock lock(sendsMutex);
+    cout << "send: " << content << endl;
     sends.push_back(content);
   }
 
@@ -62,6 +65,7 @@ public:
     if (!recvs.empty()) {
       content=recvs.front();
       recvs.pop_front();
+      cout << "revd: " << content << endl;
       return true;
     } else {
       return false;
@@ -286,10 +290,11 @@ guicmdr* gui;
 void quitproc(int param) {
   gui->end2();
   commander.reset();
+  safety.reset();
 }
 
 int main(int argc, char** argv) {
-	cfg.path("../../setup");
+  cfg.path("../../setup");
   cfg.args("guicmdr.", argv);
   if (argc == 1) cfg.load("config.csv");
   cfg.servos();
@@ -301,8 +306,8 @@ int main(int argc, char** argv) {
   safety=CreateSafetyClient(cfg.str("guicmdr.safety.publish"),cfg.str("safety.subscribe"),2);
   safety->safe(false);
 
-  commander->publish = cfg.str("commander.publish");
-  commander->subscribers = cfg.list("commander.subscribers");
+  commander->publish = cfg.str("guicmdr.publish");
+  commander->subscribers = cfg.list("guicmdr.subscribers");
   commander->rxTimeout = 1e6;
   commander->start();
 
