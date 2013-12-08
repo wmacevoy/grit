@@ -142,7 +142,7 @@ public:
 	~guicmdr() {
 		std::string exitCommand("exit\n");
 		writeResult = write(parentToChild[WRITE_FD],exitCommand.c_str(),exitCommand.size());
-		assert( pid==waitpid(pid, & status, 0) );
+		assert( pid==waitpid(pid, &status, 0) );
 	}
 
 	bool on_window_key_press_event(GdkEventKey *Key) {
@@ -302,6 +302,7 @@ int main(int argc, char** argv) {
 			builder->get_widget_derived("main_window", gui);
 			kit.run(*gui);
 			gui->end();
+			delete gui;
 	}
 
 	return 0;
