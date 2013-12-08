@@ -73,7 +73,7 @@ void ArmMover::leapAdjust(LeapHandMessage &hand)
   map<float,float> forearms;
 
   float _shoulderio,_shoulderud,_bicep,_elbow,_forearm;
-  geometry->compute(hand.at[0],hand.at[1],hand.at[2],hand.point[0],hand.down[0],
+  geometry->compute(hand.at[0],hand.at[1],hand.at[2],/* hand.point[0], */ hand.down[0],
 		    _shoulderio,_shoulderud,_bicep,_elbow,_forearm);
 
   shoulderios[0]=_shoulderio;

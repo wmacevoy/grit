@@ -39,11 +39,12 @@ void RightArmGeometry::forward()
     parameters.as_struct.bicep=variables.as_struct._bicep;
     parameters.as_struct.elbow=variables.as_struct._elbow;
     parameters.as_struct.forearm=variables.as_struct._forearm;
-    parameters.as_struct.px=residuals[0];
-    parameters.as_struct.py=residuals[1];
-    parameters.as_struct.pz=residuals[2];
-    parameters.as_struct.pointx=residuals[3];
-    parameters.as_struct.downx=-residuals[4];
+    int eq=0;
+    parameters.as_struct.px=residuals[eq++];
+    parameters.as_struct.py=residuals[eq++];
+    parameters.as_struct.pz=residuals[eq++];
+    //    parameters.as_struct.pointx=residuals[eq++];
+    parameters.as_struct.downx=-residuals[eq++];
 
     ik_rightarmf(globals.as_array,parameters.as_array,variables.as_array,residuals);
     float maxresidual=0;
@@ -66,14 +67,14 @@ bool RightArmGeometry::inverse()
   }
 }
 
-void RightArmGeometry::compute(float x,float y,float z,float pointx, float downx, float &shoulderio,float &shoulderud,float &bicep, float &elbow, float &forearm)
+void RightArmGeometry::compute(float x,float y,float z,/* float pointx, */ float downx, float &shoulderio,float &shoulderud,float &bicep, float &elbow, float &forearm)
 {
   float dist = 0;
   dist = fmax(dist, 2.54*fabs(x-parameters.as_struct.px));
   dist = fmax(dist, 2.54*fabs(y-parameters.as_struct.py));
   dist = fmax(dist, 2.54*fabs(z-parameters.as_struct.pz));
   dist = fmax(dist, (180/M_PI)*fabs(asin(downx)-asin(parameters.as_struct.downx)));
-  dist = fmax(dist, (180/M_PI)*fabs(asin(pointx)-asin(parameters.as_struct.pointx)));
+  /*  dist = fmax(dist, (180/M_PI)*fabs(asin(pointx)-asin(parameters.as_struct.pointx))); */
 
   int n = ceil(dist/10);
 
@@ -88,7 +89,7 @@ void RightArmGeometry::compute(float x,float y,float z,float pointx, float downx
     p.as_struct.px=t*parameters.as_struct.px+s*x;
     p.as_struct.py=t*parameters.as_struct.py+s*y;
     p.as_struct.pz=t*parameters.as_struct.pz+s*z;
-    p.as_struct.pointx=t*parameters.as_struct.pointx+s*pointx;
+    /*    p.as_struct.pointx=t*parameters.as_struct.pointx+s*pointx; */
     p.as_struct.downx=t*parameters.as_struct.downx+s*downx;
     ik_rightarmupdate(globals.as_array,p.as_array);
     if (p.as_struct.residual <= globals.as_struct.epsilon) {

@@ -38,7 +38,7 @@ void ArmTapeEditor::pose(const Mat3d &frame)
 
   std::cout << "ArmTapeEditor::pose(s=" << s << ",at=" << at << ",up=" << up << ",point=" << point << ")" << std::endl;
 
-  geometry->compute(at.x(),at.y(),at.z(),point.x(),-up.x(),
+  geometry->compute(at.x(),at.y(),at.z(),/* point.x(), */ -up.x(),
 		    paths(shoulderio)[s],
 		    paths(shoulderud)[s],
 		    paths(bicep)[s],

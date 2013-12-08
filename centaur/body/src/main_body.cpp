@@ -1687,8 +1687,10 @@ void leapHand() {
       Tape tape;
       TurnArmTapeEditor led("LEFTARM",arcs["turnleft"]);
       led.tape(&tape);
+      led.geometry->forward();
       TurnArmTapeEditor red("RIGHTARM",arcs["turnright"]);
       red.tape(&tape);
+      red.geometry->forward();
 
       TurnArmTapeEditor *ped = 0;
       
@@ -1898,7 +1900,7 @@ void leapHand() {
       *((uint16_t*)data)=size;
       memcpy(data+2,&reply[0],size);
       if (msg.send(socket) == 0) ok = false;
-      replies.pop_back();
+      replies.pop_front();
     }
     return ok;
   }

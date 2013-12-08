@@ -230,6 +230,16 @@ bool TapeEditor::parse(std::istream &in, Mat3d &value)
       value=translate(delta);
       return true;
     }
+    if (name == "scale") {
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != '(') return false; else in.get();
+      Vec3d s;
+      if (!parse(in,s)) return false;
+      while (isblank(in.peek())) in.get();
+      if (in.peek() != ')') return false; else in.get();
+      value=scale(s);
+      return true;
+    }
     if (name == "inverse") {
       while (isblank(in.peek())) in.get();
       if (in.peek() != '(') return false; else in.get();
@@ -247,21 +257,14 @@ bool TapeEditor::parse(std::istream &in, Mat3d &value)
       bool first = true;
       for (;;) {
 	while (isblank(in.peek())) in.get();
+	if (in.peek() == ')') { in.get(); return true; }
 	if (first) first = false;
 	else {
-	  if (in.peek() != ',') {
-	    if (in.peek() == ')') { 
-	      in.get();
-	      return true; 
-	    }
-	    return false;
-	  }
-	  in.get();
+	  if (in.peek() != ',') return false; else in.get();
 	}
 	Mat3d term;
 	if (!parse(in,term)) return false;
 	value = value*term;
-	return true;
       }
     }
     if (name == "arc") {
