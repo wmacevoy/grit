@@ -24,12 +24,11 @@ function ik_rightarmy=ik_rightarmf(ik_rightarmparameters,ik_rightarmx)
   elbow=ik_rightarmparameters(4);
   forearm=ik_rightarmparameters(5);
   downx=ik_rightarmparameters(6);
-  pointx=ik_rightarmparameters(7);
-  px=ik_rightarmparameters(8);
-  py=ik_rightarmparameters(9);
-  pz=ik_rightarmparameters(10);
-  waist=ik_rightarmparameters(11);
-  residual=ik_rightarmparameters(12);
+  px=ik_rightarmparameters(7);
+  py=ik_rightarmparameters(8);
+  pz=ik_rightarmparameters(9);
+  waist=ik_rightarmparameters(10);
+  residual=ik_rightarmparameters(11);
   
   // import variables
   
@@ -41,14 +40,12 @@ function ik_rightarmy=ik_rightarmf(ik_rightarmparameters,ik_rightarmx)
   residual0=(-14)*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))+(-9)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))+(-3.625)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))+(-1)*px+14*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+4.875;
   residual1=(-13.5)*sin((-0.0174532925199433)*waist)+(-9)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist)+(-1)*py+2.375*cos((-0.0174532925199433)*waist)+3.625*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*waist)+9*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*cos((-0.0174532925199433)*waist)+14*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*cos((-0.0174532925199433)*waist)+(-1)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist))+14*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos((-0.0174532925199433)*_bicep)*((-1)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*waist)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))+(-1)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist))+cos((-0.0174532925199433)*waist)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep));
   residual2=(-1)*pz+2.375*sin((-0.0174532925199433)*waist)+3.625*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*waist)+9*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist)+9*cos((-0.0174532925199433)*waist)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))+13.5*cos((-0.0174532925199433)*waist)+14*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist)+cos((-0.0174532925199433)*waist)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+14*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos((-0.0174532925199433)*_bicep)*(cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*cos((-0.0174532925199433)*waist)+(-1)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist))+sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)*sin((-0.0174532925199433)*waist))+12;
-  residual3=sin((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+(-1)*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))+(-1)*pointx;
-  residual4=cos((-0.0174532925199433)*_forearm+0.698131700797732)*(cos((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481)))+sin((-0.0174532925199433)*_forearm+0.698131700797732)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)+(-1)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep))+downx;
-  ik_rightarmy=zeros(5,1);
+  residual3=cos((-0.0174532925199433)*_forearm+1.13446401379631)*(cos((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481)))+sin((-0.0174532925199433)*_forearm+1.13446401379631)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)+(-1)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep))+downx;
+  ik_rightarmy=zeros(4,1);
   ik_rightarmy(1)=residual0;
   ik_rightarmy(2)=residual1;
   ik_rightarmy(3)=residual2;
   ik_rightarmy(4)=residual3;
-  ik_rightarmy(5)=residual4;
 endfunction
 
 function ik_rightarmdy=ik_rightarmdf(ik_rightarmparameters,ik_rightarmx)
@@ -70,12 +67,11 @@ function ik_rightarmdy=ik_rightarmdf(ik_rightarmparameters,ik_rightarmx)
   elbow=ik_rightarmparameters(4);
   forearm=ik_rightarmparameters(5);
   downx=ik_rightarmparameters(6);
-  pointx=ik_rightarmparameters(7);
-  px=ik_rightarmparameters(8);
-  py=ik_rightarmparameters(9);
-  pz=ik_rightarmparameters(10);
-  waist=ik_rightarmparameters(11);
-  residual=ik_rightarmparameters(12);
+  px=ik_rightarmparameters(7);
+  py=ik_rightarmparameters(8);
+  pz=ik_rightarmparameters(9);
+  waist=ik_rightarmparameters(10);
+  residual=ik_rightarmparameters(11);
   
   // import variables
   
@@ -99,18 +95,13 @@ function ik_rightarmdy=ik_rightarmdf(ik_rightarmparameters,ik_rightarmx)
   dresidual2_d_bicep=14*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*((-0.0174532925199433)*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*waist)+0.0174532925199433*sin((-0.0174532925199433)*_bicep)*(cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*cos((-0.0174532925199433)*waist)+(-1)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist)));
   dresidual2_d_elbow=(-0.2443460952792062)*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos((-0.0174532925199433)*_bicep)*(cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*cos((-0.0174532925199433)*waist)+(-1)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist))+sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)*sin((-0.0174532925199433)*waist))+0.2443460952792062*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*waist)+cos((-0.0174532925199433)*waist)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)));
   dresidual2_d_forearm=0;
-  dresidual3_d_shoulderio=sin((-0.0174532925199433)*_elbow+0.7853981633974481)*((-0.0174532925199433)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+0.0174532925199433*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+(-0.0174532925199433)*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481));
-  dresidual3_d_shoulderud=0.0174532925199433*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))+0.0174532925199433*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481));
-  dresidual3_d_bicep=sin((-0.0174532925199433)*_elbow+0.7853981633974481)*((-0.0174532925199433)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)+0.0174532925199433*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep));
-  dresidual3_d_elbow=(-0.0174532925199433)*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+(-0.0174532925199433)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481));
-  dresidual3_d_forearm=0;
-  dresidual4_d_shoulderio=cos((-0.0174532925199433)*_forearm+0.698131700797732)*(cos((-0.0174532925199433)*_elbow+0.7853981633974481)*((-0.0174532925199433)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+0.0174532925199433*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+0.0174532925199433*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_elbow+0.7853981633974481))+sin((-0.0174532925199433)*_forearm+0.698131700797732)*((-0.0174532925199433)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+(-0.0174532925199433)*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481)));
-  dresidual4_d_shoulderud=cos((-0.0174532925199433)*_forearm+0.698131700797732)*((-0.0174532925199433)*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))+0.0174532925199433*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481)))+(-0.0174532925199433)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_forearm+0.698131700797732)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep);
-  dresidual4_d_bicep=cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos((-0.0174532925199433)*_forearm+0.698131700797732)*((-0.0174532925199433)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)+0.0174532925199433*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep))+sin((-0.0174532925199433)*_forearm+0.698131700797732)*(0.0174532925199433*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+0.0174532925199433*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)));
-  dresidual4_d_elbow=cos((-0.0174532925199433)*_forearm+0.698131700797732)*((-0.0174532925199433)*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))+0.0174532925199433*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))));
-  dresidual4_d_forearm=(-0.0174532925199433)*cos((-0.0174532925199433)*_forearm+0.698131700797732)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)+(-1)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep))+0.0174532925199433*sin((-0.0174532925199433)*_forearm+0.698131700797732)*(cos((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481)));
+  dresidual3_d_shoulderio=cos((-0.0174532925199433)*_forearm+1.13446401379631)*(cos((-0.0174532925199433)*_elbow+0.7853981633974481)*((-0.0174532925199433)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+0.0174532925199433*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+0.0174532925199433*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_elbow+0.7853981633974481))+sin((-0.0174532925199433)*_forearm+1.13446401379631)*((-0.0174532925199433)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+(-0.0174532925199433)*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481)));
+  dresidual3_d_shoulderud=cos((-0.0174532925199433)*_forearm+1.13446401379631)*((-0.0174532925199433)*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))+0.0174532925199433*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481)))+(-0.0174532925199433)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_forearm+1.13446401379631)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep);
+  dresidual3_d_bicep=cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos((-0.0174532925199433)*_forearm+1.13446401379631)*((-0.0174532925199433)*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)+0.0174532925199433*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep))+sin((-0.0174532925199433)*_forearm+1.13446401379631)*(0.0174532925199433*cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+0.0174532925199433*cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)));
+  dresidual3_d_elbow=cos((-0.0174532925199433)*_forearm+1.13446401379631)*((-0.0174532925199433)*cos((-0.0174532925199433)*_elbow+0.7853981633974481)*cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))+0.0174532925199433*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))));
+  dresidual3_d_forearm=(-0.0174532925199433)*cos((-0.0174532925199433)*_forearm+1.13446401379631)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*cos((-0.0174532925199433)*_bicep)+(-1)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep))+0.0174532925199433*sin((-0.0174532925199433)*_forearm+1.13446401379631)*(cos((-0.0174532925199433)*_elbow+0.7853981633974481)*(cos(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin((-0.0174532925199433)*_bicep)+cos((-0.0174532925199433)*_bicep)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481))*sin(0.0174532925199433*_shoulderud+(-0.7853981633974481)))+cos(0.0174532925199433*_shoulderud+(-0.7853981633974481))*sin((-0.0174532925199433)*_elbow+0.7853981633974481)*sin(0.0174532925199433*_shoulderio+(-0.7853981633974481)));
   // place derivatives in dy
-  ik_rightarmdy=zeros(5,5);
+  ik_rightarmdy=zeros(4,5);
   ik_rightarmdy(1,1)=dresidual0_d_shoulderio;
   ik_rightarmdy(1,2)=dresidual0_d_shoulderud;
   ik_rightarmdy(1,3)=dresidual0_d_bicep;
@@ -131,11 +122,6 @@ function ik_rightarmdy=ik_rightarmdf(ik_rightarmparameters,ik_rightarmx)
   ik_rightarmdy(4,3)=dresidual3_d_bicep;
   ik_rightarmdy(4,4)=dresidual3_d_elbow;
   ik_rightarmdy(4,5)=dresidual3_d_forearm;
-  ik_rightarmdy(5,1)=dresidual4_d_shoulderio;
-  ik_rightarmdy(5,2)=dresidual4_d_shoulderud;
-  ik_rightarmdy(5,3)=dresidual4_d_bicep;
-  ik_rightarmdy(5,4)=dresidual4_d_elbow;
-  ik_rightarmdy(5,5)=dresidual4_d_forearm;
 endfunction
 
 function ik_rightarmx=ik_rightarmsolve(ik_rightarmparameters)
@@ -157,12 +143,11 @@ function ik_rightarmx=ik_rightarmsolve(ik_rightarmparameters)
   elbow=ik_rightarmparameters(4);
   forearm=ik_rightarmparameters(5);
   downx=ik_rightarmparameters(6);
-  pointx=ik_rightarmparameters(7);
-  px=ik_rightarmparameters(8);
-  py=ik_rightarmparameters(9);
-  pz=ik_rightarmparameters(10);
-  waist=ik_rightarmparameters(11);
-  residual=ik_rightarmparameters(12);
+  px=ik_rightarmparameters(7);
+  py=ik_rightarmparameters(8);
+  pz=ik_rightarmparameters(9);
+  waist=ik_rightarmparameters(10);
+  residual=ik_rightarmparameters(11);
   ik_rightarmresidual=0;
   
   // initialize unknowns from parameters
@@ -187,13 +172,15 @@ function ik_rightarmx=ik_rightarmsolve(ik_rightarmparameters)
   for step=1:steps
     ik_rightarmy=ik_rightarmf(ik_rightarmparameters,ik_rightarmx);
     ik_rightarmdy=ik_rightarmdf(ik_rightarmparameters,ik_rightarmx);
-    ik_rightarmx=ik_rightarmx-ik_rightarmdy\ik_rightarmy;
+    ik_rightarmdyt=ik_rightarmdy'
+    ik_rightarmdydyt=ik_rightarmdy*ik_rightarmdyt;
+    ik_rightarmx=ik_rightarmx-ik_rightarmdyt*(ik_rightarmdydyt\ik_rightarmy);  
     ik_rightarmresidual=norm(ik_rightarmy);
     if (ik_rightarmresidual <= epsilon) then
       break;
     end
   end
-  ik_rightarmparameters(12)=ik_rightarmresidual;
+  ik_rightarmparameters(11)=ik_rightarmresidual;
 endfunction
 
 function ik_rightarmnew_parameters=ik_rightarmupdate(ik_rightarmparameters)
@@ -215,12 +202,11 @@ function ik_rightarmnew_parameters=ik_rightarmupdate(ik_rightarmparameters)
   elbow=ik_rightarmparameters(4);
   forearm=ik_rightarmparameters(5);
   downx=ik_rightarmparameters(6);
-  pointx=ik_rightarmparameters(7);
-  px=ik_rightarmparameters(8);
-  py=ik_rightarmparameters(9);
-  pz=ik_rightarmparameters(10);
-  waist=ik_rightarmparameters(11);
-  residual=ik_rightarmparameters(12);
+  px=ik_rightarmparameters(7);
+  py=ik_rightarmparameters(8);
+  pz=ik_rightarmparameters(9);
+  waist=ik_rightarmparameters(10);
+  residual=ik_rightarmparameters(11);
   ik_rightarmx=ik_rightarmsolve(ik_rightarmparameters);
   
   // import variables
@@ -238,19 +224,18 @@ function ik_rightarmnew_parameters=ik_rightarmupdate(ik_rightarmparameters)
   
   // assign to new_parameters
   
-  ik_rightarmnew_parameters=zeros(12,1);
+  ik_rightarmnew_parameters=zeros(11,1);
   ik_rightarmnew_parameters(1)=shoulderio;
   ik_rightarmnew_parameters(2)=shoulderud;
   ik_rightarmnew_parameters(3)=bicep;
   ik_rightarmnew_parameters(4)=elbow;
   ik_rightarmnew_parameters(5)=forearm;
   ik_rightarmnew_parameters(6)=downx;
-  ik_rightarmnew_parameters(7)=pointx;
-  ik_rightarmnew_parameters(8)=px;
-  ik_rightarmnew_parameters(9)=py;
-  ik_rightarmnew_parameters(10)=pz;
-  ik_rightarmnew_parameters(11)=waist;
-  ik_rightarmnew_parameters(12)=residual;
+  ik_rightarmnew_parameters(7)=px;
+  ik_rightarmnew_parameters(8)=py;
+  ik_rightarmnew_parameters(9)=pz;
+  ik_rightarmnew_parameters(10)=waist;
+  ik_rightarmnew_parameters(11)=residual;
 endfunction
 
 function ik_rightarmtests(ik_rightarmname)

@@ -6,14 +6,14 @@
 enum { ik_leftarmglobal_count=2 };
 extern const char *ik_leftarmglobal_names[2];
 
-enum { ik_leftarmparameter_count=12 };
-extern const char *ik_leftarmparameter_names[12];
+enum { ik_leftarmparameter_count=11 };
+extern const char *ik_leftarmparameter_names[11];
 
 enum { ik_leftarmvariable_count=5 };
 extern const char *ik_leftarmvariable_names[5];
 
-enum { ik_leftarmequation_count=5 };
-extern const char *ik_leftarmequation_names[5];
+enum { ik_leftarmequation_count=4 };
+extern const char *ik_leftarmequation_names[4];
 const char *ik_leftarmglobal_names[]={
   "epsilon",
   "steps"
@@ -26,7 +26,6 @@ const char *ik_leftarmparameter_names[]={
   "elbow",
   "forearm",
   "downx",
-  "pointx",
   "px",
   "py",
   "pz",
@@ -46,8 +45,7 @@ const char *ik_leftarmequation_names[]={
   "residual0",
   "residual1",
   "residual2",
-  "residual3",
-  "residual4"
+  "residual3"
 };
 
 class ik_leftarmStopwatch
@@ -195,24 +193,24 @@ public:
 }
 void ik_leftarmf(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[12],
+  const float ik_leftarmparameters[11],
   const float ik_leftarmx[5],
-  float ik_leftarmy[5]
+  float ik_leftarmy[4]
 );
 void ik_leftarmdf(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[12],
+  const float ik_leftarmparameters[11],
   const float ik_leftarmx[5],
-  float ik_leftarmdy[25]
+  float ik_leftarmdy[20]
 );
 void ik_leftarminitialize(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[12],
+  const float ik_leftarmparameters[11],
   float ik_leftarmx[5]
 );
 void ik_leftarmupdate(
   const float ik_leftarmglobals[2],
-  float ik_leftarmparameters[12]
+  float ik_leftarmparameters[11]
 );
 // damped newton solver
 
@@ -230,21 +228,49 @@ void ik_leftarmupdate(
     float residual,new_residual;
   
     for (int step=0; step<steps; ++step) {
-      float y[5];
+      float y[4];
       float dx[5];
-      float dy[25];
-      int iwork[5];
+      float dy[20];
+      float tmp[4];
+      float dyt[20];
+      float dydyt[16];
+      int iwork[4];
   
       ik_leftarmf(globals,parameters,x,y);
-      residual = ik_leftarmnorm(5,y);
+      residual = ik_leftarmnorm(4,y);
       ik_leftarmdf(globals,parameters,x,dy);
 
-      ik_leftarmlinear_solve(5,iwork,dy,y,dx);
+     for (int i=0; i<4; ++i) {
+       for (int j=0; j<5; ++j) {
+         dyt[j+5*i]=dy[i+4*j];
+       }
+     }
+
+     for (int i=0; i<4; ++i) {
+       for (int j=0; j<4; ++j) {
+         float sum=0;
+         for (int k=0; k<5; ++k) {
+            sum += dy[i+4*k]*dyt[k+5*j];
+         }
+         dydyt[i+4*j]=sum;
+       }
+     }
+
+      ik_leftarmlinear_solve(4,iwork,dydyt,y,tmp);
+
+     for (int i=0; i<5; ++i) {
+       float sum=0;
+       for (int k=0; k<4; ++k) {
+          sum += dyt[i+5*k]*tmp[k];
+       }
+       dx[i]=sum;
+     }
+      
       for (int k=0; k<5; ++k) { x[k] -= dx[k]; }
 
       for (int damping=0; damping < steps; ++damping) {
 	    ik_leftarmf(globals,parameters,x,y);
-	    new_residual=ik_leftarmnorm(5,y);
+	    new_residual=ik_leftarmnorm(4,y);
 	    if (new_residual < residual) break;
 	    for (int k=0; k<5; ++k) { dx[k] /= 2; }
 	    for (int k=0; k<5; ++k) { x[k] += dx[k] ; }
@@ -252,12 +278,12 @@ void ik_leftarmupdate(
       residual=new_residual;
       if (residual <= epsilon) break;
     }
-    parameters[11]=residual;
+    parameters[10]=residual;
   } //  ik_leftarmsolve()
 typedef struct {
   const char *ik_leftarmname;
   float ik_leftarmglobals[2];
-  float ik_leftarmparameters[12];
+  float ik_leftarmparameters[11];
   float ik_leftarmx[5];
 } ik_leftarmtest_data_t;
 
@@ -276,7 +302,7 @@ void ik_leftarmtests(const std::string &ik_leftarmname)
   float ik_leftarmy_error=0;
 
   float ik_leftarmx_test[5];
-  float ik_leftarmy_test[5];
+  float ik_leftarmy_test[4];
 
   for (int ik_leftarmcase_count=0; ik_leftarmcase_count < 0; ++ik_leftarmcase_count) {
     if (ik_leftarmname == "all" || ik_leftarmname == ik_leftarmtest_data[ik_leftarmcase_count].ik_leftarmname) {
@@ -288,7 +314,7 @@ void ik_leftarmtests(const std::string &ik_leftarmname)
        ik_leftarmsolve(ik_leftarmglobals,ik_leftarmparameters,ik_leftarmx_test);
        ik_leftarmf(ik_leftarmglobals,ik_leftarmparameters,ik_leftarmx_test,ik_leftarmy_test);
        ik_leftarmx_error=ik_leftarmdist(5,ik_leftarmx,ik_leftarmx_test);
-       ik_leftarmy_error=ik_leftarmnorm(5,ik_leftarmy_test);
+       ik_leftarmy_error=ik_leftarmnorm(4,ik_leftarmy_test);
 
        if (ik_leftarmx_error > ik_leftarmmax_x_error) {
          ik_leftarmmax_x_error=ik_leftarmx_error;
@@ -320,7 +346,7 @@ void ik_leftarmtests(const std::string &ik_leftarmname)
 typedef struct {
   const char *ik_leftarmname;
   float ik_leftarmglobals[2];
-  float ik_leftarmparameters[12];
+  float ik_leftarmparameters[11];
 } ik_leftarmrun_data_t;
 
 ik_leftarmrun_data_t ik_leftarmrun_data[] = {
@@ -364,12 +390,11 @@ void ik_leftarmruns(const std::string &ik_leftarmname)
 #define elbow ik_leftarmparameters[3]
 #define forearm ik_leftarmparameters[4]
 #define downx ik_leftarmparameters[5]
-#define pointx ik_leftarmparameters[6]
-#define px ik_leftarmparameters[7]
-#define py ik_leftarmparameters[8]
-#define pz ik_leftarmparameters[9]
-#define waist ik_leftarmparameters[10]
-#define residual ik_leftarmparameters[11]
+#define px ik_leftarmparameters[6]
+#define py ik_leftarmparameters[7]
+#define pz ik_leftarmparameters[8]
+#define waist ik_leftarmparameters[9]
+#define residual ik_leftarmparameters[10]
 
 // variable aliases
 #define _shoulderio ik_leftarmx[0]
@@ -383,38 +408,32 @@ void ik_leftarmruns(const std::string &ik_leftarmname)
 #define residual1 ik_leftarmy[1]
 #define residual2 ik_leftarmy[2]
 #define residual3 ik_leftarmy[3]
-#define residual4 ik_leftarmy[4]
 
 // jacobian aliases (fortran order)
 #define dresidual0_d_shoulderio ik_leftarmdy[0]
-#define dresidual0_d_shoulderud ik_leftarmdy[5]
-#define dresidual0_d_bicep ik_leftarmdy[10]
-#define dresidual0_d_elbow ik_leftarmdy[15]
-#define dresidual0_d_forearm ik_leftarmdy[20]
+#define dresidual0_d_shoulderud ik_leftarmdy[4]
+#define dresidual0_d_bicep ik_leftarmdy[8]
+#define dresidual0_d_elbow ik_leftarmdy[12]
+#define dresidual0_d_forearm ik_leftarmdy[16]
 #define dresidual1_d_shoulderio ik_leftarmdy[1]
-#define dresidual1_d_shoulderud ik_leftarmdy[6]
-#define dresidual1_d_bicep ik_leftarmdy[11]
-#define dresidual1_d_elbow ik_leftarmdy[16]
-#define dresidual1_d_forearm ik_leftarmdy[21]
+#define dresidual1_d_shoulderud ik_leftarmdy[5]
+#define dresidual1_d_bicep ik_leftarmdy[9]
+#define dresidual1_d_elbow ik_leftarmdy[13]
+#define dresidual1_d_forearm ik_leftarmdy[17]
 #define dresidual2_d_shoulderio ik_leftarmdy[2]
-#define dresidual2_d_shoulderud ik_leftarmdy[7]
-#define dresidual2_d_bicep ik_leftarmdy[12]
-#define dresidual2_d_elbow ik_leftarmdy[17]
-#define dresidual2_d_forearm ik_leftarmdy[22]
+#define dresidual2_d_shoulderud ik_leftarmdy[6]
+#define dresidual2_d_bicep ik_leftarmdy[10]
+#define dresidual2_d_elbow ik_leftarmdy[14]
+#define dresidual2_d_forearm ik_leftarmdy[18]
 #define dresidual3_d_shoulderio ik_leftarmdy[3]
-#define dresidual3_d_shoulderud ik_leftarmdy[8]
-#define dresidual3_d_bicep ik_leftarmdy[13]
-#define dresidual3_d_elbow ik_leftarmdy[18]
-#define dresidual3_d_forearm ik_leftarmdy[23]
-#define dresidual4_d_shoulderio ik_leftarmdy[4]
-#define dresidual4_d_shoulderud ik_leftarmdy[9]
-#define dresidual4_d_bicep ik_leftarmdy[14]
-#define dresidual4_d_elbow ik_leftarmdy[19]
-#define dresidual4_d_forearm ik_leftarmdy[24]
+#define dresidual3_d_shoulderud ik_leftarmdy[7]
+#define dresidual3_d_bicep ik_leftarmdy[11]
+#define dresidual3_d_elbow ik_leftarmdy[15]
+#define dresidual3_d_forearm ik_leftarmdy[19]
 
 void ik_leftarminitialize(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[12],
+  const float ik_leftarmparameters[11],
   float ik_leftarmx[5]
 )
 {
@@ -429,12 +448,11 @@ void ik_leftarminitialize(
 #define elbow ik_leftarmparameters[3]
 #define forearm ik_leftarmparameters[4]
 #define downx ik_leftarmparameters[5]
-#define pointx ik_leftarmparameters[6]
-#define px ik_leftarmparameters[7]
-#define py ik_leftarmparameters[8]
-#define pz ik_leftarmparameters[9]
-#define waist ik_leftarmparameters[10]
-#define residual ik_leftarmparameters[11]
+#define px ik_leftarmparameters[6]
+#define py ik_leftarmparameters[7]
+#define pz ik_leftarmparameters[8]
+#define waist ik_leftarmparameters[9]
+#define residual ik_leftarmparameters[10]
 
 // variable aliases
 #define _shoulderio ik_leftarmx[0]
@@ -448,34 +466,28 @@ void ik_leftarminitialize(
 #define residual1 ik_leftarmy[1]
 #define residual2 ik_leftarmy[2]
 #define residual3 ik_leftarmy[3]
-#define residual4 ik_leftarmy[4]
 
 // jacobian aliases (fortran order)
 #define dresidual0_d_shoulderio ik_leftarmdy[0]
-#define dresidual0_d_shoulderud ik_leftarmdy[5]
-#define dresidual0_d_bicep ik_leftarmdy[10]
-#define dresidual0_d_elbow ik_leftarmdy[15]
-#define dresidual0_d_forearm ik_leftarmdy[20]
+#define dresidual0_d_shoulderud ik_leftarmdy[4]
+#define dresidual0_d_bicep ik_leftarmdy[8]
+#define dresidual0_d_elbow ik_leftarmdy[12]
+#define dresidual0_d_forearm ik_leftarmdy[16]
 #define dresidual1_d_shoulderio ik_leftarmdy[1]
-#define dresidual1_d_shoulderud ik_leftarmdy[6]
-#define dresidual1_d_bicep ik_leftarmdy[11]
-#define dresidual1_d_elbow ik_leftarmdy[16]
-#define dresidual1_d_forearm ik_leftarmdy[21]
+#define dresidual1_d_shoulderud ik_leftarmdy[5]
+#define dresidual1_d_bicep ik_leftarmdy[9]
+#define dresidual1_d_elbow ik_leftarmdy[13]
+#define dresidual1_d_forearm ik_leftarmdy[17]
 #define dresidual2_d_shoulderio ik_leftarmdy[2]
-#define dresidual2_d_shoulderud ik_leftarmdy[7]
-#define dresidual2_d_bicep ik_leftarmdy[12]
-#define dresidual2_d_elbow ik_leftarmdy[17]
-#define dresidual2_d_forearm ik_leftarmdy[22]
+#define dresidual2_d_shoulderud ik_leftarmdy[6]
+#define dresidual2_d_bicep ik_leftarmdy[10]
+#define dresidual2_d_elbow ik_leftarmdy[14]
+#define dresidual2_d_forearm ik_leftarmdy[18]
 #define dresidual3_d_shoulderio ik_leftarmdy[3]
-#define dresidual3_d_shoulderud ik_leftarmdy[8]
-#define dresidual3_d_bicep ik_leftarmdy[13]
-#define dresidual3_d_elbow ik_leftarmdy[18]
-#define dresidual3_d_forearm ik_leftarmdy[23]
-#define dresidual4_d_shoulderio ik_leftarmdy[4]
-#define dresidual4_d_shoulderud ik_leftarmdy[9]
-#define dresidual4_d_bicep ik_leftarmdy[14]
-#define dresidual4_d_elbow ik_leftarmdy[19]
-#define dresidual4_d_forearm ik_leftarmdy[24]
+#define dresidual3_d_shoulderud ik_leftarmdy[7]
+#define dresidual3_d_bicep ik_leftarmdy[11]
+#define dresidual3_d_elbow ik_leftarmdy[15]
+#define dresidual3_d_forearm ik_leftarmdy[19]
 
   // initialize unknowns from parameters
   // _shoulderio=shoulderio;
@@ -499,7 +511,6 @@ void ik_leftarminitialize(
 #undef elbow
 #undef forearm
 #undef downx
-#undef pointx
 #undef px
 #undef py
 #undef pz
@@ -518,7 +529,6 @@ void ik_leftarminitialize(
 #undef residual1
 #undef residual2
 #undef residual3
-#undef residual4
 
 // undefine jacobian aliases (fortran order)
 #undef dresidual0_d_shoulderio
@@ -541,15 +551,10 @@ void ik_leftarminitialize(
 #undef dresidual3_d_bicep
 #undef dresidual3_d_elbow
 #undef dresidual3_d_forearm
-#undef dresidual4_d_shoulderio
-#undef dresidual4_d_shoulderud
-#undef dresidual4_d_bicep
-#undef dresidual4_d_elbow
-#undef dresidual4_d_forearm
 } // ik_leftarminitialize()
 void ik_leftarmupdate(
   const float ik_leftarmglobals[2],
-  float ik_leftarmparameters[12]
+  float ik_leftarmparameters[11]
 )
 {
   float ik_leftarmx[5];
@@ -565,12 +570,11 @@ void ik_leftarmupdate(
 #define elbow ik_leftarmparameters[3]
 #define forearm ik_leftarmparameters[4]
 #define downx ik_leftarmparameters[5]
-#define pointx ik_leftarmparameters[6]
-#define px ik_leftarmparameters[7]
-#define py ik_leftarmparameters[8]
-#define pz ik_leftarmparameters[9]
-#define waist ik_leftarmparameters[10]
-#define residual ik_leftarmparameters[11]
+#define px ik_leftarmparameters[6]
+#define py ik_leftarmparameters[7]
+#define pz ik_leftarmparameters[8]
+#define waist ik_leftarmparameters[9]
+#define residual ik_leftarmparameters[10]
 
 // variable aliases
 #define _shoulderio ik_leftarmx[0]
@@ -584,34 +588,28 @@ void ik_leftarmupdate(
 #define residual1 ik_leftarmy[1]
 #define residual2 ik_leftarmy[2]
 #define residual3 ik_leftarmy[3]
-#define residual4 ik_leftarmy[4]
 
 // jacobian aliases (fortran order)
 #define dresidual0_d_shoulderio ik_leftarmdy[0]
-#define dresidual0_d_shoulderud ik_leftarmdy[5]
-#define dresidual0_d_bicep ik_leftarmdy[10]
-#define dresidual0_d_elbow ik_leftarmdy[15]
-#define dresidual0_d_forearm ik_leftarmdy[20]
+#define dresidual0_d_shoulderud ik_leftarmdy[4]
+#define dresidual0_d_bicep ik_leftarmdy[8]
+#define dresidual0_d_elbow ik_leftarmdy[12]
+#define dresidual0_d_forearm ik_leftarmdy[16]
 #define dresidual1_d_shoulderio ik_leftarmdy[1]
-#define dresidual1_d_shoulderud ik_leftarmdy[6]
-#define dresidual1_d_bicep ik_leftarmdy[11]
-#define dresidual1_d_elbow ik_leftarmdy[16]
-#define dresidual1_d_forearm ik_leftarmdy[21]
+#define dresidual1_d_shoulderud ik_leftarmdy[5]
+#define dresidual1_d_bicep ik_leftarmdy[9]
+#define dresidual1_d_elbow ik_leftarmdy[13]
+#define dresidual1_d_forearm ik_leftarmdy[17]
 #define dresidual2_d_shoulderio ik_leftarmdy[2]
-#define dresidual2_d_shoulderud ik_leftarmdy[7]
-#define dresidual2_d_bicep ik_leftarmdy[12]
-#define dresidual2_d_elbow ik_leftarmdy[17]
-#define dresidual2_d_forearm ik_leftarmdy[22]
+#define dresidual2_d_shoulderud ik_leftarmdy[6]
+#define dresidual2_d_bicep ik_leftarmdy[10]
+#define dresidual2_d_elbow ik_leftarmdy[14]
+#define dresidual2_d_forearm ik_leftarmdy[18]
 #define dresidual3_d_shoulderio ik_leftarmdy[3]
-#define dresidual3_d_shoulderud ik_leftarmdy[8]
-#define dresidual3_d_bicep ik_leftarmdy[13]
-#define dresidual3_d_elbow ik_leftarmdy[18]
-#define dresidual3_d_forearm ik_leftarmdy[23]
-#define dresidual4_d_shoulderio ik_leftarmdy[4]
-#define dresidual4_d_shoulderud ik_leftarmdy[9]
-#define dresidual4_d_bicep ik_leftarmdy[14]
-#define dresidual4_d_elbow ik_leftarmdy[19]
-#define dresidual4_d_forearm ik_leftarmdy[24]
+#define dresidual3_d_shoulderud ik_leftarmdy[7]
+#define dresidual3_d_bicep ik_leftarmdy[11]
+#define dresidual3_d_elbow ik_leftarmdy[15]
+#define dresidual3_d_forearm ik_leftarmdy[19]
 
   // shoulderio=_shoulderio
   shoulderio=_shoulderio;
@@ -634,7 +632,6 @@ void ik_leftarmupdate(
 #undef elbow
 #undef forearm
 #undef downx
-#undef pointx
 #undef px
 #undef py
 #undef pz
@@ -653,7 +650,6 @@ void ik_leftarmupdate(
 #undef residual1
 #undef residual2
 #undef residual3
-#undef residual4
 
 // undefine jacobian aliases (fortran order)
 #undef dresidual0_d_shoulderio
@@ -676,18 +672,13 @@ void ik_leftarmupdate(
 #undef dresidual3_d_bicep
 #undef dresidual3_d_elbow
 #undef dresidual3_d_forearm
-#undef dresidual4_d_shoulderio
-#undef dresidual4_d_shoulderud
-#undef dresidual4_d_bicep
-#undef dresidual4_d_elbow
-#undef dresidual4_d_forearm
 } // ik_leftarmupdate()
 
 void ik_leftarmf(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[12],
+  const float ik_leftarmparameters[11],
   const float ik_leftarmx[5],
-  float ik_leftarmy[5]
+  float ik_leftarmy[4]
 )
 {
 // global aliases
@@ -701,12 +692,11 @@ void ik_leftarmf(
 #define elbow ik_leftarmparameters[3]
 #define forearm ik_leftarmparameters[4]
 #define downx ik_leftarmparameters[5]
-#define pointx ik_leftarmparameters[6]
-#define px ik_leftarmparameters[7]
-#define py ik_leftarmparameters[8]
-#define pz ik_leftarmparameters[9]
-#define waist ik_leftarmparameters[10]
-#define residual ik_leftarmparameters[11]
+#define px ik_leftarmparameters[6]
+#define py ik_leftarmparameters[7]
+#define pz ik_leftarmparameters[8]
+#define waist ik_leftarmparameters[9]
+#define residual ik_leftarmparameters[10]
 
 // variable aliases
 #define _shoulderio ik_leftarmx[0]
@@ -720,34 +710,28 @@ void ik_leftarmf(
 #define residual1 ik_leftarmy[1]
 #define residual2 ik_leftarmy[2]
 #define residual3 ik_leftarmy[3]
-#define residual4 ik_leftarmy[4]
 
 // jacobian aliases (fortran order)
 #define dresidual0_d_shoulderio ik_leftarmdy[0]
-#define dresidual0_d_shoulderud ik_leftarmdy[5]
-#define dresidual0_d_bicep ik_leftarmdy[10]
-#define dresidual0_d_elbow ik_leftarmdy[15]
-#define dresidual0_d_forearm ik_leftarmdy[20]
+#define dresidual0_d_shoulderud ik_leftarmdy[4]
+#define dresidual0_d_bicep ik_leftarmdy[8]
+#define dresidual0_d_elbow ik_leftarmdy[12]
+#define dresidual0_d_forearm ik_leftarmdy[16]
 #define dresidual1_d_shoulderio ik_leftarmdy[1]
-#define dresidual1_d_shoulderud ik_leftarmdy[6]
-#define dresidual1_d_bicep ik_leftarmdy[11]
-#define dresidual1_d_elbow ik_leftarmdy[16]
-#define dresidual1_d_forearm ik_leftarmdy[21]
+#define dresidual1_d_shoulderud ik_leftarmdy[5]
+#define dresidual1_d_bicep ik_leftarmdy[9]
+#define dresidual1_d_elbow ik_leftarmdy[13]
+#define dresidual1_d_forearm ik_leftarmdy[17]
 #define dresidual2_d_shoulderio ik_leftarmdy[2]
-#define dresidual2_d_shoulderud ik_leftarmdy[7]
-#define dresidual2_d_bicep ik_leftarmdy[12]
-#define dresidual2_d_elbow ik_leftarmdy[17]
-#define dresidual2_d_forearm ik_leftarmdy[22]
+#define dresidual2_d_shoulderud ik_leftarmdy[6]
+#define dresidual2_d_bicep ik_leftarmdy[10]
+#define dresidual2_d_elbow ik_leftarmdy[14]
+#define dresidual2_d_forearm ik_leftarmdy[18]
 #define dresidual3_d_shoulderio ik_leftarmdy[3]
-#define dresidual3_d_shoulderud ik_leftarmdy[8]
-#define dresidual3_d_bicep ik_leftarmdy[13]
-#define dresidual3_d_elbow ik_leftarmdy[18]
-#define dresidual3_d_forearm ik_leftarmdy[23]
-#define dresidual4_d_shoulderio ik_leftarmdy[4]
-#define dresidual4_d_shoulderud ik_leftarmdy[9]
-#define dresidual4_d_bicep ik_leftarmdy[14]
-#define dresidual4_d_elbow ik_leftarmdy[19]
-#define dresidual4_d_forearm ik_leftarmdy[24]
+#define dresidual3_d_shoulderud ik_leftarmdy[7]
+#define dresidual3_d_bicep ik_leftarmdy[11]
+#define dresidual3_d_elbow ik_leftarmdy[15]
+#define dresidual3_d_forearm ik_leftarmdy[19]
 
 float tmp0;
 float tmp1;
@@ -938,29 +922,6 @@ float tmp185;
 float tmp186;
 float tmp187;
 float tmp188;
-float tmp189;
-float tmp190;
-float tmp191;
-float tmp192;
-float tmp193;
-float tmp194;
-float tmp195;
-float tmp196;
-float tmp197;
-float tmp198;
-float tmp199;
-float tmp200;
-float tmp201;
-float tmp202;
-float tmp203;
-float tmp204;
-float tmp205;
-float tmp206;
-float tmp207;
-float tmp208;
-float tmp209;
-float tmp210;
-float tmp211;
 tmp0=(-0.017453293f)*_elbow;
 tmp1=tmp0+0.78539816f;
 tmp2=cos(tmp1);
@@ -1112,72 +1073,48 @@ tmp145=tmp139+tmp144;
 tmp146=14.0f*tmp126*tmp145;
 tmp147=tmp92+tmp94+tmp98+tmp104+tmp108+tmp110+tmp124+tmp146+12.0f;
 residual2=tmp147;
-tmp148=tmp0+0.78539816f;
-tmp149=sin(tmp148);
-tmp150=tmp6+0.78539816f;
-tmp151=cos(tmp150);
-tmp152=sin(tmp23);
-tmp153=tmp151*tmp152;
-tmp154=cos(tmp23);
-tmp155=tmp6+0.78539816f;
-tmp156=sin(tmp155);
-tmp157=tmp3+(-0.78539816f);
-tmp158=sin(tmp157);
-tmp159=tmp154*tmp156*tmp158;
-tmp160=tmp153+tmp159;
-tmp161=tmp149*tmp160;
-tmp162=tmp0+0.78539816f;
-tmp163=cos(tmp162);
-tmp164=tmp3+(-0.78539816f);
-tmp165=cos(tmp164);
-tmp166=tmp6+0.78539816f;
-tmp167=sin(tmp166);
-tmp168=(-1.0f)*tmp163*tmp165*tmp167;
-tmp169=(-1.0f)*pointx;
-tmp170=tmp161+tmp168+tmp169;
-residual3=tmp170;
-tmp171=0.017453293f*_forearm;
-tmp172=tmp171+(-0.6981317f);
-tmp173=cos(tmp172);
-tmp174=tmp0+0.78539816f;
-tmp175=cos(tmp174);
+tmp148=0.017453293f*_forearm;
+tmp149=tmp148+(-1.134464f);
+tmp150=cos(tmp149);
+tmp151=tmp0+0.78539816f;
+tmp152=cos(tmp151);
+tmp153=tmp6+0.78539816f;
+tmp154=cos(tmp153);
+tmp155=sin(tmp23);
+tmp156=tmp154*tmp155;
+tmp157=cos(tmp23);
+tmp158=tmp6+0.78539816f;
+tmp159=sin(tmp158);
+tmp160=tmp3+(-0.78539816f);
+tmp161=sin(tmp160);
+tmp162=tmp157*tmp159*tmp161;
+tmp163=tmp156+tmp162;
+tmp164=tmp152*tmp163;
+tmp165=tmp3+(-0.78539816f);
+tmp166=cos(tmp165);
+tmp167=tmp0+0.78539816f;
+tmp168=sin(tmp167);
+tmp169=tmp6+0.78539816f;
+tmp170=sin(tmp169);
+tmp171=tmp166*tmp168*tmp170;
+tmp172=tmp164+tmp171;
+tmp173=tmp150*tmp172;
+tmp174=tmp148+(-1.134464f);
+tmp175=sin(tmp174);
 tmp176=tmp6+0.78539816f;
 tmp177=cos(tmp176);
-tmp178=sin(tmp23);
+tmp178=cos(tmp23);
 tmp179=tmp177*tmp178;
-tmp180=cos(tmp23);
-tmp181=tmp6+0.78539816f;
-tmp182=sin(tmp181);
-tmp183=tmp3+(-0.78539816f);
-tmp184=sin(tmp183);
-tmp185=tmp180*tmp182*tmp184;
+tmp180=tmp6+0.78539816f;
+tmp181=sin(tmp180);
+tmp182=tmp3+(-0.78539816f);
+tmp183=sin(tmp182);
+tmp184=sin(tmp23);
+tmp185=(-1.0f)*tmp181*tmp183*tmp184;
 tmp186=tmp179+tmp185;
 tmp187=tmp175*tmp186;
-tmp188=tmp3+(-0.78539816f);
-tmp189=cos(tmp188);
-tmp190=tmp0+0.78539816f;
-tmp191=sin(tmp190);
-tmp192=tmp6+0.78539816f;
-tmp193=sin(tmp192);
-tmp194=tmp189*tmp191*tmp193;
-tmp195=tmp187+tmp194;
-tmp196=tmp173*tmp195;
-tmp197=tmp171+(-0.6981317f);
-tmp198=sin(tmp197);
-tmp199=tmp6+0.78539816f;
-tmp200=cos(tmp199);
-tmp201=cos(tmp23);
-tmp202=tmp200*tmp201;
-tmp203=tmp6+0.78539816f;
-tmp204=sin(tmp203);
-tmp205=tmp3+(-0.78539816f);
-tmp206=sin(tmp205);
-tmp207=sin(tmp23);
-tmp208=(-1.0f)*tmp204*tmp206*tmp207;
-tmp209=tmp202+tmp208;
-tmp210=tmp198*tmp209;
-tmp211=tmp196+tmp210+downx;
-residual4=tmp211;
+tmp188=tmp173+tmp187+downx;
+residual3=tmp188;
 // undefine global aliases
 #undef epsilon
 #undef steps
@@ -1189,7 +1126,6 @@ residual4=tmp211;
 #undef elbow
 #undef forearm
 #undef downx
-#undef pointx
 #undef px
 #undef py
 #undef pz
@@ -1208,7 +1144,6 @@ residual4=tmp211;
 #undef residual1
 #undef residual2
 #undef residual3
-#undef residual4
 
 // undefine jacobian aliases (fortran order)
 #undef dresidual0_d_shoulderio
@@ -1231,18 +1166,13 @@ residual4=tmp211;
 #undef dresidual3_d_bicep
 #undef dresidual3_d_elbow
 #undef dresidual3_d_forearm
-#undef dresidual4_d_shoulderio
-#undef dresidual4_d_shoulderud
-#undef dresidual4_d_bicep
-#undef dresidual4_d_elbow
-#undef dresidual4_d_forearm
 } // ik_leftarmf()
 
 void ik_leftarmdf(
   const float ik_leftarmglobals[2],
-  const float ik_leftarmparameters[12],
+  const float ik_leftarmparameters[11],
   const float ik_leftarmx[5],
-  float ik_leftarmdy[25]
+  float ik_leftarmdy[20]
 )
 {
 // global aliases
@@ -1256,12 +1186,11 @@ void ik_leftarmdf(
 #define elbow ik_leftarmparameters[3]
 #define forearm ik_leftarmparameters[4]
 #define downx ik_leftarmparameters[5]
-#define pointx ik_leftarmparameters[6]
-#define px ik_leftarmparameters[7]
-#define py ik_leftarmparameters[8]
-#define pz ik_leftarmparameters[9]
-#define waist ik_leftarmparameters[10]
-#define residual ik_leftarmparameters[11]
+#define px ik_leftarmparameters[6]
+#define py ik_leftarmparameters[7]
+#define pz ik_leftarmparameters[8]
+#define waist ik_leftarmparameters[9]
+#define residual ik_leftarmparameters[10]
 
 // variable aliases
 #define _shoulderio ik_leftarmx[0]
@@ -1275,34 +1204,28 @@ void ik_leftarmdf(
 #define residual1 ik_leftarmy[1]
 #define residual2 ik_leftarmy[2]
 #define residual3 ik_leftarmy[3]
-#define residual4 ik_leftarmy[4]
 
 // jacobian aliases (fortran order)
 #define dresidual0_d_shoulderio ik_leftarmdy[0]
-#define dresidual0_d_shoulderud ik_leftarmdy[5]
-#define dresidual0_d_bicep ik_leftarmdy[10]
-#define dresidual0_d_elbow ik_leftarmdy[15]
-#define dresidual0_d_forearm ik_leftarmdy[20]
+#define dresidual0_d_shoulderud ik_leftarmdy[4]
+#define dresidual0_d_bicep ik_leftarmdy[8]
+#define dresidual0_d_elbow ik_leftarmdy[12]
+#define dresidual0_d_forearm ik_leftarmdy[16]
 #define dresidual1_d_shoulderio ik_leftarmdy[1]
-#define dresidual1_d_shoulderud ik_leftarmdy[6]
-#define dresidual1_d_bicep ik_leftarmdy[11]
-#define dresidual1_d_elbow ik_leftarmdy[16]
-#define dresidual1_d_forearm ik_leftarmdy[21]
+#define dresidual1_d_shoulderud ik_leftarmdy[5]
+#define dresidual1_d_bicep ik_leftarmdy[9]
+#define dresidual1_d_elbow ik_leftarmdy[13]
+#define dresidual1_d_forearm ik_leftarmdy[17]
 #define dresidual2_d_shoulderio ik_leftarmdy[2]
-#define dresidual2_d_shoulderud ik_leftarmdy[7]
-#define dresidual2_d_bicep ik_leftarmdy[12]
-#define dresidual2_d_elbow ik_leftarmdy[17]
-#define dresidual2_d_forearm ik_leftarmdy[22]
+#define dresidual2_d_shoulderud ik_leftarmdy[6]
+#define dresidual2_d_bicep ik_leftarmdy[10]
+#define dresidual2_d_elbow ik_leftarmdy[14]
+#define dresidual2_d_forearm ik_leftarmdy[18]
 #define dresidual3_d_shoulderio ik_leftarmdy[3]
-#define dresidual3_d_shoulderud ik_leftarmdy[8]
-#define dresidual3_d_bicep ik_leftarmdy[13]
-#define dresidual3_d_elbow ik_leftarmdy[18]
-#define dresidual3_d_forearm ik_leftarmdy[23]
-#define dresidual4_d_shoulderio ik_leftarmdy[4]
-#define dresidual4_d_shoulderud ik_leftarmdy[9]
-#define dresidual4_d_bicep ik_leftarmdy[14]
-#define dresidual4_d_elbow ik_leftarmdy[19]
-#define dresidual4_d_forearm ik_leftarmdy[24]
+#define dresidual3_d_shoulderud ik_leftarmdy[7]
+#define dresidual3_d_bicep ik_leftarmdy[11]
+#define dresidual3_d_elbow ik_leftarmdy[15]
+#define dresidual3_d_forearm ik_leftarmdy[19]
 
 float tmp0;
 float tmp1;
@@ -1829,80 +1752,6 @@ float tmp521;
 float tmp522;
 float tmp523;
 float tmp524;
-float tmp525;
-float tmp526;
-float tmp527;
-float tmp528;
-float tmp529;
-float tmp530;
-float tmp531;
-float tmp532;
-float tmp533;
-float tmp534;
-float tmp535;
-float tmp536;
-float tmp537;
-float tmp538;
-float tmp539;
-float tmp540;
-float tmp541;
-float tmp542;
-float tmp543;
-float tmp544;
-float tmp545;
-float tmp546;
-float tmp547;
-float tmp548;
-float tmp549;
-float tmp550;
-float tmp551;
-float tmp552;
-float tmp553;
-float tmp554;
-float tmp555;
-float tmp556;
-float tmp557;
-float tmp558;
-float tmp559;
-float tmp560;
-float tmp561;
-float tmp562;
-float tmp563;
-float tmp564;
-float tmp565;
-float tmp566;
-float tmp567;
-float tmp568;
-float tmp569;
-float tmp570;
-float tmp571;
-float tmp572;
-float tmp573;
-float tmp574;
-float tmp575;
-float tmp576;
-float tmp577;
-float tmp578;
-float tmp579;
-float tmp580;
-float tmp581;
-float tmp582;
-float tmp583;
-float tmp584;
-float tmp585;
-float tmp586;
-float tmp587;
-float tmp588;
-float tmp589;
-float tmp590;
-float tmp591;
-float tmp592;
-float tmp593;
-float tmp594;
-float tmp595;
-float tmp596;
-float tmp597;
-float tmp598;
 tmp0=(-0.017453293f)*_shoulderio;
 tmp1=tmp0+0.78539816f;
 tmp2=cos(tmp1);
@@ -2278,255 +2127,176 @@ tmp358=0.2443461f*tmp346*tmp357;
 tmp359=tmp344+tmp358;
 dresidual2_d_elbow=tmp359;
 dresidual2_d_forearm=0.0f;
-tmp360=tmp10+0.78539816f;
-tmp361=sin(tmp360);
-tmp362=tmp0+0.78539816f;
-tmp363=cos(tmp362);
-tmp364=cos(tmp22);
-tmp365=tmp6+(-0.78539816f);
-tmp366=sin(tmp365);
-tmp367=(-0.017453293f)*tmp363*tmp364*tmp366;
-tmp368=tmp0+0.78539816f;
+tmp360=0.017453293f*_forearm;
+tmp361=tmp360+(-1.134464f);
+tmp362=cos(tmp361);
+tmp363=tmp10+0.78539816f;
+tmp364=cos(tmp363);
+tmp365=tmp0+0.78539816f;
+tmp366=cos(tmp365);
+tmp367=cos(tmp22);
+tmp368=tmp6+(-0.78539816f);
 tmp369=sin(tmp368);
-tmp370=sin(tmp22);
-tmp371=0.017453293f*tmp369*tmp370;
-tmp372=tmp367+tmp371;
-tmp373=tmp361*tmp372;
-tmp374=tmp10+0.78539816f;
-tmp375=cos(tmp374);
-tmp376=tmp0+0.78539816f;
-tmp377=cos(tmp376);
-tmp378=tmp6+(-0.78539816f);
-tmp379=cos(tmp378);
-tmp380=0.017453293f*tmp375*tmp377*tmp379;
-tmp381=tmp373+tmp380;
-dresidual3_d_shoulderio=tmp381;
-tmp382=tmp10+0.78539816f;
-tmp383=cos(tmp382);
-tmp384=tmp0+0.78539816f;
-tmp385=sin(tmp384);
-tmp386=tmp6+(-0.78539816f);
+tmp370=(-0.017453293f)*tmp366*tmp367*tmp369;
+tmp371=tmp0+0.78539816f;
+tmp372=sin(tmp371);
+tmp373=sin(tmp22);
+tmp374=0.017453293f*tmp372*tmp373;
+tmp375=tmp370+tmp374;
+tmp376=tmp364*tmp375;
+tmp377=tmp0+0.78539816f;
+tmp378=cos(tmp377);
+tmp379=tmp6+(-0.78539816f);
+tmp380=cos(tmp379);
+tmp381=tmp10+0.78539816f;
+tmp382=sin(tmp381);
+tmp383=(-0.017453293f)*tmp378*tmp380*tmp382;
+tmp384=tmp376+tmp383;
+tmp385=tmp362*tmp384;
+tmp386=tmp360+(-1.134464f);
 tmp387=sin(tmp386);
-tmp388=0.017453293f*tmp383*tmp385*tmp387;
-tmp389=tmp6+(-0.78539816f);
-tmp390=cos(tmp389);
-tmp391=cos(tmp22);
-tmp392=tmp10+0.78539816f;
-tmp393=sin(tmp392);
-tmp394=tmp0+0.78539816f;
-tmp395=sin(tmp394);
-tmp396=0.017453293f*tmp390*tmp391*tmp393*tmp395;
-tmp397=tmp388+tmp396;
-dresidual3_d_shoulderud=tmp397;
-tmp398=tmp10+0.78539816f;
-tmp399=sin(tmp398);
-tmp400=tmp0+0.78539816f;
-tmp401=sin(tmp400);
-tmp402=tmp6+(-0.78539816f);
-tmp403=sin(tmp402);
-tmp404=sin(tmp22);
-tmp405=(-0.017453293f)*tmp401*tmp403*tmp404;
-tmp406=tmp0+0.78539816f;
-tmp407=cos(tmp406);
-tmp408=cos(tmp22);
-tmp409=0.017453293f*tmp407*tmp408;
-tmp410=tmp405+tmp409;
-tmp411=tmp399*tmp410;
-dresidual3_d_bicep=tmp411;
-tmp412=tmp10+0.78539816f;
+tmp388=tmp0+0.78539816f;
+tmp389=cos(tmp388);
+tmp390=tmp6+(-0.78539816f);
+tmp391=sin(tmp390);
+tmp392=sin(tmp22);
+tmp393=0.017453293f*tmp389*tmp391*tmp392;
+tmp394=cos(tmp22);
+tmp395=tmp0+0.78539816f;
+tmp396=sin(tmp395);
+tmp397=0.017453293f*tmp394*tmp396;
+tmp398=tmp393+tmp397;
+tmp399=tmp387*tmp398;
+tmp400=tmp385+tmp399;
+dresidual3_d_shoulderio=tmp400;
+tmp401=tmp360+(-1.134464f);
+tmp402=cos(tmp401);
+tmp403=tmp10+0.78539816f;
+tmp404=sin(tmp403);
+tmp405=tmp0+0.78539816f;
+tmp406=sin(tmp405);
+tmp407=tmp6+(-0.78539816f);
+tmp408=sin(tmp407);
+tmp409=(-0.017453293f)*tmp404*tmp406*tmp408;
+tmp410=tmp10+0.78539816f;
+tmp411=cos(tmp410);
+tmp412=tmp6+(-0.78539816f);
 tmp413=cos(tmp412);
-tmp414=tmp0+0.78539816f;
-tmp415=cos(tmp414);
-tmp416=sin(tmp22);
-tmp417=tmp415*tmp416;
-tmp418=cos(tmp22);
-tmp419=tmp0+0.78539816f;
-tmp420=sin(tmp419);
-tmp421=tmp6+(-0.78539816f);
-tmp422=sin(tmp421);
-tmp423=tmp418*tmp420*tmp422;
-tmp424=tmp417+tmp423;
-tmp425=(-0.017453293f)*tmp413*tmp424;
-tmp426=tmp6+(-0.78539816f);
-tmp427=cos(tmp426);
-tmp428=tmp10+0.78539816f;
-tmp429=sin(tmp428);
-tmp430=tmp0+0.78539816f;
-tmp431=sin(tmp430);
-tmp432=(-0.017453293f)*tmp427*tmp429*tmp431;
-tmp433=tmp425+tmp432;
-dresidual3_d_elbow=tmp433;
-dresidual3_d_forearm=0.0f;
-tmp434=0.017453293f*_forearm;
-tmp435=tmp434+(-0.6981317f);
-tmp436=cos(tmp435);
-tmp437=tmp10+0.78539816f;
-tmp438=cos(tmp437);
+tmp414=cos(tmp22);
+tmp415=tmp0+0.78539816f;
+tmp416=sin(tmp415);
+tmp417=0.017453293f*tmp411*tmp413*tmp414*tmp416;
+tmp418=tmp409+tmp417;
+tmp419=tmp402*tmp418;
+tmp420=tmp6+(-0.78539816f);
+tmp421=cos(tmp420);
+tmp422=tmp0+0.78539816f;
+tmp423=sin(tmp422);
+tmp424=tmp360+(-1.134464f);
+tmp425=sin(tmp424);
+tmp426=sin(tmp22);
+tmp427=(-0.017453293f)*tmp421*tmp423*tmp425*tmp426;
+tmp428=tmp419+tmp427;
+dresidual3_d_shoulderud=tmp428;
+tmp429=tmp10+0.78539816f;
+tmp430=cos(tmp429);
+tmp431=tmp360+(-1.134464f);
+tmp432=cos(tmp431);
+tmp433=tmp0+0.78539816f;
+tmp434=sin(tmp433);
+tmp435=tmp6+(-0.78539816f);
+tmp436=sin(tmp435);
+tmp437=sin(tmp22);
+tmp438=(-0.017453293f)*tmp434*tmp436*tmp437;
 tmp439=tmp0+0.78539816f;
 tmp440=cos(tmp439);
 tmp441=cos(tmp22);
-tmp442=tmp6+(-0.78539816f);
-tmp443=sin(tmp442);
-tmp444=(-0.017453293f)*tmp440*tmp441*tmp443;
-tmp445=tmp0+0.78539816f;
+tmp442=0.017453293f*tmp440*tmp441;
+tmp443=tmp438+tmp442;
+tmp444=tmp430*tmp432*tmp443;
+tmp445=tmp360+(-1.134464f);
 tmp446=sin(tmp445);
-tmp447=sin(tmp22);
-tmp448=0.017453293f*tmp446*tmp447;
-tmp449=tmp444+tmp448;
-tmp450=tmp438*tmp449;
-tmp451=tmp0+0.78539816f;
-tmp452=cos(tmp451);
-tmp453=tmp6+(-0.78539816f);
-tmp454=cos(tmp453);
-tmp455=tmp10+0.78539816f;
-tmp456=sin(tmp455);
-tmp457=(-0.017453293f)*tmp452*tmp454*tmp456;
-tmp458=tmp450+tmp457;
-tmp459=tmp436*tmp458;
-tmp460=tmp434+(-0.6981317f);
-tmp461=sin(tmp460);
-tmp462=tmp0+0.78539816f;
+tmp447=tmp0+0.78539816f;
+tmp448=cos(tmp447);
+tmp449=sin(tmp22);
+tmp450=(-0.017453293f)*tmp448*tmp449;
+tmp451=cos(tmp22);
+tmp452=tmp0+0.78539816f;
+tmp453=sin(tmp452);
+tmp454=tmp6+(-0.78539816f);
+tmp455=sin(tmp454);
+tmp456=(-0.017453293f)*tmp451*tmp453*tmp455;
+tmp457=tmp450+tmp456;
+tmp458=tmp446*tmp457;
+tmp459=tmp444+tmp458;
+dresidual3_d_bicep=tmp459;
+tmp460=tmp360+(-1.134464f);
+tmp461=cos(tmp460);
+tmp462=tmp10+0.78539816f;
 tmp463=cos(tmp462);
 tmp464=tmp6+(-0.78539816f);
-tmp465=sin(tmp464);
-tmp466=sin(tmp22);
-tmp467=0.017453293f*tmp463*tmp465*tmp466;
-tmp468=cos(tmp22);
-tmp469=tmp0+0.78539816f;
+tmp465=cos(tmp464);
+tmp466=tmp0+0.78539816f;
+tmp467=sin(tmp466);
+tmp468=(-0.017453293f)*tmp463*tmp465*tmp467;
+tmp469=tmp10+0.78539816f;
 tmp470=sin(tmp469);
-tmp471=0.017453293f*tmp468*tmp470;
-tmp472=tmp467+tmp471;
-tmp473=tmp461*tmp472;
-tmp474=tmp459+tmp473;
-dresidual4_d_shoulderio=tmp474;
-tmp475=tmp434+(-0.6981317f);
-tmp476=cos(tmp475);
-tmp477=tmp10+0.78539816f;
-tmp478=sin(tmp477);
-tmp479=tmp0+0.78539816f;
-tmp480=sin(tmp479);
-tmp481=tmp6+(-0.78539816f);
-tmp482=sin(tmp481);
-tmp483=(-0.017453293f)*tmp478*tmp480*tmp482;
-tmp484=tmp10+0.78539816f;
-tmp485=cos(tmp484);
-tmp486=tmp6+(-0.78539816f);
-tmp487=cos(tmp486);
-tmp488=cos(tmp22);
+tmp471=tmp0+0.78539816f;
+tmp472=cos(tmp471);
+tmp473=sin(tmp22);
+tmp474=tmp472*tmp473;
+tmp475=cos(tmp22);
+tmp476=tmp0+0.78539816f;
+tmp477=sin(tmp476);
+tmp478=tmp6+(-0.78539816f);
+tmp479=sin(tmp478);
+tmp480=tmp475*tmp477*tmp479;
+tmp481=tmp474+tmp480;
+tmp482=0.017453293f*tmp470*tmp481;
+tmp483=tmp468+tmp482;
+tmp484=tmp461*tmp483;
+dresidual3_d_elbow=tmp484;
+tmp485=tmp360+(-1.134464f);
+tmp486=sin(tmp485);
+tmp487=tmp10+0.78539816f;
+tmp488=cos(tmp487);
 tmp489=tmp0+0.78539816f;
-tmp490=sin(tmp489);
-tmp491=0.017453293f*tmp485*tmp487*tmp488*tmp490;
-tmp492=tmp483+tmp491;
-tmp493=tmp476*tmp492;
-tmp494=tmp6+(-0.78539816f);
-tmp495=cos(tmp494);
-tmp496=tmp0+0.78539816f;
+tmp490=cos(tmp489);
+tmp491=sin(tmp22);
+tmp492=tmp490*tmp491;
+tmp493=cos(tmp22);
+tmp494=tmp0+0.78539816f;
+tmp495=sin(tmp494);
+tmp496=tmp6+(-0.78539816f);
 tmp497=sin(tmp496);
-tmp498=tmp434+(-0.6981317f);
-tmp499=sin(tmp498);
-tmp500=sin(tmp22);
-tmp501=(-0.017453293f)*tmp495*tmp497*tmp499*tmp500;
-tmp502=tmp493+tmp501;
-dresidual4_d_shoulderud=tmp502;
+tmp498=tmp493*tmp495*tmp497;
+tmp499=tmp492+tmp498;
+tmp500=tmp488*tmp499;
+tmp501=tmp6+(-0.78539816f);
+tmp502=cos(tmp501);
 tmp503=tmp10+0.78539816f;
-tmp504=cos(tmp503);
-tmp505=tmp434+(-0.6981317f);
-tmp506=cos(tmp505);
-tmp507=tmp0+0.78539816f;
-tmp508=sin(tmp507);
-tmp509=tmp6+(-0.78539816f);
-tmp510=sin(tmp509);
-tmp511=sin(tmp22);
-tmp512=(-0.017453293f)*tmp508*tmp510*tmp511;
-tmp513=tmp0+0.78539816f;
-tmp514=cos(tmp513);
-tmp515=cos(tmp22);
-tmp516=0.017453293f*tmp514*tmp515;
-tmp517=tmp512+tmp516;
-tmp518=tmp504*tmp506*tmp517;
-tmp519=tmp434+(-0.6981317f);
-tmp520=sin(tmp519);
-tmp521=tmp0+0.78539816f;
-tmp522=cos(tmp521);
-tmp523=sin(tmp22);
-tmp524=(-0.017453293f)*tmp522*tmp523;
-tmp525=cos(tmp22);
-tmp526=tmp0+0.78539816f;
-tmp527=sin(tmp526);
-tmp528=tmp6+(-0.78539816f);
-tmp529=sin(tmp528);
-tmp530=(-0.017453293f)*tmp525*tmp527*tmp529;
-tmp531=tmp524+tmp530;
-tmp532=tmp520*tmp531;
-tmp533=tmp518+tmp532;
-dresidual4_d_bicep=tmp533;
-tmp534=tmp434+(-0.6981317f);
-tmp535=cos(tmp534);
-tmp536=tmp10+0.78539816f;
-tmp537=cos(tmp536);
-tmp538=tmp6+(-0.78539816f);
-tmp539=cos(tmp538);
-tmp540=tmp0+0.78539816f;
-tmp541=sin(tmp540);
-tmp542=(-0.017453293f)*tmp537*tmp539*tmp541;
-tmp543=tmp10+0.78539816f;
-tmp544=sin(tmp543);
-tmp545=tmp0+0.78539816f;
-tmp546=cos(tmp545);
-tmp547=sin(tmp22);
-tmp548=tmp546*tmp547;
-tmp549=cos(tmp22);
-tmp550=tmp0+0.78539816f;
-tmp551=sin(tmp550);
-tmp552=tmp6+(-0.78539816f);
-tmp553=sin(tmp552);
-tmp554=tmp549*tmp551*tmp553;
-tmp555=tmp548+tmp554;
-tmp556=0.017453293f*tmp544*tmp555;
-tmp557=tmp542+tmp556;
-tmp558=tmp535*tmp557;
-dresidual4_d_elbow=tmp558;
-tmp559=tmp434+(-0.6981317f);
-tmp560=sin(tmp559);
-tmp561=tmp10+0.78539816f;
-tmp562=cos(tmp561);
-tmp563=tmp0+0.78539816f;
-tmp564=cos(tmp563);
-tmp565=sin(tmp22);
-tmp566=tmp564*tmp565;
-tmp567=cos(tmp22);
-tmp568=tmp0+0.78539816f;
-tmp569=sin(tmp568);
-tmp570=tmp6+(-0.78539816f);
-tmp571=sin(tmp570);
-tmp572=tmp567*tmp569*tmp571;
-tmp573=tmp566+tmp572;
-tmp574=tmp562*tmp573;
-tmp575=tmp6+(-0.78539816f);
-tmp576=cos(tmp575);
-tmp577=tmp10+0.78539816f;
-tmp578=sin(tmp577);
-tmp579=tmp0+0.78539816f;
-tmp580=sin(tmp579);
-tmp581=tmp576*tmp578*tmp580;
-tmp582=tmp574+tmp581;
-tmp583=(-0.017453293f)*tmp560*tmp582;
-tmp584=tmp434+(-0.6981317f);
-tmp585=cos(tmp584);
-tmp586=tmp0+0.78539816f;
-tmp587=cos(tmp586);
-tmp588=cos(tmp22);
-tmp589=tmp587*tmp588;
-tmp590=tmp0+0.78539816f;
-tmp591=sin(tmp590);
-tmp592=tmp6+(-0.78539816f);
-tmp593=sin(tmp592);
-tmp594=sin(tmp22);
-tmp595=(-1.0f)*tmp591*tmp593*tmp594;
-tmp596=tmp589+tmp595;
-tmp597=0.017453293f*tmp585*tmp596;
-tmp598=tmp583+tmp597;
-dresidual4_d_forearm=tmp598;
+tmp504=sin(tmp503);
+tmp505=tmp0+0.78539816f;
+tmp506=sin(tmp505);
+tmp507=tmp502*tmp504*tmp506;
+tmp508=tmp500+tmp507;
+tmp509=(-0.017453293f)*tmp486*tmp508;
+tmp510=tmp360+(-1.134464f);
+tmp511=cos(tmp510);
+tmp512=tmp0+0.78539816f;
+tmp513=cos(tmp512);
+tmp514=cos(tmp22);
+tmp515=tmp513*tmp514;
+tmp516=tmp0+0.78539816f;
+tmp517=sin(tmp516);
+tmp518=tmp6+(-0.78539816f);
+tmp519=sin(tmp518);
+tmp520=sin(tmp22);
+tmp521=(-1.0f)*tmp517*tmp519*tmp520;
+tmp522=tmp515+tmp521;
+tmp523=0.017453293f*tmp511*tmp522;
+tmp524=tmp509+tmp523;
+dresidual3_d_forearm=tmp524;
 // undefine global aliases
 #undef epsilon
 #undef steps
@@ -2538,7 +2308,6 @@ dresidual4_d_forearm=tmp598;
 #undef elbow
 #undef forearm
 #undef downx
-#undef pointx
 #undef px
 #undef py
 #undef pz
@@ -2557,7 +2326,6 @@ dresidual4_d_forearm=tmp598;
 #undef residual1
 #undef residual2
 #undef residual3
-#undef residual4
 
 // undefine jacobian aliases (fortran order)
 #undef dresidual0_d_shoulderio
@@ -2580,9 +2348,4 @@ dresidual4_d_forearm=tmp598;
 #undef dresidual3_d_bicep
 #undef dresidual3_d_elbow
 #undef dresidual3_d_forearm
-#undef dresidual4_d_shoulderio
-#undef dresidual4_d_shoulderud
-#undef dresidual4_d_bicep
-#undef dresidual4_d_elbow
-#undef dresidual4_d_forearm
 } // ik_leftarmdf()

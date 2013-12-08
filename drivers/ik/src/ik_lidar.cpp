@@ -229,6 +229,7 @@ void ik_lidarupdate(
       ik_lidardf(globals,parameters,x,dy);
 
       ik_lidarlinear_solve(2,iwork,dy,y,dx);
+      
       for (int k=0; k<2; ++k) { x[k] -= dx[k]; }
 
       for (int damping=0; damping < steps; ++damping) {
