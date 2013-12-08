@@ -38,7 +38,9 @@ public:
     char *data = (char*) msg.data();
     size_t size = *(uint16_t*)data;
     string reply(data+2,size);
-    cout << "\rreply: " << reply << endl << "?";
+    cout << endl;
+    cout << "reply: " << reply << endl;
+    cout << "?";
     cout.flush();
     return true;
   }
