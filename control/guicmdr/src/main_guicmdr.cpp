@@ -114,7 +114,7 @@ class guicmdr : public Gtk::Window
 {
 protected:
   Glib::RefPtr<Gtk::Builder> builder;
-  Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h, *hpf, *hpb, *hyl, *hyr;
+  Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h, *hpf, *hpb, *hyl, *hyr, *safe_on, *safe_off;
   Gtk::ColorButton *btn_safe;
 	Glib::RefPtr<Gtk::EntryBuffer> cmdBuf;
 	Gtk::Entry *ent_cmd;
@@ -142,7 +142,8 @@ public:
 		builder->get_widget("command", ent_cmd);
 		builder->get_widget("oldCommands", tv_old);
 		builder->get_widget("response", tv_resp);
-		builder->get_widget("btn_safe", btn_safe);
+		builder->get_widget("btn_safe_on", safe_on);
+		builder->get_widget("btn_safe_off", safe_off);
 
 		tb_old = Gtk::TextBuffer::create();
 		tb_resp = Gtk::TextBuffer::create();
@@ -159,6 +160,8 @@ public:
 		hpb->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hpb_clicked) );
 		hyl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyl_clicked) );
 		hyr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyr_clicked) );
+		safe_on->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_safe_on_clicked) );
+		safe_off->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_safe_off_clicked) );
 
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
@@ -168,13 +171,14 @@ public:
 		hy = 0;
 	}
 
-  void on_timer()
+  bool on_timer()
   {
     std::string reply;
     while (commander->recv(reply)) {
       tb_resp->insert_at_cursor((reply+"\n").c_str());
       tv_resp->set_buffer(tb_resp);
     }
+		return true;
   }
 
 	~guicmdr() {}
@@ -188,6 +192,16 @@ public:
 		  tb_old->insert_at_cursor(" " + text);
 		  tv_old->set_buffer(tb_old);
 		}
+	}
+
+	void on_button_safe_on_clicked() {
+		if(verbose) std::cout << "safe_on clicked" << std::endl;
+		ent_cmd->set_text("safe on");
+	}
+
+	void on_button_safe_off_clicked() {
+		if(verbose) std::cout << "safe_on clicked" << std::endl;
+		ent_cmd->set_text("safe off");
 	}
 
 	void on_button_hpf_clicked() {
