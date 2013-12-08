@@ -149,10 +149,10 @@ public:
 
   void update_colors_temps(int32_t temps[], int size)
   {
-    int sev = 3, max = 0;
+    int sev = 3, max = 0, max_servo = 0;
     for (int i = 0; i < size; i+=2)
       {
-	if(temps[i+1] > max) max = temps[i+1];
+	if(temps[i+1] > max){ max = temps[i+1]; max_servo=i;}
 	if (temps[i+1] >= 55)
 	  sev = 0;
 	else if (temps[i+1] > 40)
@@ -166,7 +166,7 @@ public:
 	if(im != buttons.end()) {
 	  im->second->set_color(sev_colors[sev]);	
 	}		
-	lblTop->set_text("Top: ID>" + NumberToString(temps[i]) + "  Temp> " + NumberToString(max));
+	lblTop->set_text("Top: ID>" + NumberToString(max_servo) + "  Temp> " + NumberToString(max));
       }
   }
 
