@@ -31,13 +31,13 @@
             <child>
               <object class="GtkFixed" id="fixed1">
                 <property name="width_request">300</property>
-                <property name="height_request">600</property>
+                <property name="height_request">550</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <child>
                   <object class="GtkImage" id="picBack">
                     <property name="width_request">262</property>
-                    <property name="height_request">327</property>
+                    <property name="height_request">360</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="yalign">0</property>
@@ -675,21 +675,6 @@
                 </child>
 
 		<child>
-                  <object class="GtkLabel" id="lblAccel">
-                    <property name="width_request">100</property>
-                    <property name="height_request">20</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Accelerometers
-		  </property>
-                  </object>
-                  <packing>
-                    <property name="x">5</property>
-                    <property name="y">385</property>
-                  </packing>
-                </child>
-
-		<child>
                   <object class="GtkLabel" id="lblA0">
                     <property name="width_request">100</property>
                     <property name="height_request">20</property>
@@ -700,7 +685,7 @@
                   </object>
                   <packing>
                     <property name="x">5</property>
-                    <property name="y">400</property>
+                    <property name="y">450</property>
                   </packing>
                 </child>
 
@@ -715,7 +700,7 @@
                   </object>
                   <packing>
                     <property name="x">5</property>
-                    <property name="y">420</property>
+                    <property name="y">470</property>
                   </packing>
                 </child>
 
@@ -730,24 +715,10 @@
                   </object>
                   <packing>
                     <property name="x">5</property>
-                    <property name="y">440</property>
+                    <property name="y">490</property>
                   </packing>
                 </child>
 
-		<child>
-                  <object class="GtkLabel" id="lblGyro">
-                    <property name="width_request">100</property>
-                    <property name="height_request">20</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Gyroscope
-		  </property>
-                  </object>
-                  <packing>
-                    <property name="x">115</property>
-                    <property name="y">385</property>
-                  </packing>
-                </child>
 
 		<child>
                   <object class="GtkLabel" id="lblG0">
@@ -760,7 +731,7 @@
                   </object>
                   <packing>
                     <property name="x">115</property>
-                    <property name="y">400</property>
+                    <property name="y">450</property>
                   </packing>
                 </child>
 
@@ -775,7 +746,7 @@
                   </object>
                   <packing>
                     <property name="x">115</property>
-                    <property name="y">420</property>
+                    <property name="y">470</property>
                   </packing>
                 </child>
 
@@ -790,24 +761,10 @@
                   </object>
                   <packing>
                     <property name="x">115</property>
-                    <property name="y">440</property>
+                    <property name="y">490</property>
                   </packing>
                 </child>
 
-		<child>
-                  <object class="GtkLabel" id="lblCompass">
-                    <property name="width_request">110</property>
-                    <property name="height_request">20</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Compass
-		  </property>
-                  </object>
-                  <packing>
-                    <property name="x">205</property>
-                    <property name="y">385</property>
-                  </packing>
-                </child>
 
 		<child>
                   <object class="GtkLabel" id="lblC0">
@@ -820,7 +777,7 @@
                   </object>
                   <packing>
                     <property name="x">205</property>
-                    <property name="y">400</property>
+                    <property name="y">450</property>
                   </packing>
                 </child>
 
@@ -835,7 +792,7 @@
                   </object>
                   <packing>
                     <property name="x">205</property>
-                    <property name="y">420</property>
+                    <property name="y">470</property>
                   </packing>
                 </child>
 
@@ -850,22 +807,7 @@
                   </object>
                   <packing>
                     <property name="x">205</property>
-                    <property name="y">440</property>
-                  </packing>
-                </child>
-
-                <child>
-                  <object class="GtkLabel" id="lblTemp">
-                    <property name="width_request">100</property>
-                    <property name="height_request">20</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Temperatures
-		  </property>
-                  </object>
-                  <packing>
-                    <property name="x">100</property>
-                    <property name="y">35</property>
+                    <property name="y">490</property>
                   </packing>
                 </child>
 
@@ -879,7 +821,7 @@
                   </object>
                   <packing>
                     <property name="x">5</property>
-                    <property name="y">55</property>
+                    <property name="y">52</property>
                   </packing>
                 </child>
 
@@ -897,8 +839,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">40</property>
-                    <property name="y">485</property>
+                    <property name="x">260</property>
+                    <property name="y">390</property>
                   </packing>
                 </child>
 
@@ -916,8 +858,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">110</property>
-                    <property name="y">485</property>
+                    <property name="x">30</property>
+                    <property name="y">397</property>
                   </packing>
                 </child>
 
@@ -935,8 +877,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">110</property>
-                    <property name="y">535</property>
+                    <property name="x">260</property>
+                    <property name="y">325</property>
                   </packing>
                 </child>
 
@@ -954,8 +896,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">40</property>
-                    <property name="y">535</property>
+                    <property name="x">30</property>
+                    <property name="y">325</property>
                   </packing>
                 </child>
 
@@ -969,8 +911,8 @@
 		 							  </property>
                   </object>
                   <packing>
-                    <property name="x">175</property>
-                    <property name="y">490</property>
+                    <property name="x">200</property>
+                    <property name="y">55</property>
                   </packing>
                 </child>
 
@@ -988,22 +930,8 @@
                     <property name="color">#000000000000</property>
                   </object>
                   <packing>
-                    <property name="x">225</property>
-                    <property name="y">485</property>
-                  </packing>
-                </child>
-
-								<child>
-                  <object class="GtkImage" id="image1">
-                    <property name="width_request">49</property>
-                    <property name="height_request">65</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="stock">gtk-go-up</property>
-                  </object>
-                  <packing>
-                    <property name="x">65</property>
-                    <property name="y">490</property>
+                    <property name="x">250</property>
+                    <property name="y">50</property>
                   </packing>
                 </child>
 
