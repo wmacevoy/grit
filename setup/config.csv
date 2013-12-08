@@ -86,7 +86,7 @@ webcam.provider.detect,"true"
 webcam.provider.cascade,"../cascades/cascade.xml"
 webcam.provider.address,"tcp://*:9993"
 leap.provider.verbose,"true"
-leap.provider.decay_time,0.5,seconds
+leap.provider.decay_time,1.0,seconds
 leap.provider.ip,"${control.ip}"
 leap.provider.port,"9990"
 leap.provider.publish,"tcp://*:${leap.provider.port}"
