@@ -268,7 +268,7 @@ public:
 
 	void on_button_h_clicked() {
 		if(verbose) std::cout << "btn_h clicked" << std::endl;
-		ent_cmd->set_text("bh");
+		ent_cmd->set_text("home");
 	}
 
 	//Signal handler
