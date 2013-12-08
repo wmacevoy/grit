@@ -114,6 +114,7 @@ guicmdr.port,5505
 guicmdr.publish,"tcp://*:${guicmdr.port}"
 guicmdr.subscribers,"tcp://${body.ip}:${body.commander.port}"
 guicmdr.safety.port,5605
+guicmdr.safety.publish,"tcp://*:${body.safety.port}"
 sensors.ip,"${centaur.ip}"
 sensors.port,"5506"
 sensors.publish,"tcp://*:${sensors.port}"
