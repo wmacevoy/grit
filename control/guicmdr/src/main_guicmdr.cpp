@@ -19,15 +19,11 @@
 
 #include "Configure.h"
 #include "now.h"
-#include "SensorsMessage.h"
-#include "ZMQHub.h"
 
 Configure cfg;
 bool verbose = false;
 
 const int CHARSPERLINE = 64;
-
-SensorsMessage sensors;
 
 enum PIPE_FILE_DESCRIPTERS
 {
@@ -56,25 +52,6 @@ std::string NumberToString ( T Number )
   ss << Number;
   return ss.str();
 }
-
-class SensorsRx : public ZMQHub
-{
-public:
-  SensorsRx() {
-    subscribers.push_back(cfg.str("proxysensors.subscribe"));
-    start();
-  }
-
-  bool rx(ZMQSubscribeSocket &socket) {
-    ZMQMessage msg;
-    if (msg.recv(socket) == 0) return false;
-    memcpy(&sensors,msg.data(),sizeof(SensorsMessage));
-    return true;
-  }
-  bool tx(ZMQPublishSocket &socket) { return true; }
-};
-
-std::shared_ptr < SensorsRx > sensorsRx;
 
 class guicmdr : public Gtk::Window
 {
@@ -126,36 +103,21 @@ public:
 		hyl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyl_clicked) );
 		hyr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyr_clicked) );
 
-		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
+		//Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
 		//signal_key_press_event().connect(sigc::mem_fun(*this,&guicmdr::on_window_key_press_event), false);
 
 		hp = 0;
 		hy = 0;
-
-		readResult = read( childToParent[ READ_FD ], buffer, BUFFER_SIZE + 2000);			
-		tb_resp->set_text(buffer);
-		tv_resp->set_buffer(tb_resp);
-		fcntl(childToParent[ READ_FD ], F_SETFL, fcntl(childToParent[ READ_FD ], F_GETFL) | O_NONBLOCK);
 	}
 
-	~guicmdr() {
-		std::string exitCommand("exit\n");
-		writeResult = write(parentToChild[WRITE_FD],exitCommand.c_str(),exitCommand.size());
-		kill(pid, SIGTERM);
-		assert( pid==waitpid(pid, &status, 0) );
-	}
+	~guicmdr() {}
 
 	bool on_window_key_press_event(GdkEventKey *Key) {
 		if(verbose) std::cout << Key->keyval << std::endl;
 		if(Key->keyval == 65293) {
 			on_button_send_clicked();
 		}
-		return true;
-	}
-
-	bool on_timer() {
-		updateSafety();
 		return true;
 	}
 
@@ -171,10 +133,8 @@ public:
 			tb_old->insert_at_cursor(" " + text);
 			tv_old->set_buffer(tb_old);
 
-			writeResult = write(parentToChild[WRITE_FD], text.c_str(), text.size());
 			if(verbose) std::cout << "Wrote " << writeResult << "bytes to pid " << pid << std::endl;			
-	
-			readResult = read( childToParent[ READ_FD ], buffer, BUFFER_SIZE );		
+		
 			if(readResult > 0) {			
 				tb_resp->set_text(buffer);
 				tv_resp->set_buffer(tb_resp);			
@@ -272,38 +232,14 @@ int main(int argc, char** argv) {
   signal(SIGTERM, quitproc);
   signal(SIGQUIT, quitproc);
 
-	sensorsRx = std::shared_ptr < SensorsRx > (new SensorsRx());
-
-	assert(0==pipe(parentToChild));
-  assert(0==pipe(childToParent));
-
   Gtk::Main kit(argc,argv);
   Glib::RefPtr<Gtk::Builder> builder = Gtk::Builder::create_from_file("src/MojUI.glade");
 
-	switch ( pid = fork() )
-  {
-    case -1:
-      std::cerr << "Fork failed";
-      exit(-1);
 
-    case 0: /* Child */
-      assert(-1!=dup2( parentToChild[ READ_FD  ], STDIN_FILENO ) );
-      assert(-1!=dup2( childToParent[ WRITE_FD ], STDOUT_FILENO ) );
-      assert(-1!=dup2( childToParent[ WRITE_FD ], STDERR_FILENO ) );
-
-      /*   file,  arg0,  arg1,   arg2 */
-      execlp( "commander", "commander", NULL );
-
-      std::cerr << "This line should never be reached!!!";
-      exit(-1);
-
-    default: /* Parent */
-			std::cout << "Child " << pid << " process running..." << std::endl;
-
-			builder->get_widget_derived("main_window", gui);
-			kit.run(*gui);
-			gui->end();
-			delete gui;
+	builder->get_widget_derived("main_window", gui);
+	kit.run(*gui);
+	gui->end();
+	delete gui;
 	}
 
 	return 0;
