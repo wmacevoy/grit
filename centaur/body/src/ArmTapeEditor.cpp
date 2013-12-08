@@ -15,9 +15,9 @@ ArmTapeEditor::ArmTapeEditor(const std::string &side_)
 
   shoulderio=side + "_SHOULDER_IO";
   shoulderud=side + "_SHOULDER_UD";
-  bicep=side="_BICEP_ROTATE";
-  elbow=side="_ELBOW";
-  forearm=side+"_FOREARM_ROTATE";
+  bicep=side + "_BICEP_ROTATE";
+  elbow=side + "_ELBOW";
+  forearm=side + "_FOREARM_ROTATE";
 
   names.push_back(shoulderio);
   names.push_back(shoulderud);
