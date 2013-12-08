@@ -92,7 +92,11 @@ void RightArmGeometry::compute(float x,float y,float z,/* float pointx, */ float
     /*    p.as_struct.pointx=t*parameters.as_struct.pointx+s*pointx; */
     p.as_struct.downx=t*parameters.as_struct.downx+s*downx;
     ik_rightarmupdate(globals.as_array,p.as_array);
-    if (p.as_struct.residual <= globals.as_struct.epsilon) {
+    bool finite=true;
+    for (int i=0; i<ik_leftarmparameter_count; ++i) {
+      if (!isfinite(p.as_array[i])) { finite = false; break; }
+    }
+    if (finite && (p.as_struct.residual <= globals.as_struct.epsilon)) {
       memcpy(&q,&p,sizeof(ik_rightarmparameters));
     } else {
       if (verbose) {

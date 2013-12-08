@@ -18,7 +18,7 @@ safety.rate,4,update rate (hertz)
 safety.verbose,true
 safety.publish,tcp://*:${safety.port}
 safety.subscribe,tcp://${safety.ip}:${safety.port}
-safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port}"
+safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port},tcp://${guicmdr.ip}:${guicmdr.safety.port}"
 xsafety.subscribers,"tcp://${servos.ip}:${servos.safety.port}"
 gui.ip,${control.ip}
 gui.safety.port,5604
@@ -60,7 +60,7 @@ body.servos.publish,tcp://*:5503
 body.servos.subscribers,tcp://127.0.0.1:5500
 body.commander.port,5502
 body.commander.publish,tcp://*:${body.commander.port}
-body.commander.subscribers,"tcp://${commander.ip}:${commander.port}"
+body.commander.subscribers,"tcp://${commander.ip}:${commander.port},tcp://${guicmdr.ip}:${guicmdr.port}"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
 body.commander.neckAddress,"tcp://${control.ip}:5556"
 body.verbose,true
@@ -109,6 +109,11 @@ glView.subscriber.addressL,"tcp://${centaur.ip}:9997"
 glView.subscriber.verbose,"false"
 glView.subscriber.sleep_time,25
 guicmdr.verbose,"true"
+guicmdr.ip,${control.ip}
+guicmdr.port,5505
+guicmdr.publish,"tcp://*:${guicmdr.port}"
+guicmdr.subscribers,"tcp://${body.ip}:${body.commander.port}"
+guicmdr.safety.port,5605
 sensors.ip,"${centaur.ip}"
 sensors.port,"5506"
 sensors.publish,"tcp://*:${sensors.port}"

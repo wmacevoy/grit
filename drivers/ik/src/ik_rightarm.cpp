@@ -266,6 +266,7 @@ void ik_rightarmupdate(
        dx[i]=sum;
      }
       
+      
       for (int k=0; k<5; ++k) { x[k] -= dx[k]; }
 
       for (int damping=0; damping < steps; ++damping) {
