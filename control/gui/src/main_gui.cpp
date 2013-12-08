@@ -58,7 +58,7 @@ protected:
   std::map<int, Gtk::ColorButton*> buttons;
   std::map<int, Gtk::ColorButton*>::iterator im;
   Gdk::Color sev_colors[5];
-  Gtk::Label *lblTop, *lblTemp, *lblAccel, *lblGyro, *lblCompass, *lblSafety;
+  Gtk::Label *lblTop, *lblSafety;
   Gtk::Label *lblA0, *lblA1, *lblA2, *lblG0, *lblG1, *lblG2, *lblC0, *lblC1, *lblC2;
   int SLEEP_TIME;
 	
@@ -123,11 +123,6 @@ public:
       }
 
     builder->get_widget("lblTop", lblTop);
-    builder->get_widget("lblTemp", lblTemp);
-
-    builder->get_widget("lblAccel", lblAccel);
-    builder->get_widget("lblGyro", lblGyro);
-    builder->get_widget("lblCompass", lblCompass);
     builder->get_widget("lblSafety", lblSafety);
     builder->get_widget("lblA0", lblA0);
     builder->get_widget("lblA1", lblA1);
