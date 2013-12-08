@@ -152,7 +152,7 @@ public:
     int sev = 3, max = 0, max_servo = 0;
     for (int i = 0; i < size; i+=2)
       {
-	if(temps[i+1] > max){ max = temps[i+1]; max_servo=i;}
+	if(temps[i+1] > max){ max = temps[i+1]; max_servo=temps[i];}
 	if (temps[i+1] >= 55)
 	  sev = 0;
 	else if (temps[i+1] > 40)
