@@ -400,7 +400,7 @@ public:
 
 	void on_button_hp_u_clicked() {
 		if(verbose) std::cout << "btn_hp_u clicked" << std::endl;
-		hp++;
+		hp--;
 		ent_cmd->set_text("hp " + NumberToString(hp));
 		if(mode) {
 			on_button_send_clicked();
@@ -409,7 +409,7 @@ public:
 
 	void on_button_hp_d_clicked() {
 		if(verbose) std::cout << "btn_hp_d clicked" << std::endl;
-		hp--;
+		hp++;
 		ent_cmd->set_text("hp " + NumberToString(hp));
 		if(mode) {
 			on_button_send_clicked();
