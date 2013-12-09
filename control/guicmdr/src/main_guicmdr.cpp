@@ -120,16 +120,19 @@ class guicmdr : public Gtk::Window
 {
 protected:
   Glib::RefPtr<Gtk::Builder> builder;
-  Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h, *hpf, *hpb, *hyl, *hyr, *safe_on, *safe_off;
+  Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h, *safe_on, *safe_off;
+	Gtk::Button *hy_n175, *hy_n90, *hy_0, *hy_90, *hy_175, *hp_0, *hp_20, *hp_65;
+	Gtk::ToggleButton *btn_mode;
   Gtk::ColorButton *btn_safe;
 	Glib::RefPtr<Gtk::EntryBuffer> cmdBuf;
 	Gtk::Entry *ent_cmd;
 	Glib::RefPtr<Gtk::TextBuffer> tb_old, tb_resp;
 	Gtk::TextView *tv_old, *tv_resp;
 	Gdk::Color clr_safe;
-	Glib::ustring text;
+	Glib::ustring text, txt_mode;
 
 	int hp, hy;
+	bool mode; //true = immediate, false = manual
 
 public:
   guicmdr(BaseObjectType* cobject, const Glib::RefPtr<Gtk::Builder>& refGlade) : Gtk::Window(cobject), builder(refGlade) {
@@ -141,15 +144,20 @@ public:
 		builder->get_widget("btn_sr", sr);
 		builder->get_widget("btn_sl", sl);
 		builder->get_widget("btn_h", h);
-		builder->get_widget("btn_hp_f", hpf);
-		builder->get_widget("btn_hp_b", hpb);
-		builder->get_widget("btn_hy_l", hyl);
-		builder->get_widget("btn_hy_r", hyr);
+		builder->get_widget("btn_hy_-175", hy_n175);
+		builder->get_widget("btn_hy_-90", hy_n90);
+		builder->get_widget("btn_hy_0", hy_0);
+		builder->get_widget("btn_hy_90", hy_90);
+		builder->get_widget("btn_hy_175", hy_175);
+		builder->get_widget("btn_hp_0", hp_0);
+		builder->get_widget("btn_hp_20", hp_20);
+		builder->get_widget("btn_hp_65", hp_65);
 		builder->get_widget("command", ent_cmd);
 		builder->get_widget("oldCommands", tv_old);
 		builder->get_widget("response", tv_resp);
 		builder->get_widget("btn_safe_on", safe_on);
 		builder->get_widget("btn_safe_off", safe_off);
+		builder->get_widget("btn_mode", btn_mode);
 
 		tb_old = Gtk::TextBuffer::create();
 		tb_resp = Gtk::TextBuffer::create();
@@ -162,19 +170,24 @@ public:
 		sr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_sr_clicked) );
 		sl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_sl_clicked) );
 		h->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_h_clicked) );
-		hpf->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hpf_clicked) );
-		hpb->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hpb_clicked) );
-		hyl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyl_clicked) );
-		hyr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hyr_clicked) );
+		hy_n175->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hy_n175_clicked) );
+		hy_n90->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hy_n90_clicked) );
+		hy_0->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hy_0_clicked) );
+		hy_90->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hy_90_clicked) );
+		hy_175->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hy_175_clicked) );
+		hp_0->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hp_0_clicked) );
+		hp_20->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hp_20_clicked) );
+		hp_65->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hp_65_clicked) );	
 		safe_on->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_safe_on_clicked) );
 		safe_off->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_safe_off_clicked) );
+		btn_mode->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_toggled) );
 
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
-		//signal_key_press_event().connect(sigc::mem_fun(*this,&guicmdr::on_window_key_press_event), false);
-
 		hp = 0;
 		hy = 0;
+		mode = false;
+		btn_mode->set_active(true);
 	}
 
   bool on_timer()
@@ -191,11 +204,11 @@ public:
 
 
 	void on_button_send_clicked() {
-		if(verbose) std::cout << "btn_send clicked" << std::endl;
+		if(!mode) if(verbose) std::cout << "btn_send clicked" << std::endl;
 		text = ent_cmd->get_text();
 		if(text != "") {
 		  commander->send(text);
-		  tb_old->insert_at_cursor(" " + text);
+		  tb_old->insert_at_cursor(text + "  ");
 		  tv_old->set_buffer(tb_old);
 		}
 	}
@@ -203,72 +216,149 @@ public:
 	void on_button_safe_on_clicked() {
 		if(verbose) std::cout << "safe_on clicked" << std::endl;
 		safety->safe(true);
-		//		ent_cmd->set_text("safe on");
 	}
 
 	void on_button_safe_off_clicked() {
 		if(verbose) std::cout << "safe_on clicked" << std::endl;
 		safety->safe(false);
-		//		ent_cmd->set_text("safe off");
 	}
 
-	void on_button_hpf_clicked() {
-		if(verbose) std::cout << "btn_hpf clicked" << std::endl;
-		hp--;
-		ent_cmd->set_text("hp " + NumberToString(hp));
-	}
-
-	void on_button_hpb_clicked() {
-		if(verbose) std::cout << "btn_hpb clicked" << std::endl;
-		hp++;
-		ent_cmd->set_text("hp " + NumberToString(hp));
-	}
-
-	void on_button_hyl_clicked() {
-		if(verbose) std::cout << "btn_hyl clicked" << std::endl;
-		hy--;
+	void on_button_hy_n175_clicked() {
+		if(verbose) std::cout << "btn_hy_n175 clicked" << std::endl;
+		hy = -175;
 		ent_cmd->set_text("hy " + NumberToString(hy));
+		if(mode) {
+			on_button_send_clicked();
+		}
 	}
 
-	void on_button_hyr_clicked() {
-		if(verbose) std::cout << "btn_hyr clicked" << std::endl;
-		hy++;
+	void on_button_hy_n90_clicked() {
+		if(verbose) std::cout << "btn_hy_n90 clicked" << std::endl;
+		hy = -90;
 		ent_cmd->set_text("hy " + NumberToString(hy));
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_button_hy_0_clicked() {
+		if(verbose) std::cout << "btn_hy_0 clicked" << std::endl;
+		hy = 0;
+		ent_cmd->set_text("hy " + NumberToString(hy));
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_button_hy_90_clicked() {
+		if(verbose) std::cout << "btn_hy_90 clicked" << std::endl;
+		hy = 90;
+		ent_cmd->set_text("hy " + NumberToString(hy));
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_button_hy_175_clicked() {
+		if(verbose) std::cout << "btn_hy_175 clicked" << std::endl;
+		hy = 175;
+		ent_cmd->set_text("hy " + NumberToString(hy));
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_button_hp_0_clicked() {
+		if(verbose) std::cout << "btn_hp_0 clicked" << std::endl;
+		hp = 0;
+		ent_cmd->set_text("hp " + NumberToString(hp));
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_button_hp_20_clicked() {
+		if(verbose) std::cout << "btn_hp_20 clicked" << std::endl;
+		hp = 20;
+		ent_cmd->set_text("hp " + NumberToString(hp));
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_button_hp_65_clicked() {
+		if(verbose) std::cout << "btn_hp_65 clicked" << std::endl;
+		hp = 65;
+		ent_cmd->set_text("hp " + NumberToString(hp));
+		if(mode) {
+			on_button_send_clicked();
+		}
 	}
 
 	void on_button_f_clicked() {
 		if(verbose) std::cout << "btn_f clicked" << std::endl;
 		ent_cmd->set_text("bf");
+		if(mode) {
+			on_button_send_clicked();
+		}
 	}
 
 	void on_button_b_clicked() {
 		if(verbose) std::cout << "btn_b clicked" << std::endl;
 		ent_cmd->set_text("bb");
+		if(mode) {
+			on_button_send_clicked();
+		}
 	}
 
 	void on_button_r_clicked() {
 		if(verbose) std::cout << "btn_r clicked" << std::endl;
 		ent_cmd->set_text("br");
+		if(mode) {
+			on_button_send_clicked();
+		}
 	}
 
 	void on_button_l_clicked() {
 		if(verbose) std::cout << "btn_l clicked" << std::endl;
 		ent_cmd->set_text("bl");
+		if(mode) {
+			on_button_send_clicked();
+		}
 	}
 
 	void on_button_sr_clicked() {
 		if(verbose) std::cout << "btn_sr clicked" << std::endl;
 		ent_cmd->set_text("bsr");
+		if(mode) {
+			on_button_send_clicked();
+		}
 	}
 
 	void on_button_sl_clicked() {
 		if(verbose) std::cout << "btn_sl clicked" << std::endl;
 		ent_cmd->set_text("bsl");
+		if(mode) {
+			on_button_send_clicked();
+		}
 	}
 
 	void on_button_h_clicked() {
 		if(verbose) std::cout << "btn_h clicked" << std::endl;
 		ent_cmd->set_text("home");
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_toggled() {
+		mode = !mode;
+		if(mode) {
+			txt_mode = "immediate";
+		}else{
+			txt_mode = "manual";
+		}			
+		btn_mode->set_label(txt_mode);
 	}
 
 	//Signal handler
