@@ -122,6 +122,7 @@ protected:
   Glib::RefPtr<Gtk::Builder> builder;
   Gtk::Button *send, *f, *b, *r, *l, *sr, *sl, *h, *safe_on, *safe_off;
 	Gtk::Button *hy_n175, *hy_n90, *hy_0, *hy_90, *hy_175, *hp_0, *hp_20, *hp_65, *hy_l, *hy_r, *hp_u, *hp_d;
+	Gtk::CheckButton *chk_left, *chk_right, *chk_leap, *chk_neck;
 	Gtk::ToggleButton *btn_mode;
   Gtk::ColorButton *btn_safe;
 	Glib::RefPtr<Gtk::EntryBuffer> cmdBuf;
@@ -162,6 +163,10 @@ public:
 		builder->get_widget("btn_hy_r", hy_r);
 		builder->get_widget("btn_hp_u", hp_u);
 		builder->get_widget("btn_hp_d", hp_d);
+		builder->get_widget("chk_right", chk_right);
+		builder->get_widget("chk_left", chk_left);
+		builder->get_widget("chk_leap", chk_leap);
+		builder->get_widget("chk_neck", chk_neck);
 
 		tb_old = Gtk::TextBuffer::create();
 		tb_resp = Gtk::TextBuffer::create();
@@ -189,6 +194,10 @@ public:
 		hy_l->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hy_l_clicked) );
 		hp_u->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hp_u_clicked) );
 		hp_d->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hp_d_clicked) );
+		chk_right->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_chk_right_toggled) );
+		chk_left->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_chk_left_toggled) );
+		chk_leap->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_chk_leap_toggled) );
+		chk_neck->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_chk_neck_toggled) );
 
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
@@ -196,6 +205,7 @@ public:
 		hy = 0;
 		mode = false;
 		btn_mode->set_active(true);
+		ent_cmd->set_text("");
 	}
 
   bool on_timer()
@@ -411,6 +421,48 @@ public:
 		if(verbose) std::cout << "btn_hp_d clicked" << std::endl;
 		hp++;
 		ent_cmd->set_text("hp " + NumberToString(hp));
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_chk_right_toggled() {
+		if(verbose) std::cout << "chk_right clicked" << std::endl;
+		if(chk_right->get_active()) {
+			ent_cmd->set_text("enable right");
+		}else{
+			ent_cmd->set_text("disable right");
+		}
+	}
+
+	void on_chk_left_toggled() {
+		if(verbose) std::cout << "chk_left clicked" << std::endl;
+		if(chk_left->get_active()) {
+			ent_cmd->set_text("enable left");
+		}else{
+			ent_cmd->set_text("disable left");
+		}
+	}
+
+	void on_chk_leap_toggled() {
+		if(verbose) std::cout << "chk_leap clicked" << std::endl;
+		if(chk_leap->get_active()) {
+			ent_cmd->set_text("leap on");
+		}else{
+			ent_cmd->set_text("leap off");
+		}
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+
+	void on_chk_neck_toggled() {
+		if(verbose) std::cout << "chk_neck clicked" << std::endl;
+		if(chk_neck->get_active()) {
+			ent_cmd->set_text("neck on");
+		}else{
+			ent_cmd->set_text("neck off");
+		}
 		if(mode) {
 			on_button_send_clicked();
 		}

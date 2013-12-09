@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
-  <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixel_size">12</property>
-    <property name="icon_name">dialog-ok</property>
-  </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="pixel_size">12</property>
     <property name="icon_name">edit-delete</property>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixel_size">12</property>
+    <property name="icon_name">dialog-ok</property>
   </object>
   <object class="GtkImage" id="img_b_btn">
     <property name="visible">True</property>
@@ -786,6 +786,91 @@
               <packing>
                 <property name="x">145</property>
                 <property name="y">215</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="chk_right">
+                <property name="label" translatable="yes">right arm</property>
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">90</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="xalign">0</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="x">140</property>
+                <property name="y">105</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="chk_left">
+                <property name="label" translatable="yes">left arm</property>
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">90</property>
+                <property name="height_request">26</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="xalign">0</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="x">140</property>
+                <property name="y">125</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lbl_enable_disable">
+                <property name="width_request">100</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Enable/Disable:</property>
+              </object>
+              <packing>
+                <property name="x">135</property>
+                <property name="y">90</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="chk_leap">
+                <property name="label" translatable="yes">Leap</property>
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">60</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="xalign">0</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="x">170</property>
+                <property name="y">10</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="chk_neck">
+                <property name="label" translatable="yes">Neck</property>
+                <property name="use_action_appearance">False</property>
+                <property name="width_request">60</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="xalign">0</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="x">170</property>
+                <property name="y">30</property>
               </packing>
             </child>
           </object>
