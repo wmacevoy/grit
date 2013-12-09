@@ -229,6 +229,7 @@ public:
 	  commander->send(text);
 	  tb_old->insert_at_cursor(text + "  ");
 	  tv_old->set_buffer(tb_old);
+		tv_old->scroll_to(tb_old->get_insert());
 	}
 
 	void on_button_safe_off_clicked() {
@@ -238,6 +239,7 @@ public:
 	  commander->send(text);
 	  tb_old->insert_at_cursor(text + "  ");
 	  tv_old->set_buffer(tb_old);
+		tv_old->scroll_to(tb_old->get_insert());
 	}
 
 	void on_button_hy_n175_clicked() {
