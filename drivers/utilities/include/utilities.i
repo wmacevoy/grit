@@ -7,7 +7,6 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
-#include "Symbols.h"
 #include "Configure.h"
 #include "now.h"
 static std::istream& cin() { return std::cin; }
@@ -46,6 +45,5 @@ public:
 std::istream& cin();
 std::ostream& cout();
 
-%include "Symbols.h"
 %include "Configure.h"
 %include "now.h"

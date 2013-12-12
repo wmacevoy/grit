@@ -1,7 +1,7 @@
 all : libs progs py
 
-DEPS=threed
-MY_FLAGS=
-MY_LIBS=
+DEPS=
+MY_FLAGS=`python2.7-config --cflags`
+MY_LIBS=`python2.7-config --ldflags`
 
 include ../rules.mk

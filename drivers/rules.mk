@@ -119,7 +119,7 @@ src/$(TARGET).py : include/$(TARGET).i
 	swig -c++ -I../ex/include -python -o src/$(TARGET).cpp include/$(TARGET).i
 
 lib/_$(TARGET).so : tmp/$(TARGET).cpp.o lib/lib$(TARGET).so
-	$(CXX) $(CXXFLAGS) -Llib -shared  -o $@ $< -l$(TARGET) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -L../$(TARGET)/lib -shared  -o $@ $< -l$(TARGET) $(LDFLAGS)
 
 lib/$(TARGET).py : src/$(TARGET).py
 	cp $< $@
