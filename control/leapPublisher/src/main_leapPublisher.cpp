@@ -114,18 +114,6 @@ public:
   }
 };
 
-class LeapPublisher : public ZMQHub
-{
-  bool rx(ZMQSubscribeSocket &socket) { return true; }
-
-  bool tx(ZMQPublishSocket &socket)
-  {
-    ZMQMessage message(sizeof(LeapMessage));
-    memcpy(message.data(),&leapMessage,sizeof(LeapMessage));
-    return message.send(socket) != 0;
-  }
-};
-
 void quitproc(int sig) {
   die = 1;
 }
