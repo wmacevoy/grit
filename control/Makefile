@@ -6,4 +6,6 @@
 	$(MAKE) -C joystickProvider $@ 
 	$(MAKE) -C leapPublisher $@
 	$(MAKE) -C heartBeatRequester $@
+	$(MAKE) -C guicmdr $@
+
 
