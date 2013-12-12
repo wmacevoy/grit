@@ -2939,24 +2939,70 @@ SWIG_Python_NonDynamicSetAttr(PyObject *obj, PyObject *name, PyObject *value) {
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_Body swig_types[0]
-#define SWIGTYPE_p_LeftArm swig_types[1]
-#define SWIGTYPE_p_Legs swig_types[2]
-#define SWIGTYPE_p_Neck swig_types[3]
-#define SWIGTYPE_p_RightArm swig_types[4]
-#define SWIGTYPE_p_SPBodyMover swig_types[5]
-#define SWIGTYPE_p_SPServo swig_types[6]
-#define SWIGTYPE_p_SPServoController swig_types[7]
-#define SWIGTYPE_p_SensorsMessage swig_types[8]
-#define SWIGTYPE_p_char swig_types[9]
-#define SWIGTYPE_p_std__mapT_int_SPServo_t swig_types[10]
-#define SWIGTYPE_p_std__ostream swig_types[11]
-#define SWIGTYPE_p_std__shared_ptrT_Body_t swig_types[12]
-#define SWIGTYPE_p_std__shared_ptrT_Configure_t swig_types[13]
-#define SWIGTYPE_p_std__shared_ptrT_Servo_t swig_types[14]
-#define SWIGTYPE_p_std__string swig_types[15]
-static swig_type_info *swig_types[17];
-static swig_module_info swig_module = {swig_types, 16, 0, 0, 0, 0};
+#define SWIGTYPE_p_Arm swig_types[0]
+#define SWIGTYPE_p_ArmGeometry swig_types[1]
+#define SWIGTYPE_p_ArmMover swig_types[2]
+#define SWIGTYPE_p_Body swig_types[3]
+#define SWIGTYPE_p_BodyMover swig_types[4]
+#define SWIGTYPE_p_Curve swig_types[5]
+#define SWIGTYPE_p_LeapHandMessage swig_types[6]
+#define SWIGTYPE_p_LeftArm swig_types[7]
+#define SWIGTYPE_p_LeftArmGeometry swig_types[8]
+#define SWIGTYPE_p_LeftArmMover swig_types[9]
+#define SWIGTYPE_p_Leg swig_types[10]
+#define SWIGTYPE_p_LegGeometry swig_types[11]
+#define SWIGTYPE_p_LegMover swig_types[12]
+#define SWIGTYPE_p_Legs swig_types[13]
+#define SWIGTYPE_p_LegsMover swig_types[14]
+#define SWIGTYPE_p_Mover swig_types[15]
+#define SWIGTYPE_p_Neck swig_types[16]
+#define SWIGTYPE_p_NeckMover swig_types[17]
+#define SWIGTYPE_p_Path swig_types[18]
+#define SWIGTYPE_p_Paths swig_types[19]
+#define SWIGTYPE_p_Point swig_types[20]
+#define SWIGTYPE_p_RightArm swig_types[21]
+#define SWIGTYPE_p_RightArmGeometry swig_types[22]
+#define SWIGTYPE_p_RightArmMover swig_types[23]
+#define SWIGTYPE_p_SPServo swig_types[24]
+#define SWIGTYPE_p_SPServoController swig_types[25]
+#define SWIGTYPE_p_SafetySP swig_types[26]
+#define SWIGTYPE_p_SensorsMessage swig_types[27]
+#define SWIGTYPE_p_Servo swig_types[28]
+#define SWIGTYPE_p_ServoMover swig_types[29]
+#define SWIGTYPE_p_Tape swig_types[30]
+#define SWIGTYPE_p_WalkParameters swig_types[31]
+#define SWIGTYPE_p_char swig_types[32]
+#define SWIGTYPE_p_double swig_types[33]
+#define SWIGTYPE_p_float swig_types[34]
+#define SWIGTYPE_p_ik_leftarmglobals swig_types[35]
+#define SWIGTYPE_p_ik_leftarmparameters swig_types[36]
+#define SWIGTYPE_p_ik_leftarmvariables swig_types[37]
+#define SWIGTYPE_p_ik_rightarmglobals swig_types[38]
+#define SWIGTYPE_p_ik_rightarmparameters swig_types[39]
+#define SWIGTYPE_p_ik_rightarmvariables swig_types[40]
+#define SWIGTYPE_p_std__mapT_float_Point_t swig_types[41]
+#define SWIGTYPE_p_std__mapT_float_float_t swig_types[42]
+#define SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t swig_types[43]
+#define SWIGTYPE_p_std__mapT_int_SPServo_t swig_types[44]
+#define SWIGTYPE_p_std__mapT_std__string_Arc3d_t swig_types[45]
+#define SWIGTYPE_p_std__mapT_std__string_Mat3d_t swig_types[46]
+#define SWIGTYPE_p_std__mapT_std__string_Vec3d_t swig_types[47]
+#define SWIGTYPE_p_std__mapT_std__string_double_t swig_types[48]
+#define SWIGTYPE_p_std__mapT_std__string_std__mapT_float_float_t_t swig_types[49]
+#define SWIGTYPE_p_std__ostream swig_types[50]
+#define SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t swig_types[51]
+#define SWIGTYPE_p_std__shared_ptrT_BodyMover_t swig_types[52]
+#define SWIGTYPE_p_std__shared_ptrT_Body_t swig_types[53]
+#define SWIGTYPE_p_std__shared_ptrT_Configure_t swig_types[54]
+#define SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t swig_types[55]
+#define SWIGTYPE_p_std__shared_ptrT_LegMover_t swig_types[56]
+#define SWIGTYPE_p_std__shared_ptrT_Mover_t swig_types[57]
+#define SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t swig_types[58]
+#define SWIGTYPE_p_std__shared_ptrT_ServoMover_t swig_types[59]
+#define SWIGTYPE_p_std__shared_ptrT_Servo_t swig_types[60]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t swig_types[61]
+static swig_type_info *swig_types[63];
+static swig_module_info swig_module = {swig_types, 62, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3053,12 +3099,7 @@ namespace swig {
 }
 
 
-#define SWIG_FILE_WITH_INIT
-#include "Body.h"
-#include "BodyGlobals.h"
-
-
-  #define SWIG_From_double   PyFloat_FromDouble 
+#include <string>
 
 
   #define SWIG_From_long   PyInt_FromLong 
@@ -3069,6 +3110,191 @@ SWIG_From_int  (int value)
 {    
   return SWIG_From_long  (value);
 }
+
+
+#define SWIG_FILE_WITH_INIT
+#include "ArmGeometry.h"
+#include "RightArmGeometry.h"
+#include "LeftArmGeometry.h"
+#include "LegGeometry.h"
+
+#include "Neck.h"
+#include "Arms.h"
+#include "Leg.h"
+#include "Legs.h"
+#include "Body.h"
+
+#include "ArmMover.h"
+#include "CreateWalkMover.h"
+#include "LegMover.h"
+#include "Mover.h"
+#include "RightArmMover.h"
+#include "BodyMover.h"
+#include "LeftArmMover.h"
+#include "LegsMover.h"
+#include "NeckMover.h"
+#include "ServoMover.h"
+
+#include "BodyGlobals.h"
+#include "Tape.h"
+
+
+SWIGINTERN swig_type_info*
+SWIG_pchar_descriptor(void)
+{
+  static int init = 0;
+  static swig_type_info* info = 0;
+  if (!init) {
+    info = SWIG_TypeQuery("_p_char");
+    init = 1;
+  }
+  return info;
+}
+
+
+SWIGINTERN int
+SWIG_AsCharPtrAndSize(PyObject *obj, char** cptr, size_t* psize, int *alloc)
+{
+#if PY_VERSION_HEX>=0x03000000
+  if (PyUnicode_Check(obj))
+#else  
+  if (PyString_Check(obj))
+#endif
+  {
+    char *cstr; Py_ssize_t len;
+#if PY_VERSION_HEX>=0x03000000
+    if (!alloc && cptr) {
+        /* We can't allow converting without allocation, since the internal
+           representation of string in Python 3 is UCS-2/UCS-4 but we require
+           a UTF-8 representation.
+           TODO(bhy) More detailed explanation */
+        return SWIG_RuntimeError;
+    }
+    obj = PyUnicode_AsUTF8String(obj);
+    PyBytes_AsStringAndSize(obj, &cstr, &len);
+    if(alloc) *alloc = SWIG_NEWOBJ;
+#else
+    PyString_AsStringAndSize(obj, &cstr, &len);
+#endif
+    if (cptr) {
+      if (alloc) {
+	/* 
+	   In python the user should not be able to modify the inner
+	   string representation. To warranty that, if you define
+	   SWIG_PYTHON_SAFE_CSTRINGS, a new/copy of the python string
+	   buffer is always returned.
+
+	   The default behavior is just to return the pointer value,
+	   so, be careful.
+	*/ 
+#if defined(SWIG_PYTHON_SAFE_CSTRINGS)
+	if (*alloc != SWIG_OLDOBJ) 
+#else
+	if (*alloc == SWIG_NEWOBJ) 
+#endif
+	  {
+	    *cptr = reinterpret_cast< char* >(memcpy((new char[len + 1]), cstr, sizeof(char)*(len + 1)));
+	    *alloc = SWIG_NEWOBJ;
+	  }
+	else {
+	  *cptr = cstr;
+	  *alloc = SWIG_OLDOBJ;
+	}
+      } else {
+        #if PY_VERSION_HEX>=0x03000000
+        assert(0); /* Should never reach here in Python 3 */
+        #endif
+	*cptr = SWIG_Python_str_AsChar(obj);
+      }
+    }
+    if (psize) *psize = len + 1;
+#if PY_VERSION_HEX>=0x03000000
+    Py_XDECREF(obj);
+#endif
+    return SWIG_OK;
+  } else {
+    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+    if (pchar_descriptor) {
+      void* vptr = 0;
+      if (SWIG_ConvertPtr(obj, &vptr, pchar_descriptor, 0) == SWIG_OK) {
+	if (cptr) *cptr = (char *) vptr;
+	if (psize) *psize = vptr ? (strlen((char *)vptr) + 1) : 0;
+	if (alloc) *alloc = SWIG_OLDOBJ;
+	return SWIG_OK;
+      }
+    }
+  }
+  return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsPtr_std_string (PyObject * obj, std::string **val) 
+{
+  char* buf = 0 ; size_t size = 0; int alloc = SWIG_OLDOBJ;
+  if (SWIG_IsOK((SWIG_AsCharPtrAndSize(obj, &buf, &size, &alloc)))) {
+    if (buf) {
+      if (val) *val = new std::string(buf, size - 1);
+      if (alloc == SWIG_NEWOBJ) delete[] buf;
+      return SWIG_NEWOBJ;
+    } else {
+      if (val) *val = 0;
+      return SWIG_OLDOBJ;
+    }
+  } else {
+    static int init = 0;
+    static swig_type_info* descriptor = 0;
+    if (!init) {
+      descriptor = SWIG_TypeQuery("std::string" " *");
+      init = 1;
+    }
+    if (descriptor) {
+      std::string *vptr;
+      int res = SWIG_ConvertPtr(obj, (void**)&vptr, descriptor, 0);
+      if (SWIG_IsOK(res) && val) *val = vptr;
+      return res;
+    }
+  }
+  return SWIG_ERROR;
+}
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_FromCharPtrAndSize(const char* carray, size_t size)
+{
+  if (carray) {
+    if (size > INT_MAX) {
+      swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+      return pchar_descriptor ? 
+	SWIG_InternalNewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : SWIG_Py_Void();
+    } else {
+#if PY_VERSION_HEX >= 0x03000000
+      return PyUnicode_FromStringAndSize(carray, static_cast< int >(size));
+#else
+      return PyString_FromStringAndSize(carray, static_cast< int >(size));
+#endif
+    }
+  } else {
+    return SWIG_Py_Void();
+  }
+}
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_std_string  (const std::string& s)
+{
+  return SWIG_FromCharPtrAndSize(s.data(), s.size());
+}
+
+
+SWIGINTERNINLINE PyObject*
+  SWIG_From_bool  (bool value)
+{
+  return PyBool_FromLong(value ? 1 : 0);
+}
+
+
+#include <float.h>
 
 
 SWIGINTERN int
@@ -3115,7 +3341,43 @@ SWIG_AsVal_double (PyObject *obj, double *val)
 }
 
 
-#include <float.h>
+SWIGINTERN int
+SWIG_AsVal_float (PyObject * obj, float *val)
+{
+  double v;
+  int res = SWIG_AsVal_double (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < -FLT_MAX || v > FLT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< float >(v);
+    }
+  }  
+  return res;
+}
+
+
+struct SWIG_null_deleter {
+  void operator() (void const *) const {
+  }
+};
+#define SWIG_NO_NULL_DELETER_0 , SWIG_null_deleter()
+#define SWIG_NO_NULL_DELETER_1
+#define SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW
+#define SWIG_NO_NULL_DELETER_SWIG_POINTER_OWN
+
+
+#define SWIG_NO_NULL_DELETER_SWIG_BUILTIN_INIT
+
+
+#include <limits.h>
+#if !defined(SWIG_NO_LLONG_MAX)
+# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
+#   define LLONG_MAX __LONG_LONG_MAX__
+#   define LLONG_MIN (-LLONG_MAX - 1LL)
+#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
+# endif
+#endif
 
 
 #include <math.h>
@@ -3191,6 +3453,32 @@ SWIG_AsVal_long (PyObject *obj, long* val)
 
 
 SWIGINTERN int
+SWIG_AsVal_int (PyObject * obj, int *val)
+{
+  long v;
+  int res = SWIG_AsVal_long (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < INT_MIN || v > INT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< int >(v);
+    }
+  }  
+  return res;
+}
+
+
+  #define SWIG_From_double   PyFloat_FromDouble 
+
+
+SWIGINTERNINLINE PyObject *
+SWIG_From_float  (float value)
+{    
+  return SWIG_From_double  (value);
+}
+
+
+SWIGINTERN int
 SWIG_AsVal_bool (PyObject *obj, bool *val)
 {
   int r = PyObject_IsTrue(obj);
@@ -3200,23 +3488,3351 @@ SWIG_AsVal_bool (PyObject *obj, bool *val)
   return SWIG_OK;
 }
 
-
-SWIGINTERNINLINE PyObject*
-  SWIG_From_bool  (bool value)
-{
-  return PyBool_FromLong(value ? 1 : 0);
-}
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+SWIGINTERN PyObject *_wrap_ArmGeometry_name__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmGeometry *arg1 = (ArmGeometry *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ArmGeometry > tempshared1 ;
+  std::shared_ptr< ArmGeometry > *smartarg1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmGeometry_name",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmGeometry_name" "', argument " "1"" of type '" "ArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmGeometry_name" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmGeometry_name" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  (arg1)->name((std::string const &)*arg2);
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmGeometry_name__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmGeometry *arg1 = (ArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ArmGeometry const > tempshared1 ;
+  std::shared_ptr< ArmGeometry const > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::string *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmGeometry_name",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmGeometry_name" "', argument " "1"" of type '" "ArmGeometry const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr< const ArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr< const ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr< const ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (std::string *) &((ArmGeometry const *)arg1)->name();
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmGeometry_name(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_ArmGeometry_name__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_AsPtr_std_string(argv[1], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_ArmGeometry_name__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'ArmGeometry_name'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    ArmGeometry::name(std::string const &)\n"
+    "    ArmGeometry::name() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmGeometry_forward(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmGeometry *arg1 = (ArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ArmGeometry > tempshared1 ;
+  std::shared_ptr< ArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmGeometry_forward",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmGeometry_forward" "', argument " "1"" of type '" "ArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  (arg1)->forward();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmGeometry_inverse(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmGeometry *arg1 = (ArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ArmGeometry > tempshared1 ;
+  std::shared_ptr< ArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmGeometry_inverse",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmGeometry_inverse" "', argument " "1"" of type '" "ArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (bool)(arg1)->inverse();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmGeometry_compute(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmGeometry *arg1 = (ArmGeometry *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  float arg5 ;
+  float *arg6 = 0 ;
+  float *arg7 = 0 ;
+  float *arg8 = 0 ;
+  float *arg9 = 0 ;
+  float *arg10 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ArmGeometry > tempshared1 ;
+  std::shared_ptr< ArmGeometry > *smartarg1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  float val5 ;
+  int ecode5 = 0 ;
+  void *argp6 = 0 ;
+  int res6 = 0 ;
+  void *argp7 = 0 ;
+  int res7 = 0 ;
+  void *argp8 = 0 ;
+  int res8 = 0 ;
+  void *argp9 = 0 ;
+  int res9 = 0 ;
+  void *argp10 = 0 ;
+  int res10 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOO:ArmGeometry_compute",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmGeometry_compute" "', argument " "1"" of type '" "ArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ArmGeometry_compute" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ArmGeometry_compute" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ArmGeometry_compute" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "ArmGeometry_compute" "', argument " "5"" of type '" "float""'");
+  } 
+  arg5 = static_cast< float >(val5);
+  res6 = SWIG_ConvertPtr(obj5, &argp6, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "ArmGeometry_compute" "', argument " "6"" of type '" "float &""'"); 
+  }
+  if (!argp6) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmGeometry_compute" "', argument " "6"" of type '" "float &""'"); 
+  }
+  arg6 = reinterpret_cast< float * >(argp6);
+  res7 = SWIG_ConvertPtr(obj6, &argp7, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res7)) {
+    SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "ArmGeometry_compute" "', argument " "7"" of type '" "float &""'"); 
+  }
+  if (!argp7) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmGeometry_compute" "', argument " "7"" of type '" "float &""'"); 
+  }
+  arg7 = reinterpret_cast< float * >(argp7);
+  res8 = SWIG_ConvertPtr(obj7, &argp8, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res8)) {
+    SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "ArmGeometry_compute" "', argument " "8"" of type '" "float &""'"); 
+  }
+  if (!argp8) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmGeometry_compute" "', argument " "8"" of type '" "float &""'"); 
+  }
+  arg8 = reinterpret_cast< float * >(argp8);
+  res9 = SWIG_ConvertPtr(obj8, &argp9, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res9)) {
+    SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "ArmGeometry_compute" "', argument " "9"" of type '" "float &""'"); 
+  }
+  if (!argp9) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmGeometry_compute" "', argument " "9"" of type '" "float &""'"); 
+  }
+  arg9 = reinterpret_cast< float * >(argp9);
+  res10 = SWIG_ConvertPtr(obj9, &argp10, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res10)) {
+    SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "ArmGeometry_compute" "', argument " "10"" of type '" "float &""'"); 
+  }
+  if (!argp10) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmGeometry_compute" "', argument " "10"" of type '" "float &""'"); 
+  }
+  arg10 = reinterpret_cast< float * >(argp10);
+  (arg1)->compute(arg2,arg3,arg4,arg5,*arg6,*arg7,*arg8,*arg9,*arg10);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_ArmGeometry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmGeometry *arg1 = (ArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ArmGeometry > tempshared1 ;
+  std::shared_ptr< ArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_ArmGeometry",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ArmGeometry" "', argument " "1"" of type '" "ArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  (void)arg1; delete smartarg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *ArmGeometry_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_parameters_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  ik_rightarmparameters arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:RightArmGeometry_parameters_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_parameters_set" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_ik_rightarmparameters,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "RightArmGeometry_parameters_set" "', argument " "2"" of type '" "ik_rightarmparameters""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmGeometry_parameters_set" "', argument " "2"" of type '" "ik_rightarmparameters""'");
+    } else {
+      ik_rightarmparameters * temp = reinterpret_cast< ik_rightarmparameters * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  if (arg1) (arg1)->parameters = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_parameters_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ik_rightarmparameters result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:RightArmGeometry_parameters_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_parameters_get" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result =  ((arg1)->parameters);
+  resultobj = SWIG_NewPointerObj((new ik_rightarmparameters(static_cast< const ik_rightarmparameters& >(result))), SWIGTYPE_p_ik_rightarmparameters, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_variables_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  ik_rightarmvariables arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:RightArmGeometry_variables_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_variables_set" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_ik_rightarmvariables,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "RightArmGeometry_variables_set" "', argument " "2"" of type '" "ik_rightarmvariables""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmGeometry_variables_set" "', argument " "2"" of type '" "ik_rightarmvariables""'");
+    } else {
+      ik_rightarmvariables * temp = reinterpret_cast< ik_rightarmvariables * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  if (arg1) (arg1)->variables = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_variables_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ik_rightarmvariables result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:RightArmGeometry_variables_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_variables_get" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result =  ((arg1)->variables);
+  resultobj = SWIG_NewPointerObj((new ik_rightarmvariables(static_cast< const ik_rightarmvariables& >(result))), SWIGTYPE_p_ik_rightarmvariables, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_globals_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  ik_rightarmglobals arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:RightArmGeometry_globals_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_globals_set" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_ik_rightarmglobals,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "RightArmGeometry_globals_set" "', argument " "2"" of type '" "ik_rightarmglobals""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmGeometry_globals_set" "', argument " "2"" of type '" "ik_rightarmglobals""'");
+    } else {
+      ik_rightarmglobals * temp = reinterpret_cast< ik_rightarmglobals * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  if (arg1) (arg1)->globals = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_globals_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ik_rightarmglobals result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:RightArmGeometry_globals_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_globals_get" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result =  ((arg1)->globals);
+  resultobj = SWIG_NewPointerObj((new ik_rightarmglobals(static_cast< const ik_rightarmglobals& >(result))), SWIGTYPE_p_ik_rightarmglobals, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_RightArmGeometry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_RightArmGeometry")) SWIG_fail;
+  result = (RightArmGeometry *)new RightArmGeometry();
+  {
+    std::shared_ptr<  RightArmGeometry > *smartresult = result ? new std::shared_ptr<  RightArmGeometry >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_forward(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:RightArmGeometry_forward",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_forward" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  (arg1)->forward();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_inverse(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:RightArmGeometry_inverse",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_inverse" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (bool)(arg1)->inverse();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmGeometry_compute(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  float arg5 ;
+  float *arg6 = 0 ;
+  float *arg7 = 0 ;
+  float *arg8 = 0 ;
+  float *arg9 = 0 ;
+  float *arg10 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  float val5 ;
+  int ecode5 = 0 ;
+  void *argp6 = 0 ;
+  int res6 = 0 ;
+  void *argp7 = 0 ;
+  int res7 = 0 ;
+  void *argp8 = 0 ;
+  int res8 = 0 ;
+  void *argp9 = 0 ;
+  int res9 = 0 ;
+  void *argp10 = 0 ;
+  int res10 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOO:RightArmGeometry_compute",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmGeometry_compute" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "RightArmGeometry_compute" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "RightArmGeometry_compute" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "RightArmGeometry_compute" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "RightArmGeometry_compute" "', argument " "5"" of type '" "float""'");
+  } 
+  arg5 = static_cast< float >(val5);
+  res6 = SWIG_ConvertPtr(obj5, &argp6, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "RightArmGeometry_compute" "', argument " "6"" of type '" "float &""'"); 
+  }
+  if (!argp6) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmGeometry_compute" "', argument " "6"" of type '" "float &""'"); 
+  }
+  arg6 = reinterpret_cast< float * >(argp6);
+  res7 = SWIG_ConvertPtr(obj6, &argp7, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res7)) {
+    SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "RightArmGeometry_compute" "', argument " "7"" of type '" "float &""'"); 
+  }
+  if (!argp7) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmGeometry_compute" "', argument " "7"" of type '" "float &""'"); 
+  }
+  arg7 = reinterpret_cast< float * >(argp7);
+  res8 = SWIG_ConvertPtr(obj7, &argp8, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res8)) {
+    SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "RightArmGeometry_compute" "', argument " "8"" of type '" "float &""'"); 
+  }
+  if (!argp8) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmGeometry_compute" "', argument " "8"" of type '" "float &""'"); 
+  }
+  arg8 = reinterpret_cast< float * >(argp8);
+  res9 = SWIG_ConvertPtr(obj8, &argp9, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res9)) {
+    SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "RightArmGeometry_compute" "', argument " "9"" of type '" "float &""'"); 
+  }
+  if (!argp9) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmGeometry_compute" "', argument " "9"" of type '" "float &""'"); 
+  }
+  arg9 = reinterpret_cast< float * >(argp9);
+  res10 = SWIG_ConvertPtr(obj9, &argp10, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res10)) {
+    SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "RightArmGeometry_compute" "', argument " "10"" of type '" "float &""'"); 
+  }
+  if (!argp10) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmGeometry_compute" "', argument " "10"" of type '" "float &""'"); 
+  }
+  arg10 = reinterpret_cast< float * >(argp10);
+  (arg1)->compute(arg2,arg3,arg4,arg5,*arg6,*arg7,*arg8,*arg9,*arg10);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_RightArmGeometry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmGeometry *arg1 = (RightArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< RightArmGeometry > tempshared1 ;
+  std::shared_ptr< RightArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_RightArmGeometry",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_RightArmGeometry" "', argument " "1"" of type '" "RightArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  RightArmGeometry > * >(argp1);
+      arg1 = const_cast< RightArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  (void)arg1; delete smartarg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *RightArmGeometry_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_parameters_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  ik_leftarmparameters arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LeftArmGeometry_parameters_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_parameters_set" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_ik_leftarmparameters,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LeftArmGeometry_parameters_set" "', argument " "2"" of type '" "ik_leftarmparameters""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmGeometry_parameters_set" "', argument " "2"" of type '" "ik_leftarmparameters""'");
+    } else {
+      ik_leftarmparameters * temp = reinterpret_cast< ik_leftarmparameters * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  if (arg1) (arg1)->parameters = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_parameters_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ik_leftarmparameters result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LeftArmGeometry_parameters_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_parameters_get" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result =  ((arg1)->parameters);
+  resultobj = SWIG_NewPointerObj((new ik_leftarmparameters(static_cast< const ik_leftarmparameters& >(result))), SWIGTYPE_p_ik_leftarmparameters, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_variables_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  ik_leftarmvariables arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LeftArmGeometry_variables_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_variables_set" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_ik_leftarmvariables,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LeftArmGeometry_variables_set" "', argument " "2"" of type '" "ik_leftarmvariables""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmGeometry_variables_set" "', argument " "2"" of type '" "ik_leftarmvariables""'");
+    } else {
+      ik_leftarmvariables * temp = reinterpret_cast< ik_leftarmvariables * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  if (arg1) (arg1)->variables = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_variables_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ik_leftarmvariables result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LeftArmGeometry_variables_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_variables_get" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result =  ((arg1)->variables);
+  resultobj = SWIG_NewPointerObj((new ik_leftarmvariables(static_cast< const ik_leftarmvariables& >(result))), SWIGTYPE_p_ik_leftarmvariables, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_globals_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  ik_leftarmglobals arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LeftArmGeometry_globals_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_globals_set" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_ik_leftarmglobals,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LeftArmGeometry_globals_set" "', argument " "2"" of type '" "ik_leftarmglobals""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmGeometry_globals_set" "', argument " "2"" of type '" "ik_leftarmglobals""'");
+    } else {
+      ik_leftarmglobals * temp = reinterpret_cast< ik_leftarmglobals * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  if (arg1) (arg1)->globals = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_globals_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ik_leftarmglobals result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LeftArmGeometry_globals_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_globals_get" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result =  ((arg1)->globals);
+  resultobj = SWIG_NewPointerObj((new ik_leftarmglobals(static_cast< const ik_leftarmglobals& >(result))), SWIGTYPE_p_ik_leftarmglobals, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_LeftArmGeometry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_LeftArmGeometry")) SWIG_fail;
+  result = (LeftArmGeometry *)new LeftArmGeometry();
+  {
+    std::shared_ptr<  LeftArmGeometry > *smartresult = result ? new std::shared_ptr<  LeftArmGeometry >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_forward(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LeftArmGeometry_forward",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_forward" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  (arg1)->forward();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_inverse(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LeftArmGeometry_inverse",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_inverse" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (bool)(arg1)->inverse();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmGeometry_compute(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  float arg5 ;
+  float *arg6 = 0 ;
+  float *arg7 = 0 ;
+  float *arg8 = 0 ;
+  float *arg9 = 0 ;
+  float *arg10 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  float val5 ;
+  int ecode5 = 0 ;
+  void *argp6 = 0 ;
+  int res6 = 0 ;
+  void *argp7 = 0 ;
+  int res7 = 0 ;
+  void *argp8 = 0 ;
+  int res8 = 0 ;
+  void *argp9 = 0 ;
+  int res9 = 0 ;
+  void *argp10 = 0 ;
+  int res10 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOO:LeftArmGeometry_compute",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmGeometry_compute" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LeftArmGeometry_compute" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "LeftArmGeometry_compute" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LeftArmGeometry_compute" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "LeftArmGeometry_compute" "', argument " "5"" of type '" "float""'");
+  } 
+  arg5 = static_cast< float >(val5);
+  res6 = SWIG_ConvertPtr(obj5, &argp6, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "LeftArmGeometry_compute" "', argument " "6"" of type '" "float &""'"); 
+  }
+  if (!argp6) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmGeometry_compute" "', argument " "6"" of type '" "float &""'"); 
+  }
+  arg6 = reinterpret_cast< float * >(argp6);
+  res7 = SWIG_ConvertPtr(obj6, &argp7, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res7)) {
+    SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "LeftArmGeometry_compute" "', argument " "7"" of type '" "float &""'"); 
+  }
+  if (!argp7) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmGeometry_compute" "', argument " "7"" of type '" "float &""'"); 
+  }
+  arg7 = reinterpret_cast< float * >(argp7);
+  res8 = SWIG_ConvertPtr(obj7, &argp8, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res8)) {
+    SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "LeftArmGeometry_compute" "', argument " "8"" of type '" "float &""'"); 
+  }
+  if (!argp8) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmGeometry_compute" "', argument " "8"" of type '" "float &""'"); 
+  }
+  arg8 = reinterpret_cast< float * >(argp8);
+  res9 = SWIG_ConvertPtr(obj8, &argp9, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res9)) {
+    SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "LeftArmGeometry_compute" "', argument " "9"" of type '" "float &""'"); 
+  }
+  if (!argp9) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmGeometry_compute" "', argument " "9"" of type '" "float &""'"); 
+  }
+  arg9 = reinterpret_cast< float * >(argp9);
+  res10 = SWIG_ConvertPtr(obj9, &argp10, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res10)) {
+    SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "LeftArmGeometry_compute" "', argument " "10"" of type '" "float &""'"); 
+  }
+  if (!argp10) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmGeometry_compute" "', argument " "10"" of type '" "float &""'"); 
+  }
+  arg10 = reinterpret_cast< float * >(argp10);
+  (arg1)->compute(arg2,arg3,arg4,arg5,*arg6,*arg7,*arg8,*arg9,*arg10);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_LeftArmGeometry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmGeometry *arg1 = (LeftArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< LeftArmGeometry > tempshared1 ;
+  std::shared_ptr< LeftArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_LeftArmGeometry",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LeftArmGeometry" "', argument " "1"" of type '" "LeftArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  LeftArmGeometry > * >(argp1);
+      arg1 = const_cast< LeftArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  (void)arg1; delete smartarg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *LeftArmGeometry_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_new_LegGeometry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_LegGeometry")) SWIG_fail;
+  result = (LegGeometry *)new LegGeometry();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LegGeometry, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_number__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegGeometry_number",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_number" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegGeometry_number" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  (arg1)->number(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_number__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegGeometry_number",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_number" "', argument " "1"" of type '" "LegGeometry const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  result = (int)((LegGeometry const *)arg1)->number();
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_number(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegGeometry, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_LegGeometry_number__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegGeometry, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_LegGeometry_number__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegGeometry_number'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegGeometry::number(int)\n"
+    "    LegGeometry::number() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_name__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegGeometry_name",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_name" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegGeometry_name" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_name" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  (arg1)->name((std::string const &)*arg2);
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_name__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::string *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegGeometry_name",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_name" "', argument " "1"" of type '" "LegGeometry const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  result = (std::string *) &((LegGeometry const *)arg1)->name();
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_name(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegGeometry, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_LegGeometry_name__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegGeometry, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_AsPtr_std_string(argv[1], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_LegGeometry_name__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegGeometry_name'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegGeometry::name(std::string const &)\n"
+    "    LegGeometry::name() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_setPosition(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:LegGeometry_setPosition",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_setPosition" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegGeometry_setPosition" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "LegGeometry_setPosition" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  (arg1)->setPosition(arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_setHipOffset(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegGeometry_setHipOffset",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_setHipOffset" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegGeometry_setHipOffset" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->setHipOffset(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_setName(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  std::string arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegGeometry_setName",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_setName" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "LegGeometry_setName" "', argument " "2"" of type '" "std::string""'"); 
+    }
+    arg2 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
+  }
+  (arg1)->setName(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_outputName(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  std::ostream *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegGeometry_outputName",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_outputName" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__ostream,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegGeometry_outputName" "', argument " "2"" of type '" "std::ostream &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_outputName" "', argument " "2"" of type '" "std::ostream &""'"); 
+  }
+  arg2 = reinterpret_cast< std::ostream * >(argp2);
+  (arg1)->outputName(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_robustACos(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegGeometry_robustACos",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_robustACos" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegGeometry_robustACos" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = (float)(arg1)->robustACos(arg2);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_compute2D(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  float *arg4 = 0 ;
+  float *arg5 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:LegGeometry_compute2D",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_compute2D" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegGeometry_compute2D" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "LegGeometry_compute2D" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  res4 = SWIG_ConvertPtr(obj3, &argp4, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "LegGeometry_compute2D" "', argument " "4"" of type '" "float &""'"); 
+  }
+  if (!argp4) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_compute2D" "', argument " "4"" of type '" "float &""'"); 
+  }
+  arg4 = reinterpret_cast< float * >(argp4);
+  res5 = SWIG_ConvertPtr(obj4, &argp5, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "LegGeometry_compute2D" "', argument " "5"" of type '" "float &""'"); 
+  }
+  if (!argp5) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_compute2D" "', argument " "5"" of type '" "float &""'"); 
+  }
+  arg5 = reinterpret_cast< float * >(argp5);
+  (arg1)->compute2D(arg2,arg3,*arg4,*arg5);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_compute3D(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  float *arg5 = 0 ;
+  float *arg6 = 0 ;
+  float *arg7 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  void *argp6 = 0 ;
+  int res6 = 0 ;
+  void *argp7 = 0 ;
+  int res7 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:LegGeometry_compute3D",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_compute3D" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegGeometry_compute3D" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "LegGeometry_compute3D" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegGeometry_compute3D" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  res5 = SWIG_ConvertPtr(obj4, &argp5, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "LegGeometry_compute3D" "', argument " "5"" of type '" "float &""'"); 
+  }
+  if (!argp5) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_compute3D" "', argument " "5"" of type '" "float &""'"); 
+  }
+  arg5 = reinterpret_cast< float * >(argp5);
+  res6 = SWIG_ConvertPtr(obj5, &argp6, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "LegGeometry_compute3D" "', argument " "6"" of type '" "float &""'"); 
+  }
+  if (!argp6) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_compute3D" "', argument " "6"" of type '" "float &""'"); 
+  }
+  arg6 = reinterpret_cast< float * >(argp6);
+  res7 = SWIG_ConvertPtr(obj6, &argp7, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res7)) {
+    SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "LegGeometry_compute3D" "', argument " "7"" of type '" "float &""'"); 
+  }
+  if (!argp7) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_compute3D" "', argument " "7"" of type '" "float &""'"); 
+  }
+  arg7 = reinterpret_cast< float * >(argp7);
+  (arg1)->compute3D(arg2,arg3,arg4,*arg5,*arg6,*arg7);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegGeometry_forward3D(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  float *arg5 = 0 ;
+  float *arg6 = 0 ;
+  float *arg7 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  void *argp5 = 0 ;
+  int res5 = 0 ;
+  void *argp6 = 0 ;
+  int res6 = 0 ;
+  void *argp7 = 0 ;
+  int res7 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:LegGeometry_forward3D",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_forward3D" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegGeometry_forward3D" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "LegGeometry_forward3D" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegGeometry_forward3D" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  res5 = SWIG_ConvertPtr(obj4, &argp5, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res5)) {
+    SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "LegGeometry_forward3D" "', argument " "5"" of type '" "float &""'"); 
+  }
+  if (!argp5) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_forward3D" "', argument " "5"" of type '" "float &""'"); 
+  }
+  arg5 = reinterpret_cast< float * >(argp5);
+  res6 = SWIG_ConvertPtr(obj5, &argp6, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res6)) {
+    SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "LegGeometry_forward3D" "', argument " "6"" of type '" "float &""'"); 
+  }
+  if (!argp6) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_forward3D" "', argument " "6"" of type '" "float &""'"); 
+  }
+  arg6 = reinterpret_cast< float * >(argp6);
+  res7 = SWIG_ConvertPtr(obj6, &argp7, SWIGTYPE_p_float,  0 );
+  if (!SWIG_IsOK(res7)) {
+    SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "LegGeometry_forward3D" "', argument " "7"" of type '" "float &""'"); 
+  }
+  if (!argp7) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_forward3D" "', argument " "7"" of type '" "float &""'"); 
+  }
+  arg7 = reinterpret_cast< float * >(argp7);
+  (arg1)->forward3D(arg2,arg3,arg4,*arg5,*arg6,*arg7);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_LegGeometry(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegGeometry *arg1 = (LegGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_LegGeometry",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LegGeometry" "', argument " "1"" of type '" "LegGeometry *""'"); 
+  }
+  arg1 = reinterpret_cast< LegGeometry * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *LegGeometry_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_LegGeometry, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_Neck_upDown_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Neck *arg1 = (Neck *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Neck_upDown_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Neck, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Neck_upDown_set" "', argument " "1"" of type '" "Neck *""'"); 
+  }
+  arg1 = reinterpret_cast< Neck * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Neck_upDown_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->upDown = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Neck_upDown_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Neck *arg1 = (Neck *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Neck_upDown_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Neck, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Neck_upDown_get" "', argument " "1"" of type '" "Neck *""'"); 
+  }
+  arg1 = reinterpret_cast< Neck * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->upDown);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Neck_leftRight_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Neck *arg1 = (Neck *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Neck_leftRight_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Neck, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Neck_leftRight_set" "', argument " "1"" of type '" "Neck *""'"); 
+  }
+  arg1 = reinterpret_cast< Neck * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Neck_leftRight_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->leftRight = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Neck_leftRight_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Neck *arg1 = (Neck *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Neck_leftRight_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Neck, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Neck_leftRight_get" "', argument " "1"" of type '" "Neck *""'"); 
+  }
+  arg1 = reinterpret_cast< Neck * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->leftRight);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Neck_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Neck *arg1 = (Neck *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Neck_init",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Neck, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Neck_init" "', argument " "1"" of type '" "Neck *""'"); 
+  }
+  arg1 = reinterpret_cast< Neck * >(argp1);
+  (arg1)->init();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Neck(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Neck *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_Neck")) SWIG_fail;
+  result = (Neck *)new Neck();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Neck, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Neck(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Neck *arg1 = (Neck *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_Neck",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Neck, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Neck" "', argument " "1"" of type '" "Neck *""'"); 
+  }
+  arg1 = reinterpret_cast< Neck * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *Neck_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Neck, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_Arm_inOut_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_inOut_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_inOut_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_inOut_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->inOut = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_inOut_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_inOut_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_inOut_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->inOut);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_upDown_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_upDown_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_upDown_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_upDown_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->upDown = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_upDown_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_upDown_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_upDown_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->upDown);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_bicep_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_bicep_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_bicep_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_bicep_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->bicep = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_bicep_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_bicep_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_bicep_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->bicep);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_elbow_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_elbow_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_elbow_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_elbow_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->elbow = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_elbow_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_elbow_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_elbow_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->elbow);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_forearm_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_forearm_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_forearm_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_forearm_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->forearm = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_forearm_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_forearm_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_forearm_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->forearm);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_trigger_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_trigger_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_trigger_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_trigger_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->trigger = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_trigger_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_trigger_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_trigger_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->trigger);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_middle_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_middle_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_middle_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_middle_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->middle = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_middle_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_middle_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_middle_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->middle);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_ring_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_ring_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_ring_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_ring_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->ring = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_ring_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_ring_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_ring_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->ring);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_thumb_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_thumb_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_thumb_set" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_thumb_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->thumb = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_thumb_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_thumb_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_thumb_get" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->thumb);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_init",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_init" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  (arg1)->init();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_goLimp(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Arm_goLimp",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_goLimp" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  (arg1)->goLimp();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_report(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::ostream *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_report",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_report" "', argument " "1"" of type '" "Arm const *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__ostream,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_report" "', argument " "2"" of type '" "std::ostream &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Arm_report" "', argument " "2"" of type '" "std::ostream &""'"); 
+  }
+  arg2 = reinterpret_cast< std::ostream * >(argp2);
+  ((Arm const *)arg1)->report(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Arm_temp_report(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  std::ostream *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Arm_temp_report",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Arm_temp_report" "', argument " "1"" of type '" "Arm const *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__ostream,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Arm_temp_report" "', argument " "2"" of type '" "std::ostream &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Arm_temp_report" "', argument " "2"" of type '" "std::ostream &""'"); 
+  }
+  arg2 = reinterpret_cast< std::ostream * >(argp2);
+  ((Arm const *)arg1)->temp_report(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Arm(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Arm *arg1 = (Arm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_Arm",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Arm, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Arm" "', argument " "1"" of type '" "Arm *""'"); 
+  }
+  arg1 = reinterpret_cast< Arm * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *Arm_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Arm, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_LeftArm_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArm *arg1 = (LeftArm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LeftArm_init",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LeftArm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArm_init" "', argument " "1"" of type '" "LeftArm *""'"); 
+  }
+  arg1 = reinterpret_cast< LeftArm * >(argp1);
+  (arg1)->init();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_LeftArm(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArm *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_LeftArm")) SWIG_fail;
+  result = (LeftArm *)new LeftArm();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LeftArm, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_LeftArm(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArm *arg1 = (LeftArm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_LeftArm",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LeftArm, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LeftArm" "', argument " "1"" of type '" "LeftArm *""'"); 
+  }
+  arg1 = reinterpret_cast< LeftArm * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *LeftArm_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_LeftArm, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_RightArm_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArm *arg1 = (RightArm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:RightArm_init",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_RightArm, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArm_init" "', argument " "1"" of type '" "RightArm *""'"); 
+  }
+  arg1 = reinterpret_cast< RightArm * >(argp1);
+  (arg1)->init();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_RightArm(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArm *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_RightArm")) SWIG_fail;
+  result = (RightArm *)new RightArm();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_RightArm, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_RightArm(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArm *arg1 = (RightArm *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_RightArm",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_RightArm, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_RightArm" "', argument " "1"" of type '" "RightArm *""'"); 
+  }
+  arg1 = reinterpret_cast< RightArm * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *RightArm_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_RightArm, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_Leg_knee_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Leg_knee_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_knee_set" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Leg_knee_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->knee = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_knee_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Leg_knee_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_knee_get" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->knee);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_femur_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Leg_femur_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_femur_set" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Leg_femur_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->femur = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_femur_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Leg_femur_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_femur_get" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->femur);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_hip_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Leg_hip_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_hip_set" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Leg_hip_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
+  }
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->hip = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_hip_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::shared_ptr< Servo > *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Leg_hip_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_hip_get" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  result = (std::shared_ptr< Servo > *)& ((arg1)->hip);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_name_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Leg_name_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_name_set" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Leg_name_set" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Leg_name_set" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  if (arg1) (arg1)->name = *arg2;
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_name_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::string *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Leg_name_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_name_get" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  result = (std::string *) & ((arg1)->name);
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Leg_init",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_init" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  (arg1)->init();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_report(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Leg_report",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_report" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  (arg1)->report();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Leg_temp_report(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Leg_temp_report",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Leg_temp_report" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  (arg1)->temp_report();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Leg(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_Leg")) SWIG_fail;
+  result = (Leg *)new Leg();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Leg, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Leg(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Leg *arg1 = (Leg *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_Leg",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Leg, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Leg" "', argument " "1"" of type '" "Leg *""'"); 
+  }
+  arg1 = reinterpret_cast< Leg * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *Leg_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Leg, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_Legs_legs_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Legs *arg1 = (Legs *) 0 ;
+  Leg *arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Legs_legs_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Legs, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Legs_legs_set" "', argument " "1"" of type '" "Legs *""'"); 
+  }
+  arg1 = reinterpret_cast< Legs * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_Leg, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Legs_legs_set" "', argument " "2"" of type '" "Leg [4]""'"); 
+  } 
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  {
+    if (arg2) {
+      size_t ii = 0;
+      for (; ii < (size_t)4; ++ii) arg1->legs[ii] = arg2[ii];
+    } else {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""legs""' of type '""Leg [4]""'");
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Legs_legs_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Legs *arg1 = (Legs *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Leg *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Legs_legs_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Legs, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Legs_legs_get" "', argument " "1"" of type '" "Legs *""'"); 
+  }
+  arg1 = reinterpret_cast< Legs * >(argp1);
+  result = (Leg *)(Leg *) ((arg1)->legs);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Leg, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Legs(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Legs *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_Legs")) SWIG_fail;
+  result = (Legs *)new Legs();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Legs, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Legs_init(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Legs *arg1 = (Legs *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Legs_init",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Legs, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Legs_init" "', argument " "1"" of type '" "Legs *""'"); 
+  }
+  arg1 = reinterpret_cast< Legs * >(argp1);
+  (arg1)->init();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Legs(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Legs *arg1 = (Legs *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_Legs",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Legs, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Legs" "', argument " "1"" of type '" "Legs *""'"); 
+  }
+  arg1 = reinterpret_cast< Legs * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *Legs_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Legs, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
 SWIGINTERN PyObject *_wrap_Body_legs_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Body *arg1 = (Body *) 0 ;
-  Legs arg2 ;
+  Legs *arg2 = (Legs *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
+  void *argp2 = 0 ;
   int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
@@ -3227,20 +6843,12 @@ SWIGINTERN PyObject *_wrap_Body_legs_set(PyObject *SWIGUNUSEDPARM(self), PyObjec
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_legs_set" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_legs_set" "', argument " "2"" of type '" "Legs""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Body_legs_set" "', argument " "2"" of type '" "Legs""'");
-    } else {
-      Legs * temp = reinterpret_cast< Legs * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
-    }
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_Legs, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_legs_set" "', argument " "2"" of type '" "Legs *""'"); 
   }
-  if (arg1) (arg1)->legs = arg2;
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  if (arg1) (arg1)->legs = *arg2;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3254,7 +6862,7 @@ SWIGINTERN PyObject *_wrap_Body_legs_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
-  Legs result;
+  Legs *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:Body_legs_get",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Body, 0 |  0 );
@@ -3262,8 +6870,8 @@ SWIGINTERN PyObject *_wrap_Body_legs_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_legs_get" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  result =  ((arg1)->legs);
-  resultobj = SWIG_NewPointerObj((new Legs(static_cast< const Legs& >(result))), SWIGTYPE_p_Legs, SWIG_POINTER_OWN |  0 );
+  result = (Legs *)& ((arg1)->legs);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Legs, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -3273,10 +6881,10 @@ fail:
 SWIGINTERN PyObject *_wrap_Body_waist_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Body *arg1 = (Body *) 0 ;
-  std::shared_ptr< Servo > arg2 ;
+  std::shared_ptr< Servo > *arg2 = (std::shared_ptr< Servo > *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
+  void *argp2 = 0 ;
   int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
@@ -3287,20 +6895,12 @@ SWIGINTERN PyObject *_wrap_Body_waist_set(PyObject *SWIGUNUSEDPARM(self), PyObje
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_waist_set" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_Servo_t,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_waist_set" "', argument " "2"" of type '" "std::shared_ptr< Servo >""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Body_waist_set" "', argument " "2"" of type '" "std::shared_ptr< Servo >""'");
-    } else {
-      std::shared_ptr< Servo > * temp = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
-    }
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_waist_set" "', argument " "2"" of type '" "std::shared_ptr< Servo > *""'"); 
   }
-  if (arg1) (arg1)->waist = arg2;
+  arg2 = reinterpret_cast< std::shared_ptr< Servo > * >(argp2);
+  if (arg1) (arg1)->waist = *arg2;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3314,7 +6914,7 @@ SWIGINTERN PyObject *_wrap_Body_waist_get(PyObject *SWIGUNUSEDPARM(self), PyObje
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
-  std::shared_ptr< Servo > result;
+  std::shared_ptr< Servo > *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:Body_waist_get",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Body, 0 |  0 );
@@ -3322,8 +6922,8 @@ SWIGINTERN PyObject *_wrap_Body_waist_get(PyObject *SWIGUNUSEDPARM(self), PyObje
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_waist_get" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  result =  ((arg1)->waist);
-  resultobj = SWIG_NewPointerObj((new std::shared_ptr< Servo >(static_cast< const std::shared_ptr< Servo >& >(result))), SWIGTYPE_p_std__shared_ptrT_Servo_t, SWIG_POINTER_OWN |  0 );
+  result = (std::shared_ptr< Servo > *)& ((arg1)->waist);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_Servo_t, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -3333,10 +6933,10 @@ fail:
 SWIGINTERN PyObject *_wrap_Body_neck_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Body *arg1 = (Body *) 0 ;
-  Neck arg2 ;
+  Neck *arg2 = (Neck *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
+  void *argp2 = 0 ;
   int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
@@ -3347,20 +6947,12 @@ SWIGINTERN PyObject *_wrap_Body_neck_set(PyObject *SWIGUNUSEDPARM(self), PyObjec
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_neck_set" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Neck,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_neck_set" "', argument " "2"" of type '" "Neck""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Body_neck_set" "', argument " "2"" of type '" "Neck""'");
-    } else {
-      Neck * temp = reinterpret_cast< Neck * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
-    }
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_Neck, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_neck_set" "', argument " "2"" of type '" "Neck *""'"); 
   }
-  if (arg1) (arg1)->neck = arg2;
+  arg2 = reinterpret_cast< Neck * >(argp2);
+  if (arg1) (arg1)->neck = *arg2;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3374,7 +6966,7 @@ SWIGINTERN PyObject *_wrap_Body_neck_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
-  Neck result;
+  Neck *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:Body_neck_get",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Body, 0 |  0 );
@@ -3382,8 +6974,8 @@ SWIGINTERN PyObject *_wrap_Body_neck_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_neck_get" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  result =  ((arg1)->neck);
-  resultobj = SWIG_NewPointerObj((new Neck(static_cast< const Neck& >(result))), SWIGTYPE_p_Neck, SWIG_POINTER_OWN |  0 );
+  result = (Neck *)& ((arg1)->neck);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Neck, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -3393,10 +6985,10 @@ fail:
 SWIGINTERN PyObject *_wrap_Body_left_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Body *arg1 = (Body *) 0 ;
-  LeftArm arg2 ;
+  LeftArm *arg2 = (LeftArm *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
+  void *argp2 = 0 ;
   int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
@@ -3407,20 +6999,12 @@ SWIGINTERN PyObject *_wrap_Body_left_set(PyObject *SWIGUNUSEDPARM(self), PyObjec
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_left_set" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_LeftArm,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_left_set" "', argument " "2"" of type '" "LeftArm""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Body_left_set" "', argument " "2"" of type '" "LeftArm""'");
-    } else {
-      LeftArm * temp = reinterpret_cast< LeftArm * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
-    }
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_LeftArm, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_left_set" "', argument " "2"" of type '" "LeftArm *""'"); 
   }
-  if (arg1) (arg1)->left = arg2;
+  arg2 = reinterpret_cast< LeftArm * >(argp2);
+  if (arg1) (arg1)->left = *arg2;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3434,7 +7018,7 @@ SWIGINTERN PyObject *_wrap_Body_left_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
-  LeftArm result;
+  LeftArm *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:Body_left_get",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Body, 0 |  0 );
@@ -3442,8 +7026,8 @@ SWIGINTERN PyObject *_wrap_Body_left_get(PyObject *SWIGUNUSEDPARM(self), PyObjec
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_left_get" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  result =  ((arg1)->left);
-  resultobj = SWIG_NewPointerObj((new LeftArm(static_cast< const LeftArm& >(result))), SWIGTYPE_p_LeftArm, SWIG_POINTER_OWN |  0 );
+  result = (LeftArm *)& ((arg1)->left);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LeftArm, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -3453,10 +7037,10 @@ fail:
 SWIGINTERN PyObject *_wrap_Body_right_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   Body *arg1 = (Body *) 0 ;
-  RightArm arg2 ;
+  RightArm *arg2 = (RightArm *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
+  void *argp2 = 0 ;
   int res2 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
@@ -3467,20 +7051,12 @@ SWIGINTERN PyObject *_wrap_Body_right_set(PyObject *SWIGUNUSEDPARM(self), PyObje
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_right_set" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  {
-    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_RightArm,  0  | 0);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_right_set" "', argument " "2"" of type '" "RightArm""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Body_right_set" "', argument " "2"" of type '" "RightArm""'");
-    } else {
-      RightArm * temp = reinterpret_cast< RightArm * >(argp2);
-      arg2 = *temp;
-      if (SWIG_IsNewObj(res2)) delete temp;
-    }
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_RightArm, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Body_right_set" "', argument " "2"" of type '" "RightArm *""'"); 
   }
-  if (arg1) (arg1)->right = arg2;
+  arg2 = reinterpret_cast< RightArm * >(argp2);
+  if (arg1) (arg1)->right = *arg2;
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -3494,7 +7070,7 @@ SWIGINTERN PyObject *_wrap_Body_right_get(PyObject *SWIGUNUSEDPARM(self), PyObje
   void *argp1 = 0 ;
   int res1 = 0 ;
   PyObject * obj0 = 0 ;
-  RightArm result;
+  RightArm *result = 0 ;
   
   if (!PyArg_ParseTuple(args,(char *)"O:Body_right_get",&obj0)) SWIG_fail;
   res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Body, 0 |  0 );
@@ -3502,8 +7078,8 @@ SWIGINTERN PyObject *_wrap_Body_right_get(PyObject *SWIGUNUSEDPARM(self), PyObje
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Body_right_get" "', argument " "1"" of type '" "Body *""'"); 
   }
   arg1 = reinterpret_cast< Body * >(argp1);
-  result =  ((arg1)->right);
-  resultobj = SWIG_NewPointerObj((new RightArm(static_cast< const RightArm& >(result))), SWIGTYPE_p_RightArm, SWIG_POINTER_OWN |  0 );
+  result = (RightArm *)& ((arg1)->right);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_RightArm, 0 |  0 );
   return resultobj;
 fail:
   return NULL;
@@ -3573,8 +7149,6 @@ SWIGINTERN PyObject *_wrap_Body_temp_report(PyObject *SWIGUNUSEDPARM(self), PyOb
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
-  void *argp3 ;
-  int res3 = 0 ;
   PyObject * obj0 = 0 ;
   PyObject * obj1 = 0 ;
   PyObject * obj2 = 0 ;
@@ -3594,17 +7168,13 @@ SWIGINTERN PyObject *_wrap_Body_temp_report(PyObject *SWIGUNUSEDPARM(self), PyOb
   }
   arg2 = reinterpret_cast< std::ostream * >(argp2);
   {
-    res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_std__string,  0  | 0);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Body_temp_report" "', argument " "3"" of type '" "std::string""'"); 
-    }  
-    if (!argp3) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Body_temp_report" "', argument " "3"" of type '" "std::string""'");
-    } else {
-      std::string * temp = reinterpret_cast< std::string * >(argp3);
-      arg3 = *temp;
-      if (SWIG_IsNewObj(res3)) delete temp;
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(obj2, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "Body_temp_report" "', argument " "3"" of type '" "std::string""'"); 
     }
+    arg3 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
   }
   ((Body const *)arg1)->temp_report(*arg2,arg3);
   resultobj = SWIG_Py_Void();
@@ -3652,6 +7222,9000 @@ SWIGINTERN PyObject *Body_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject 
   PyObject *obj;
   if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
   SWIG_TypeNewClientData(SWIGTYPE_p_Body, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_ArmMover_geometry_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ArmGeometry *arg2 = (ArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ArmGeometry > tempshared2 ;
+  std::shared_ptr< ArmGeometry > *smartarg2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_geometry_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_geometry_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_geometry_set" "', argument " "2"" of type '" "ArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp2);
+      arg2 = const_cast< ArmGeometry * >(tempshared2.get());
+    } else {
+      smartarg2 = reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp2);
+      arg2 = const_cast< ArmGeometry * >((smartarg2 ? smartarg2->get() : 0));
+    }
+  }
+  if (arg1) (arg1)->geometry = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_geometry_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ArmGeometry *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_geometry_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_geometry_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ArmGeometry *) ((arg1)->geometry);
+  {
+    std::shared_ptr<  ArmGeometry > *smartresult = result ? new std::shared_ptr<  ArmGeometry >(result SWIG_NO_NULL_DELETER_0) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_inOut_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_inOut_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_inOut_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_inOut_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_inOut_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->inOut = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_inOut_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_inOut_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_inOut_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->inOut);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_upDown_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_upDown_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_upDown_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_upDown_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_upDown_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->upDown = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_upDown_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_upDown_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_upDown_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->upDown);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_bicep_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_bicep_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_bicep_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_bicep_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_bicep_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->bicep = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_bicep_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_bicep_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_bicep_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->bicep);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_elbow_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_elbow_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_elbow_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_elbow_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_elbow_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->elbow = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_elbow_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_elbow_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_elbow_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->elbow);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_forearm_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_forearm_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_forearm_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_forearm_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_forearm_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->forearm = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_forearm_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_forearm_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_forearm_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->forearm);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_trigger_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_trigger_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_trigger_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_trigger_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_trigger_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->trigger = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_trigger_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_trigger_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_trigger_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->trigger);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_middle_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_middle_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_middle_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_middle_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_middle_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->middle = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_middle_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_middle_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_middle_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->middle);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_ring_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_ring_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_ring_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_ring_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_ring_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->ring = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_ring_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_ring_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_ring_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->ring);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_thumb_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_thumb_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_thumb_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_thumb_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_thumb_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->thumb = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_thumb_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_thumb_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_thumb_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->thumb);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_move(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  Arm *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_move",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_move" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Arm,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_move" "', argument " "2"" of type '" "Arm &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_move" "', argument " "2"" of type '" "Arm &""'"); 
+  }
+  arg2 = reinterpret_cast< Arm * >(argp2);
+  (arg1)->move(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_torque(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_torque",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_torque" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ArmMover_torque" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->torque(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_done",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_done" "', argument " "1"" of type '" "ArmMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (bool)((ArmMover const *)arg1)->done();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_leapReset(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_leapReset",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_leapReset" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  (arg1)->leapReset();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapTime_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_lastLeapTime_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapTime_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ArmMover_lastLeapTime_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->lastLeapTime = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapTime_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_lastLeapTime_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapTime_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (double) ((arg1)->lastLeapTime);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapShoulderIO_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_lastLeapShoulderIO_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapShoulderIO_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ArmMover_lastLeapShoulderIO_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->lastLeapShoulderIO = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapShoulderIO_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_lastLeapShoulderIO_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapShoulderIO_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (float) ((arg1)->lastLeapShoulderIO);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapShoulderUD_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_lastLeapShoulderUD_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapShoulderUD_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ArmMover_lastLeapShoulderUD_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->lastLeapShoulderUD = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapShoulderUD_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_lastLeapShoulderUD_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapShoulderUD_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (float) ((arg1)->lastLeapShoulderUD);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapBicep_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_lastLeapBicep_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapBicep_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ArmMover_lastLeapBicep_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->lastLeapBicep = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapBicep_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_lastLeapBicep_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapBicep_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (float) ((arg1)->lastLeapBicep);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapElbow_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_lastLeapElbow_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapElbow_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ArmMover_lastLeapElbow_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->lastLeapElbow = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapElbow_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_lastLeapElbow_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapElbow_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (float) ((arg1)->lastLeapElbow);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapForearm_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_lastLeapForearm_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapForearm_set" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ArmMover_lastLeapForearm_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->lastLeapForearm = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_lastLeapForearm_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ArmMover_lastLeapForearm_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_lastLeapForearm_get" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  result = (float) ((arg1)->lastLeapForearm);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ArmMover_leapAdjust(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  LeapHandMessage *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ArmMover_leapAdjust",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ArmMover_leapAdjust" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_LeapHandMessage,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ArmMover_leapAdjust" "', argument " "2"" of type '" "LeapHandMessage &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ArmMover_leapAdjust" "', argument " "2"" of type '" "LeapHandMessage &""'"); 
+  }
+  arg2 = reinterpret_cast< LeapHandMessage * >(argp2);
+  (arg1)->leapAdjust(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_ArmMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmMover *arg1 = (ArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_ArmMover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_ArmMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ArmMover" "', argument " "1"" of type '" "ArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< ArmMover * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_ArmMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ArmGeometry *arg1 = (ArmGeometry *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ArmGeometry > tempshared1 ;
+  std::shared_ptr< ArmGeometry > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ArmMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_ArmMover",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ArmGeometry_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ArmMover" "', argument " "1"" of type '" "ArmGeometry *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ArmGeometry > * >(argp1);
+      arg1 = const_cast< ArmGeometry * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (ArmMover *)new ArmMover(arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_ArmMover, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *ArmMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_ArmMover, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_CreateWalkMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  SwigValueWrapper< std::shared_ptr< Mover > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)":CreateWalkMover")) SWIG_fail;
+  result = CreateWalkMover();
+  resultobj = SWIG_NewPointerObj((new MoverSP(static_cast< const MoverSP& >(result))), SWIGTYPE_p_std__shared_ptrT_Mover_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_touchPressure_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_touchPressure_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_touchPressure_set" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegMover_touchPressure_set" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  if (arg1) (arg1)->touchPressure = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_touchPressure_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_touchPressure_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_touchPressure_get" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (int) ((arg1)->touchPressure);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_state__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_state",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_state" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegMover_state" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  (arg1)->state(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_state__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_state",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_state" "', argument " "1"" of type '" "LegMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (int)((LegMover const *)arg1)->state();
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_state(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_LegMover_state__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_LegMover_state__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegMover_state'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegMover::state(int)\n"
+    "    LegMover::state() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_tape__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_tape",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_tape" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_tape" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_tape" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  (arg1)->tape((std::string const &)*arg2);
+  resultobj = SWIG_Py_Void();
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_tape__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  std::string *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_tape",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_tape" "', argument " "1"" of type '" "LegMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (std::string *) &((LegMover const *)arg1)->tape();
+  resultobj = SWIG_From_std_string(static_cast< std::string >(*result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_tape(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_LegMover_tape__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_AsPtr_std_string(argv[1], (std::string**)(0));
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_LegMover_tape__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegMover_tape'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegMover::tape(std::string const &)\n"
+    "    LegMover::tape() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_m_cutoff_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_m_cutoff_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_m_cutoff_set" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegMover_m_cutoff_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->m_cutoff = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_m_cutoff_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_m_cutoff_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_m_cutoff_get" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (float) ((arg1)->m_cutoff);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_cutoff__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_cutoff",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_cutoff" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegMover_cutoff" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->cutoff(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_cutoff__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_cutoff",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_cutoff" "', argument " "1"" of type '" "LegMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (float)((LegMover const *)arg1)->cutoff();
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_cutoff(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_LegMover_cutoff__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_LegMover_cutoff__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegMover_cutoff'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegMover::cutoff(float)\n"
+    "    LegMover::cutoff() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_legs_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  LegsMover *arg2 = (LegsMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_legs_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_legs_set" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_LegsMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_legs_set" "', argument " "2"" of type '" "LegsMover *""'"); 
+  }
+  arg2 = reinterpret_cast< LegsMover * >(argp2);
+  if (arg1) (arg1)->legs = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_legs_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  LegsMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_legs_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_legs_get" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (LegsMover *) ((arg1)->legs);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LegsMover, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_LegMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  LegMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:new_LegMover",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_LegMover" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_LegMover" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  result = (LegMover *)new LegMover(arg1,arg2);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LegMover, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_kneeMover_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  ServoMoverSP *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  ServoMoverSP tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_kneeMover_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_kneeMover_set" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_kneeMover_set" "', argument " "2"" of type '" "ServoMoverSP const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< ServoMoverSP * >(argp2);
+      delete reinterpret_cast< ServoMoverSP * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< ServoMoverSP * >(argp2) : &tempshared2;
+    }
+  }
+  if (arg1) (arg1)->kneeMover = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_kneeMover_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMoverSP *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_kneeMover_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_kneeMover_get" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (ServoMoverSP *) & ((arg1)->kneeMover);
+  {
+    std::shared_ptr<  ServoMover > *smartresult = *result ? new std::shared_ptr<  ServoMover >(*result) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_femurMover_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  ServoMoverSP *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  ServoMoverSP tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_femurMover_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_femurMover_set" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_femurMover_set" "', argument " "2"" of type '" "ServoMoverSP const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< ServoMoverSP * >(argp2);
+      delete reinterpret_cast< ServoMoverSP * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< ServoMoverSP * >(argp2) : &tempshared2;
+    }
+  }
+  if (arg1) (arg1)->femurMover = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_femurMover_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMoverSP *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_femurMover_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_femurMover_get" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (ServoMoverSP *) & ((arg1)->femurMover);
+  {
+    std::shared_ptr<  ServoMover > *smartresult = *result ? new std::shared_ptr<  ServoMover >(*result) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_hipMover_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  ServoMoverSP *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  ServoMoverSP tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_hipMover_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_hipMover_set" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_hipMover_set" "', argument " "2"" of type '" "ServoMoverSP const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      if (argp2) tempshared2 = *reinterpret_cast< ServoMoverSP * >(argp2);
+      delete reinterpret_cast< ServoMoverSP * >(argp2);
+      arg2 = &tempshared2;
+    } else {
+      arg2 = (argp2) ? reinterpret_cast< ServoMoverSP * >(argp2) : &tempshared2;
+    }
+  }
+  if (arg1) (arg1)->hipMover = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_hipMover_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMoverSP *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_hipMover_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_hipMover_get" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (ServoMoverSP *) & ((arg1)->hipMover);
+  {
+    std::shared_ptr<  ServoMover > *smartresult = *result ? new std::shared_ptr<  ServoMover >(*result) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_tipping(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_tipping",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_tipping" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  (arg1)->tipping();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_cautious(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_cautious",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_cautious" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_cautious" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_cautious" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  (arg1)->cautious(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_bricks(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_bricks",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_bricks" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_bricks" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_bricks" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  (arg1)->bricks(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_normal(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_normal",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_normal" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_normal" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_normal" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  (arg1)->normal(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_move(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_move",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_move" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_move" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_move" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  (arg1)->move(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_setup__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  std::map< float,std::pair< Point,int > > *arg3 = 0 ;
+  double arg4 ;
+  double arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:LegMover_setup",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_setup" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const &""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,std::pair< Point,int > > * >(argp3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "LegMover_setup" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  (arg1)->setup(*arg2,(std::map< float,std::pair< Point,int > > const &)*arg3,arg4,arg5);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_setup__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  std::map< float,std::pair< Point,int > > *arg3 = 0 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:LegMover_setup",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_setup" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const &""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,std::pair< Point,int > > * >(argp3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  (arg1)->setup(*arg2,(std::map< float,std::pair< Point,int > > const &)*arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_setup__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  std::map< float,std::pair< Point,int > > *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:LegMover_setup",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_setup" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const &""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,std::pair< Point,int > > * >(argp3);
+  (arg1)->setup(*arg2,(std::map< float,std::pair< Point,int > > const &)*arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_setup__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  std::map< float,Point > *arg3 = 0 ;
+  double arg4 ;
+  double arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:LegMover_setup",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_setup" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_std__mapT_float_Point_t,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const &""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,Point > * >(argp3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "LegMover_setup" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  (arg1)->setup(*arg2,(std::map< float,Point > const &)*arg3,arg4,arg5);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_setup__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  std::map< float,Point > *arg3 = 0 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:LegMover_setup",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_setup" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_std__mapT_float_Point_t,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const &""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,Point > * >(argp3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  (arg1)->setup(*arg2,(std::map< float,Point > const &)*arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_setup__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  std::map< float,Point > *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:LegMover_setup",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_setup" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_std__mapT_float_Point_t,  0  | 0);
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const &""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,Point > * >(argp3);
+  (arg1)->setup(*arg2,(std::map< float,Point > const &)*arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_setup__SWIG_6(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  Leg *arg2 = 0 ;
+  Point arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:LegMover_setup",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_setup" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Leg,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "2"" of type '" "Leg &""'"); 
+  }
+  arg2 = reinterpret_cast< Leg * >(argp2);
+  {
+    res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_Point,  0  | 0);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegMover_setup" "', argument " "3"" of type '" "Point""'"); 
+    }  
+    if (!argp3) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegMover_setup" "', argument " "3"" of type '" "Point""'");
+    } else {
+      Point * temp = reinterpret_cast< Point * >(argp3);
+      arg3 = *temp;
+      if (SWIG_IsNewObj(res3)) delete temp;
+    }
+  }
+  (arg1)->setup(*arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_setup(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[6];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 5) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Leg, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_LegMover_setup__SWIG_2(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Leg, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_std__mapT_float_Point_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_LegMover_setup__SWIG_5(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Leg, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_Point, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_LegMover_setup__SWIG_6(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Leg, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_LegMover_setup__SWIG_1(self, args);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Leg, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_std__mapT_float_Point_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_LegMover_setup__SWIG_4(self, args);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Leg, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_std__mapT_float_Point_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              return _wrap_LegMover_setup__SWIG_3(self, args);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Leg, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              return _wrap_LegMover_setup__SWIG_0(self, args);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegMover_setup'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegMover::setup(Leg &,std::map< float,std::pair< Point,int > > const &,double,double)\n"
+    "    LegMover::setup(Leg &,std::map< float,std::pair< Point,int > > const &,double)\n"
+    "    LegMover::setup(Leg &,std::map< float,std::pair< Point,int > > const &)\n"
+    "    LegMover::setup(Leg &,std::map< float,Point > const &,double,double)\n"
+    "    LegMover::setup(Leg &,std::map< float,Point > const &,double)\n"
+    "    LegMover::setup(Leg &,std::map< float,Point > const &)\n"
+    "    LegMover::setup(Leg &,Point)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_torque(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegMover_torque",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_torque" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegMover_torque" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->torque(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegMover_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegMover_done",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegMover_done" "', argument " "1"" of type '" "LegMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  result = (bool)((LegMover const *)arg1)->done();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_LegMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegMover *arg1 = (LegMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_LegMover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LegMover" "', argument " "1"" of type '" "LegMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegMover * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *LegMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_LegMover, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_Mover_start(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Mover *arg1 = (Mover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Mover_start",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Mover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Mover_start" "', argument " "1"" of type '" "Mover *""'"); 
+  }
+  arg1 = reinterpret_cast< Mover * >(argp1);
+  (arg1)->start();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Mover_stop(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Mover *arg1 = (Mover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Mover_stop",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Mover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Mover_stop" "', argument " "1"" of type '" "Mover *""'"); 
+  }
+  arg1 = reinterpret_cast< Mover * >(argp1);
+  (arg1)->stop();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Mover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Mover *arg1 = (Mover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_Mover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Mover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Mover" "', argument " "1"" of type '" "Mover *""'"); 
+  }
+  arg1 = reinterpret_cast< Mover * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *Mover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Mover, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_RightArmMover_rightArmGeometry_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmMover *arg1 = (RightArmMover *) 0 ;
+  RightArmGeometry *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< RightArmGeometry const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:RightArmMover_rightArmGeometry_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_RightArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmMover_rightArmGeometry_set" "', argument " "1"" of type '" "RightArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< RightArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "RightArmMover_rightArmGeometry_set" "', argument " "2"" of type '" "RightArmGeometry const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "RightArmMover_rightArmGeometry_set" "', argument " "2"" of type '" "RightArmGeometry const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const RightArmGeometry > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const RightArmGeometry > * >(argp2);
+      arg2 = const_cast< RightArmGeometry * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< RightArmGeometry * >(reinterpret_cast< std::shared_ptr< const RightArmGeometry > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->rightArmGeometry = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_RightArmMover_rightArmGeometry_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmMover *arg1 = (RightArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  RightArmGeometry *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:RightArmMover_rightArmGeometry_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_RightArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "RightArmMover_rightArmGeometry_get" "', argument " "1"" of type '" "RightArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< RightArmMover * >(argp1);
+  result = (RightArmGeometry *) & ((arg1)->rightArmGeometry);
+  {
+    std::shared_ptr< const RightArmGeometry > *smartresult = new std::shared_ptr< const RightArmGeometry >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_RightArmGeometry_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_RightArmMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_RightArmMover")) SWIG_fail;
+  result = (RightArmMover *)new RightArmMover();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_RightArmMover, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_RightArmMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  RightArmMover *arg1 = (RightArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_RightArmMover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_RightArmMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_RightArmMover" "', argument " "1"" of type '" "RightArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< RightArmMover * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *RightArmMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_RightArmMover, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_WalkParameters_radius_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_radius_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_radius_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_radius_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->radius = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_radius_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_radius_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_radius_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->radius);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_x1_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_x1_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_x1_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_x1_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x1 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_x1_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_x1_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_x1_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->x1);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_y1_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_y1_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_y1_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_y1_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y1 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_y1_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_y1_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_y1_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->y1);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z1_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_z1_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z1_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_z1_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z1 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z1_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_z1_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z1_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->z1);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_x2_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_x2_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_x2_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_x2_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x2 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_x2_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_x2_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_x2_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->x2);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_y2_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_y2_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_y2_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_y2_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y2 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_y2_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_y2_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_y2_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->y2);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z2_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_z2_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z2_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_z2_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z2 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z2_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_z2_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z2_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->z2);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_x3_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_x3_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_x3_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_x3_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x3 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_x3_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_x3_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_x3_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->x3);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_y3_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_y3_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_y3_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_y3_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y3 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_y3_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_y3_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_y3_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->y3);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z3_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_z3_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z3_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_z3_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z3 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z3_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_z3_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z3_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->z3);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_x4_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_x4_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_x4_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_x4_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x4 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_x4_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_x4_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_x4_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->x4);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_y4_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_y4_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_y4_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_y4_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y4 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_y4_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_y4_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_y4_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->y4);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z4_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_z4_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z4_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_z4_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z4 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z4_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_z4_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z4_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->z4);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_z_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_z_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_z_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_z_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_z_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->z);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_step_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_step_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_step_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_step_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->step = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_step_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_step_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_step_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->step);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_direction_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_direction_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_direction_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_direction_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->direction = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_direction_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_direction_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_direction_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->direction);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_zStep_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_zStep_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_zStep_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_zStep_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zStep = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_zStep_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_zStep_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_zStep_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->zStep);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_repeat_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_repeat_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_repeat_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_repeat_set" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  if (arg1) (arg1)->repeat = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_repeat_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_repeat_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_repeat_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (int) ((arg1)->repeat);
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_rotation_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_rotation_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_rotation_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_rotation_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->rotation = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_rotation_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_rotation_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_rotation_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->rotation);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_zOffset_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:WalkParameters_zOffset_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_zOffset_set" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "WalkParameters_zOffset_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zOffset = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_WalkParameters_zOffset_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:WalkParameters_zOffset_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "WalkParameters_zOffset_get" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  result = (double) ((arg1)->zOffset);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_WalkParameters(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  WalkParameters *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOO:new_WalkParameters",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6)) SWIG_fail;
+  ecode1 = SWIG_AsVal_double(obj0, &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_WalkParameters" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "new_WalkParameters" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "new_WalkParameters" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "new_WalkParameters" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "new_WalkParameters" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "new_WalkParameters" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "new_WalkParameters" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  result = (WalkParameters *)new WalkParameters(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_WalkParameters, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_WalkParameters(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  WalkParameters *arg1 = (WalkParameters *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_WalkParameters",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_WalkParameters, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_WalkParameters" "', argument " "1"" of type '" "WalkParameters *""'"); 
+  }
+  arg1 = reinterpret_cast< WalkParameters * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *WalkParameters_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_WalkParameters, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_BodyMover_legs_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  LegsMover *arg2 = (LegsMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_legs_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_legs_set" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_legs_set" "', argument " "2"" of type '" "LegsMover *""'"); 
+  }
+  arg2 = reinterpret_cast< LegsMover * >(argp2);
+  if (arg1) (arg1)->legs = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_legs_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  LegsMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:BodyMover_legs_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_legs_get" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  result = (LegsMover *)& ((arg1)->legs);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LegsMover, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_waist_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_waist_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_waist_set" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_waist_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_waist_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->waist = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_waist_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:BodyMover_waist_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_waist_get" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->waist);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_neck_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  NeckMover *arg2 = (NeckMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_neck_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_neck_set" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_NeckMover, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_neck_set" "', argument " "2"" of type '" "NeckMover *""'"); 
+  }
+  arg2 = reinterpret_cast< NeckMover * >(argp2);
+  if (arg1) (arg1)->neck = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_neck_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  NeckMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:BodyMover_neck_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_neck_get" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  result = (NeckMover *)& ((arg1)->neck);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_NeckMover, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_left_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  LeftArmMover *arg2 = (LeftArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_left_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_left_set" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_LeftArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_left_set" "', argument " "2"" of type '" "LeftArmMover *""'"); 
+  }
+  arg2 = reinterpret_cast< LeftArmMover * >(argp2);
+  if (arg1) (arg1)->left = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_left_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  LeftArmMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:BodyMover_left_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_left_get" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  result = (LeftArmMover *)& ((arg1)->left);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LeftArmMover, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_right_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  RightArmMover *arg2 = (RightArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_right_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_right_set" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_RightArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_right_set" "', argument " "2"" of type '" "RightArmMover *""'"); 
+  }
+  arg2 = reinterpret_cast< RightArmMover * >(argp2);
+  if (arg1) (arg1)->right = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_right_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  RightArmMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:BodyMover_right_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_right_get" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  result = (RightArmMover *)& ((arg1)->right);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_RightArmMover, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_BodyMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_BodyMover")) SWIG_fail;
+  result = (BodyMover *)new BodyMover();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_BodyMover, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_bMove(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  SwigValueWrapper< WalkParameters > arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  std::vector< std::vector< double > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_bMove",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_bMove" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_WalkParameters,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_bMove" "', argument " "2"" of type '" "WalkParameters""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_bMove" "', argument " "2"" of type '" "WalkParameters""'");
+    } else {
+      WalkParameters * temp = reinterpret_cast< WalkParameters * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  result = (arg1)->bMove(arg2);
+  resultobj = SWIG_NewPointerObj((new std::vector< std::vector< double > >(static_cast< const std::vector< std::vector< double > >& >(result))), SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_createMove__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  bool arg11 ;
+  int arg12 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  bool val11 ;
+  int ecode11 = 0 ;
+  int val12 ;
+  int ecode12 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  PyObject * obj10 = 0 ;
+  PyObject * obj11 = 0 ;
+  std::vector< std::vector< double > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOOO:BodyMover_createMove",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10,&obj11)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_createMove" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_createMove" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_createMove" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_createMove" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_createMove" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_createMove" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_createMove" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_createMove" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_createMove" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_createMove" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  ecode11 = SWIG_AsVal_bool(obj10, &val11);
+  if (!SWIG_IsOK(ecode11)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "BodyMover_createMove" "', argument " "11"" of type '" "bool""'");
+  } 
+  arg11 = static_cast< bool >(val11);
+  ecode12 = SWIG_AsVal_int(obj11, &val12);
+  if (!SWIG_IsOK(ecode12)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode12), "in method '" "BodyMover_createMove" "', argument " "12"" of type '" "int""'");
+  } 
+  arg12 = static_cast< int >(val12);
+  result = (arg1)->createMove(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12);
+  resultobj = SWIG_NewPointerObj((new std::vector< std::vector< double > >(static_cast< const std::vector< std::vector< double > >& >(result))), SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_createMove__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  bool arg11 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  bool val11 ;
+  int ecode11 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  PyObject * obj10 = 0 ;
+  std::vector< std::vector< double > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOO:BodyMover_createMove",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_createMove" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_createMove" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_createMove" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_createMove" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_createMove" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_createMove" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_createMove" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_createMove" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_createMove" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_createMove" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  ecode11 = SWIG_AsVal_bool(obj10, &val11);
+  if (!SWIG_IsOK(ecode11)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "BodyMover_createMove" "', argument " "11"" of type '" "bool""'");
+  } 
+  arg11 = static_cast< bool >(val11);
+  result = (arg1)->createMove(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11);
+  resultobj = SWIG_NewPointerObj((new std::vector< std::vector< double > >(static_cast< const std::vector< std::vector< double > >& >(result))), SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_createMove__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  std::vector< std::vector< double > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOO:BodyMover_createMove",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_createMove" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_createMove" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_createMove" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_createMove" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_createMove" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_createMove" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_createMove" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_createMove" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_createMove" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_createMove" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  result = (arg1)->createMove(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+  resultobj = SWIG_NewPointerObj((new std::vector< std::vector< double > >(static_cast< const std::vector< std::vector< double > >& >(result))), SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_createMove(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[13];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 12) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 10) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        return _wrap_BodyMover_createMove__SWIG_2(self, args);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 11) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        {
+                          int res = SWIG_AsVal_bool(argv[10], NULL);
+                          _v = SWIG_CheckState(res);
+                        }
+                        if (_v) {
+                          return _wrap_BodyMover_createMove__SWIG_1(self, args);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        {
+                          int res = SWIG_AsVal_bool(argv[10], NULL);
+                          _v = SWIG_CheckState(res);
+                        }
+                        if (_v) {
+                          {
+                            int res = SWIG_AsVal_int(argv[11], NULL);
+                            _v = SWIG_CheckState(res);
+                          }
+                          if (_v) {
+                            return _wrap_BodyMover_createMove__SWIG_0(self, args);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'BodyMover_createMove'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    BodyMover::createMove(double,double,double,double,double,double,double,double,double,bool,int)\n"
+    "    BodyMover::createMove(double,double,double,double,double,double,double,double,double,bool)\n"
+    "    BodyMover::createMove(double,double,double,double,double,double,double,double,double)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_stepMove__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  bool arg11 ;
+  int arg12 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  bool val11 ;
+  int ecode11 = 0 ;
+  int val12 ;
+  int ecode12 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  PyObject * obj10 = 0 ;
+  PyObject * obj11 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOOO:BodyMover_stepMove",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10,&obj11)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_stepMove" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_stepMove" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_stepMove" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_stepMove" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_stepMove" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_stepMove" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_stepMove" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_stepMove" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_stepMove" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_stepMove" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  ecode11 = SWIG_AsVal_bool(obj10, &val11);
+  if (!SWIG_IsOK(ecode11)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "BodyMover_stepMove" "', argument " "11"" of type '" "bool""'");
+  } 
+  arg11 = static_cast< bool >(val11);
+  ecode12 = SWIG_AsVal_int(obj11, &val12);
+  if (!SWIG_IsOK(ecode12)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode12), "in method '" "BodyMover_stepMove" "', argument " "12"" of type '" "int""'");
+  } 
+  arg12 = static_cast< int >(val12);
+  result = (bool)(arg1)->stepMove(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_stepMove__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  bool arg11 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  bool val11 ;
+  int ecode11 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  PyObject * obj10 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOO:BodyMover_stepMove",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_stepMove" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_stepMove" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_stepMove" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_stepMove" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_stepMove" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_stepMove" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_stepMove" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_stepMove" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_stepMove" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_stepMove" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  ecode11 = SWIG_AsVal_bool(obj10, &val11);
+  if (!SWIG_IsOK(ecode11)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "BodyMover_stepMove" "', argument " "11"" of type '" "bool""'");
+  } 
+  arg11 = static_cast< bool >(val11);
+  result = (bool)(arg1)->stepMove(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_stepMove__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOO:BodyMover_stepMove",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_stepMove" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_stepMove" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_stepMove" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_stepMove" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_stepMove" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_stepMove" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_stepMove" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_stepMove" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_stepMove" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_stepMove" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  result = (bool)(arg1)->stepMove(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_stepMove(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[13];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 12) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 10) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        return _wrap_BodyMover_stepMove__SWIG_2(self, args);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 11) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        {
+                          int res = SWIG_AsVal_bool(argv[10], NULL);
+                          _v = SWIG_CheckState(res);
+                        }
+                        if (_v) {
+                          return _wrap_BodyMover_stepMove__SWIG_1(self, args);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        {
+                          int res = SWIG_AsVal_bool(argv[10], NULL);
+                          _v = SWIG_CheckState(res);
+                        }
+                        if (_v) {
+                          {
+                            int res = SWIG_AsVal_int(argv[11], NULL);
+                            _v = SWIG_CheckState(res);
+                          }
+                          if (_v) {
+                            return _wrap_BodyMover_stepMove__SWIG_0(self, args);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'BodyMover_stepMove'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    BodyMover::stepMove(double,double,double,double,double,double,double,double,double,bool,int)\n"
+    "    BodyMover::stepMove(double,double,double,double,double,double,double,double,double,bool)\n"
+    "    BodyMover::stepMove(double,double,double,double,double,double,double,double,double)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_blended__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  bool arg11 ;
+  int arg12 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  bool val11 ;
+  int ecode11 = 0 ;
+  int val12 ;
+  int ecode12 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  PyObject * obj10 = 0 ;
+  PyObject * obj11 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOOO:BodyMover_blended",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10,&obj11)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_blended" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_blended" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_blended" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_blended" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_blended" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_blended" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_blended" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_blended" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_blended" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_blended" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  ecode11 = SWIG_AsVal_bool(obj10, &val11);
+  if (!SWIG_IsOK(ecode11)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "BodyMover_blended" "', argument " "11"" of type '" "bool""'");
+  } 
+  arg11 = static_cast< bool >(val11);
+  ecode12 = SWIG_AsVal_int(obj11, &val12);
+  if (!SWIG_IsOK(ecode12)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode12), "in method '" "BodyMover_blended" "', argument " "12"" of type '" "int""'");
+  } 
+  arg12 = static_cast< int >(val12);
+  result = (bool)(arg1)->blended(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11,arg12);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_blended__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  bool arg11 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  bool val11 ;
+  int ecode11 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  PyObject * obj10 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOOO:BodyMover_blended",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9,&obj10)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_blended" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_blended" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_blended" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_blended" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_blended" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_blended" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_blended" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_blended" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_blended" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_blended" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  ecode11 = SWIG_AsVal_bool(obj10, &val11);
+  if (!SWIG_IsOK(ecode11)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "BodyMover_blended" "', argument " "11"" of type '" "bool""'");
+  } 
+  arg11 = static_cast< bool >(val11);
+  result = (bool)(arg1)->blended(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10,arg11);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_blended__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  double arg10 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  double val10 ;
+  int ecode10 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  PyObject * obj5 = 0 ;
+  PyObject * obj6 = 0 ;
+  PyObject * obj7 = 0 ;
+  PyObject * obj8 = 0 ;
+  PyObject * obj9 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOOOOOOO:BodyMover_blended",&obj0,&obj1,&obj2,&obj3,&obj4,&obj5,&obj6,&obj7,&obj8,&obj9)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_blended" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "BodyMover_blended" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_blended" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "BodyMover_blended" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "BodyMover_blended" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(obj5, &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "BodyMover_blended" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(obj6, &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "BodyMover_blended" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(obj7, &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "BodyMover_blended" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(obj8, &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "BodyMover_blended" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  ecode10 = SWIG_AsVal_double(obj9, &val10);
+  if (!SWIG_IsOK(ecode10)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "BodyMover_blended" "', argument " "10"" of type '" "double""'");
+  } 
+  arg10 = static_cast< double >(val10);
+  result = (bool)(arg1)->blended(arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_blended(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[13];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 12) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 10) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        return _wrap_BodyMover_blended__SWIG_2(self, args);
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 11) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        {
+                          int res = SWIG_AsVal_bool(argv[10], NULL);
+                          _v = SWIG_CheckState(res);
+                        }
+                        if (_v) {
+                          return _wrap_BodyMover_blended__SWIG_1(self, args);
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 12) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      {
+                        int res = SWIG_AsVal_double(argv[9], NULL);
+                        _v = SWIG_CheckState(res);
+                      }
+                      if (_v) {
+                        {
+                          int res = SWIG_AsVal_bool(argv[10], NULL);
+                          _v = SWIG_CheckState(res);
+                        }
+                        if (_v) {
+                          {
+                            int res = SWIG_AsVal_int(argv[11], NULL);
+                            _v = SWIG_CheckState(res);
+                          }
+                          if (_v) {
+                            return _wrap_BodyMover_blended__SWIG_0(self, args);
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'BodyMover_blended'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    BodyMover::blended(double,double,double,double,double,double,double,double,double,bool,int)\n"
+    "    BodyMover::blended(double,double,double,double,double,double,double,double,double,bool)\n"
+    "    BodyMover::blended(double,double,double,double,double,double,double,double,double)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_bStep(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  SwigValueWrapper< WalkParameters > arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_bStep",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_bStep" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_WalkParameters,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_bStep" "', argument " "2"" of type '" "WalkParameters""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_bStep" "', argument " "2"" of type '" "WalkParameters""'");
+    } else {
+      WalkParameters * temp = reinterpret_cast< WalkParameters * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  result = (bool)(arg1)->bStep(arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_stepMerge__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  std::vector< std::vector< double > > arg2 ;
+  std::vector< std::vector< double > > arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  std::vector< std::vector< double > > result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:BodyMover_stepMerge",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_stepMerge" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_stepMerge" "', argument " "2"" of type '" "std::vector< std::vector< double > >""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_stepMerge" "', argument " "2"" of type '" "std::vector< std::vector< double > >""'");
+    } else {
+      std::vector< std::vector< double > > * temp = reinterpret_cast< std::vector< std::vector< double > > * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  {
+    res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t,  0  | 0);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "BodyMover_stepMerge" "', argument " "3"" of type '" "std::vector< std::vector< double > >""'"); 
+    }  
+    if (!argp3) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_stepMerge" "', argument " "3"" of type '" "std::vector< std::vector< double > >""'");
+    } else {
+      std::vector< std::vector< double > > * temp = reinterpret_cast< std::vector< std::vector< double > > * >(argp3);
+      arg3 = *temp;
+      if (SWIG_IsNewObj(res3)) delete temp;
+    }
+  }
+  result = (arg1)->stepMerge(arg2,arg3);
+  resultobj = SWIG_NewPointerObj((new std::vector< std::vector< double > >(static_cast< const std::vector< std::vector< double > >& >(result))), SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_changeZ(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  SwigValueWrapper< WalkParameters > arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:BodyMover_changeZ",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_changeZ" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_WalkParameters,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_changeZ" "', argument " "2"" of type '" "WalkParameters""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_changeZ" "', argument " "2"" of type '" "WalkParameters""'");
+    } else {
+      WalkParameters * temp = reinterpret_cast< WalkParameters * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "BodyMover_changeZ" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  (arg1)->changeZ(arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_stepMerge__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  SwigValueWrapper< WalkParameters > arg2 ;
+  SwigValueWrapper< WalkParameters > arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:BodyMover_stepMerge",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_stepMerge" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_WalkParameters,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_stepMerge" "', argument " "2"" of type '" "WalkParameters""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_stepMerge" "', argument " "2"" of type '" "WalkParameters""'");
+    } else {
+      WalkParameters * temp = reinterpret_cast< WalkParameters * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  {
+    res3 = SWIG_ConvertPtr(obj2, &argp3, SWIGTYPE_p_WalkParameters,  0  | 0);
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "BodyMover_stepMerge" "', argument " "3"" of type '" "WalkParameters""'"); 
+    }  
+    if (!argp3) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_stepMerge" "', argument " "3"" of type '" "WalkParameters""'");
+    } else {
+      WalkParameters * temp = reinterpret_cast< WalkParameters * >(argp3);
+      arg3 = *temp;
+      if (SWIG_IsNewObj(res3)) delete temp;
+    }
+  }
+  (arg1)->stepMerge(arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_stepMerge(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[4];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 3) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_BodyMover_stepMerge__SWIG_0(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_BodyMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_WalkParameters, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        int res = SWIG_ConvertPtr(argv[2], 0, SWIGTYPE_p_WalkParameters, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_BodyMover_stepMerge__SWIG_1(self, args);
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'BodyMover_stepMerge'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    BodyMover::stepMerge(std::vector< std::vector< double > >,std::vector< std::vector< double > >)\n"
+    "    BodyMover::stepMerge(WalkParameters,WalkParameters)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_logPosition(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  std::vector< std::vector< double > > arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_logPosition",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_logPosition" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_logPosition" "', argument " "2"" of type '" "std::vector< std::vector< double > >""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_logPosition" "', argument " "2"" of type '" "std::vector< std::vector< double > >""'");
+    } else {
+      std::vector< std::vector< double > > * temp = reinterpret_cast< std::vector< std::vector< double > > * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  (arg1)->logPosition(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_fromTips(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  std::vector< std::vector< double > > arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_fromTips",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_fromTips" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__vectorT_std__vectorT_double_t_t,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_fromTips" "', argument " "2"" of type '" "std::vector< std::vector< double > >""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_fromTips" "', argument " "2"" of type '" "std::vector< std::vector< double > >""'");
+    } else {
+      std::vector< std::vector< double > > * temp = reinterpret_cast< std::vector< std::vector< double > > * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  (arg1)->fromTips(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_dynamicWalk(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:BodyMover_dynamicWalk",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_dynamicWalk" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  (arg1)->dynamicWalk();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_move(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  Body *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_move",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_move" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Body,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_move" "', argument " "2"" of type '" "Body &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_move" "', argument " "2"" of type '" "Body &""'"); 
+  }
+  arg2 = reinterpret_cast< Body * >(argp2);
+  (arg1)->move(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_load(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_load",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_load" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_load" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_load" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (bool)(arg1)->load((std::string const &)*arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_play(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_play",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_play" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_play" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_play" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (bool)(arg1)->play((std::string const &)*arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_getMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:BodyMover_getMover",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_getMover" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "BodyMover_getMover" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "BodyMover_getMover" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (ServoMover *)(arg1)->getMover((std::string const &)*arg2);
+  {
+    std::shared_ptr<  ServoMover > *smartresult = result ? new std::shared_ptr<  ServoMover >(result SWIG_NO_NULL_DELETER_0) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 | SWIG_POINTER_OWN);
+  }
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_BodyMover_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:BodyMover_done",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "BodyMover_done" "', argument " "1"" of type '" "BodyMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  result = (bool)((BodyMover const *)arg1)->done();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_BodyMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_BodyMover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_BodyMover" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *BodyMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_BodyMover, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_LeftArmMover_leftArmGeometry_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmMover *arg1 = (LeftArmMover *) 0 ;
+  LeftArmGeometry *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< LeftArmGeometry const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LeftArmMover_leftArmGeometry_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LeftArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmMover_leftArmGeometry_set" "', argument " "1"" of type '" "LeftArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LeftArmMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LeftArmMover_leftArmGeometry_set" "', argument " "2"" of type '" "LeftArmGeometry const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LeftArmMover_leftArmGeometry_set" "', argument " "2"" of type '" "LeftArmGeometry const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const LeftArmGeometry > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const LeftArmGeometry > * >(argp2);
+      arg2 = const_cast< LeftArmGeometry * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< LeftArmGeometry * >(reinterpret_cast< std::shared_ptr< const LeftArmGeometry > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->leftArmGeometry = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LeftArmMover_leftArmGeometry_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmMover *arg1 = (LeftArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  LeftArmGeometry *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LeftArmMover_leftArmGeometry_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LeftArmMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LeftArmMover_leftArmGeometry_get" "', argument " "1"" of type '" "LeftArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LeftArmMover * >(argp1);
+  result = (LeftArmGeometry *) & ((arg1)->leftArmGeometry);
+  {
+    std::shared_ptr< const LeftArmGeometry > *smartresult = new std::shared_ptr< const LeftArmGeometry >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_LeftArmGeometry_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_LeftArmMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_LeftArmMover")) SWIG_fail;
+  result = (LeftArmMover *)new LeftArmMover();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LeftArmMover, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_LeftArmMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LeftArmMover *arg1 = (LeftArmMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_LeftArmMover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LeftArmMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LeftArmMover" "', argument " "1"" of type '" "LeftArmMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LeftArmMover * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *LeftArmMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_LeftArmMover, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_LegsMover_cutoff__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegsMover_cutoff",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_cutoff" "', argument " "1"" of type '" "LegsMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  result = (float)((LegsMover const *)arg1)->cutoff();
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_cutoff__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegsMover_cutoff",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_cutoff" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegsMover_cutoff" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->cutoff(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_cutoff(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_LegsMover_cutoff__SWIG_0(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_LegsMover_cutoff__SWIG_1(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegsMover_cutoff'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegsMover::cutoff() const\n"
+    "    LegsMover::cutoff(float)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_legMovers_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  LegMoverSP *arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegsMover_legMovers_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_legMovers_set" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__shared_ptrT_LegMover_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_legMovers_set" "', argument " "2"" of type '" "LegMoverSP [4]""'"); 
+  } 
+  arg2 = reinterpret_cast< LegMoverSP * >(argp2);
+  {
+    if (arg2) {
+      size_t ii = 0;
+      for (; ii < (size_t)4; ++ii) arg1->legMovers[ii] = arg2[ii];
+    } else {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""legMovers""' of type '""LegMoverSP [4]""'");
+    }
+  }
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_legMovers_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  LegMoverSP *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegsMover_legMovers_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_legMovers_get" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  result = (LegMoverSP *)(LegMoverSP *) ((arg1)->legMovers);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__shared_ptrT_LegMover_t, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_state__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  int arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegsMover_state",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_state" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  ecode2 = SWIG_AsVal_int(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegsMover_state" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  (arg1)->state(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_state__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  int result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegsMover_state",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_state" "', argument " "1"" of type '" "LegsMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  result = (int)((LegsMover const *)arg1)->state();
+  resultobj = SWIG_From_int(static_cast< int >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_state(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_LegsMover_state__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_LegsMover_state__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegsMover_state'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegsMover::state(int)\n"
+    "    LegsMover::state() const\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_bodyMover_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  BodyMover *arg2 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegsMover_bodyMover_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_bodyMover_set" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_BodyMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_bodyMover_set" "', argument " "2"" of type '" "BodyMover *""'"); 
+  }
+  arg2 = reinterpret_cast< BodyMover * >(argp2);
+  if (arg1) (arg1)->bodyMover = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_bodyMover_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  BodyMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegsMover_bodyMover_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_bodyMover_get" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  result = (BodyMover *) ((arg1)->bodyMover);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_BodyMover, 0 |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_LegsMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  BodyMover *arg1 = (BodyMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  LegsMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_LegsMover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_BodyMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_LegsMover" "', argument " "1"" of type '" "BodyMover *""'"); 
+  }
+  arg1 = reinterpret_cast< BodyMover * >(argp1);
+  result = (LegsMover *)new LegsMover(arg1);
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LegsMover, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_normal(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  Legs *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegsMover_normal",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_normal" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_normal" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegsMover_normal" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  (arg1)->normal(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_move(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  Legs *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:LegsMover_move",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_move" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_move" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegsMover_move" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  (arg1)->move(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_setup__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  Legs *arg2 = 0 ;
+  std::map< float,Point > *arg3 = (std::map< float,Point > *) 0 ;
+  double arg4 ;
+  double arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:LegsMover_setup",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_setup" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_std__mapT_float_Point_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegsMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const *""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,Point > * >(argp3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegsMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "LegsMover_setup" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  (arg1)->setup(*arg2,(std::map< float,Point > const *)arg3,arg4,arg5);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_setup__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  Legs *arg2 = 0 ;
+  std::map< float,Point > *arg3 = (std::map< float,Point > *) 0 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:LegsMover_setup",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_setup" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_std__mapT_float_Point_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegsMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const *""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,Point > * >(argp3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegsMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  (arg1)->setup(*arg2,(std::map< float,Point > const *)arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_setup__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  Legs *arg2 = 0 ;
+  std::map< float,Point > *arg3 = (std::map< float,Point > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:LegsMover_setup",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_setup" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_std__mapT_float_Point_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegsMover_setup" "', argument " "3"" of type '" "std::map< float,Point > const *""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,Point > * >(argp3);
+  (arg1)->setup(*arg2,(std::map< float,Point > const *)arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_setup__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  Legs *arg2 = 0 ;
+  std::map< float,std::pair< Point,int > > *arg3 = (std::map< float,std::pair< Point,int > > *) 0 ;
+  double arg4 ;
+  double arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:LegsMover_setup",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_setup" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegsMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const *""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,std::pair< Point,int > > * >(argp3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegsMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "LegsMover_setup" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  (arg1)->setup(*arg2,(std::map< float,std::pair< Point,int > > const *)arg3,arg4,arg5);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_setup__SWIG_4(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  Legs *arg2 = 0 ;
+  std::map< float,std::pair< Point,int > > *arg3 = (std::map< float,std::pair< Point,int > > *) 0 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:LegsMover_setup",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_setup" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegsMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const *""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,std::pair< Point,int > > * >(argp3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "LegsMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  (arg1)->setup(*arg2,(std::map< float,std::pair< Point,int > > const *)arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_setup__SWIG_5(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  Legs *arg2 = 0 ;
+  std::map< float,std::pair< Point,int > > *arg3 = (std::map< float,std::pair< Point,int > > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:LegsMover_setup",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_setup" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Legs,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegsMover_setup" "', argument " "2"" of type '" "Legs &""'"); 
+  }
+  arg2 = reinterpret_cast< Legs * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LegsMover_setup" "', argument " "3"" of type '" "std::map< float,std::pair< Point,int > > const *""'"); 
+  }
+  arg3 = reinterpret_cast< std::map< float,std::pair< Point,int > > * >(argp3);
+  (arg1)->setup(*arg2,(std::map< float,std::pair< Point,int > > const *)arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_setup(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[6];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 5) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Legs, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__mapT_float_Point_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_LegsMover_setup__SWIG_2(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Legs, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_LegsMover_setup__SWIG_5(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Legs, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_LegsMover_setup__SWIG_4(self, args);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Legs, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__mapT_float_Point_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_LegsMover_setup__SWIG_1(self, args);
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Legs, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__mapT_float_Point_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              return _wrap_LegsMover_setup__SWIG_0(self, args);
+            }
+          }
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_LegsMover, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Legs, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_std__mapT_float_std__pairT_Point_int_t_t, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              return _wrap_LegsMover_setup__SWIG_3(self, args);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'LegsMover_setup'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    LegsMover::setup(Legs &,std::map< float,Point > const *,double,double)\n"
+    "    LegsMover::setup(Legs &,std::map< float,Point > const *,double)\n"
+    "    LegsMover::setup(Legs &,std::map< float,Point > const *)\n"
+    "    LegsMover::setup(Legs &,std::map< float,std::pair< Point,int > > const *,double,double)\n"
+    "    LegsMover::setup(Legs &,std::map< float,std::pair< Point,int > > const *,double)\n"
+    "    LegsMover::setup(Legs &,std::map< float,std::pair< Point,int > > const *)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_torque(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  float arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:LegsMover_torque",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_torque" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LegsMover_torque" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_int(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "LegsMover_torque" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  (arg1)->torque(arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_LegsMover_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:LegsMover_done",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegsMover_done" "', argument " "1"" of type '" "LegsMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  result = (bool)((LegsMover const *)arg1)->done();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_LegsMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  LegsMover *arg1 = (LegsMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_LegsMover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegsMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LegsMover" "', argument " "1"" of type '" "LegsMover *""'"); 
+  }
+  arg1 = reinterpret_cast< LegsMover * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *LegsMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_LegsMover, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_NeckMover_upDown_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *arg1 = (NeckMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:NeckMover_upDown_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NeckMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NeckMover_upDown_set" "', argument " "1"" of type '" "NeckMover *""'"); 
+  }
+  arg1 = reinterpret_cast< NeckMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "NeckMover_upDown_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "NeckMover_upDown_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->upDown = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_NeckMover_upDown_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *arg1 = (NeckMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:NeckMover_upDown_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NeckMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NeckMover_upDown_get" "', argument " "1"" of type '" "NeckMover *""'"); 
+  }
+  arg1 = reinterpret_cast< NeckMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->upDown);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_NeckMover_leftRight_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *arg1 = (NeckMover *) 0 ;
+  ServoMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared2 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:NeckMover_leftRight_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NeckMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NeckMover_leftRight_set" "', argument " "1"" of type '" "NeckMover *""'"); 
+  }
+  arg1 = reinterpret_cast< NeckMover * >(argp1);
+  {
+    int newmem = 0;
+    res2 = SWIG_ConvertPtrAndOwn(obj1, &argp2, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "NeckMover_leftRight_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "NeckMover_leftRight_set" "', argument " "2"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared2 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2);
+      arg2 = const_cast< ServoMover * >(tempshared2.get());
+    } else {
+      arg2 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp2)->get());
+    }
+  }
+  if (arg1) (arg1)->leftRight = *arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_NeckMover_leftRight_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *arg1 = (NeckMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:NeckMover_leftRight_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NeckMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NeckMover_leftRight_get" "', argument " "1"" of type '" "NeckMover *""'"); 
+  }
+  arg1 = reinterpret_cast< NeckMover * >(argp1);
+  result = (ServoMover *) & ((arg1)->leftRight);
+  {
+    std::shared_ptr< const ServoMover > *smartresult = new std::shared_ptr< const ServoMover >(result SWIG_NO_NULL_DELETER_0);
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_NeckMover_move(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *arg1 = (NeckMover *) 0 ;
+  Neck *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:NeckMover_move",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NeckMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NeckMover_move" "', argument " "1"" of type '" "NeckMover *""'"); 
+  }
+  arg1 = reinterpret_cast< NeckMover * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Neck,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "NeckMover_move" "', argument " "2"" of type '" "Neck &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "NeckMover_move" "', argument " "2"" of type '" "Neck &""'"); 
+  }
+  arg2 = reinterpret_cast< Neck * >(argp2);
+  (arg1)->move(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_NeckMover_torque(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *arg1 = (NeckMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:NeckMover_torque",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NeckMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NeckMover_torque" "', argument " "1"" of type '" "NeckMover *""'"); 
+  }
+  arg1 = reinterpret_cast< NeckMover * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "NeckMover_torque" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->torque(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_NeckMover_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *arg1 = (NeckMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:NeckMover_done",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NeckMover, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NeckMover_done" "', argument " "1"" of type '" "NeckMover const *""'"); 
+  }
+  arg1 = reinterpret_cast< NeckMover * >(argp1);
+  result = (bool)((NeckMover const *)arg1)->done();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_NeckMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_NeckMover")) SWIG_fail;
+  result = (NeckMover *)new NeckMover();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_NeckMover, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_NeckMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  NeckMover *arg1 = (NeckMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_NeckMover",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_NeckMover, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_NeckMover" "', argument " "1"" of type '" "NeckMover *""'"); 
+  }
+  arg1 = reinterpret_cast< NeckMover * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *NeckMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_NeckMover, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
+SWIGINTERN PyObject *_wrap_new_ServoMover__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared1 ;
+  PyObject * obj0 = 0 ;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:new_ServoMover",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t,  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "new_ServoMover" "', argument " "1"" of type '" "ServoMover const &""'"); 
+    }
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "new_ServoMover" "', argument " "1"" of type '" "ServoMover const &""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      arg1 = const_cast< ServoMover * >(reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp1)->get());
+    }
+  }
+  result = (ServoMover *)new ServoMover((ServoMover const &)*arg1);
+  {
+    std::shared_ptr<  ServoMover > *smartresult = result ? new std::shared_ptr<  ServoMover >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_angles_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  Curve arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ServoMover_angles_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_angles_set" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Curve,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ServoMover_angles_set" "', argument " "2"" of type '" "Curve""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ServoMover_angles_set" "', argument " "2"" of type '" "Curve""'");
+    } else {
+      Curve * temp = reinterpret_cast< Curve * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  if (arg1) (arg1)->angles = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_angles_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Curve result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_angles_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_angles_get" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result =  ((arg1)->angles);
+  resultobj = SWIG_NewPointerObj((new Curve(static_cast< const Curve& >(result))), SWIGTYPE_p_Curve, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_simTime0_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ServoMover_simTime0_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_simTime0_set" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ServoMover_simTime0_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->simTime0 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_simTime0_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_simTime0_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_simTime0_get" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (double) ((arg1)->simTime0);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_simTime1_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ServoMover_simTime1_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_simTime1_set" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_double(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ServoMover_simTime1_set" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->simTime1 = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_simTime1_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  double result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_simTime1_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_simTime1_get" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (double) ((arg1)->simTime1);
+  resultobj = SWIG_From_double(static_cast< double >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_torque_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ServoMover_torque_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_torque_set" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ServoMover_torque_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->torque = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_torque_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_torque_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_torque_get" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (float) ((arg1)->torque);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_sharpCutoff_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ServoMover_sharpCutoff_set",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_sharpCutoff_set" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ServoMover_sharpCutoff_set" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->sharpCutoff = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_sharpCutoff_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_sharpCutoff_get",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_sharpCutoff_get" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (float) ((arg1)->sharpCutoff);
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_curve(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  double *arg2 ;
+  float *arg3 ;
+  float *arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  void *argp4 = 0 ;
+  int res4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:ServoMover_curve",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_curve" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_double, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ServoMover_curve" "', argument " "2"" of type '" "double [2]""'"); 
+  } 
+  arg2 = reinterpret_cast< double * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_float, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "ServoMover_curve" "', argument " "3"" of type '" "float [3]""'"); 
+  } 
+  arg3 = reinterpret_cast< float * >(argp3);
+  res4 = SWIG_ConvertPtr(obj3, &argp4,SWIGTYPE_p_float, 0 |  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "ServoMover_curve" "', argument " "4"" of type '" "float [3]""'"); 
+  } 
+  arg4 = reinterpret_cast< float * >(argp4);
+  (arg1)->curve(arg2,arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_angle(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_angle",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_angle" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (float)(arg1)->angle();
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_speed(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_speed",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_speed" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (float)(arg1)->speed();
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_at(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  float *arg2 = (float *) 0 ;
+  float *arg3 = (float *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:ServoMover_at",&obj0,&obj1,&obj2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_at" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_float, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ServoMover_at" "', argument " "2"" of type '" "float *""'"); 
+  }
+  arg2 = reinterpret_cast< float * >(argp2);
+  res3 = SWIG_ConvertPtr(obj2, &argp3,SWIGTYPE_p_float, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "ServoMover_at" "', argument " "3"" of type '" "float *""'"); 
+  }
+  arg3 = reinterpret_cast< float * >(argp3);
+  (arg1)->at(arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_clear(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_clear",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_clear" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  (arg1)->clear();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_move(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  Servo *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ServoMover_move",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_move" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Servo,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ServoMover_move" "', argument " "2"" of type '" "Servo &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ServoMover_move" "', argument " "2"" of type '" "Servo &""'"); 
+  }
+  arg2 = reinterpret_cast< Servo * >(argp2);
+  (arg1)->move(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_setup__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  std::map< float,float > *arg2 = 0 ;
+  double arg3 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOO:ServoMover_setup",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_setup" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__mapT_float_float_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ServoMover_setup" "', argument " "2"" of type '" "std::map< float,float > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ServoMover_setup" "', argument " "2"" of type '" "std::map< float,float > const &""'"); 
+  }
+  arg2 = reinterpret_cast< std::map< float,float > * >(argp2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ServoMover_setup" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "ServoMover_setup" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  (arg1)->setup((std::map< float,float > const &)*arg2,arg3,arg4);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_setup__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  std::map< float,float > *arg2 = 0 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:ServoMover_setup",&obj0,&obj1,&obj2)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_setup" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__mapT_float_float_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ServoMover_setup" "', argument " "2"" of type '" "std::map< float,float > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ServoMover_setup" "', argument " "2"" of type '" "std::map< float,float > const &""'"); 
+  }
+  arg2 = reinterpret_cast< std::map< float,float > * >(argp2);
+  ecode3 = SWIG_AsVal_double(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "ServoMover_setup" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  (arg1)->setup((std::map< float,float > const &)*arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_setup__SWIG_2(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  std::map< float,float > *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ServoMover_setup",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_setup" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__mapT_float_float_t,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ServoMover_setup" "', argument " "2"" of type '" "std::map< float,float > const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ServoMover_setup" "', argument " "2"" of type '" "std::map< float,float > const &""'"); 
+  }
+  arg2 = reinterpret_cast< std::map< float,float > * >(argp2);
+  (arg1)->setup((std::map< float,float > const &)*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_setup__SWIG_3(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:ServoMover_setup",&obj0,&obj1)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_setup" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ServoMover_setup" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->setup(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_setup(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[5];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 4) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 2) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__mapT_float_float_t, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_ServoMover_setup__SWIG_2(self, args);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_ServoMover_setup__SWIG_3(self, args);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__mapT_float_float_t, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_ServoMover_setup__SWIG_1(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      int res = SWIG_ConvertPtr(argv[1], 0, SWIGTYPE_p_std__mapT_float_float_t, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_ServoMover_setup__SWIG_0(self, args);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'ServoMover_setup'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    ServoMover::setup(std::map< float,float > const &,double,double)\n"
+    "    ServoMover::setup(std::map< float,float > const &,double)\n"
+    "    ServoMover::setup(std::map< float,float > const &)\n"
+    "    ServoMover::setup(float)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_ServoMover_done(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover const > tempshared1 ;
+  std::shared_ptr< ServoMover const > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_done",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_done" "', argument " "1"" of type '" "ServoMover const *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr< const ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  result = (bool)((ServoMover const *)arg1)->done();
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_ServoMover__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_ServoMover")) SWIG_fail;
+  result = (ServoMover *)new ServoMover();
+  {
+    std::shared_ptr<  ServoMover > *smartresult = result ? new std::shared_ptr<  ServoMover >(result SWIG_NO_NULL_DELETER_SWIG_POINTER_NEW) : 0;
+    resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(smartresult), SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_POINTER_NEW | SWIG_POINTER_OWN);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_ServoMover(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[2];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 1) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 0) {
+    return _wrap_new_ServoMover__SWIG_1(self, args);
+  }
+  if (argc == 1) {
+    int _v;
+    int res = SWIG_ConvertPtr(argv[0], 0, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_ServoMover__SWIG_0(self, args);
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'new_ServoMover'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    ServoMover::ServoMover(ServoMover const &)\n"
+    "    ServoMover::ServoMover()\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_ServoMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  ServoMover *arg1 = (ServoMover *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  std::shared_ptr< ServoMover > tempshared1 ;
+  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_ServoMover",&obj0)) SWIG_fail;
+  {
+    int newmem = 0;
+    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_ServoMover" "', argument " "1"" of type '" "ServoMover *""'"); 
+    }
+    if (newmem & SWIG_CAST_NEW_MEMORY) {
+      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >(tempshared1.get());
+    } else {
+      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
+      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
+    }
+  }
+  (void)arg1; delete smartarg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *ServoMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_std__shared_ptrT_ServoMover_t, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
 
@@ -3793,6 +16357,156 @@ SWIGINTERN PyObject *Swig_var_lastRealTime_get(void) {
 }
 
 
+SWIGINTERN int Swig_var_strs_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__mapT_std__string_double_t,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""strs""' of type '""std::map< std::string,double >""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""strs""' of type '""std::map< std::string,double >""'");
+    } else {
+      std::map< std::string,double > * temp;
+      temp  = reinterpret_cast< std::map< std::string,double > * >(argp);
+      strs = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_strs_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&strs), SWIGTYPE_p_std__mapT_std__string_double_t,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_nums_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__mapT_std__string_double_t,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""nums""' of type '""std::map< std::string,double >""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""nums""' of type '""std::map< std::string,double >""'");
+    } else {
+      std::map< std::string,double > * temp;
+      temp  = reinterpret_cast< std::map< std::string,double > * >(argp);
+      nums = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_nums_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&nums), SWIGTYPE_p_std__mapT_std__string_double_t,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_vecs_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__mapT_std__string_Vec3d_t,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""vecs""' of type '""std::map< std::string,Vec3d >""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""vecs""' of type '""std::map< std::string,Vec3d >""'");
+    } else {
+      std::map< std::string,Vec3d > * temp;
+      temp  = reinterpret_cast< std::map< std::string,Vec3d > * >(argp);
+      vecs = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_vecs_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&vecs), SWIGTYPE_p_std__mapT_std__string_Vec3d_t,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_mats_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__mapT_std__string_Mat3d_t,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""mats""' of type '""std::map< std::string,Mat3d >""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""mats""' of type '""std::map< std::string,Mat3d >""'");
+    } else {
+      std::map< std::string,Mat3d > * temp;
+      temp  = reinterpret_cast< std::map< std::string,Mat3d > * >(argp);
+      mats = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_mats_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&mats), SWIGTYPE_p_std__mapT_std__string_Mat3d_t,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_arcs_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__mapT_std__string_Arc3d_t,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""arcs""' of type '""std::map< std::string,Arc3d >""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""arcs""' of type '""std::map< std::string,Arc3d >""'");
+    } else {
+      std::map< std::string,Arc3d > * temp;
+      temp  = reinterpret_cast< std::map< std::string,Arc3d > * >(argp);
+      arcs = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_arcs_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&arcs), SWIGTYPE_p_std__mapT_std__string_Arc3d_t,  0 );
+  return pyobj;
+}
+
+
 SWIGINTERN int Swig_var_cfg_set(PyObject *_val) {
   {
     void *argp = 0;
@@ -3916,7 +16630,7 @@ SWIGINTERN PyObject *Swig_var_body_get(void) {
 SWIGINTERN int Swig_var_mover_set(PyObject *_val) {
   {
     void *argp = 0;
-    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_SPBodyMover,  0  | 0);
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_std__shared_ptrT_BodyMover_t,  0  | 0);
     if (!SWIG_IsOK(res)) {
       SWIG_exception_fail(SWIG_ArgError(res), "in variable '""mover""' of type '""SPBodyMover""'");
     }
@@ -3938,7 +16652,37 @@ fail:
 SWIGINTERN PyObject *Swig_var_mover_get(void) {
   PyObject *pyobj = 0;
   
-  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&mover), SWIGTYPE_p_SPBodyMover,  0 );
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&mover), SWIGTYPE_p_std__shared_ptrT_BodyMover_t,  0 );
+  return pyobj;
+}
+
+
+SWIGINTERN int Swig_var_safety_set(PyObject *_val) {
+  {
+    void *argp = 0;
+    int res = SWIG_ConvertPtr(_val, &argp, SWIGTYPE_p_SafetySP,  0  | 0);
+    if (!SWIG_IsOK(res)) {
+      SWIG_exception_fail(SWIG_ArgError(res), "in variable '""safety""' of type '""SafetySP""'");
+    }
+    if (!argp) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""safety""' of type '""SafetySP""'");
+    } else {
+      SafetySP * temp;
+      temp  = reinterpret_cast< SafetySP * >(argp);
+      safety = *temp;
+      if (SWIG_IsNewObj(res)) delete temp;
+    }
+  }
+  return 0;
+fail:
+  return 1;
+}
+
+
+SWIGINTERN PyObject *Swig_var_safety_get(void) {
+  PyObject *pyobj = 0;
+  
+  pyobj = SWIG_NewPointerObj(SWIG_as_voidptr(&safety), SWIGTYPE_p_SafetySP,  0 );
   return pyobj;
 }
 
@@ -3976,24 +16720,18 @@ SWIGINTERN PyObject *Swig_var_sensors_get(void) {
 SWIGINTERN PyObject *_wrap_servo(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   std::string arg1 ;
-  void *argp1 ;
-  int res1 = 0 ;
   PyObject * obj0 = 0 ;
   SPServo result;
   
   if (!PyArg_ParseTuple(args,(char *)"O:servo",&obj0)) SWIG_fail;
   {
-    res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_std__string,  0  | 0);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "servo" "', argument " "1"" of type '" "std::string""'"); 
-    }  
-    if (!argp1) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "servo" "', argument " "1"" of type '" "std::string""'");
-    } else {
-      std::string * temp = reinterpret_cast< std::string * >(argp1);
-      arg1 = *temp;
-      if (SWIG_IsNewObj(res1)) delete temp;
+    std::string *ptr = (std::string *)0;
+    int res = SWIG_AsPtr_std_string(obj0, &ptr);
+    if (!SWIG_IsOK(res) || !ptr) {
+      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "servo" "', argument " "1"" of type '" "std::string""'"); 
     }
+    arg1 = *ptr;
+    if (SWIG_IsNewObj(res)) delete ptr;
   }
   result = servo(arg1);
   resultobj = SWIG_NewPointerObj((new SPServo(static_cast< const SPServo& >(result))), SWIGTYPE_p_SPServo, SWIG_POINTER_OWN |  0 );
@@ -4003,8 +16741,807 @@ fail:
 }
 
 
+SWIGINTERN PyObject *_wrap_Tape_paths_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  Tape::Paths arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_paths_set",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_paths_set" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__mapT_std__string_std__mapT_float_float_t_t,  0  | 0);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Tape_paths_set" "', argument " "2"" of type '" "Tape::Paths""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Tape_paths_set" "', argument " "2"" of type '" "Tape::Paths""'");
+    } else {
+      Tape::Paths * temp = reinterpret_cast< Tape::Paths * >(argp2);
+      arg2 = *temp;
+      if (SWIG_IsNewObj(res2)) delete temp;
+    }
+  }
+  if (arg1) (arg1)->paths = arg2;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_paths_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  Tape::Paths result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Tape_paths_get",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_paths_get" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  result =  ((arg1)->paths);
+  resultobj = SWIG_NewPointerObj((new Tape::Paths(static_cast< const Tape::Paths& >(result))), SWIGTYPE_p_std__mapT_std__string_std__mapT_float_float_t_t, SWIG_POINTER_OWN |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_write(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  BodyMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_write",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_write" "', argument " "1"" of type '" "Tape const *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_BodyMover,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Tape_write" "', argument " "2"" of type '" "BodyMover &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Tape_write" "', argument " "2"" of type '" "BodyMover &""'"); 
+  }
+  arg2 = reinterpret_cast< BodyMover * >(argp2);
+  ((Tape const *)arg1)->write(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_read(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  BodyMover *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_read",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_read" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_BodyMover,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Tape_read" "', argument " "2"" of type '" "BodyMover &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Tape_read" "', argument " "2"" of type '" "BodyMover &""'"); 
+  }
+  arg2 = reinterpret_cast< BodyMover * >(argp2);
+  (arg1)->read(*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_maxSimTime(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Tape_maxSimTime",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_maxSimTime" "', argument " "1"" of type '" "Tape const *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  result = (float)((Tape const *)arg1)->maxSimTime();
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_minSimTime(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  float result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Tape_minSimTime",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_minSimTime" "', argument " "1"" of type '" "Tape const *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  result = (float)((Tape const *)arg1)->minSimTime();
+  resultobj = SWIG_From_float(static_cast< float >(result));
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_clear(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Tape_clear",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_clear" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  (arg1)->clear();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_same(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_same",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_same" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Tape_same" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->same(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_shift(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_shift",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_shift" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Tape_shift" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->shift(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_rescale(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_rescale",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_rescale" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Tape_rescale" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->rescale(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_remap__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  float arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  float val5 ;
+  int ecode5 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  PyObject * obj3 = 0 ;
+  PyObject * obj4 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOOOO:Tape_remap",&obj0,&obj1,&obj2,&obj3,&obj4)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_remap" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Tape_remap" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Tape_remap" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(obj3, &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Tape_remap" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  ecode5 = SWIG_AsVal_float(obj4, &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Tape_remap" "', argument " "5"" of type '" "float""'");
+  } 
+  arg5 = static_cast< float >(val5);
+  (arg1)->remap(arg2,arg3,arg4,arg5);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_remap__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  float arg2 ;
+  float arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject * obj2 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OOO:Tape_remap",&obj0,&obj1,&obj2)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_remap" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Tape_remap" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(obj2, &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Tape_remap" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  (arg1)->remap(arg2,arg3);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_remap(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[6];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 5) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Tape, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Tape_remap__SWIG_1(self, args);
+        }
+      }
+    }
+  }
+  if (argc == 5) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Tape, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_float(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_float(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              return _wrap_Tape_remap__SWIG_0(self, args);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Tape_remap'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Tape::remap(float,float,float,float)\n"
+    "    Tape::remap(float,float)\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_cluster__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_cluster",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_cluster" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  ecode2 = SWIG_AsVal_float(obj1, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Tape_cluster" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  (arg1)->cluster(arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_cluster__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:Tape_cluster",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_cluster" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  (arg1)->cluster();
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_cluster(PyObject *self, PyObject *args) {
+  int argc;
+  PyObject *argv[3];
+  int ii;
+  
+  if (!PyTuple_Check(args)) SWIG_fail;
+  argc = args ? (int)PyObject_Length(args) : 0;
+  for (ii = 0; (ii < 2) && (ii < argc); ii++) {
+    argv[ii] = PyTuple_GET_ITEM(args,ii);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Tape, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_Tape_cluster__SWIG_1(self, args);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Tape, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Tape_cluster__SWIG_0(self, args);
+      }
+    }
+  }
+  
+fail:
+  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number or type of arguments for overloaded function 'Tape_cluster'.\n"
+    "  Possible C/C++ prototypes are:\n"
+    "    Tape::cluster(float)\n"
+    "    Tape::cluster()\n");
+  return 0;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_include(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  Tape *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_include",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_include" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_Tape,  0  | 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Tape_include" "', argument " "2"" of type '" "Tape const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Tape_include" "', argument " "2"" of type '" "Tape const &""'"); 
+  }
+  arg2 = reinterpret_cast< Tape * >(argp2);
+  (arg1)->include((Tape const &)*arg2);
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_save(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_save",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_save" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Tape_save" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Tape_save" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (bool)(arg1)->save((std::string const &)*arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Tape_load(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  std::string *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 = SWIG_OLDOBJ ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  bool result;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:Tape_load",&obj0,&obj1)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Tape_load" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  {
+    std::string *ptr = (std::string *)0;
+    res2 = SWIG_AsPtr_std_string(obj1, &ptr);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Tape_load" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    if (!ptr) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Tape_load" "', argument " "2"" of type '" "std::string const &""'"); 
+    }
+    arg2 = ptr;
+  }
+  result = (bool)(arg1)->load((std::string const &)*arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return resultobj;
+fail:
+  if (SWIG_IsNewObj(res2)) delete arg2;
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_delete_Tape(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *arg1 = (Tape *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  PyObject * obj0 = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"O:delete_Tape",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_Tape, SWIG_POINTER_DISOWN |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_Tape" "', argument " "1"" of type '" "Tape *""'"); 
+  }
+  arg1 = reinterpret_cast< Tape * >(argp1);
+  delete arg1;
+  resultobj = SWIG_Py_Void();
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_new_Tape(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  Tape *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)":new_Tape")) SWIG_fail;
+  result = (Tape *)new Tape();
+  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Tape, SWIG_POINTER_NEW |  0 );
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *Tape_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *obj;
+  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
+  SWIG_TypeNewClientData(SWIGTYPE_p_Tape, SWIG_NewClientData(obj));
+  return SWIG_Py_Void();
+}
+
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"SWIG_PyInstanceMethod_New", (PyCFunction)SWIG_PyInstanceMethod_New, METH_O, NULL},
+	 { (char *)"ArmGeometry_name", _wrap_ArmGeometry_name, METH_VARARGS, NULL},
+	 { (char *)"ArmGeometry_forward", _wrap_ArmGeometry_forward, METH_VARARGS, NULL},
+	 { (char *)"ArmGeometry_inverse", _wrap_ArmGeometry_inverse, METH_VARARGS, NULL},
+	 { (char *)"ArmGeometry_compute", _wrap_ArmGeometry_compute, METH_VARARGS, NULL},
+	 { (char *)"delete_ArmGeometry", _wrap_delete_ArmGeometry, METH_VARARGS, NULL},
+	 { (char *)"ArmGeometry_swigregister", ArmGeometry_swigregister, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_parameters_set", _wrap_RightArmGeometry_parameters_set, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_parameters_get", _wrap_RightArmGeometry_parameters_get, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_variables_set", _wrap_RightArmGeometry_variables_set, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_variables_get", _wrap_RightArmGeometry_variables_get, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_globals_set", _wrap_RightArmGeometry_globals_set, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_globals_get", _wrap_RightArmGeometry_globals_get, METH_VARARGS, NULL},
+	 { (char *)"new_RightArmGeometry", _wrap_new_RightArmGeometry, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_forward", _wrap_RightArmGeometry_forward, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_inverse", _wrap_RightArmGeometry_inverse, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_compute", _wrap_RightArmGeometry_compute, METH_VARARGS, NULL},
+	 { (char *)"delete_RightArmGeometry", _wrap_delete_RightArmGeometry, METH_VARARGS, NULL},
+	 { (char *)"RightArmGeometry_swigregister", RightArmGeometry_swigregister, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_parameters_set", _wrap_LeftArmGeometry_parameters_set, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_parameters_get", _wrap_LeftArmGeometry_parameters_get, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_variables_set", _wrap_LeftArmGeometry_variables_set, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_variables_get", _wrap_LeftArmGeometry_variables_get, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_globals_set", _wrap_LeftArmGeometry_globals_set, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_globals_get", _wrap_LeftArmGeometry_globals_get, METH_VARARGS, NULL},
+	 { (char *)"new_LeftArmGeometry", _wrap_new_LeftArmGeometry, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_forward", _wrap_LeftArmGeometry_forward, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_inverse", _wrap_LeftArmGeometry_inverse, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_compute", _wrap_LeftArmGeometry_compute, METH_VARARGS, NULL},
+	 { (char *)"delete_LeftArmGeometry", _wrap_delete_LeftArmGeometry, METH_VARARGS, NULL},
+	 { (char *)"LeftArmGeometry_swigregister", LeftArmGeometry_swigregister, METH_VARARGS, NULL},
+	 { (char *)"new_LegGeometry", _wrap_new_LegGeometry, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_number", _wrap_LegGeometry_number, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_name", _wrap_LegGeometry_name, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_setPosition", _wrap_LegGeometry_setPosition, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_setHipOffset", _wrap_LegGeometry_setHipOffset, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_setName", _wrap_LegGeometry_setName, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_outputName", _wrap_LegGeometry_outputName, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_robustACos", _wrap_LegGeometry_robustACos, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_compute2D", _wrap_LegGeometry_compute2D, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_compute3D", _wrap_LegGeometry_compute3D, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_forward3D", _wrap_LegGeometry_forward3D, METH_VARARGS, NULL},
+	 { (char *)"delete_LegGeometry", _wrap_delete_LegGeometry, METH_VARARGS, NULL},
+	 { (char *)"LegGeometry_swigregister", LegGeometry_swigregister, METH_VARARGS, NULL},
+	 { (char *)"Neck_upDown_set", _wrap_Neck_upDown_set, METH_VARARGS, NULL},
+	 { (char *)"Neck_upDown_get", _wrap_Neck_upDown_get, METH_VARARGS, NULL},
+	 { (char *)"Neck_leftRight_set", _wrap_Neck_leftRight_set, METH_VARARGS, NULL},
+	 { (char *)"Neck_leftRight_get", _wrap_Neck_leftRight_get, METH_VARARGS, NULL},
+	 { (char *)"Neck_init", _wrap_Neck_init, METH_VARARGS, NULL},
+	 { (char *)"new_Neck", _wrap_new_Neck, METH_VARARGS, NULL},
+	 { (char *)"delete_Neck", _wrap_delete_Neck, METH_VARARGS, NULL},
+	 { (char *)"Neck_swigregister", Neck_swigregister, METH_VARARGS, NULL},
+	 { (char *)"Arm_inOut_set", _wrap_Arm_inOut_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_inOut_get", _wrap_Arm_inOut_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_upDown_set", _wrap_Arm_upDown_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_upDown_get", _wrap_Arm_upDown_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_bicep_set", _wrap_Arm_bicep_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_bicep_get", _wrap_Arm_bicep_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_elbow_set", _wrap_Arm_elbow_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_elbow_get", _wrap_Arm_elbow_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_forearm_set", _wrap_Arm_forearm_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_forearm_get", _wrap_Arm_forearm_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_trigger_set", _wrap_Arm_trigger_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_trigger_get", _wrap_Arm_trigger_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_middle_set", _wrap_Arm_middle_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_middle_get", _wrap_Arm_middle_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_ring_set", _wrap_Arm_ring_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_ring_get", _wrap_Arm_ring_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_thumb_set", _wrap_Arm_thumb_set, METH_VARARGS, NULL},
+	 { (char *)"Arm_thumb_get", _wrap_Arm_thumb_get, METH_VARARGS, NULL},
+	 { (char *)"Arm_init", _wrap_Arm_init, METH_VARARGS, NULL},
+	 { (char *)"Arm_goLimp", _wrap_Arm_goLimp, METH_VARARGS, NULL},
+	 { (char *)"Arm_report", _wrap_Arm_report, METH_VARARGS, NULL},
+	 { (char *)"Arm_temp_report", _wrap_Arm_temp_report, METH_VARARGS, NULL},
+	 { (char *)"delete_Arm", _wrap_delete_Arm, METH_VARARGS, NULL},
+	 { (char *)"Arm_swigregister", Arm_swigregister, METH_VARARGS, NULL},
+	 { (char *)"LeftArm_init", _wrap_LeftArm_init, METH_VARARGS, NULL},
+	 { (char *)"new_LeftArm", _wrap_new_LeftArm, METH_VARARGS, NULL},
+	 { (char *)"delete_LeftArm", _wrap_delete_LeftArm, METH_VARARGS, NULL},
+	 { (char *)"LeftArm_swigregister", LeftArm_swigregister, METH_VARARGS, NULL},
+	 { (char *)"RightArm_init", _wrap_RightArm_init, METH_VARARGS, NULL},
+	 { (char *)"new_RightArm", _wrap_new_RightArm, METH_VARARGS, NULL},
+	 { (char *)"delete_RightArm", _wrap_delete_RightArm, METH_VARARGS, NULL},
+	 { (char *)"RightArm_swigregister", RightArm_swigregister, METH_VARARGS, NULL},
+	 { (char *)"Leg_knee_set", _wrap_Leg_knee_set, METH_VARARGS, NULL},
+	 { (char *)"Leg_knee_get", _wrap_Leg_knee_get, METH_VARARGS, NULL},
+	 { (char *)"Leg_femur_set", _wrap_Leg_femur_set, METH_VARARGS, NULL},
+	 { (char *)"Leg_femur_get", _wrap_Leg_femur_get, METH_VARARGS, NULL},
+	 { (char *)"Leg_hip_set", _wrap_Leg_hip_set, METH_VARARGS, NULL},
+	 { (char *)"Leg_hip_get", _wrap_Leg_hip_get, METH_VARARGS, NULL},
+	 { (char *)"Leg_name_set", _wrap_Leg_name_set, METH_VARARGS, NULL},
+	 { (char *)"Leg_name_get", _wrap_Leg_name_get, METH_VARARGS, NULL},
+	 { (char *)"Leg_init", _wrap_Leg_init, METH_VARARGS, NULL},
+	 { (char *)"Leg_report", _wrap_Leg_report, METH_VARARGS, NULL},
+	 { (char *)"Leg_temp_report", _wrap_Leg_temp_report, METH_VARARGS, NULL},
+	 { (char *)"new_Leg", _wrap_new_Leg, METH_VARARGS, NULL},
+	 { (char *)"delete_Leg", _wrap_delete_Leg, METH_VARARGS, NULL},
+	 { (char *)"Leg_swigregister", Leg_swigregister, METH_VARARGS, NULL},
+	 { (char *)"Legs_legs_set", _wrap_Legs_legs_set, METH_VARARGS, NULL},
+	 { (char *)"Legs_legs_get", _wrap_Legs_legs_get, METH_VARARGS, NULL},
+	 { (char *)"new_Legs", _wrap_new_Legs, METH_VARARGS, NULL},
+	 { (char *)"Legs_init", _wrap_Legs_init, METH_VARARGS, NULL},
+	 { (char *)"delete_Legs", _wrap_delete_Legs, METH_VARARGS, NULL},
+	 { (char *)"Legs_swigregister", Legs_swigregister, METH_VARARGS, NULL},
 	 { (char *)"Body_legs_set", _wrap_Body_legs_set, METH_VARARGS, NULL},
 	 { (char *)"Body_legs_get", _wrap_Body_legs_get, METH_VARARGS, NULL},
 	 { (char *)"Body_waist_set", _wrap_Body_waist_set, METH_VARARGS, NULL},
@@ -4021,83 +17558,514 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_Body", _wrap_new_Body, METH_VARARGS, NULL},
 	 { (char *)"delete_Body", _wrap_delete_Body, METH_VARARGS, NULL},
 	 { (char *)"Body_swigregister", Body_swigregister, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_geometry_set", _wrap_ArmMover_geometry_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_geometry_get", _wrap_ArmMover_geometry_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_inOut_set", _wrap_ArmMover_inOut_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_inOut_get", _wrap_ArmMover_inOut_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_upDown_set", _wrap_ArmMover_upDown_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_upDown_get", _wrap_ArmMover_upDown_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_bicep_set", _wrap_ArmMover_bicep_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_bicep_get", _wrap_ArmMover_bicep_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_elbow_set", _wrap_ArmMover_elbow_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_elbow_get", _wrap_ArmMover_elbow_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_forearm_set", _wrap_ArmMover_forearm_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_forearm_get", _wrap_ArmMover_forearm_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_trigger_set", _wrap_ArmMover_trigger_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_trigger_get", _wrap_ArmMover_trigger_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_middle_set", _wrap_ArmMover_middle_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_middle_get", _wrap_ArmMover_middle_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_ring_set", _wrap_ArmMover_ring_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_ring_get", _wrap_ArmMover_ring_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_thumb_set", _wrap_ArmMover_thumb_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_thumb_get", _wrap_ArmMover_thumb_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_move", _wrap_ArmMover_move, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_torque", _wrap_ArmMover_torque, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_done", _wrap_ArmMover_done, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_leapReset", _wrap_ArmMover_leapReset, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapTime_set", _wrap_ArmMover_lastLeapTime_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapTime_get", _wrap_ArmMover_lastLeapTime_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapShoulderIO_set", _wrap_ArmMover_lastLeapShoulderIO_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapShoulderIO_get", _wrap_ArmMover_lastLeapShoulderIO_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapShoulderUD_set", _wrap_ArmMover_lastLeapShoulderUD_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapShoulderUD_get", _wrap_ArmMover_lastLeapShoulderUD_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapBicep_set", _wrap_ArmMover_lastLeapBicep_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapBicep_get", _wrap_ArmMover_lastLeapBicep_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapElbow_set", _wrap_ArmMover_lastLeapElbow_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapElbow_get", _wrap_ArmMover_lastLeapElbow_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapForearm_set", _wrap_ArmMover_lastLeapForearm_set, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_lastLeapForearm_get", _wrap_ArmMover_lastLeapForearm_get, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_leapAdjust", _wrap_ArmMover_leapAdjust, METH_VARARGS, NULL},
+	 { (char *)"delete_ArmMover", _wrap_delete_ArmMover, METH_VARARGS, NULL},
+	 { (char *)"new_ArmMover", _wrap_new_ArmMover, METH_VARARGS, NULL},
+	 { (char *)"ArmMover_swigregister", ArmMover_swigregister, METH_VARARGS, NULL},
+	 { (char *)"CreateWalkMover", _wrap_CreateWalkMover, METH_VARARGS, NULL},
+	 { (char *)"LegMover_touchPressure_set", _wrap_LegMover_touchPressure_set, METH_VARARGS, NULL},
+	 { (char *)"LegMover_touchPressure_get", _wrap_LegMover_touchPressure_get, METH_VARARGS, NULL},
+	 { (char *)"LegMover_state", _wrap_LegMover_state, METH_VARARGS, NULL},
+	 { (char *)"LegMover_tape", _wrap_LegMover_tape, METH_VARARGS, NULL},
+	 { (char *)"LegMover_m_cutoff_set", _wrap_LegMover_m_cutoff_set, METH_VARARGS, NULL},
+	 { (char *)"LegMover_m_cutoff_get", _wrap_LegMover_m_cutoff_get, METH_VARARGS, NULL},
+	 { (char *)"LegMover_cutoff", _wrap_LegMover_cutoff, METH_VARARGS, NULL},
+	 { (char *)"LegMover_legs_set", _wrap_LegMover_legs_set, METH_VARARGS, NULL},
+	 { (char *)"LegMover_legs_get", _wrap_LegMover_legs_get, METH_VARARGS, NULL},
+	 { (char *)"new_LegMover", _wrap_new_LegMover, METH_VARARGS, NULL},
+	 { (char *)"LegMover_kneeMover_set", _wrap_LegMover_kneeMover_set, METH_VARARGS, NULL},
+	 { (char *)"LegMover_kneeMover_get", _wrap_LegMover_kneeMover_get, METH_VARARGS, NULL},
+	 { (char *)"LegMover_femurMover_set", _wrap_LegMover_femurMover_set, METH_VARARGS, NULL},
+	 { (char *)"LegMover_femurMover_get", _wrap_LegMover_femurMover_get, METH_VARARGS, NULL},
+	 { (char *)"LegMover_hipMover_set", _wrap_LegMover_hipMover_set, METH_VARARGS, NULL},
+	 { (char *)"LegMover_hipMover_get", _wrap_LegMover_hipMover_get, METH_VARARGS, NULL},
+	 { (char *)"LegMover_tipping", _wrap_LegMover_tipping, METH_VARARGS, NULL},
+	 { (char *)"LegMover_cautious", _wrap_LegMover_cautious, METH_VARARGS, NULL},
+	 { (char *)"LegMover_bricks", _wrap_LegMover_bricks, METH_VARARGS, NULL},
+	 { (char *)"LegMover_normal", _wrap_LegMover_normal, METH_VARARGS, NULL},
+	 { (char *)"LegMover_move", _wrap_LegMover_move, METH_VARARGS, NULL},
+	 { (char *)"LegMover_setup", _wrap_LegMover_setup, METH_VARARGS, NULL},
+	 { (char *)"LegMover_torque", _wrap_LegMover_torque, METH_VARARGS, NULL},
+	 { (char *)"LegMover_done", _wrap_LegMover_done, METH_VARARGS, NULL},
+	 { (char *)"delete_LegMover", _wrap_delete_LegMover, METH_VARARGS, NULL},
+	 { (char *)"LegMover_swigregister", LegMover_swigregister, METH_VARARGS, NULL},
+	 { (char *)"Mover_start", _wrap_Mover_start, METH_VARARGS, NULL},
+	 { (char *)"Mover_stop", _wrap_Mover_stop, METH_VARARGS, NULL},
+	 { (char *)"delete_Mover", _wrap_delete_Mover, METH_VARARGS, NULL},
+	 { (char *)"Mover_swigregister", Mover_swigregister, METH_VARARGS, NULL},
+	 { (char *)"RightArmMover_rightArmGeometry_set", _wrap_RightArmMover_rightArmGeometry_set, METH_VARARGS, NULL},
+	 { (char *)"RightArmMover_rightArmGeometry_get", _wrap_RightArmMover_rightArmGeometry_get, METH_VARARGS, NULL},
+	 { (char *)"new_RightArmMover", _wrap_new_RightArmMover, METH_VARARGS, NULL},
+	 { (char *)"delete_RightArmMover", _wrap_delete_RightArmMover, METH_VARARGS, NULL},
+	 { (char *)"RightArmMover_swigregister", RightArmMover_swigregister, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_radius_set", _wrap_WalkParameters_radius_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_radius_get", _wrap_WalkParameters_radius_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_x1_set", _wrap_WalkParameters_x1_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_x1_get", _wrap_WalkParameters_x1_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_y1_set", _wrap_WalkParameters_y1_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_y1_get", _wrap_WalkParameters_y1_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z1_set", _wrap_WalkParameters_z1_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z1_get", _wrap_WalkParameters_z1_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_x2_set", _wrap_WalkParameters_x2_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_x2_get", _wrap_WalkParameters_x2_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_y2_set", _wrap_WalkParameters_y2_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_y2_get", _wrap_WalkParameters_y2_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z2_set", _wrap_WalkParameters_z2_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z2_get", _wrap_WalkParameters_z2_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_x3_set", _wrap_WalkParameters_x3_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_x3_get", _wrap_WalkParameters_x3_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_y3_set", _wrap_WalkParameters_y3_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_y3_get", _wrap_WalkParameters_y3_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z3_set", _wrap_WalkParameters_z3_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z3_get", _wrap_WalkParameters_z3_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_x4_set", _wrap_WalkParameters_x4_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_x4_get", _wrap_WalkParameters_x4_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_y4_set", _wrap_WalkParameters_y4_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_y4_get", _wrap_WalkParameters_y4_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z4_set", _wrap_WalkParameters_z4_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z4_get", _wrap_WalkParameters_z4_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z_set", _wrap_WalkParameters_z_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_z_get", _wrap_WalkParameters_z_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_step_set", _wrap_WalkParameters_step_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_step_get", _wrap_WalkParameters_step_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_direction_set", _wrap_WalkParameters_direction_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_direction_get", _wrap_WalkParameters_direction_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_zStep_set", _wrap_WalkParameters_zStep_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_zStep_get", _wrap_WalkParameters_zStep_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_repeat_set", _wrap_WalkParameters_repeat_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_repeat_get", _wrap_WalkParameters_repeat_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_rotation_set", _wrap_WalkParameters_rotation_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_rotation_get", _wrap_WalkParameters_rotation_get, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_zOffset_set", _wrap_WalkParameters_zOffset_set, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_zOffset_get", _wrap_WalkParameters_zOffset_get, METH_VARARGS, NULL},
+	 { (char *)"new_WalkParameters", _wrap_new_WalkParameters, METH_VARARGS, NULL},
+	 { (char *)"delete_WalkParameters", _wrap_delete_WalkParameters, METH_VARARGS, NULL},
+	 { (char *)"WalkParameters_swigregister", WalkParameters_swigregister, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_legs_set", _wrap_BodyMover_legs_set, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_legs_get", _wrap_BodyMover_legs_get, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_waist_set", _wrap_BodyMover_waist_set, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_waist_get", _wrap_BodyMover_waist_get, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_neck_set", _wrap_BodyMover_neck_set, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_neck_get", _wrap_BodyMover_neck_get, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_left_set", _wrap_BodyMover_left_set, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_left_get", _wrap_BodyMover_left_get, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_right_set", _wrap_BodyMover_right_set, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_right_get", _wrap_BodyMover_right_get, METH_VARARGS, NULL},
+	 { (char *)"new_BodyMover", _wrap_new_BodyMover, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_bMove", _wrap_BodyMover_bMove, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_createMove", _wrap_BodyMover_createMove, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_stepMove", _wrap_BodyMover_stepMove, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_blended", _wrap_BodyMover_blended, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_bStep", _wrap_BodyMover_bStep, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_changeZ", _wrap_BodyMover_changeZ, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_stepMerge", _wrap_BodyMover_stepMerge, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_logPosition", _wrap_BodyMover_logPosition, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_fromTips", _wrap_BodyMover_fromTips, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_dynamicWalk", _wrap_BodyMover_dynamicWalk, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_move", _wrap_BodyMover_move, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_load", _wrap_BodyMover_load, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_play", _wrap_BodyMover_play, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_getMover", _wrap_BodyMover_getMover, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_done", _wrap_BodyMover_done, METH_VARARGS, NULL},
+	 { (char *)"delete_BodyMover", _wrap_delete_BodyMover, METH_VARARGS, NULL},
+	 { (char *)"BodyMover_swigregister", BodyMover_swigregister, METH_VARARGS, NULL},
+	 { (char *)"LeftArmMover_leftArmGeometry_set", _wrap_LeftArmMover_leftArmGeometry_set, METH_VARARGS, NULL},
+	 { (char *)"LeftArmMover_leftArmGeometry_get", _wrap_LeftArmMover_leftArmGeometry_get, METH_VARARGS, NULL},
+	 { (char *)"new_LeftArmMover", _wrap_new_LeftArmMover, METH_VARARGS, NULL},
+	 { (char *)"delete_LeftArmMover", _wrap_delete_LeftArmMover, METH_VARARGS, NULL},
+	 { (char *)"LeftArmMover_swigregister", LeftArmMover_swigregister, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_cutoff", _wrap_LegsMover_cutoff, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_legMovers_set", _wrap_LegsMover_legMovers_set, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_legMovers_get", _wrap_LegsMover_legMovers_get, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_state", _wrap_LegsMover_state, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_bodyMover_set", _wrap_LegsMover_bodyMover_set, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_bodyMover_get", _wrap_LegsMover_bodyMover_get, METH_VARARGS, NULL},
+	 { (char *)"new_LegsMover", _wrap_new_LegsMover, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_normal", _wrap_LegsMover_normal, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_move", _wrap_LegsMover_move, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_setup", _wrap_LegsMover_setup, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_torque", _wrap_LegsMover_torque, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_done", _wrap_LegsMover_done, METH_VARARGS, NULL},
+	 { (char *)"delete_LegsMover", _wrap_delete_LegsMover, METH_VARARGS, NULL},
+	 { (char *)"LegsMover_swigregister", LegsMover_swigregister, METH_VARARGS, NULL},
+	 { (char *)"NeckMover_upDown_set", _wrap_NeckMover_upDown_set, METH_VARARGS, NULL},
+	 { (char *)"NeckMover_upDown_get", _wrap_NeckMover_upDown_get, METH_VARARGS, NULL},
+	 { (char *)"NeckMover_leftRight_set", _wrap_NeckMover_leftRight_set, METH_VARARGS, NULL},
+	 { (char *)"NeckMover_leftRight_get", _wrap_NeckMover_leftRight_get, METH_VARARGS, NULL},
+	 { (char *)"NeckMover_move", _wrap_NeckMover_move, METH_VARARGS, NULL},
+	 { (char *)"NeckMover_torque", _wrap_NeckMover_torque, METH_VARARGS, NULL},
+	 { (char *)"NeckMover_done", _wrap_NeckMover_done, METH_VARARGS, NULL},
+	 { (char *)"new_NeckMover", _wrap_new_NeckMover, METH_VARARGS, NULL},
+	 { (char *)"delete_NeckMover", _wrap_delete_NeckMover, METH_VARARGS, NULL},
+	 { (char *)"NeckMover_swigregister", NeckMover_swigregister, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_angles_set", _wrap_ServoMover_angles_set, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_angles_get", _wrap_ServoMover_angles_get, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_simTime0_set", _wrap_ServoMover_simTime0_set, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_simTime0_get", _wrap_ServoMover_simTime0_get, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_simTime1_set", _wrap_ServoMover_simTime1_set, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_simTime1_get", _wrap_ServoMover_simTime1_get, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_torque_set", _wrap_ServoMover_torque_set, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_torque_get", _wrap_ServoMover_torque_get, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_sharpCutoff_set", _wrap_ServoMover_sharpCutoff_set, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_sharpCutoff_get", _wrap_ServoMover_sharpCutoff_get, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_curve", _wrap_ServoMover_curve, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_angle", _wrap_ServoMover_angle, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_speed", _wrap_ServoMover_speed, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_at", _wrap_ServoMover_at, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_clear", _wrap_ServoMover_clear, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_move", _wrap_ServoMover_move, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_setup", _wrap_ServoMover_setup, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_done", _wrap_ServoMover_done, METH_VARARGS, NULL},
+	 { (char *)"new_ServoMover", _wrap_new_ServoMover, METH_VARARGS, NULL},
+	 { (char *)"delete_ServoMover", _wrap_delete_ServoMover, METH_VARARGS, NULL},
+	 { (char *)"ServoMover_swigregister", ServoMover_swigregister, METH_VARARGS, NULL},
 	 { (char *)"servo", _wrap_servo, METH_VARARGS, NULL},
+	 { (char *)"Tape_paths_set", _wrap_Tape_paths_set, METH_VARARGS, NULL},
+	 { (char *)"Tape_paths_get", _wrap_Tape_paths_get, METH_VARARGS, NULL},
+	 { (char *)"Tape_write", _wrap_Tape_write, METH_VARARGS, NULL},
+	 { (char *)"Tape_read", _wrap_Tape_read, METH_VARARGS, NULL},
+	 { (char *)"Tape_maxSimTime", _wrap_Tape_maxSimTime, METH_VARARGS, NULL},
+	 { (char *)"Tape_minSimTime", _wrap_Tape_minSimTime, METH_VARARGS, NULL},
+	 { (char *)"Tape_clear", _wrap_Tape_clear, METH_VARARGS, NULL},
+	 { (char *)"Tape_same", _wrap_Tape_same, METH_VARARGS, NULL},
+	 { (char *)"Tape_shift", _wrap_Tape_shift, METH_VARARGS, NULL},
+	 { (char *)"Tape_rescale", _wrap_Tape_rescale, METH_VARARGS, NULL},
+	 { (char *)"Tape_remap", _wrap_Tape_remap, METH_VARARGS, NULL},
+	 { (char *)"Tape_cluster", _wrap_Tape_cluster, METH_VARARGS, NULL},
+	 { (char *)"Tape_include", _wrap_Tape_include, METH_VARARGS, NULL},
+	 { (char *)"Tape_save", _wrap_Tape_save, METH_VARARGS, NULL},
+	 { (char *)"Tape_load", _wrap_Tape_load, METH_VARARGS, NULL},
+	 { (char *)"delete_Tape", _wrap_delete_Tape, METH_VARARGS, NULL},
+	 { (char *)"new_Tape", _wrap_new_Tape, METH_VARARGS, NULL},
+	 { (char *)"Tape_swigregister", Tape_swigregister, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
+static void *_p_RightArmTo_p_Arm(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((Arm *)  ((RightArm *) x));
+}
+static void *_p_LeftArmTo_p_Arm(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((Arm *)  ((LeftArm *) x));
+}
+static void *_p_LegTo_p_LegGeometry(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((LegGeometry *)  ((Leg *) x));
+}
+static void *_p_LegMoverTo_p_LegGeometry(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((LegGeometry *)  ((LegMover *) x));
+}
+static void *_p_RightArmGeometryTo_p_ArmGeometry(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((ArmGeometry *)  ((RightArmGeometry *) x));
+}
+static void *_p_LeftArmGeometryTo_p_ArmGeometry(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((ArmGeometry *)  ((LeftArmGeometry *) x));
+}
+static void *_p_std__shared_ptrT_RightArmGeometry_tTo_p_std__shared_ptrT_ArmGeometry_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new std::shared_ptr< ArmGeometry >(*(std::shared_ptr< RightArmGeometry > *)x);
+}
+static void *_p_std__shared_ptrT_LeftArmGeometry_tTo_p_std__shared_ptrT_ArmGeometry_t(void *x, int *newmemory) {
+    *newmemory = SWIG_CAST_NEW_MEMORY;
+    return (void *) new std::shared_ptr< ArmGeometry >(*(std::shared_ptr< LeftArmGeometry > *)x);
+}
+static void *_p_RightArmMoverTo_p_ArmMover(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((ArmMover *)  ((RightArmMover *) x));
+}
+static void *_p_LeftArmMoverTo_p_ArmMover(void *x, int *SWIGUNUSEDPARM(newmemory)) {
+    return (void *)((ArmMover *)  ((LeftArmMover *) x));
+}
+static swig_type_info _swigt__p_Arm = {"_p_Arm", "Arm *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ArmGeometry = {"_p_ArmGeometry", "ArmGeometry *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ArmMover = {"_p_ArmMover", "ArmMover *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Body = {"_p_Body", "Body *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_BodyMover = {"_p_BodyMover", "BodyMover *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Curve = {"_p_Curve", "Curve *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_LeapHandMessage = {"_p_LeapHandMessage", "LeapHandMessage *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_LeftArm = {"_p_LeftArm", "LeftArm *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_LeftArmGeometry = {"_p_LeftArmGeometry", "LeftArmGeometry *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_LeftArmMover = {"_p_LeftArmMover", "LeftArmMover *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Leg = {"_p_Leg", "Leg *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_LegGeometry = {"_p_LegGeometry", "LegGeometry *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_LegMover = {"_p_LegMover", "LegMover *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Legs = {"_p_Legs", "Legs *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_LegsMover = {"_p_LegsMover", "LegsMover *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Mover = {"_p_Mover", "Mover *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Neck = {"_p_Neck", "Neck *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_NeckMover = {"_p_NeckMover", "NeckMover *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Path = {"_p_Path", "Path *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Paths = {"_p_Paths", "Paths *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Point = {"_p_Point", "Point *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_RightArm = {"_p_RightArm", "RightArm *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_SPBodyMover = {"_p_SPBodyMover", "SPBodyMover *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_RightArmGeometry = {"_p_RightArmGeometry", "RightArmGeometry *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_RightArmMover = {"_p_RightArmMover", "RightArmMover *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_SPServo = {"_p_SPServo", "SPServo *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_SPServoController = {"_p_SPServoController", "SPServoController *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_SafetySP = {"_p_SafetySP", "SafetySP *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_SensorsMessage = {"_p_SensorsMessage", "SensorsMessage *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Servo = {"_p_Servo", "Servo *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ServoMover = {"_p_ServoMover", "ServoMover *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Tape = {"_p_Tape", "Tape *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_WalkParameters = {"_p_WalkParameters", "WalkParameters *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ik_leftarmglobals = {"_p_ik_leftarmglobals", "ik_leftarmglobals *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ik_leftarmparameters = {"_p_ik_leftarmparameters", "ik_leftarmparameters *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ik_leftarmvariables = {"_p_ik_leftarmvariables", "ik_leftarmvariables *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ik_rightarmglobals = {"_p_ik_rightarmglobals", "ik_rightarmglobals *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ik_rightarmparameters = {"_p_ik_rightarmparameters", "ik_rightarmparameters *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_ik_rightarmvariables = {"_p_ik_rightarmvariables", "ik_rightarmvariables *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_float_Point_t = {"_p_std__mapT_float_Point_t", "std::map< float,Point > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_float_float_t = {"_p_std__mapT_float_float_t", "std::map< float,float > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_float_std__pairT_Point_int_t_t = {"_p_std__mapT_float_std__pairT_Point_int_t_t", "std::map< float,std::pair< Point,int > > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__mapT_int_SPServo_t = {"_p_std__mapT_int_SPServo_t", "std::map< int,SPServo > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_std__string_Arc3d_t = {"_p_std__mapT_std__string_Arc3d_t", "std::map< std::string,Arc3d > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_std__string_Mat3d_t = {"_p_std__mapT_std__string_Mat3d_t", "std::map< std::string,Mat3d > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_std__string_Vec3d_t = {"_p_std__mapT_std__string_Vec3d_t", "std::map< std::string,Vec3d > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_std__string_double_t = {"_p_std__mapT_std__string_double_t", "std::map< std::string,double > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__mapT_std__string_std__mapT_float_float_t_t = {"_p_std__mapT_std__string_std__mapT_float_float_t_t", "std::map< std::string,std::map< float,float > > *|Tape::Paths *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__ostream = {"_p_std__ostream", "std::ostream *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_ArmGeometry_t = {"_p_std__shared_ptrT_ArmGeometry_t", "std::shared_ptr< ArmGeometry > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_BodyMover_t = {"_p_std__shared_ptrT_BodyMover_t", "SPBodyMover *|std::shared_ptr< BodyMover > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_Body_t = {"_p_std__shared_ptrT_Body_t", "SPBody *|std::shared_ptr< Body > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_Configure_t = {"_p_std__shared_ptrT_Configure_t", "std::shared_ptr< Configure > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_LeftArmGeometry_t = {"_p_std__shared_ptrT_LeftArmGeometry_t", "std::shared_ptr< LeftArmGeometry > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_LegMover_t = {"_p_std__shared_ptrT_LegMover_t", "std::shared_ptr< LegMover > *|LegMoverSP *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_Mover_t = {"_p_std__shared_ptrT_Mover_t", "std::shared_ptr< Mover > *|MoverSP *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_RightArmGeometry_t = {"_p_std__shared_ptrT_RightArmGeometry_t", "std::shared_ptr< RightArmGeometry > *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__shared_ptrT_ServoMover_t = {"_p_std__shared_ptrT_ServoMover_t", "std::shared_ptr< ServoMover > *|ServoMoverSP *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__shared_ptrT_Servo_t = {"_p_std__shared_ptrT_Servo_t", "std::shared_ptr< Servo > *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_std__vectorT_std__vectorT_double_t_t = {"_p_std__vectorT_std__vectorT_double_t_t", "std::vector< std::vector< double > > *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
+  &_swigt__p_Arm,
+  &_swigt__p_ArmGeometry,
+  &_swigt__p_ArmMover,
   &_swigt__p_Body,
+  &_swigt__p_BodyMover,
+  &_swigt__p_Curve,
+  &_swigt__p_LeapHandMessage,
   &_swigt__p_LeftArm,
+  &_swigt__p_LeftArmGeometry,
+  &_swigt__p_LeftArmMover,
+  &_swigt__p_Leg,
+  &_swigt__p_LegGeometry,
+  &_swigt__p_LegMover,
   &_swigt__p_Legs,
+  &_swigt__p_LegsMover,
+  &_swigt__p_Mover,
   &_swigt__p_Neck,
+  &_swigt__p_NeckMover,
+  &_swigt__p_Path,
+  &_swigt__p_Paths,
+  &_swigt__p_Point,
   &_swigt__p_RightArm,
-  &_swigt__p_SPBodyMover,
+  &_swigt__p_RightArmGeometry,
+  &_swigt__p_RightArmMover,
   &_swigt__p_SPServo,
   &_swigt__p_SPServoController,
+  &_swigt__p_SafetySP,
   &_swigt__p_SensorsMessage,
+  &_swigt__p_Servo,
+  &_swigt__p_ServoMover,
+  &_swigt__p_Tape,
+  &_swigt__p_WalkParameters,
   &_swigt__p_char,
+  &_swigt__p_double,
+  &_swigt__p_float,
+  &_swigt__p_ik_leftarmglobals,
+  &_swigt__p_ik_leftarmparameters,
+  &_swigt__p_ik_leftarmvariables,
+  &_swigt__p_ik_rightarmglobals,
+  &_swigt__p_ik_rightarmparameters,
+  &_swigt__p_ik_rightarmvariables,
+  &_swigt__p_std__mapT_float_Point_t,
+  &_swigt__p_std__mapT_float_float_t,
+  &_swigt__p_std__mapT_float_std__pairT_Point_int_t_t,
   &_swigt__p_std__mapT_int_SPServo_t,
+  &_swigt__p_std__mapT_std__string_Arc3d_t,
+  &_swigt__p_std__mapT_std__string_Mat3d_t,
+  &_swigt__p_std__mapT_std__string_Vec3d_t,
+  &_swigt__p_std__mapT_std__string_double_t,
+  &_swigt__p_std__mapT_std__string_std__mapT_float_float_t_t,
   &_swigt__p_std__ostream,
+  &_swigt__p_std__shared_ptrT_ArmGeometry_t,
+  &_swigt__p_std__shared_ptrT_BodyMover_t,
   &_swigt__p_std__shared_ptrT_Body_t,
   &_swigt__p_std__shared_ptrT_Configure_t,
+  &_swigt__p_std__shared_ptrT_LeftArmGeometry_t,
+  &_swigt__p_std__shared_ptrT_LegMover_t,
+  &_swigt__p_std__shared_ptrT_Mover_t,
+  &_swigt__p_std__shared_ptrT_RightArmGeometry_t,
+  &_swigt__p_std__shared_ptrT_ServoMover_t,
   &_swigt__p_std__shared_ptrT_Servo_t,
-  &_swigt__p_std__string,
+  &_swigt__p_std__vectorT_std__vectorT_double_t_t,
 };
 
+static swig_cast_info _swigc__p_Arm[] = {  {&_swigt__p_RightArm, _p_RightArmTo_p_Arm, 0, 0},  {&_swigt__p_Arm, 0, 0, 0},  {&_swigt__p_LeftArm, _p_LeftArmTo_p_Arm, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ArmGeometry[] = {  {&_swigt__p_ArmGeometry, 0, 0, 0},  {&_swigt__p_RightArmGeometry, _p_RightArmGeometryTo_p_ArmGeometry, 0, 0},  {&_swigt__p_LeftArmGeometry, _p_LeftArmGeometryTo_p_ArmGeometry, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ArmMover[] = {  {&_swigt__p_ArmMover, 0, 0, 0},  {&_swigt__p_RightArmMover, _p_RightArmMoverTo_p_ArmMover, 0, 0},  {&_swigt__p_LeftArmMover, _p_LeftArmMoverTo_p_ArmMover, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Body[] = {  {&_swigt__p_Body, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_BodyMover[] = {  {&_swigt__p_BodyMover, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Curve[] = {  {&_swigt__p_Curve, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_LeapHandMessage[] = {  {&_swigt__p_LeapHandMessage, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_LeftArm[] = {  {&_swigt__p_LeftArm, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_LeftArmGeometry[] = {  {&_swigt__p_LeftArmGeometry, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_LeftArmMover[] = {  {&_swigt__p_LeftArmMover, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Leg[] = {  {&_swigt__p_Leg, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_LegGeometry[] = {  {&_swigt__p_LegGeometry, 0, 0, 0},  {&_swigt__p_Leg, _p_LegTo_p_LegGeometry, 0, 0},  {&_swigt__p_LegMover, _p_LegMoverTo_p_LegGeometry, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_LegMover[] = {  {&_swigt__p_LegMover, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Legs[] = {  {&_swigt__p_Legs, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_LegsMover[] = {  {&_swigt__p_LegsMover, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Mover[] = {  {&_swigt__p_Mover, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Neck[] = {  {&_swigt__p_Neck, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_NeckMover[] = {  {&_swigt__p_NeckMover, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Path[] = {  {&_swigt__p_Path, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Paths[] = {  {&_swigt__p_Paths, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Point[] = {  {&_swigt__p_Point, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_RightArm[] = {  {&_swigt__p_RightArm, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_SPBodyMover[] = {  {&_swigt__p_SPBodyMover, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_RightArmGeometry[] = {  {&_swigt__p_RightArmGeometry, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_RightArmMover[] = {  {&_swigt__p_RightArmMover, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SPServo[] = {  {&_swigt__p_SPServo, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SPServoController[] = {  {&_swigt__p_SPServoController, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_SafetySP[] = {  {&_swigt__p_SafetySP, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_SensorsMessage[] = {  {&_swigt__p_SensorsMessage, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Servo[] = {  {&_swigt__p_Servo, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ServoMover[] = {  {&_swigt__p_ServoMover, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Tape[] = {  {&_swigt__p_Tape, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_WalkParameters[] = {  {&_swigt__p_WalkParameters, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ik_leftarmglobals[] = {  {&_swigt__p_ik_leftarmglobals, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ik_leftarmparameters[] = {  {&_swigt__p_ik_leftarmparameters, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ik_leftarmvariables[] = {  {&_swigt__p_ik_leftarmvariables, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ik_rightarmglobals[] = {  {&_swigt__p_ik_rightarmglobals, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ik_rightarmparameters[] = {  {&_swigt__p_ik_rightarmparameters, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_ik_rightarmvariables[] = {  {&_swigt__p_ik_rightarmvariables, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_float_Point_t[] = {  {&_swigt__p_std__mapT_float_Point_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_float_float_t[] = {  {&_swigt__p_std__mapT_float_float_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_float_std__pairT_Point_int_t_t[] = {  {&_swigt__p_std__mapT_float_std__pairT_Point_int_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__mapT_int_SPServo_t[] = {  {&_swigt__p_std__mapT_int_SPServo_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_std__string_Arc3d_t[] = {  {&_swigt__p_std__mapT_std__string_Arc3d_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_std__string_Mat3d_t[] = {  {&_swigt__p_std__mapT_std__string_Mat3d_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_std__string_Vec3d_t[] = {  {&_swigt__p_std__mapT_std__string_Vec3d_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_std__string_double_t[] = {  {&_swigt__p_std__mapT_std__string_double_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__mapT_std__string_std__mapT_float_float_t_t[] = {  {&_swigt__p_std__mapT_std__string_std__mapT_float_float_t_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__ostream[] = {  {&_swigt__p_std__ostream, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_ArmGeometry_t[] = {  {&_swigt__p_std__shared_ptrT_ArmGeometry_t, 0, 0, 0},  {&_swigt__p_std__shared_ptrT_RightArmGeometry_t, _p_std__shared_ptrT_RightArmGeometry_tTo_p_std__shared_ptrT_ArmGeometry_t, 0, 0},  {&_swigt__p_std__shared_ptrT_LeftArmGeometry_t, _p_std__shared_ptrT_LeftArmGeometry_tTo_p_std__shared_ptrT_ArmGeometry_t, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_BodyMover_t[] = {  {&_swigt__p_std__shared_ptrT_BodyMover_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_Body_t[] = {  {&_swigt__p_std__shared_ptrT_Body_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_Configure_t[] = {  {&_swigt__p_std__shared_ptrT_Configure_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_LeftArmGeometry_t[] = {  {&_swigt__p_std__shared_ptrT_LeftArmGeometry_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_LegMover_t[] = {  {&_swigt__p_std__shared_ptrT_LegMover_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_Mover_t[] = {  {&_swigt__p_std__shared_ptrT_Mover_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_RightArmGeometry_t[] = {  {&_swigt__p_std__shared_ptrT_RightArmGeometry_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__shared_ptrT_ServoMover_t[] = {  {&_swigt__p_std__shared_ptrT_ServoMover_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__shared_ptrT_Servo_t[] = {  {&_swigt__p_std__shared_ptrT_Servo_t, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_std__vectorT_std__vectorT_double_t_t[] = {  {&_swigt__p_std__vectorT_std__vectorT_double_t_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
+  _swigc__p_Arm,
+  _swigc__p_ArmGeometry,
+  _swigc__p_ArmMover,
   _swigc__p_Body,
+  _swigc__p_BodyMover,
+  _swigc__p_Curve,
+  _swigc__p_LeapHandMessage,
   _swigc__p_LeftArm,
+  _swigc__p_LeftArmGeometry,
+  _swigc__p_LeftArmMover,
+  _swigc__p_Leg,
+  _swigc__p_LegGeometry,
+  _swigc__p_LegMover,
   _swigc__p_Legs,
+  _swigc__p_LegsMover,
+  _swigc__p_Mover,
   _swigc__p_Neck,
+  _swigc__p_NeckMover,
+  _swigc__p_Path,
+  _swigc__p_Paths,
+  _swigc__p_Point,
   _swigc__p_RightArm,
-  _swigc__p_SPBodyMover,
+  _swigc__p_RightArmGeometry,
+  _swigc__p_RightArmMover,
   _swigc__p_SPServo,
   _swigc__p_SPServoController,
+  _swigc__p_SafetySP,
   _swigc__p_SensorsMessage,
+  _swigc__p_Servo,
+  _swigc__p_ServoMover,
+  _swigc__p_Tape,
+  _swigc__p_WalkParameters,
   _swigc__p_char,
+  _swigc__p_double,
+  _swigc__p_float,
+  _swigc__p_ik_leftarmglobals,
+  _swigc__p_ik_leftarmparameters,
+  _swigc__p_ik_leftarmvariables,
+  _swigc__p_ik_rightarmglobals,
+  _swigc__p_ik_rightarmparameters,
+  _swigc__p_ik_rightarmvariables,
+  _swigc__p_std__mapT_float_Point_t,
+  _swigc__p_std__mapT_float_float_t,
+  _swigc__p_std__mapT_float_std__pairT_Point_int_t_t,
   _swigc__p_std__mapT_int_SPServo_t,
+  _swigc__p_std__mapT_std__string_Arc3d_t,
+  _swigc__p_std__mapT_std__string_Mat3d_t,
+  _swigc__p_std__mapT_std__string_Vec3d_t,
+  _swigc__p_std__mapT_std__string_double_t,
+  _swigc__p_std__mapT_std__string_std__mapT_float_float_t_t,
   _swigc__p_std__ostream,
+  _swigc__p_std__shared_ptrT_ArmGeometry_t,
+  _swigc__p_std__shared_ptrT_BodyMover_t,
   _swigc__p_std__shared_ptrT_Body_t,
   _swigc__p_std__shared_ptrT_Configure_t,
+  _swigc__p_std__shared_ptrT_LeftArmGeometry_t,
+  _swigc__p_std__shared_ptrT_LegMover_t,
+  _swigc__p_std__shared_ptrT_Mover_t,
+  _swigc__p_std__shared_ptrT_RightArmGeometry_t,
+  _swigc__p_std__shared_ptrT_ServoMover_t,
   _swigc__p_std__shared_ptrT_Servo_t,
-  _swigc__p_std__string,
+  _swigc__p_std__vectorT_std__vectorT_double_t_t,
 };
 
 
@@ -4783,6 +18751,10 @@ SWIG_init(void) {
   
   SWIG_InstallConstants(d,swig_const_table);
   
+  SWIG_Python_SetConstant(d, "SHARED_PTR_DISOWN",SWIG_From_int(static_cast< int >(0)));
+  SWIG_Python_SetConstant(d, "LegMover_LEG_NORMAL",SWIG_From_int(static_cast< int >(LegMover::LEG_NORMAL)));
+  SWIG_Python_SetConstant(d, "LegMover_LEG_CAUTIOUS",SWIG_From_int(static_cast< int >(LegMover::LEG_CAUTIOUS)));
+  SWIG_Python_SetConstant(d, "LegMover_LEG_BRICKS",SWIG_From_int(static_cast< int >(LegMover::LEG_BRICKS)));
   SWIG_Python_SetConstant(d, "ANGLE360",SWIG_From_double(static_cast< double >(360.0)));
   SWIG_Python_SetConstant(d, "ANGLE180",SWIG_From_double(static_cast< double >((360.0/2.0))));
   SWIG_Python_SetConstant(d, "ANGLE90",SWIG_From_double(static_cast< double >(((360.0/2.0)/2.0))));
@@ -4800,11 +18772,17 @@ SWIG_init(void) {
   SWIG_addvarlink(SWIG_globals(),(char*)"simSpeed",Swig_var_simSpeed_get, Swig_var_simSpeed_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"realTime",Swig_var_realTime_get, Swig_var_realTime_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"lastRealTime",Swig_var_lastRealTime_get, Swig_var_lastRealTime_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"strs",Swig_var_strs_get, Swig_var_strs_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"nums",Swig_var_nums_get, Swig_var_nums_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"vecs",Swig_var_vecs_get, Swig_var_vecs_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"mats",Swig_var_mats_get, Swig_var_mats_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"arcs",Swig_var_arcs_get, Swig_var_arcs_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"cfg",Swig_var_cfg_get, Swig_var_cfg_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"servoController",Swig_var_servoController_get, Swig_var_servoController_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"servos",Swig_var_servos_get, Swig_var_servos_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"body",Swig_var_body_get, Swig_var_body_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"mover",Swig_var_mover_get, Swig_var_mover_set);
+  SWIG_addvarlink(SWIG_globals(),(char*)"safety",Swig_var_safety_get, Swig_var_safety_set);
   SWIG_addvarlink(SWIG_globals(),(char*)"sensors",Swig_var_sensors_get, Swig_var_sensors_set);
 #if PY_VERSION_HEX >= 0x03000000
   return m;

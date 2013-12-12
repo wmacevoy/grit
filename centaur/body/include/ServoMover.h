@@ -11,8 +11,11 @@
 
 class ServoMover
 {
-public:
-  std::mutex access;
+ private:
+  mutable std::mutex access;
+ public:
+  ServoMover(const ServoMover &copy);
+  const ServoMover& operator=(const ServoMover &copy);
 #if USE_SERVO_LINEAR == 1
   typedef std::map < float , float > Angles;
   Angles angles;

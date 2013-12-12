@@ -67,6 +67,258 @@ except AttributeError:
     _newclass = 0
 
 
+SHARED_PTR_DISOWN = _body.SHARED_PTR_DISOWN
+class ArmGeometry(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ArmGeometry, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ArmGeometry, name)
+    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined - class is abstract")
+    __repr__ = _swig_repr
+    def name(self, *args): return _body.ArmGeometry_name(self, *args)
+    def forward(self): return _body.ArmGeometry_forward(self)
+    def inverse(self): return _body.ArmGeometry_inverse(self)
+    def compute(self, *args): return _body.ArmGeometry_compute(self, *args)
+    __swig_destroy__ = _body.delete_ArmGeometry
+    __del__ = lambda self : None;
+ArmGeometry_swigregister = _body.ArmGeometry_swigregister
+ArmGeometry_swigregister(ArmGeometry)
+
+class RightArmGeometry(ArmGeometry):
+    __swig_setmethods__ = {}
+    for _s in [ArmGeometry]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, RightArmGeometry, name, value)
+    __swig_getmethods__ = {}
+    for _s in [ArmGeometry]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, RightArmGeometry, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["parameters"] = _body.RightArmGeometry_parameters_set
+    __swig_getmethods__["parameters"] = _body.RightArmGeometry_parameters_get
+    if _newclass:parameters = _swig_property(_body.RightArmGeometry_parameters_get, _body.RightArmGeometry_parameters_set)
+    __swig_setmethods__["variables"] = _body.RightArmGeometry_variables_set
+    __swig_getmethods__["variables"] = _body.RightArmGeometry_variables_get
+    if _newclass:variables = _swig_property(_body.RightArmGeometry_variables_get, _body.RightArmGeometry_variables_set)
+    __swig_setmethods__["globals"] = _body.RightArmGeometry_globals_set
+    __swig_getmethods__["globals"] = _body.RightArmGeometry_globals_get
+    if _newclass:globals = _swig_property(_body.RightArmGeometry_globals_get, _body.RightArmGeometry_globals_set)
+    def __init__(self): 
+        this = _body.new_RightArmGeometry()
+        try: self.this.append(this)
+        except: self.this = this
+    def forward(self): return _body.RightArmGeometry_forward(self)
+    def inverse(self): return _body.RightArmGeometry_inverse(self)
+    def compute(self, *args): return _body.RightArmGeometry_compute(self, *args)
+    __swig_destroy__ = _body.delete_RightArmGeometry
+    __del__ = lambda self : None;
+RightArmGeometry_swigregister = _body.RightArmGeometry_swigregister
+RightArmGeometry_swigregister(RightArmGeometry)
+
+class LeftArmGeometry(ArmGeometry):
+    __swig_setmethods__ = {}
+    for _s in [ArmGeometry]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LeftArmGeometry, name, value)
+    __swig_getmethods__ = {}
+    for _s in [ArmGeometry]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, LeftArmGeometry, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["parameters"] = _body.LeftArmGeometry_parameters_set
+    __swig_getmethods__["parameters"] = _body.LeftArmGeometry_parameters_get
+    if _newclass:parameters = _swig_property(_body.LeftArmGeometry_parameters_get, _body.LeftArmGeometry_parameters_set)
+    __swig_setmethods__["variables"] = _body.LeftArmGeometry_variables_set
+    __swig_getmethods__["variables"] = _body.LeftArmGeometry_variables_get
+    if _newclass:variables = _swig_property(_body.LeftArmGeometry_variables_get, _body.LeftArmGeometry_variables_set)
+    __swig_setmethods__["globals"] = _body.LeftArmGeometry_globals_set
+    __swig_getmethods__["globals"] = _body.LeftArmGeometry_globals_get
+    if _newclass:globals = _swig_property(_body.LeftArmGeometry_globals_get, _body.LeftArmGeometry_globals_set)
+    def __init__(self): 
+        this = _body.new_LeftArmGeometry()
+        try: self.this.append(this)
+        except: self.this = this
+    def forward(self): return _body.LeftArmGeometry_forward(self)
+    def inverse(self): return _body.LeftArmGeometry_inverse(self)
+    def compute(self, *args): return _body.LeftArmGeometry_compute(self, *args)
+    __swig_destroy__ = _body.delete_LeftArmGeometry
+    __del__ = lambda self : None;
+LeftArmGeometry_swigregister = _body.LeftArmGeometry_swigregister
+LeftArmGeometry_swigregister(LeftArmGeometry)
+
+class LegGeometry(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LegGeometry, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, LegGeometry, name)
+    __repr__ = _swig_repr
+    def __init__(self): 
+        this = _body.new_LegGeometry()
+        try: self.this.append(this)
+        except: self.this = this
+    def number(self, *args): return _body.LegGeometry_number(self, *args)
+    def name(self, *args): return _body.LegGeometry_name(self, *args)
+    def setPosition(self, *args): return _body.LegGeometry_setPosition(self, *args)
+    def setHipOffset(self, *args): return _body.LegGeometry_setHipOffset(self, *args)
+    def setName(self, *args): return _body.LegGeometry_setName(self, *args)
+    def outputName(self, *args): return _body.LegGeometry_outputName(self, *args)
+    def robustACos(self, *args): return _body.LegGeometry_robustACos(self, *args)
+    def compute2D(self, *args): return _body.LegGeometry_compute2D(self, *args)
+    def compute3D(self, *args): return _body.LegGeometry_compute3D(self, *args)
+    def forward3D(self, *args): return _body.LegGeometry_forward3D(self, *args)
+    __swig_destroy__ = _body.delete_LegGeometry
+    __del__ = lambda self : None;
+LegGeometry_swigregister = _body.LegGeometry_swigregister
+LegGeometry_swigregister(LegGeometry)
+
+class Neck(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Neck, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Neck, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["upDown"] = _body.Neck_upDown_set
+    __swig_getmethods__["upDown"] = _body.Neck_upDown_get
+    if _newclass:upDown = _swig_property(_body.Neck_upDown_get, _body.Neck_upDown_set)
+    __swig_setmethods__["leftRight"] = _body.Neck_leftRight_set
+    __swig_getmethods__["leftRight"] = _body.Neck_leftRight_get
+    if _newclass:leftRight = _swig_property(_body.Neck_leftRight_get, _body.Neck_leftRight_set)
+    def init(self): return _body.Neck_init(self)
+    def __init__(self): 
+        this = _body.new_Neck()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_Neck
+    __del__ = lambda self : None;
+Neck_swigregister = _body.Neck_swigregister
+Neck_swigregister(Neck)
+
+class Arm(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Arm, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Arm, name)
+    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined - class is abstract")
+    __repr__ = _swig_repr
+    __swig_setmethods__["inOut"] = _body.Arm_inOut_set
+    __swig_getmethods__["inOut"] = _body.Arm_inOut_get
+    if _newclass:inOut = _swig_property(_body.Arm_inOut_get, _body.Arm_inOut_set)
+    __swig_setmethods__["upDown"] = _body.Arm_upDown_set
+    __swig_getmethods__["upDown"] = _body.Arm_upDown_get
+    if _newclass:upDown = _swig_property(_body.Arm_upDown_get, _body.Arm_upDown_set)
+    __swig_setmethods__["bicep"] = _body.Arm_bicep_set
+    __swig_getmethods__["bicep"] = _body.Arm_bicep_get
+    if _newclass:bicep = _swig_property(_body.Arm_bicep_get, _body.Arm_bicep_set)
+    __swig_setmethods__["elbow"] = _body.Arm_elbow_set
+    __swig_getmethods__["elbow"] = _body.Arm_elbow_get
+    if _newclass:elbow = _swig_property(_body.Arm_elbow_get, _body.Arm_elbow_set)
+    __swig_setmethods__["forearm"] = _body.Arm_forearm_set
+    __swig_getmethods__["forearm"] = _body.Arm_forearm_get
+    if _newclass:forearm = _swig_property(_body.Arm_forearm_get, _body.Arm_forearm_set)
+    __swig_setmethods__["trigger"] = _body.Arm_trigger_set
+    __swig_getmethods__["trigger"] = _body.Arm_trigger_get
+    if _newclass:trigger = _swig_property(_body.Arm_trigger_get, _body.Arm_trigger_set)
+    __swig_setmethods__["middle"] = _body.Arm_middle_set
+    __swig_getmethods__["middle"] = _body.Arm_middle_get
+    if _newclass:middle = _swig_property(_body.Arm_middle_get, _body.Arm_middle_set)
+    __swig_setmethods__["ring"] = _body.Arm_ring_set
+    __swig_getmethods__["ring"] = _body.Arm_ring_get
+    if _newclass:ring = _swig_property(_body.Arm_ring_get, _body.Arm_ring_set)
+    __swig_setmethods__["thumb"] = _body.Arm_thumb_set
+    __swig_getmethods__["thumb"] = _body.Arm_thumb_get
+    if _newclass:thumb = _swig_property(_body.Arm_thumb_get, _body.Arm_thumb_set)
+    def init(self): return _body.Arm_init(self)
+    def goLimp(self): return _body.Arm_goLimp(self)
+    def report(self, *args): return _body.Arm_report(self, *args)
+    def temp_report(self, *args): return _body.Arm_temp_report(self, *args)
+    __swig_destroy__ = _body.delete_Arm
+    __del__ = lambda self : None;
+Arm_swigregister = _body.Arm_swigregister
+Arm_swigregister(Arm)
+
+class LeftArm(Arm):
+    __swig_setmethods__ = {}
+    for _s in [Arm]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LeftArm, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Arm]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, LeftArm, name)
+    __repr__ = _swig_repr
+    def init(self): return _body.LeftArm_init(self)
+    def __init__(self): 
+        this = _body.new_LeftArm()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_LeftArm
+    __del__ = lambda self : None;
+LeftArm_swigregister = _body.LeftArm_swigregister
+LeftArm_swigregister(LeftArm)
+
+class RightArm(Arm):
+    __swig_setmethods__ = {}
+    for _s in [Arm]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, RightArm, name, value)
+    __swig_getmethods__ = {}
+    for _s in [Arm]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, RightArm, name)
+    __repr__ = _swig_repr
+    def init(self): return _body.RightArm_init(self)
+    def __init__(self): 
+        this = _body.new_RightArm()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_RightArm
+    __del__ = lambda self : None;
+RightArm_swigregister = _body.RightArm_swigregister
+RightArm_swigregister(RightArm)
+
+class Leg(LegGeometry):
+    __swig_setmethods__ = {}
+    for _s in [LegGeometry]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Leg, name, value)
+    __swig_getmethods__ = {}
+    for _s in [LegGeometry]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, Leg, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["knee"] = _body.Leg_knee_set
+    __swig_getmethods__["knee"] = _body.Leg_knee_get
+    if _newclass:knee = _swig_property(_body.Leg_knee_get, _body.Leg_knee_set)
+    __swig_setmethods__["femur"] = _body.Leg_femur_set
+    __swig_getmethods__["femur"] = _body.Leg_femur_get
+    if _newclass:femur = _swig_property(_body.Leg_femur_get, _body.Leg_femur_set)
+    __swig_setmethods__["hip"] = _body.Leg_hip_set
+    __swig_getmethods__["hip"] = _body.Leg_hip_get
+    if _newclass:hip = _swig_property(_body.Leg_hip_get, _body.Leg_hip_set)
+    __swig_setmethods__["name"] = _body.Leg_name_set
+    __swig_getmethods__["name"] = _body.Leg_name_get
+    if _newclass:name = _swig_property(_body.Leg_name_get, _body.Leg_name_set)
+    def init(self): return _body.Leg_init(self)
+    def report(self): return _body.Leg_report(self)
+    def temp_report(self): return _body.Leg_temp_report(self)
+    def __init__(self): 
+        this = _body.new_Leg()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_Leg
+    __del__ = lambda self : None;
+Leg_swigregister = _body.Leg_swigregister
+Leg_swigregister(Leg)
+
+class Legs(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Legs, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Legs, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["legs"] = _body.Legs_legs_set
+    __swig_getmethods__["legs"] = _body.Legs_legs_get
+    if _newclass:legs = _swig_property(_body.Legs_legs_get, _body.Legs_legs_set)
+    def __init__(self): 
+        this = _body.new_Legs()
+        try: self.this.append(this)
+        except: self.this = this
+    def init(self): return _body.Legs_init(self)
+    __swig_destroy__ = _body.delete_Legs
+    __del__ = lambda self : None;
+Legs_swigregister = _body.Legs_swigregister
+Legs_swigregister(Legs)
+
 class Body(_object):
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, Body, name, value)
@@ -100,6 +352,391 @@ class Body(_object):
 Body_swigregister = _body.Body_swigregister
 Body_swigregister(Body)
 
+class ArmMover(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ArmMover, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ArmMover, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["geometry"] = _body.ArmMover_geometry_set
+    __swig_getmethods__["geometry"] = _body.ArmMover_geometry_get
+    if _newclass:geometry = _swig_property(_body.ArmMover_geometry_get, _body.ArmMover_geometry_set)
+    __swig_setmethods__["inOut"] = _body.ArmMover_inOut_set
+    __swig_getmethods__["inOut"] = _body.ArmMover_inOut_get
+    if _newclass:inOut = _swig_property(_body.ArmMover_inOut_get, _body.ArmMover_inOut_set)
+    __swig_setmethods__["upDown"] = _body.ArmMover_upDown_set
+    __swig_getmethods__["upDown"] = _body.ArmMover_upDown_get
+    if _newclass:upDown = _swig_property(_body.ArmMover_upDown_get, _body.ArmMover_upDown_set)
+    __swig_setmethods__["bicep"] = _body.ArmMover_bicep_set
+    __swig_getmethods__["bicep"] = _body.ArmMover_bicep_get
+    if _newclass:bicep = _swig_property(_body.ArmMover_bicep_get, _body.ArmMover_bicep_set)
+    __swig_setmethods__["elbow"] = _body.ArmMover_elbow_set
+    __swig_getmethods__["elbow"] = _body.ArmMover_elbow_get
+    if _newclass:elbow = _swig_property(_body.ArmMover_elbow_get, _body.ArmMover_elbow_set)
+    __swig_setmethods__["forearm"] = _body.ArmMover_forearm_set
+    __swig_getmethods__["forearm"] = _body.ArmMover_forearm_get
+    if _newclass:forearm = _swig_property(_body.ArmMover_forearm_get, _body.ArmMover_forearm_set)
+    __swig_setmethods__["trigger"] = _body.ArmMover_trigger_set
+    __swig_getmethods__["trigger"] = _body.ArmMover_trigger_get
+    if _newclass:trigger = _swig_property(_body.ArmMover_trigger_get, _body.ArmMover_trigger_set)
+    __swig_setmethods__["middle"] = _body.ArmMover_middle_set
+    __swig_getmethods__["middle"] = _body.ArmMover_middle_get
+    if _newclass:middle = _swig_property(_body.ArmMover_middle_get, _body.ArmMover_middle_set)
+    __swig_setmethods__["ring"] = _body.ArmMover_ring_set
+    __swig_getmethods__["ring"] = _body.ArmMover_ring_get
+    if _newclass:ring = _swig_property(_body.ArmMover_ring_get, _body.ArmMover_ring_set)
+    __swig_setmethods__["thumb"] = _body.ArmMover_thumb_set
+    __swig_getmethods__["thumb"] = _body.ArmMover_thumb_get
+    if _newclass:thumb = _swig_property(_body.ArmMover_thumb_get, _body.ArmMover_thumb_set)
+    def move(self, *args): return _body.ArmMover_move(self, *args)
+    def torque(self, *args): return _body.ArmMover_torque(self, *args)
+    def done(self): return _body.ArmMover_done(self)
+    def leapReset(self): return _body.ArmMover_leapReset(self)
+    __swig_setmethods__["lastLeapTime"] = _body.ArmMover_lastLeapTime_set
+    __swig_getmethods__["lastLeapTime"] = _body.ArmMover_lastLeapTime_get
+    if _newclass:lastLeapTime = _swig_property(_body.ArmMover_lastLeapTime_get, _body.ArmMover_lastLeapTime_set)
+    __swig_setmethods__["lastLeapShoulderIO"] = _body.ArmMover_lastLeapShoulderIO_set
+    __swig_getmethods__["lastLeapShoulderIO"] = _body.ArmMover_lastLeapShoulderIO_get
+    if _newclass:lastLeapShoulderIO = _swig_property(_body.ArmMover_lastLeapShoulderIO_get, _body.ArmMover_lastLeapShoulderIO_set)
+    __swig_setmethods__["lastLeapShoulderUD"] = _body.ArmMover_lastLeapShoulderUD_set
+    __swig_getmethods__["lastLeapShoulderUD"] = _body.ArmMover_lastLeapShoulderUD_get
+    if _newclass:lastLeapShoulderUD = _swig_property(_body.ArmMover_lastLeapShoulderUD_get, _body.ArmMover_lastLeapShoulderUD_set)
+    __swig_setmethods__["lastLeapBicep"] = _body.ArmMover_lastLeapBicep_set
+    __swig_getmethods__["lastLeapBicep"] = _body.ArmMover_lastLeapBicep_get
+    if _newclass:lastLeapBicep = _swig_property(_body.ArmMover_lastLeapBicep_get, _body.ArmMover_lastLeapBicep_set)
+    __swig_setmethods__["lastLeapElbow"] = _body.ArmMover_lastLeapElbow_set
+    __swig_getmethods__["lastLeapElbow"] = _body.ArmMover_lastLeapElbow_get
+    if _newclass:lastLeapElbow = _swig_property(_body.ArmMover_lastLeapElbow_get, _body.ArmMover_lastLeapElbow_set)
+    __swig_setmethods__["lastLeapForearm"] = _body.ArmMover_lastLeapForearm_set
+    __swig_getmethods__["lastLeapForearm"] = _body.ArmMover_lastLeapForearm_get
+    if _newclass:lastLeapForearm = _swig_property(_body.ArmMover_lastLeapForearm_get, _body.ArmMover_lastLeapForearm_set)
+    def leapAdjust(self, *args): return _body.ArmMover_leapAdjust(self, *args)
+    __swig_destroy__ = _body.delete_ArmMover
+    __del__ = lambda self : None;
+    def __init__(self, *args): 
+        this = _body.new_ArmMover(*args)
+        try: self.this.append(this)
+        except: self.this = this
+ArmMover_swigregister = _body.ArmMover_swigregister
+ArmMover_swigregister(ArmMover)
+
+
+def CreateWalkMover():
+  return _body.CreateWalkMover()
+CreateWalkMover = _body.CreateWalkMover
+class LegMover(LegGeometry):
+    __swig_setmethods__ = {}
+    for _s in [LegGeometry]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LegMover, name, value)
+    __swig_getmethods__ = {}
+    for _s in [LegGeometry]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, LegMover, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["touchPressure"] = _body.LegMover_touchPressure_set
+    __swig_getmethods__["touchPressure"] = _body.LegMover_touchPressure_get
+    if _newclass:touchPressure = _swig_property(_body.LegMover_touchPressure_get, _body.LegMover_touchPressure_set)
+    def state(self, *args): return _body.LegMover_state(self, *args)
+    def tape(self, *args): return _body.LegMover_tape(self, *args)
+    __swig_setmethods__["m_cutoff"] = _body.LegMover_m_cutoff_set
+    __swig_getmethods__["m_cutoff"] = _body.LegMover_m_cutoff_get
+    if _newclass:m_cutoff = _swig_property(_body.LegMover_m_cutoff_get, _body.LegMover_m_cutoff_set)
+    def cutoff(self, *args): return _body.LegMover_cutoff(self, *args)
+    __swig_setmethods__["legs"] = _body.LegMover_legs_set
+    __swig_getmethods__["legs"] = _body.LegMover_legs_get
+    if _newclass:legs = _swig_property(_body.LegMover_legs_get, _body.LegMover_legs_set)
+    LEG_NORMAL = _body.LegMover_LEG_NORMAL
+    LEG_CAUTIOUS = _body.LegMover_LEG_CAUTIOUS
+    LEG_BRICKS = _body.LegMover_LEG_BRICKS
+    def __init__(self, *args): 
+        this = _body.new_LegMover(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_setmethods__["kneeMover"] = _body.LegMover_kneeMover_set
+    __swig_getmethods__["kneeMover"] = _body.LegMover_kneeMover_get
+    if _newclass:kneeMover = _swig_property(_body.LegMover_kneeMover_get, _body.LegMover_kneeMover_set)
+    __swig_setmethods__["femurMover"] = _body.LegMover_femurMover_set
+    __swig_getmethods__["femurMover"] = _body.LegMover_femurMover_get
+    if _newclass:femurMover = _swig_property(_body.LegMover_femurMover_get, _body.LegMover_femurMover_set)
+    __swig_setmethods__["hipMover"] = _body.LegMover_hipMover_set
+    __swig_getmethods__["hipMover"] = _body.LegMover_hipMover_get
+    if _newclass:hipMover = _swig_property(_body.LegMover_hipMover_get, _body.LegMover_hipMover_set)
+    def tipping(self): return _body.LegMover_tipping(self)
+    def cautious(self, *args): return _body.LegMover_cautious(self, *args)
+    def bricks(self, *args): return _body.LegMover_bricks(self, *args)
+    def normal(self, *args): return _body.LegMover_normal(self, *args)
+    def move(self, *args): return _body.LegMover_move(self, *args)
+    def setup(self, *args): return _body.LegMover_setup(self, *args)
+    def torque(self, *args): return _body.LegMover_torque(self, *args)
+    def done(self): return _body.LegMover_done(self)
+    __swig_destroy__ = _body.delete_LegMover
+    __del__ = lambda self : None;
+LegMover_swigregister = _body.LegMover_swigregister
+LegMover_swigregister(LegMover)
+
+class Mover(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Mover, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Mover, name)
+    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined - class is abstract")
+    __repr__ = _swig_repr
+    def start(self): return _body.Mover_start(self)
+    def stop(self): return _body.Mover_stop(self)
+    __swig_destroy__ = _body.delete_Mover
+    __del__ = lambda self : None;
+Mover_swigregister = _body.Mover_swigregister
+Mover_swigregister(Mover)
+
+class RightArmMover(ArmMover):
+    __swig_setmethods__ = {}
+    for _s in [ArmMover]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, RightArmMover, name, value)
+    __swig_getmethods__ = {}
+    for _s in [ArmMover]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, RightArmMover, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["rightArmGeometry"] = _body.RightArmMover_rightArmGeometry_set
+    __swig_getmethods__["rightArmGeometry"] = _body.RightArmMover_rightArmGeometry_get
+    if _newclass:rightArmGeometry = _swig_property(_body.RightArmMover_rightArmGeometry_get, _body.RightArmMover_rightArmGeometry_set)
+    def __init__(self): 
+        this = _body.new_RightArmMover()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_RightArmMover
+    __del__ = lambda self : None;
+RightArmMover_swigregister = _body.RightArmMover_swigregister
+RightArmMover_swigregister(RightArmMover)
+
+class WalkParameters(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, WalkParameters, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, WalkParameters, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["radius"] = _body.WalkParameters_radius_set
+    __swig_getmethods__["radius"] = _body.WalkParameters_radius_get
+    if _newclass:radius = _swig_property(_body.WalkParameters_radius_get, _body.WalkParameters_radius_set)
+    __swig_setmethods__["x1"] = _body.WalkParameters_x1_set
+    __swig_getmethods__["x1"] = _body.WalkParameters_x1_get
+    if _newclass:x1 = _swig_property(_body.WalkParameters_x1_get, _body.WalkParameters_x1_set)
+    __swig_setmethods__["y1"] = _body.WalkParameters_y1_set
+    __swig_getmethods__["y1"] = _body.WalkParameters_y1_get
+    if _newclass:y1 = _swig_property(_body.WalkParameters_y1_get, _body.WalkParameters_y1_set)
+    __swig_setmethods__["z1"] = _body.WalkParameters_z1_set
+    __swig_getmethods__["z1"] = _body.WalkParameters_z1_get
+    if _newclass:z1 = _swig_property(_body.WalkParameters_z1_get, _body.WalkParameters_z1_set)
+    __swig_setmethods__["x2"] = _body.WalkParameters_x2_set
+    __swig_getmethods__["x2"] = _body.WalkParameters_x2_get
+    if _newclass:x2 = _swig_property(_body.WalkParameters_x2_get, _body.WalkParameters_x2_set)
+    __swig_setmethods__["y2"] = _body.WalkParameters_y2_set
+    __swig_getmethods__["y2"] = _body.WalkParameters_y2_get
+    if _newclass:y2 = _swig_property(_body.WalkParameters_y2_get, _body.WalkParameters_y2_set)
+    __swig_setmethods__["z2"] = _body.WalkParameters_z2_set
+    __swig_getmethods__["z2"] = _body.WalkParameters_z2_get
+    if _newclass:z2 = _swig_property(_body.WalkParameters_z2_get, _body.WalkParameters_z2_set)
+    __swig_setmethods__["x3"] = _body.WalkParameters_x3_set
+    __swig_getmethods__["x3"] = _body.WalkParameters_x3_get
+    if _newclass:x3 = _swig_property(_body.WalkParameters_x3_get, _body.WalkParameters_x3_set)
+    __swig_setmethods__["y3"] = _body.WalkParameters_y3_set
+    __swig_getmethods__["y3"] = _body.WalkParameters_y3_get
+    if _newclass:y3 = _swig_property(_body.WalkParameters_y3_get, _body.WalkParameters_y3_set)
+    __swig_setmethods__["z3"] = _body.WalkParameters_z3_set
+    __swig_getmethods__["z3"] = _body.WalkParameters_z3_get
+    if _newclass:z3 = _swig_property(_body.WalkParameters_z3_get, _body.WalkParameters_z3_set)
+    __swig_setmethods__["x4"] = _body.WalkParameters_x4_set
+    __swig_getmethods__["x4"] = _body.WalkParameters_x4_get
+    if _newclass:x4 = _swig_property(_body.WalkParameters_x4_get, _body.WalkParameters_x4_set)
+    __swig_setmethods__["y4"] = _body.WalkParameters_y4_set
+    __swig_getmethods__["y4"] = _body.WalkParameters_y4_get
+    if _newclass:y4 = _swig_property(_body.WalkParameters_y4_get, _body.WalkParameters_y4_set)
+    __swig_setmethods__["z4"] = _body.WalkParameters_z4_set
+    __swig_getmethods__["z4"] = _body.WalkParameters_z4_get
+    if _newclass:z4 = _swig_property(_body.WalkParameters_z4_get, _body.WalkParameters_z4_set)
+    __swig_setmethods__["z"] = _body.WalkParameters_z_set
+    __swig_getmethods__["z"] = _body.WalkParameters_z_get
+    if _newclass:z = _swig_property(_body.WalkParameters_z_get, _body.WalkParameters_z_set)
+    __swig_setmethods__["step"] = _body.WalkParameters_step_set
+    __swig_getmethods__["step"] = _body.WalkParameters_step_get
+    if _newclass:step = _swig_property(_body.WalkParameters_step_get, _body.WalkParameters_step_set)
+    __swig_setmethods__["direction"] = _body.WalkParameters_direction_set
+    __swig_getmethods__["direction"] = _body.WalkParameters_direction_get
+    if _newclass:direction = _swig_property(_body.WalkParameters_direction_get, _body.WalkParameters_direction_set)
+    __swig_setmethods__["zStep"] = _body.WalkParameters_zStep_set
+    __swig_getmethods__["zStep"] = _body.WalkParameters_zStep_get
+    if _newclass:zStep = _swig_property(_body.WalkParameters_zStep_get, _body.WalkParameters_zStep_set)
+    __swig_setmethods__["repeat"] = _body.WalkParameters_repeat_set
+    __swig_getmethods__["repeat"] = _body.WalkParameters_repeat_get
+    if _newclass:repeat = _swig_property(_body.WalkParameters_repeat_get, _body.WalkParameters_repeat_set)
+    __swig_setmethods__["rotation"] = _body.WalkParameters_rotation_set
+    __swig_getmethods__["rotation"] = _body.WalkParameters_rotation_get
+    if _newclass:rotation = _swig_property(_body.WalkParameters_rotation_get, _body.WalkParameters_rotation_set)
+    __swig_setmethods__["zOffset"] = _body.WalkParameters_zOffset_set
+    __swig_getmethods__["zOffset"] = _body.WalkParameters_zOffset_get
+    if _newclass:zOffset = _swig_property(_body.WalkParameters_zOffset_get, _body.WalkParameters_zOffset_set)
+    def __init__(self, *args): 
+        this = _body.new_WalkParameters(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_WalkParameters
+    __del__ = lambda self : None;
+WalkParameters_swigregister = _body.WalkParameters_swigregister
+WalkParameters_swigregister(WalkParameters)
+
+class BodyMover(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, BodyMover, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, BodyMover, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["legs"] = _body.BodyMover_legs_set
+    __swig_getmethods__["legs"] = _body.BodyMover_legs_get
+    if _newclass:legs = _swig_property(_body.BodyMover_legs_get, _body.BodyMover_legs_set)
+    __swig_setmethods__["waist"] = _body.BodyMover_waist_set
+    __swig_getmethods__["waist"] = _body.BodyMover_waist_get
+    if _newclass:waist = _swig_property(_body.BodyMover_waist_get, _body.BodyMover_waist_set)
+    __swig_setmethods__["neck"] = _body.BodyMover_neck_set
+    __swig_getmethods__["neck"] = _body.BodyMover_neck_get
+    if _newclass:neck = _swig_property(_body.BodyMover_neck_get, _body.BodyMover_neck_set)
+    __swig_setmethods__["left"] = _body.BodyMover_left_set
+    __swig_getmethods__["left"] = _body.BodyMover_left_get
+    if _newclass:left = _swig_property(_body.BodyMover_left_get, _body.BodyMover_left_set)
+    __swig_setmethods__["right"] = _body.BodyMover_right_set
+    __swig_getmethods__["right"] = _body.BodyMover_right_get
+    if _newclass:right = _swig_property(_body.BodyMover_right_get, _body.BodyMover_right_set)
+    def __init__(self): 
+        this = _body.new_BodyMover()
+        try: self.this.append(this)
+        except: self.this = this
+    def bMove(self, *args): return _body.BodyMover_bMove(self, *args)
+    def createMove(self, *args): return _body.BodyMover_createMove(self, *args)
+    def stepMove(self, *args): return _body.BodyMover_stepMove(self, *args)
+    def blended(self, *args): return _body.BodyMover_blended(self, *args)
+    def bStep(self, *args): return _body.BodyMover_bStep(self, *args)
+    def changeZ(self, *args): return _body.BodyMover_changeZ(self, *args)
+    def stepMerge(self, *args): return _body.BodyMover_stepMerge(self, *args)
+    def logPosition(self, *args): return _body.BodyMover_logPosition(self, *args)
+    def fromTips(self, *args): return _body.BodyMover_fromTips(self, *args)
+    def dynamicWalk(self): return _body.BodyMover_dynamicWalk(self)
+    def move(self, *args): return _body.BodyMover_move(self, *args)
+    def load(self, *args): return _body.BodyMover_load(self, *args)
+    def play(self, *args): return _body.BodyMover_play(self, *args)
+    def getMover(self, *args): return _body.BodyMover_getMover(self, *args)
+    def done(self): return _body.BodyMover_done(self)
+    __swig_destroy__ = _body.delete_BodyMover
+    __del__ = lambda self : None;
+BodyMover_swigregister = _body.BodyMover_swigregister
+BodyMover_swigregister(BodyMover)
+
+class LeftArmMover(ArmMover):
+    __swig_setmethods__ = {}
+    for _s in [ArmMover]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LeftArmMover, name, value)
+    __swig_getmethods__ = {}
+    for _s in [ArmMover]: __swig_getmethods__.update(getattr(_s,'__swig_getmethods__',{}))
+    __getattr__ = lambda self, name: _swig_getattr(self, LeftArmMover, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["leftArmGeometry"] = _body.LeftArmMover_leftArmGeometry_set
+    __swig_getmethods__["leftArmGeometry"] = _body.LeftArmMover_leftArmGeometry_get
+    if _newclass:leftArmGeometry = _swig_property(_body.LeftArmMover_leftArmGeometry_get, _body.LeftArmMover_leftArmGeometry_set)
+    def __init__(self): 
+        this = _body.new_LeftArmMover()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_LeftArmMover
+    __del__ = lambda self : None;
+LeftArmMover_swigregister = _body.LeftArmMover_swigregister
+LeftArmMover_swigregister(LeftArmMover)
+
+class LegsMover(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, LegsMover, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, LegsMover, name)
+    __repr__ = _swig_repr
+    def cutoff(self, *args): return _body.LegsMover_cutoff(self, *args)
+    __swig_setmethods__["legMovers"] = _body.LegsMover_legMovers_set
+    __swig_getmethods__["legMovers"] = _body.LegsMover_legMovers_get
+    if _newclass:legMovers = _swig_property(_body.LegsMover_legMovers_get, _body.LegsMover_legMovers_set)
+    def state(self, *args): return _body.LegsMover_state(self, *args)
+    __swig_setmethods__["bodyMover"] = _body.LegsMover_bodyMover_set
+    __swig_getmethods__["bodyMover"] = _body.LegsMover_bodyMover_get
+    if _newclass:bodyMover = _swig_property(_body.LegsMover_bodyMover_get, _body.LegsMover_bodyMover_set)
+    def __init__(self, *args): 
+        this = _body.new_LegsMover(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    def normal(self, *args): return _body.LegsMover_normal(self, *args)
+    def move(self, *args): return _body.LegsMover_move(self, *args)
+    def setup(self, *args): return _body.LegsMover_setup(self, *args)
+    def torque(self, *args): return _body.LegsMover_torque(self, *args)
+    def done(self): return _body.LegsMover_done(self)
+    __swig_destroy__ = _body.delete_LegsMover
+    __del__ = lambda self : None;
+LegsMover_swigregister = _body.LegsMover_swigregister
+LegsMover_swigregister(LegsMover)
+
+class NeckMover(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, NeckMover, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, NeckMover, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["upDown"] = _body.NeckMover_upDown_set
+    __swig_getmethods__["upDown"] = _body.NeckMover_upDown_get
+    if _newclass:upDown = _swig_property(_body.NeckMover_upDown_get, _body.NeckMover_upDown_set)
+    __swig_setmethods__["leftRight"] = _body.NeckMover_leftRight_set
+    __swig_getmethods__["leftRight"] = _body.NeckMover_leftRight_get
+    if _newclass:leftRight = _swig_property(_body.NeckMover_leftRight_get, _body.NeckMover_leftRight_set)
+    def move(self, *args): return _body.NeckMover_move(self, *args)
+    def torque(self, *args): return _body.NeckMover_torque(self, *args)
+    def done(self): return _body.NeckMover_done(self)
+    def __init__(self): 
+        this = _body.new_NeckMover()
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_NeckMover
+    __del__ = lambda self : None;
+NeckMover_swigregister = _body.NeckMover_swigregister
+NeckMover_swigregister(NeckMover)
+
+class ServoMover(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, ServoMover, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, ServoMover, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["angles"] = _body.ServoMover_angles_set
+    __swig_getmethods__["angles"] = _body.ServoMover_angles_get
+    if _newclass:angles = _swig_property(_body.ServoMover_angles_get, _body.ServoMover_angles_set)
+    __swig_setmethods__["simTime0"] = _body.ServoMover_simTime0_set
+    __swig_getmethods__["simTime0"] = _body.ServoMover_simTime0_get
+    if _newclass:simTime0 = _swig_property(_body.ServoMover_simTime0_get, _body.ServoMover_simTime0_set)
+    __swig_setmethods__["simTime1"] = _body.ServoMover_simTime1_set
+    __swig_getmethods__["simTime1"] = _body.ServoMover_simTime1_get
+    if _newclass:simTime1 = _swig_property(_body.ServoMover_simTime1_get, _body.ServoMover_simTime1_set)
+    __swig_setmethods__["torque"] = _body.ServoMover_torque_set
+    __swig_getmethods__["torque"] = _body.ServoMover_torque_get
+    if _newclass:torque = _swig_property(_body.ServoMover_torque_get, _body.ServoMover_torque_set)
+    __swig_setmethods__["sharpCutoff"] = _body.ServoMover_sharpCutoff_set
+    __swig_getmethods__["sharpCutoff"] = _body.ServoMover_sharpCutoff_get
+    if _newclass:sharpCutoff = _swig_property(_body.ServoMover_sharpCutoff_get, _body.ServoMover_sharpCutoff_set)
+    def curve(self, *args): return _body.ServoMover_curve(self, *args)
+    def angle(self): return _body.ServoMover_angle(self)
+    def speed(self): return _body.ServoMover_speed(self)
+    def at(self, *args): return _body.ServoMover_at(self, *args)
+    def clear(self): return _body.ServoMover_clear(self)
+    def move(self, *args): return _body.ServoMover_move(self, *args)
+    def setup(self, *args): return _body.ServoMover_setup(self, *args)
+    def done(self): return _body.ServoMover_done(self)
+    def __init__(self, *args): 
+        this = _body.new_ServoMover(*args)
+        try: self.this.append(this)
+        except: self.this = this
+    __swig_destroy__ = _body.delete_ServoMover
+    __del__ = lambda self : None;
+ServoMover_swigregister = _body.ServoMover_swigregister
+ServoMover_swigregister(ServoMover)
+
 ANGLE360 = _body.ANGLE360
 ANGLE180 = _body.ANGLE180
 ANGLE90 = _body.ANGLE90
@@ -114,7 +751,38 @@ LEG4 = _body.LEG4
 def servo(*args):
   return _body.servo(*args)
 servo = _body.servo
+class Tape(_object):
+    __swig_setmethods__ = {}
+    __setattr__ = lambda self, name, value: _swig_setattr(self, Tape, name, value)
+    __swig_getmethods__ = {}
+    __getattr__ = lambda self, name: _swig_getattr(self, Tape, name)
+    __repr__ = _swig_repr
+    __swig_setmethods__["paths"] = _body.Tape_paths_set
+    __swig_getmethods__["paths"] = _body.Tape_paths_get
+    if _newclass:paths = _swig_property(_body.Tape_paths_get, _body.Tape_paths_set)
+    def write(self, *args): return _body.Tape_write(self, *args)
+    def read(self, *args): return _body.Tape_read(self, *args)
+    def maxSimTime(self): return _body.Tape_maxSimTime(self)
+    def minSimTime(self): return _body.Tape_minSimTime(self)
+    def clear(self): return _body.Tape_clear(self)
+    def same(self, *args): return _body.Tape_same(self, *args)
+    def shift(self, *args): return _body.Tape_shift(self, *args)
+    def rescale(self, *args): return _body.Tape_rescale(self, *args)
+    def remap(self, *args): return _body.Tape_remap(self, *args)
+    def cluster(self, epsilon = 1e-4): return _body.Tape_cluster(self, epsilon)
+    def include(self, *args): return _body.Tape_include(self, *args)
+    def save(self, *args): return _body.Tape_save(self, *args)
+    def load(self, *args): return _body.Tape_load(self, *args)
+    __swig_destroy__ = _body.delete_Tape
+    __del__ = lambda self : None;
+    def __init__(self): 
+        this = _body.new_Tape()
+        try: self.this.append(this)
+        except: self.this = this
+Tape_swigregister = _body.Tape_swigregister
+Tape_swigregister(Tape)
+cvar = _body.cvar
+
 # This file is compatible with both classic and new-style classes.
 
-cvar = _body.cvar
 

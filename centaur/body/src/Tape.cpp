@@ -167,7 +167,6 @@ void Tape::cluster(float epsilon)
 
 void Tape::include(const Tape &inc)
 {
-
   for (Paths::const_iterator i=inc.paths.begin(); i != inc.paths.end(); ++i) {
     for (Path::const_iterator j=i->second.begin(); j!=i->second.end(); ++j) {
       paths[i->first][j->first]=j->second;

@@ -22,7 +22,7 @@ SUFFIXES += .d
 NODEPS:=clean tags svn
 
 #Find all the C++ files in the src/ directory (but not test_.. or main_...)
-SOURCES:=$(shell find src/ -regex ".*/[a-zA-Z0-9][^/]*\.\(c\|cpp\)" -a -! -regex ".*/test_[^/]*\.\(c\|cpp\)" -a -! -regex ".*/main_[^/]*\.\(c\|cpp\)" )
+SOURCES:=$(shell find src/ -regex ".*/[a-zA-Z0-9][^/]*\.\(c\|cpp\)" -a -! -regex ".*/test_[^/]*\.\(c\|cpp\)" -a -! -regex ".*/main_[^/]*\.\(c\|cpp\)" -a -! -name '$(TARGET).cpp' )
 MAIN_SOURCES:=$(shell find src/ -regex ".*/main_[^/]*\.\(c\|cpp\)")
 TEST_SOURCES:=$(shell find src/ -regex ".*/test_[^/]*\.\(c\|cpp\)")
 ALL_SOURCES=$(SOURCES) $(MAIN_SOURCES) $(TEST_SOURCES)
@@ -114,3 +114,23 @@ deps :
 
 run : bin/$(TARGET)
 	../context bin/$(TARGET)
+
+include/swig_$(TARGET).h :
+	swig -c++ -I../ex/include -python -external-runtime include/swig_$(TARGET).h
+
+src/$(TARGET).cpp : include/$(TARGET).i
+	swig -c++ -I../ex/include -python -o src/$(TARGET).cpp include/$(TARGET).i
+
+src/$(TARGET).py : include/$(TARGET).i
+	swig -c++ -I../ex/include -python -o src/$(TARGET).cpp include/$(TARGET).i
+
+lib/_$(TARGET).so : tmp/$(TARGET).cpp.o lib/lib$(TARGET).so
+	$(CXX) $(CXXFLAGS) -L../$(TARGET)/lib -shared  -o $@ $< -l$(TARGET) $(LDFLAGS)
+
+lib/$(TARGET).py : src/$(TARGET).py
+	cp $< $@
+
+py : lib/_$(TARGET).so lib/$(TARGET).py include/swig_$(TARGET).h
+
+pyclean :
+	/bin/rm -rf src/$(TARGET).cpp src/$(TARGET).py include/swig_$(TARGET).h

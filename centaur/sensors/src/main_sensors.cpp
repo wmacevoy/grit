@@ -240,6 +240,10 @@ void read_open()
 
 ssize_t read_timeout(int fd, char *buffer, size_t n, size_t msTimeout)
 {
+  if (fd < 0) {
+    usleep(msTimeout*1000);
+    return 0;
+  }
   struct timespec ts;
   ts.tv_sec = msTimeout/1000;
   ts.tv_nsec = (msTimeout % 1000)*1000000;
@@ -261,7 +265,7 @@ ssize_t read_timeout(int fd, char *buffer, size_t n, size_t msTimeout)
 
 void read()
 {
-  if (fd < 0 || okRead+okReadTimeout < now()) {
+  if (okRead+okReadTimeout < now()) {
     read_open();
   }
 

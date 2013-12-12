@@ -21,12 +21,11 @@ public:
 
   void shift(float delta);
   void rescale(float lambda);
-  void include(Tape &with);
   void remap(float new_s0,float new_s1,float old_s0, float old_s1);
   void remap(float new_s0,float new_s1);
 
   void cluster(float epsilon=1e-4);
-  void include(const Tape &tape);
+  void include(const Tape &inc);
   
   bool save(const std::string &file);
   bool load(const std::string &file);

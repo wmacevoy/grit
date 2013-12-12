@@ -39,7 +39,7 @@
 #include "Arc3d.h"
 #include "Mat3d.h"
 
-#define USE_PY 0
+#define USE_PY 1
 
 #if USE_PY != 0
 #include "Script.h"

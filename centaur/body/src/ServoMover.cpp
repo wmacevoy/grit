@@ -2,6 +2,7 @@
 #include "ServoMover.h"
 #include "Lock.h"
 #include "math.h"
+#include "now.h"
 #if USE_SERVO_LINEAR == 1
 #include "fit.h"
 #endif
@@ -200,7 +201,49 @@ bool ServoMover::done() const
 
 ServoMover::ServoMover()
 {
+  simTime0=now();
+  simTime1=now();
   setup(0);
   torque=10;
   sharpCutoff=1.0;
 }
+
+ServoMover::ServoMover(const ServoMover &copy)
+{
+  Lock lock1(access);
+  Lock lock2(copy.access);
+  
+#if USE_SERVO_LINEAR == 1
+  angles=copy.angles;
+  at=copy.at;
+#else
+  angles=copy.angles;
+#endif
+  simTime0=copy.simTime0;
+  simTime1=copy.simTime1;
+  torque=copy.torque;
+  sharpCutoff=copy.sharpCutoff;
+}  
+
+const ServoMover& ServoMover::operator=(const ServoMover &copy)
+{
+  if (this == &copy) return *this;
+
+  Lock lock1(access);
+  Lock lock2(copy.access);
+  
+#if USE_SERVO_LINEAR == 1
+  angles=copy.angles;
+  at=copy.at;
+#else
+  angles=copy.angles;
+#endif
+  simTime0=copy.simTime0;
+  simTime1=copy.simTime1;
+  torque=copy.torque;
+  sharpCutoff=copy.sharpCutoff;
+
+  return *this;
+}  
+
+  
