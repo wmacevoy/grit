@@ -3,8 +3,8 @@
 #
 
 # TRUNK_FLAGS=-O2 -g -Wall -fPIC
-TRUNK_FLAGS=-g -Wall -fPIC `python2.7-config --cflags`
-TRUNK_LIBS=`python2.7-config --ldflags`
+TRUNK_FLAGS=-g -Wall -fPIC 
+TRUNK_LIBS=
 
 CFLAGS += $(TRUNK_FLAGS)
 CXXFLAGS += -std=c++0x $(TRUNK_FLAGS)
