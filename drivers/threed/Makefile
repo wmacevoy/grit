@@ -1,4 +1,4 @@
-all : libs progs
+all : libs progs py
 
 DEPS=
 MY_FLAGS=

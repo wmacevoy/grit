@@ -1,6 +1,6 @@
 all : libs progs
 
-DEPS=3d
+DEPS=threed
 MY_FLAGS=
 MY_LIBS=
 

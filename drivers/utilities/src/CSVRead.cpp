@@ -21,7 +21,7 @@ bool CSVRead(const std::string &file,
 	     std::vector < std::vector < std::string > > &table)
 {
   table.clear();
-  cout << "Reading " << file << endl;
+  cout << "Reading '" << file << "'" << endl;
   ifstream in(file);
 
   if (!in) { 

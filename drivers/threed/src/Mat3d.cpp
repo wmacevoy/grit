@@ -188,6 +188,7 @@ Mat3d operator*(float a, const Mat3d &b)
 std::ostream& operator<< (std::ostream &out, const Mat3d &m)
 {
   out << "[" << m.ex() << "," << m.ey() << "," << m.ez() << "," << m.o() << "]";
+  return out;
 }
 
 

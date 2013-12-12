@@ -1,4 +1,4 @@
-all : libs progs
+all : libs progs py
 
 DEPS=utilities zmqpp
 MY_FLAGS=

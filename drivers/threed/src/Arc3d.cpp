@@ -6,6 +6,14 @@
 
 using namespace std;
 
+Arc3d::Arc3d()
+{
+  frame=Mat3d::identity();
+  radius=0;
+  theta0=0;
+  theta1=0;
+}
+
 Mat3d Arc3d::pose(float s) const
 {
   float t=(theta0*(1-s)+theta1*s);

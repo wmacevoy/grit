@@ -11,5 +11,4 @@ class Safety
   virtual ~Safety();
 };
 
-
 typedef std::shared_ptr <Safety> SafetySP;
