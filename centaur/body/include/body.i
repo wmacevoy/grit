@@ -20,7 +20,6 @@
 #include "Body.h"
 
 #include "ArmMover.h"
-#include "CreateWalkMover.h"
 #include "LegMover.h"
 #include "Mover.h"
 #include "RightArmMover.h"
@@ -44,10 +43,7 @@
 %include "Legs.h"
 %include "Body.h"
 
-
-
 %include "ArmMover.h"
-%include "CreateWalkMover.h"
 %include "LegMover.h"
 %include "Mover.h"
 %include "RightArmMover.h"

@@ -19,8 +19,6 @@ class LegGeometry {
   const std::string &name() const;
   void setPosition(float newlcx,float newlcy);
   void setHipOffset(float newHipOffset);
-  void setName(std::string newName);
-  void outputName(std::ostream &out);
   float robustACos(float cosvalue);
   
   // Do not worry about the hip rotation

@@ -1,9 +1,11 @@
+#include <math.h>
+#include <sstream>
+#include <string>
+
 #include "TapeEditor.h"
 #include "BodyGlobals.h"
 #include "fk_leftarm.h"
 #include "fk_rightarm.h"
-
-#include <math.h>
 
 using namespace std;
 
@@ -397,6 +399,17 @@ bool TapeEditor::parse(const std::string &cmd, std::istream &in)
     }
   }
   return false;
+}
+
+bool TapeEditor::parse(const std::string &cmd)
+{
+  istringstream iss(cmd);
+  string head;
+  if (iss >> head) {
+    return parse(head,iss);
+  } else {
+    return false;
+  }
 }
 
 TapeEditor::TapeEditor() 

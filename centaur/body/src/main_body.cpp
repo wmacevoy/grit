@@ -1990,6 +1990,9 @@ int main(int argc, char *argv[])
 #if USE_PY != 0
   py = SPScript(new Script(argv[0]));
   py->import("__main__");
+  py->run("import utilities");
+  py->run("import symbols");
+  py->run("import body");
 #endif
 
   simTime = 0;

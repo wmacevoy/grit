@@ -35,6 +35,8 @@ class TapeEditor
 
   virtual bool parse(const std::string &cmd,std::istream &in);
 
+  virtual bool parse(const std::string &cmd);
+
   TapeEditor();
   ~TapeEditor();
 };

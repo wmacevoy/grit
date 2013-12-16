@@ -3125,7 +3125,6 @@ SWIG_From_int  (int value)
 #include "Body.h"
 
 #include "ArmMover.h"
-#include "CreateWalkMover.h"
 #include "LegMover.h"
 #include "Mover.h"
 #include "RightArmMover.h"
@@ -5130,71 +5129,6 @@ SWIGINTERN PyObject *_wrap_LegGeometry_setHipOffset(PyObject *SWIGUNUSEDPARM(sel
   } 
   arg2 = static_cast< float >(val2);
   (arg1)->setHipOffset(arg2);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LegGeometry_setName(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LegGeometry *arg1 = (LegGeometry *) 0 ;
-  std::string arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LegGeometry_setName",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_setName" "', argument " "1"" of type '" "LegGeometry *""'"); 
-  }
-  arg1 = reinterpret_cast< LegGeometry * >(argp1);
-  {
-    std::string *ptr = (std::string *)0;
-    int res = SWIG_AsPtr_std_string(obj1, &ptr);
-    if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "LegGeometry_setName" "', argument " "2"" of type '" "std::string""'"); 
-    }
-    arg2 = *ptr;
-    if (SWIG_IsNewObj(res)) delete ptr;
-  }
-  (arg1)->setName(arg2);
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LegGeometry_outputName(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LegGeometry *arg1 = (LegGeometry *) 0 ;
-  std::ostream *arg2 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LegGeometry_outputName",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LegGeometry, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LegGeometry_outputName" "', argument " "1"" of type '" "LegGeometry *""'"); 
-  }
-  arg1 = reinterpret_cast< LegGeometry * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2, SWIGTYPE_p_std__ostream,  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LegGeometry_outputName" "', argument " "2"" of type '" "std::ostream &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LegGeometry_outputName" "', argument " "2"" of type '" "std::ostream &""'"); 
-  }
-  arg2 = reinterpret_cast< std::ostream * >(argp2);
-  (arg1)->outputName(*arg2);
   resultobj = SWIG_Py_Void();
   return resultobj;
 fail:
@@ -8416,19 +8350,6 @@ SWIGINTERN PyObject *ArmMover_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObj
   SWIG_TypeNewClientData(SWIGTYPE_p_ArmMover, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
-
-SWIGINTERN PyObject *_wrap_CreateWalkMover(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  SwigValueWrapper< std::shared_ptr< Mover > > result;
-  
-  if (!PyArg_ParseTuple(args,(char *)":CreateWalkMover")) SWIG_fail;
-  result = CreateWalkMover();
-  resultobj = SWIG_NewPointerObj((new MoverSP(static_cast< const MoverSP& >(result))), SWIGTYPE_p_std__shared_ptrT_Mover_t, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
 
 SWIGINTERN PyObject *_wrap_LegMover_touchPressure_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
@@ -15726,39 +15647,6 @@ fail:
 }
 
 
-SWIGINTERN PyObject *_wrap_ServoMover_clear(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  ServoMover *arg1 = (ServoMover *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  std::shared_ptr< ServoMover > tempshared1 ;
-  std::shared_ptr< ServoMover > *smartarg1 = 0 ;
-  PyObject * obj0 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:ServoMover_clear",&obj0)) SWIG_fail;
-  {
-    int newmem = 0;
-    res1 = SWIG_ConvertPtrAndOwn(obj0, &argp1, SWIGTYPE_p_std__shared_ptrT_ServoMover_t, 0 |  0 , &newmem);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ServoMover_clear" "', argument " "1"" of type '" "ServoMover *""'"); 
-    }
-    if (newmem & SWIG_CAST_NEW_MEMORY) {
-      tempshared1 = *reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
-      delete reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
-      arg1 = const_cast< ServoMover * >(tempshared1.get());
-    } else {
-      smartarg1 = reinterpret_cast< std::shared_ptr<  ServoMover > * >(argp1);
-      arg1 = const_cast< ServoMover * >((smartarg1 ? smartarg1->get() : 0));
-    }
-  }
-  (arg1)->clear();
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap_ServoMover_move(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   ServoMover *arg1 = (ServoMover *) 0 ;
@@ -17474,8 +17362,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"LegGeometry_name", _wrap_LegGeometry_name, METH_VARARGS, NULL},
 	 { (char *)"LegGeometry_setPosition", _wrap_LegGeometry_setPosition, METH_VARARGS, NULL},
 	 { (char *)"LegGeometry_setHipOffset", _wrap_LegGeometry_setHipOffset, METH_VARARGS, NULL},
-	 { (char *)"LegGeometry_setName", _wrap_LegGeometry_setName, METH_VARARGS, NULL},
-	 { (char *)"LegGeometry_outputName", _wrap_LegGeometry_outputName, METH_VARARGS, NULL},
 	 { (char *)"LegGeometry_robustACos", _wrap_LegGeometry_robustACos, METH_VARARGS, NULL},
 	 { (char *)"LegGeometry_compute2D", _wrap_LegGeometry_compute2D, METH_VARARGS, NULL},
 	 { (char *)"LegGeometry_compute3D", _wrap_LegGeometry_compute3D, METH_VARARGS, NULL},
@@ -17598,7 +17484,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_ArmMover", _wrap_delete_ArmMover, METH_VARARGS, NULL},
 	 { (char *)"new_ArmMover", _wrap_new_ArmMover, METH_VARARGS, NULL},
 	 { (char *)"ArmMover_swigregister", ArmMover_swigregister, METH_VARARGS, NULL},
-	 { (char *)"CreateWalkMover", _wrap_CreateWalkMover, METH_VARARGS, NULL},
 	 { (char *)"LegMover_touchPressure_set", _wrap_LegMover_touchPressure_set, METH_VARARGS, NULL},
 	 { (char *)"LegMover_touchPressure_get", _wrap_LegMover_touchPressure_get, METH_VARARGS, NULL},
 	 { (char *)"LegMover_state", _wrap_LegMover_state, METH_VARARGS, NULL},
@@ -17748,7 +17633,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"ServoMover_angle", _wrap_ServoMover_angle, METH_VARARGS, NULL},
 	 { (char *)"ServoMover_speed", _wrap_ServoMover_speed, METH_VARARGS, NULL},
 	 { (char *)"ServoMover_at", _wrap_ServoMover_at, METH_VARARGS, NULL},
-	 { (char *)"ServoMover_clear", _wrap_ServoMover_clear, METH_VARARGS, NULL},
 	 { (char *)"ServoMover_move", _wrap_ServoMover_move, METH_VARARGS, NULL},
 	 { (char *)"ServoMover_setup", _wrap_ServoMover_setup, METH_VARARGS, NULL},
 	 { (char *)"ServoMover_done", _wrap_ServoMover_done, METH_VARARGS, NULL},

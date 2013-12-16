@@ -500,7 +500,10 @@ int main(int argc, char** argv) {
 
   commander = std::shared_ptr < Commander > (new Commander());
 
-  safety=CreateSafetyClient(cfg.str("guicmdr.safety.publish"),cfg.str("safety.subscribe"),2);
+  string safetyPublish = cfg.str("guicmdr.safety.publish");
+  string safetySubscribe = cfg.str("safety.subscribe");
+  float  safetyRate = 2;
+  safety=CreateSafetyClient(safetyPublish, safetySubscribe,safetyRate);
   safety->safe(false);
 
   commander->publish = cfg.str("guicmdr.publish");

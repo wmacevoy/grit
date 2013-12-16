@@ -89,11 +89,11 @@ void ZMQHub::rxLoop()
   while (running) {
     if (rxOk+rxTimeout < now()) rxOpen();
     if (zmq_poll(&rxPollItems[0],rxPollItems.size(),int(rxPollTimeout*1000)) <= 0) continue;
-    if (!running) break;
     bool ok = true;
     for (size_t i=0; i != rxSockets.size(); ++i) {
       if ((rxPollItems[i].revents & ZMQ_POLLIN) != 0) {
 	++rxCount;
+	if (!running) break;
 	if (!rx(*rxSockets[i],i)) ok = false;
 	rxPollItems[i].revents = 0;
       }
@@ -130,9 +130,10 @@ void ZMQHub::txLoop()
   txOpen();
   while (running) {
     if (txOk+txTimeout < now()) txOpen();
-    txWait();
+    if (!running) break;
     if (tx(*txSocket)) txOk=now();
     ++txCount;
+    txWait();
   }
   txClose();
 }
@@ -145,6 +146,7 @@ void ZMQHub::reportLoop()
     std::this_thread::sleep_for(std::chrono::microseconds(int(dt*1000000)));
 	rxRate = rxCount/dt;
     txRate = txCount/dt;
+    if (!running) break;
     report();
     rxCount = 0;
     txCount = 0;

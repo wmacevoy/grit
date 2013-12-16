@@ -156,8 +156,6 @@ class LegGeometry(_object):
     def name(self, *args): return _body.LegGeometry_name(self, *args)
     def setPosition(self, *args): return _body.LegGeometry_setPosition(self, *args)
     def setHipOffset(self, *args): return _body.LegGeometry_setHipOffset(self, *args)
-    def setName(self, *args): return _body.LegGeometry_setName(self, *args)
-    def outputName(self, *args): return _body.LegGeometry_outputName(self, *args)
     def robustACos(self, *args): return _body.LegGeometry_robustACos(self, *args)
     def compute2D(self, *args): return _body.LegGeometry_compute2D(self, *args)
     def compute3D(self, *args): return _body.LegGeometry_compute3D(self, *args)
@@ -420,10 +418,6 @@ class ArmMover(_object):
 ArmMover_swigregister = _body.ArmMover_swigregister
 ArmMover_swigregister(ArmMover)
 
-
-def CreateWalkMover():
-  return _body.CreateWalkMover()
-CreateWalkMover = _body.CreateWalkMover
 class LegMover(LegGeometry):
     __swig_setmethods__ = {}
     for _s in [LegGeometry]: __swig_setmethods__.update(getattr(_s,'__swig_setmethods__',{}))
@@ -724,7 +718,6 @@ class ServoMover(_object):
     def angle(self): return _body.ServoMover_angle(self)
     def speed(self): return _body.ServoMover_speed(self)
     def at(self, *args): return _body.ServoMover_at(self, *args)
-    def clear(self): return _body.ServoMover_clear(self)
     def move(self, *args): return _body.ServoMover_move(self, *args)
     def setup(self, *args): return _body.ServoMover_setup(self, *args)
     def done(self): return _body.ServoMover_done(self)
