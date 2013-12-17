@@ -180,6 +180,10 @@ void ZMQHub::join()
   if (goReport) { goReport->join(); delete goReport; goReport=0; }
 }
 
+bool ZMQHub::rx(ZMQSubscribeSocket &socket) { return true; }
+bool ZMQHub::tx(ZMQPublishSocket &socket) { return true; }
+
+
 void ZMQHub::stop()
 {
   running=false;
