@@ -68,13 +68,14 @@ commander.ip,${control.ip}
 commander.port,5504
 commander.publish,"tcp://*:${commander.port}"
 commander.subscribers,"tcp://${body.ip}:${body.commander.port}"
-lidar.provider.address,"tcp://*:9997"
+lidar.provider.port,9997
+lidar.provider.ip,${centaur.ip}
+lidar.provider.subscribe,"tcp://${lidar.provider.ip}:${lidar.provider.port}"
+lidar.provider.publish,"tcp://*:${lidar.provider.port}"
 lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"10"
 lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
-webcam.requester.addressW,"tcp://${xcentaur.ip}:9993"
-webcam.requester.addressL,"tcp://${centaur.ip}:9997"
 webcam.requester.calibration,"true"
 webcam.requester.sleep_time_color,"100"
 webcam.requester.sleep_time_gray,"100"
@@ -84,7 +85,10 @@ webcam.provider.index,"0"
 webcam.provider.sleep_time,"10"
 webcam.provider.detect,"true"
 webcam.provider.cascade,"../cascades/cascade.xml"
-webcam.provider.address,"tcp://*:9993"
+webcam.provider.port,9993
+webcam.provider.ip,"${centaur.ip}"
+webcam.provider.publish,"tcp://*:${webcam.provider.port}"
+webcam.provider.subscribe,"tcp://${webcam.provider.ip}:${webcam.provider.port}"
 leap.provider.verbose,"true"
 leap.provider.decay_time,1.0,seconds
 leap.provider.ip,"${control.ip}"
@@ -105,7 +109,6 @@ heartbeat.provider.sleep_time,"100"
 heartbeat.requester.address,"tcp://${centaur.ip}:9800"
 heartbeat.requester.verbose,"false"
 heartbeat.requester.sleep_time,"100"
-glView.subscriber.addressL,"tcp://${centaur.ip}:9997"
 glView.subscriber.verbose,"false"
 glView.subscriber.sleep_time,25
 guicmdr.verbose,"true"
