@@ -119,8 +119,8 @@ int main(int argc, char** argv)
 	double fontScale = 0.60;
 	int thickness = 2;
 
-	std::string ip1 = cfg.str("webcam.requester.addressW");
-	std::string ip2 = cfg.str("webcam.requester.addressL");
+	std::string ip1 = cfg.str("webcam.provider.subscribe");
+	std::string ip2 = cfg.str("lidar.provider.subscribe");
 
 	void* context_mat = zmq_ctx_new ();
 	void* context_lidar = zmq_ctx_new ();
