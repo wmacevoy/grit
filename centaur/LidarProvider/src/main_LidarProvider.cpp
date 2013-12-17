@@ -47,7 +47,7 @@ int main(int argc, char** argv)
 	necklr=servos->servo(93);
 	servos->start();
 	
-	std::string address = cfg.str("lidar.provider.address").c_str();
+	std::string address = cfg.str("lidar.provider.publish").c_str();
 	std::string lidar_path = cfg.str("lidar.provider.dev_path").c_str();
 	int sleep_time = (int)cfg.num("lidar.provider.sleep_time");
 

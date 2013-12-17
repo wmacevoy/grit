@@ -66,7 +66,7 @@ int main(int argc, char** argv)
 	int index = cfg.num("webcam.provider.index", 0);
 	int sleep_time = cfg.num("webcam.provider.sleep_time");
 	bool detect = cfg.flag("webcam.provider.detect");
-	std::string address = cfg.str("webcam.provider.address").c_str();
+	std::string address = cfg.str("webcam.provider.publish").c_str();
 
 	int hwm = 1;
 	int linger = 25;

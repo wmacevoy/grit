@@ -7,6 +7,5 @@
 	$(MAKE) -C sensors $@
 	$(MAKE) -C proxysensors $@
 	$(MAKE) -C safetyProvider $@
-	$(MAKE) -C glView $@
 
 
