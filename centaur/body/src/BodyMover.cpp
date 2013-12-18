@@ -718,10 +718,10 @@ void BodyMover::dynamicWalk() {
   double l2d=direction;
   double l3d=direction;
   double l4d=direction;
-  double l1z=wp.z/*+zoffset/2.0*/;
-  double l2z=wp.z/*+zoffset/2.0*/;
-  double l3z=wp.z/*-zoffset/2.0*/;
-  double l4z=wp.z/*-zoffset/2.0*/;
+  double l1z=wp.z;
+  double l2z=wp.z;
+  double l3z=wp.z;
+  double l4z=wp.z;
   l2d+=wp.rotation*3.0*M_PI_2;
   l3d+=wp.rotation*M_PI;
   l4d+=wp.rotation*M_PI_2;

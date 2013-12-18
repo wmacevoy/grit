@@ -400,7 +400,7 @@ public:
   void balancedRampUp()
   {
       zoffset = ( ( (sensors.a[0] - Amin) * (zmin - zmax) ) / (Amin - Amax) ) + 8;
-      WalkParameters wp(2.5,15.9,15.9,-15.,2.0,90.0,1.0);
+      WalkParameters wp(2.5,12.0,17.25,-15.,2.0,90.0,1.0);
       wp.repeat=4;
       wp.zOffset=zoffset;
       mover->bStep(wp);
@@ -409,7 +409,7 @@ public:
   void balancedRampDown()
   {
       zoffset = ( ( (sensors.a[0] - Amin) * (zmin - zmax) ) / (Amin - Amax) ) + 8;
-      WalkParameters wp(2.5,15.9,15.9,-15.,2.0,90.0,1.0);
+      WalkParameters wp(2.5,12.0,17.25,-15.,2.0,90.0,1.0);
       wp.repeat=4;
       wp.zOffset=zoffset;
       mover->bStep(wp);
@@ -454,6 +454,7 @@ public:
   void balancedForward(int repeat=4)
   {
 	double step=4.0;
+//  						     (2.5,15.9,15.9,-15.,2.0,90.0,1.0)
     WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0,2.0);
     wp.y3-=step;  // move back legs back 
     wp.y4-=step;    
