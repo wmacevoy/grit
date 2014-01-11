@@ -1,9 +1,9 @@
 name,value
-xcontrol.ip,192.168.2.113
-control.ip,127.0.0.1
+control.ip,192.168.2.113
+xcontrol.ip,127.0.0.1
 control.user,mojavaton
-xcentaur.ip,192.168.2.101
-centaur.ip,127.0.0.1
+centaur.ip,192.168.2.101
+xcentaur.ip,127.0.0.1
 centaur.user,fit-pc
 legs.minspeed,25,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
@@ -77,8 +77,8 @@ lidar.provider.sleep_time,"10"
 lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
 webcam.requester.calibration,"true"
-webcam.requester.sleep_time_color,"100"
-webcam.requester.sleep_time_gray,"100"
+webcam.requester.sleep_time_color,"200"
+webcam.requester.sleep_time_gray,"200"
 webcam.requester.oculus,"false"
 webcam.provider.verbose,"false"
 webcam.provider.index,"0"
