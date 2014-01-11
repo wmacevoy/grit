@@ -13,6 +13,7 @@
 #include "Configure.h"
 #include "LidarMessage.h"
 #include "fk_lidar.h"
+#include "SDL/SDL_net.h"
 
 using namespace cv;
 
@@ -23,21 +24,24 @@ bool inside = false;
 bool verbose = false;
 
 LidarMessage lidarMessage;
-//int64_t* lidar_data;
-//const int sz_lidar_data  = 1081;
 
 volatile int mx = 0;
 volatile int my = 0;
 
-const int normalWidth = 160;
-const int normalHeight = 120;
+const int normalWidth = 80;
+const int normalHeight = 60;
 
-const int x_min = 34;
-const int x_max = 285;
-const int ind_min = 479;
-const int ind_max = 605;
+const int x_min = 32;
+const int x_max = 50;
+const int ind_min = 517;
+const int ind_max = 551;
 
 const int lidarLine = 105 * 0.43;
+
+//////////SDL
+UDPsocket sd;
+IPaddress srvadd;
+UDPpacket* p;
 
 std::string convstr(const float t) {
 	std::stringstream ftoa;
@@ -97,7 +101,7 @@ int main(int argc, char** argv)
 	int sleep_time_gray = cfg.num("webcam.requester.sleep_time_gray");
 	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
-	int hwm = 1;
+	int hwm = 10;
 	int linger = 25;
 	int rcc = 0;
 	int rcl = 0;
@@ -122,6 +126,12 @@ int main(int argc, char** argv)
 
 	std::string ip1 = cfg.str("webcam.provider.subscribe");
 	std::string ip2 = cfg.str("lidar.provider.subscribe");
+	std::string ip3 = ip1;
+	ip1+="9993";
+	
+	SDLNet_Init();
+	sd = SDLNet_UDP_Open(9993);
+	p = SDLNet_AllocPacket(4800);
 
 	void* context_mat = zmq_ctx_new ();
 	void* context_lidar = zmq_ctx_new ();
@@ -153,9 +163,9 @@ int main(int argc, char** argv)
 
 	zmq_msg_t msg;
 	while(!die) {
-		if(requesting) rcc = zmq_send(req_mat, &requestType, sizeof(char), ZMQ_DONTWAIT);
-		else rcc = 0;
-		if (rcc) {
+		//if(requesting) rcc = zmq_send(req_mat, &requestType, sizeof(char), ZMQ_DONTWAIT);
+		//else rcc = 0;
+		if (1) {
 			rcc = zmq_msg_init (&msg);
 			if(rcc == 0) {			
 				switch(requestType) {
@@ -198,7 +208,9 @@ int main(int argc, char** argv)
 					}
 					break;
 				case 'g':
-					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
+					//rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
+					SDLNet_UDP_Recv(sd, p);
+					if(p->len > 4000) {
 					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
 					if (verbose) {
 					  std::cout << "t=" << lidarMessage.t << " waist=" <<
@@ -206,9 +218,9 @@ int main(int argc, char** argv)
 					    
 					    " data[0]=" << lidarMessage.data[0] << std::endl;
 					}	
-					if(rcc == gray.total() * gray.elemSize()) {
+					if(1) {
 						t1 = time(0);
-						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
+						memcpy(gray.data, p->data, p->len);
 						line(gray, pt1, pt2, Scalar(50, 50, 50));
 						line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
 						line(gray, tick5r1, tick5r2, Scalar(0, 0, 0));
@@ -227,13 +239,14 @@ int main(int argc, char** argv)
 
 						if(inside) {	
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-							//index = 380 + mx;
+							//index = 500 + mx;
 							text = at(index);
 							putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
 									"  sleep_time: " << sleep_time << std::endl;
 						}
 						imshow(winName, gray);
+					}
 					}
 					break;
 				}
@@ -273,7 +286,7 @@ int main(int argc, char** argv)
 			if(zmq_setsockopt(req_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
 				if(zmq_setsockopt(req_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
 					if(zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-						rcc = zmq_connect(req_mat, ip1.c_str());
+						rcc = zmq_connect(req_mat, ip3.c_str());
 					}
 				}
 			}
@@ -293,6 +306,8 @@ int main(int argc, char** argv)
 		}
 	}
 
+	SDLNet_FreePacket(p);
+	SDLNet_Quit();
 	std::cout << std::endl << "Quitting..." << std::endl;
 	std::cout << "destroying window and freeing mat memory..." << std::endl;
 	destroyWindow(winName);
