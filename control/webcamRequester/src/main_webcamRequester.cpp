@@ -252,6 +252,7 @@ int main(int argc, char** argv)
 				}
 			}
 		}
+	}
 		zmq_msg_close(&msg);
 		char c = waitKey(sleep_time);
 		if(c == 't') {
@@ -304,7 +305,7 @@ int main(int argc, char** argv)
 			else std::cout << "Connection un-successfully set/reset" << std::endl;
 			
 		}
-	}
+	
 
 	SDLNet_FreePacket(p);
 	SDLNet_Quit();
