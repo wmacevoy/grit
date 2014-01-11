@@ -5,9 +5,10 @@
 
 using namespace std;
 
-ArmMover::ArmMover(ArmGeometry *geometry_)
+ArmMover::ArmMover(ArmGeometry *geometry_, BodyMover *bodyMover_)
 {
   geometry=geometry_;
+  bodyMover=bodyMover_;
   trigger.sharpCutoff=0;
   middle.sharpCutoff=0;
   ring.sharpCutoff=0;
@@ -105,5 +106,33 @@ void ArmMover::leapAdjust(LeapHandMessage &hand)
   lastLeapForearm=_forearm;
 }
 
+void ArmMover::pose(const Mat3d &value)
+{
+  Vec3d at=value.o();
+  Vec3d up=value.ez();
+  Vec3d point=value.ey();
+
+  if (up.z() < 0) { up = -up; }
+  if (point.y() < 0) { point = -point; }
+
+  float ioAngle,udAngle,bicepAngle,elbowAngle,forearmAngle;
+  geometry->compute(at.x(),at.y(),at.z(),/* point.x(), */ -up.x(),
+		    ioAngle,udAngle,bicepAngle,elbowAngle,forearmAngle);
+  inOut.setup(ioAngle);
+  upDown.setup(udAngle);
+  bicep.setup(bicepAngle);
+  elbow.setup(elbowAngle);
+  forearm.setup(forearmAngle);
+}
+
+void ArmMover::shift(float dx, float dy, float dz, float df)
+{
+  Mat3d frame=pose();
+  geometry->forward();
+  float saved = forearm.angle();
+  frame=translate(Vec3d(dx,dy,dz))*frame*rotate(Vec3d::o,Vec3d::ey,df);
+  pose(frame);
+  if (df == 0) forearm.setup(saved);
+}
 
 ArmMover::~ArmMover() {}

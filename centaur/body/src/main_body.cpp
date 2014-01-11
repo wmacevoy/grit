@@ -328,6 +328,12 @@ public:
 	mover->right.forearm.setup(angle);
 //	mover->right.elbow.torque=0.75;
   }
+
+  void goDHomeLegs()
+  {
+    load("doorhome.csv");
+  }
+
   void goDHome() {
     load("doorhome.csv");
     setWaist(0);
@@ -400,7 +406,7 @@ public:
   void balancedRampUp()
   {
       zoffset = ( ( (sensors.a[0] - Amin) * (zmin - zmax) ) / (Amin - Amax) ) + 8;
-      WalkParameters wp(2.5,12.0,17.25,-15.,2.0,90.0,1.0);
+      WalkParameters wp(2.5,12.0,17.25,-15.,4.0,90.0,1.0);
       wp.repeat=4;
       wp.zOffset=zoffset;
       mover->bStep(wp);
@@ -409,7 +415,7 @@ public:
   void balancedRampDown()
   {
       zoffset = ( ( (sensors.a[0] - Amin) * (zmin - zmax) ) / (Amin - Amax) ) + 8;
-      WalkParameters wp(2.5,12.0,17.25,-15.,2.0,90.0,1.0);
+      WalkParameters wp(2.5,12.0,17.25,-15.,4.0,90.0,1.0);
       wp.repeat=4;
       wp.zOffset=zoffset;
       mover->bStep(wp);
@@ -451,10 +457,28 @@ public:
     mover->changeZ(wp1,-15.0);
   }
   
-  void balancedForward(int repeat=4)
+  void balancedForward(int repeat=1)
   {
 	double step=4.0;
-//  						     (2.5,15.9,15.9,-15.,2.0,90.0,1.0)
+    WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0,2);
+    wp.y3-=step;  // move back legs back 
+    wp.y4-=step;    
+    wp.repeat=repeat;
+    mover->bStep(wp);
+  }
+
+  void balancedSmallForward(int repeat=1)
+  {
+	double step=1.0;
+    WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0,2.0);
+    wp.y3-=step;  // move back legs back 
+    wp.y4-=step;    
+    wp.repeat=repeat;
+    mover->bStep(wp);
+  }
+  void balancedWiggle(int repeat=1)
+  {
+	double step=0.0;
     WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0,2.0);
     wp.y3-=step;  // move back legs back 
     wp.y4-=step;    
@@ -463,7 +487,7 @@ public:
   }
   void balancedStrafeRight()
   {
-	  double step=2.0;
+	  double step=4.0;
       WalkParameters wp(2.5,12.0,17.25,-15.,step,0.0,1.0);    
       wp.y3-=step;  // move back legs back 
       wp.y4-=step;    
@@ -471,7 +495,7 @@ public:
   }
   void balancedStrafeLeft()
   {
-	  double step=2.0;
+	  double step=4.0;
       WalkParameters wp(2.5,12.0,17.25,-15.,step,180.0,1.0);
       wp.y3-=step;  // move back legs back 
       wp.y4-=step;    
@@ -520,7 +544,7 @@ public:
   
   void balancedLowForward()
   {
-	  double step=0.5;
+	  double step=4.0;
 	  WalkParameters wp(2.5,12.5,14.5,-10.00,step,90.0,0.0);
 	  wp.repeat=4;
       mover->bStep(wp);
@@ -568,6 +592,34 @@ public:
     setRUD(10);
     setRElbow(-10);
   }
+
+  void leftLeapHand()
+  {
+    //Lift arm and place over handle
+    setLElbow(-40);
+    sleep(8);
+    setLUD(35);
+    setLBicep(0);
+    setLIO(23);
+    setLForearm(42);
+    //    sleep(14);
+    //    setLUD(10);
+    //    setLElbow(-10);
+  }
+
+  void rightLeapHand()
+  {
+    //Lift arm and place over handle
+    setRElbow(-40);
+    sleep(8);
+    setRUD(35);
+    setRBicep(0);
+    setRIO(23);
+    setRForearm(42);
+    //    sleep(14);
+    //    setRUD(10);
+    //    setRElbow(-10);
+  }
   
 void leapHand() {
     //Lift arm and place over handle
@@ -582,11 +634,11 @@ void leapHand() {
     setRBicep(0);
     setRIO(23);
     setRForearm(42);
-    sleep(14);
-    setLUD(10);
-    setLElbow(-10);
-    setRUD(10);
-    setRElbow(-10);
+    //    sleep(14);
+    //    setLUD(10);
+    //    setLElbow(-10);
+    //    setRUD(10);
+    //    setRElbow(-10);
   }
 
 
@@ -611,6 +663,32 @@ void leapHand() {
     setLUD(-10);
     setLElbow(-20);
     sleep(5);
+  }
+
+  void leftRetractArm() {
+    //Position arm in to be ready to move from door
+    setLUD(30);
+    setLElbow(-35);
+    sleep(4);
+    //Put arm back near home
+    setLIO(-40);
+    sleep(6);
+    setLUD(-40);
+    setLElbow(0);
+    setLForearm(0);
+  }
+
+  void rightRetractArm() {
+    //Position arm in to be ready to move from door
+    setRUD(30);
+    setRElbow(-35);
+    sleep(4);
+    //Put arm back near home
+    setRIO(-40);
+    sleep(6);
+    setRUD(-40);
+    setRElbow(0);
+    setRForearm(0);
   }
 
   void retractArm() {
@@ -774,10 +852,39 @@ void leapHand() {
       mover->legs.torque(torque,3);
       ok = true;
     }
+  }
+
+  void torque(string part, float value)
+  {
+    bool ok = false;
+    if (part == "left") {
+      mover->left.torque(value);
+      ok=true;
+    }
+    if (part == "right") {
+      mover->right.torque(value);
+      ok=true;
+    }
+    if (part == "leg1"){
+      mover->legs.torque(value,0);
+      ok = true;
+    }
+    if (part == "leg2"){
+      mover->legs.torque(value,1);
+      ok = true;
+    }
+    if (part == "leg3"){
+      mover->legs.torque(value,2);
+      ok = true;
+    }
+    if (part == "leg4"){
+      mover->legs.torque(value,3);
+      ok = true;
+    }
 
     ostringstream oss;
     if (ok) {
-      oss << "my " << part << " is " << (value ? "enabled" : "disabled");
+      oss << "my " << part << " torque is " << value;
       answer(oss);
     } else {
       oss << "what is " << part << "?";
@@ -954,6 +1061,14 @@ void leapHand() {
       iss >> part;
       enable(part,false);
     }
+
+    if (head == "torque") {
+      string part;
+      float value;
+      iss >> part >> value;
+      torque(part,value);
+    }
+
     if (head == "sl") {
 		lab -= 2;
 		setLBicep(lab);
@@ -972,6 +1087,16 @@ void leapHand() {
       leapHand();
       answer("Leap hand...");
     }
+    if (head == "llh") {
+      lab = 0;
+      leftLeapHand();
+      answer("Leap hand...");
+    }
+    if (head == "rlh") {
+      lab = 0;
+      rightLeapHand();
+      answer("Leap hand...");
+    }
     if (head == "hd1") {
       handDownPush();
       answer("Pushing handle down and push...");
@@ -985,6 +1110,19 @@ void leapHand() {
       retractArm();
       answer("Retracting arm...");
     }
+
+    if (head == "lra") {
+	  lab = 0;
+      leftRetractArm();
+      answer("Retracting arm...");
+    }
+
+    if (head == "rra") {
+	  lab = 0;
+      rightRetractArm();
+      answer("Retracting arm...");
+    }
+
     if (head == "HStep") {
       float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
       iss >> radius >> xstep >> ystep;
@@ -1135,6 +1273,37 @@ void leapHand() {
       answer(oss.str());
     }
 
+    if (head == "atnow") {
+      set<string> names = cfg->servoNames();
+      bool any=false;
+      string name;
+      while (iss >> name) {
+	any=true;
+	if (name.rfind('=') != string::npos) {
+	  size_t eq=name.rfind('=');
+	  double value=atof(name.substr(eq+1).c_str());
+	  name=name.substr(0,eq);
+	  set<string>::iterator i = names.find(name);
+	  if (i != names.end()) {
+	    mover->getMover(name)->setup(value);
+	    oss << " set " << name << "=" << value;
+	  }
+	} else {
+	  set<string>::iterator i = names.find(name);
+	  if (i != names.end()) {
+	    int id=atoi(cfg->servo(name,"id").c_str());
+	    oss << " " <<  name << "=" << servos[id]->angle();
+	  }
+	}
+      }
+      if (!any) {
+	for (set<string>::iterator i = names.begin(); i != names.end(); ++i) {
+	  oss << " " <<  *i << "=" << mover->getMover(*i)->angle();
+	}
+      }
+      answer(oss.str());
+    }
+
     if (head=="hands") {
       string value;
       iss >> value;
@@ -1187,7 +1356,14 @@ void leapHand() {
       ostringstream oss;
       oss << "played DoorHome script and more"; 
       answer(oss.str());
-    }    if (head == "walk") {
+    }
+    if (head == "dhomelegs") {
+	  goDHomeLegs();
+      ostringstream oss;
+      oss << "played DoorHomeLegs script and more"; 
+      answer(oss.str());
+    }
+    if (head == "walk") {
 	  load("Gait1_3.csv");
       ostringstream oss;
       oss << "played Gait1_3 script"; 
@@ -1209,8 +1385,8 @@ void leapHand() {
       mover->legs.legMovers[3]->tape("f");
       mover->legs.legMovers[0]->state(LegMover::LEG_BRICKS);
       mover->legs.legMovers[1]->state(LegMover::LEG_BRICKS);
-   	  mover->legs.legMovers[2]->state(LegMover::LEG_NORMAL);
-   	  mover->legs.legMovers[3]->state(LegMover::LEG_NORMAL);
+      mover->legs.legMovers[2]->state(LegMover::LEG_NORMAL);
+      mover->legs.legMovers[3]->state(LegMover::LEG_NORMAL);
       simSpeed = 0.5;
       answer("Front stepping on brick");
     }
@@ -1415,11 +1591,27 @@ void leapHand() {
 	  answer("Performing StepOut");
 	}
     if (head == "bf") {  // forward
-      int repeat=4;
+      int repeat=1;
       iss >> repeat;
       balancedForward(repeat);
       ostringstream oss;
       oss << "Step Balanced r=2 zstep=12:ok."; 
+      answer(oss.str());
+    }
+    if (head == "bsf") {  // forward
+      int repeat=1;
+      iss >> repeat;
+      balancedSmallForward(repeat);
+      ostringstream oss;
+      oss << "Step Balanced Small Forward r=2 zstep=12:ok."; 
+      answer(oss.str());
+    }
+    if (head == "bw") {  // forward
+      int repeat=1;
+      iss >> repeat;
+      balancedWiggle(repeat);
+      ostringstream oss;
+      oss << "Balanced wiggle."; 
       answer(oss.str());
     }
     if (head == "bb") {  // backward
@@ -1681,6 +1873,52 @@ void leapHand() {
 	}
       }
       answer("ok.");
+    }
+
+    if (head == "shift") {
+      bool any=false;
+      bool ok = true;
+      string part;
+      iss >> part;
+      if (part == "left" || part == "right") {
+	string name;
+	float dx=0,dy=0,dz=0,df=0;
+	while (iss >> name) {
+	  if (name.rfind('=') != string::npos) {
+	    size_t eq=name.rfind('=');
+	    double value=atof(name.substr(eq+1).c_str());
+	    name=name.substr(0,eq);
+	    if (name == "dx") {
+	      dx=value;
+	      any=true;
+	    } else if (name == "dy") {
+	      dy=value;
+	      any=true;
+	    } else if (name == "dz") {
+	      dz=value;
+	      any=true;
+	    } else if (name == "df") {
+	      df=value;
+	      any=true;
+	    } else {
+	      ok = false;
+	    }
+	  } else {
+	    ok = false;
+	  }
+	}
+	ok = ok && any;
+	if (ok && part == "left") {
+	  mover->left.shift(dx,dy,dz,df);
+	  oss << "left shift(dx=" << dx << ",dy=" << dy << ",dz=" << dz << ",df=" << df << ")";
+	  answer(oss);
+	}
+	if (ok && part == "right") {
+	  mover->right.shift(dx,dy,dz,df);
+	  oss << "right shift(dx=" << dx << ",dy=" << dy << ",dz=" << dz << ",df=" << df << ")";
+	  answer(oss);
+	}
+      }
     }
 
     if (head == "turn") {
@@ -1950,7 +2188,7 @@ void leapHand() {
     saveSavedCommands();
 
   }
-};
+  };
 
 int BodyController::lab = 0;
 

@@ -3,12 +3,15 @@
 #include "ServoMover.h"
 #include "Arms.h"
 #include "LeapMessage.h"
+#include "Mat3d.h"
 
 class ArmGeometry;
+class BodyMover;
 
 class ArmMover
 {
  public:
+  BodyMover *bodyMover;
   ArmGeometry *geometry;
   ServoMover inOut;
   ServoMover upDown;
@@ -30,9 +33,11 @@ class ArmMover
   float lastLeapBicep;
   float lastLeapElbow;
   float lastLeapForearm;
-
+  virtual Mat3d pose()=0;
+  virtual void pose(const Mat3d &value);
+  virtual void shift(float dx, float dy, float dz, float df);
   void leapAdjust(LeapHandMessage &leapHandMessage);
 
   virtual ~ArmMover();
-  ArmMover(ArmGeometry *geometry_);
+  ArmMover(ArmGeometry *geometry_, BodyMover *bodyMover_);
 };

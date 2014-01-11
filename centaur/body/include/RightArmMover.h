@@ -3,11 +3,14 @@
 #include "ArmMover.h"
 #include "RightArmGeometry.h"
 
+class BodyMover;
+
 class RightArmMover : public ArmMover
 {
  public:
   RightArmGeometry rightArmGeometry;
-  RightArmMover();
+  Mat3d pose();
+  RightArmMover(BodyMover *bodyMover);
 };
 
 

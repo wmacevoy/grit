@@ -36,7 +36,7 @@ WalkParameters::WalkParameters(double newRadius,double x,double y,double newZ,do
 
 
 BodyMover::BodyMover()
-  : legs(this)
+  : legs(this), left(this), right(this)
 {
 }
 
@@ -508,7 +508,8 @@ double stepZ(double dist,double angle) {
 double legDirection(double angle) {
   double pi_8=M_PI_4/2.0;
   if (5.0*pi_8<angle && angle<3.0*M_PI_4) return 1.0;
-  else if (3.0*M_PI_4<angle && angle<7.0*pi_8) return -1.0;
+  else if (3.0*M_PI_4<angle && angle<(7.0*pi_8-M_PI/16.0)) return -1.0;
+  else if ((7.0*pi_8-M_PI/16.0)<angle && angle<7.0*pi_8) return -2.0;
   else return 0.0; 
 }
  
@@ -718,10 +719,10 @@ void BodyMover::dynamicWalk() {
   double l2d=direction;
   double l3d=direction;
   double l4d=direction;
-  double l1z=wp.z;
-  double l2z=wp.z;
-  double l3z=wp.z;
-  double l4z=wp.z;
+  double l1z=wp.z/*+zoffset/2.0*/;
+  double l2z=wp.z/*+zoffset/2.0*/;
+  double l3z=wp.z/*-zoffset/2.0*/;
+  double l4z=wp.z/*-zoffset/2.0*/;
   l2d+=wp.rotation*3.0*M_PI_2;
   l3d+=wp.rotation*M_PI;
   l4d+=wp.rotation*M_PI_2;
