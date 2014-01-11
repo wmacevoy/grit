@@ -111,13 +111,6 @@ struct SafetyServer : DelayedSafety, ZMQHub
       data->value = warn();
       if (msg.send(socket) == 0) ok = false;
     }
-    {
-      ZMQMessage msg(sizeof(SafetyMessage));
-      SafetyMessage *data = (SafetyMessage*)msg.data();
-      data->messageId = SafetyMessage::GET_STALE;
-      data->value = stale();
-      if (msg.send(socket) == 0) ok = false;
-    }
     return ok;
   }
 

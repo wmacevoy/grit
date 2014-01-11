@@ -3,7 +3,7 @@
 
 ZMQServo::ZMQServo() 
   : goalAngle(0), presentAngle(0), goalSpeed(0), goalTorque(0), 
-    goalRate(1.0), curveMode(false), presentTemp(0), presentTempTime(now())
+    goalRate(1.0), curveMode(false), presentTemp(0), presentTempTime(0)
 {
   curveMode = false;
   goalRate = 1.0;
@@ -73,6 +73,6 @@ uint8_t ZMQServo::temp() const
   if (presentTempTime < now() - 20.0) {
     return 1;
   } else {
-    return presentTemp;
+   return presentTemp;
   }
 }

@@ -13,8 +13,10 @@ class ZMQServo : public Servo
 
   bool curveMode;
  private:
+#ifndef SWIG
   uint8_t presentTemp;
   double presentTempTime;
+#endif
  public:
   double t[2];
   float c0[3];
