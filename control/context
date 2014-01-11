@@ -220,7 +220,7 @@ start()
     if [ $# -gt 0 ] ; then
 	start_apps "$@"
      else
-	start_apps leapPublisher glovePublisher webcamRequester heartBeatRequester joystickProvider gui
+	start_apps leapPublisher glovePublisher  heartBeatRequester joystickProvider gui glView guicmdr
     fi
 }
 
@@ -229,7 +229,7 @@ stop()
     if [ $# -gt 0 ] ; then
 	stop_apps "$@"
     else
-	stop_apps leapPublisher glovePublisher webcamRequester heartBeatRequester joystickProvider gui
+	stop_apps leapPublisher glovePublisher heartBeatRequester joystickProvider gui glView guicmdr
     fi
 }
 

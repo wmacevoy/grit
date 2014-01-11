@@ -18,6 +18,8 @@ bool verbose = false;
 
 const double colorMapper = USHRT_MAX / 255;
 
+enum Color {RED, YELLOW, GREEN, BLACK, SAFETY, BLUE, ORANGE, GREY };
+
 SPServoController servoController;
 std::map<int,Servo*> servos;
 SensorsMessage sensors;
@@ -57,7 +59,7 @@ protected:
   Glib::RefPtr<Gtk::Builder> builder;
   std::map<int, Gtk::ColorButton*> buttons;
   std::map<int, Gtk::ColorButton*>::iterator im;
-  Gdk::Color sev_colors[5];
+  Gdk::Color sev_colors[8];
   Gtk::Label *lblTop, *lblSafety;
   Gtk::Label *lblA0, *lblA1, *lblA2, *lblG0, *lblG1, *lblG2, *lblC0, *lblC1, *lblC2;
   int SLEEP_TIME;
@@ -67,11 +69,14 @@ public:
   {
     SLEEP_TIME = (int)(cfg.num("gui.sleep_t"));
 		
-    sev_colors[0].set_rgb(USHRT_MAX,0,0);
-    sev_colors[1].set_rgb(USHRT_MAX,USHRT_MAX,0);
-    sev_colors[2].set_rgb(0,USHRT_MAX,0);
-    sev_colors[3].set_rgb(0,0,0);
-    sev_colors[4].set_rgb(0,0,0); //Used for safety light only
+    sev_colors[RED].set_rgb(USHRT_MAX,0,0);
+    sev_colors[YELLOW].set_rgb(USHRT_MAX,USHRT_MAX,0);
+    sev_colors[GREEN].set_rgb(0,USHRT_MAX,0);
+    sev_colors[BLACK].set_rgb(0,0,0);
+    sev_colors[SAFETY].set_rgb(0,0,0); //Used for safety light only
+    sev_colors[BLUE].set_rgb(0,USHRT_MAX/2+USHRT_MAX/5,USHRT_MAX); //BLUE
+    sev_colors[ORANGE].set_rgb(USHRT_MAX,USHRT_MAX/2+USHRT_MAX/7,0); //ORANGE
+    sev_colors[GREY].set_rgb(USHRT_MAX/2, USHRT_MAX/2,USHRT_MAX/2); //GREY
 	  
     for (int i =11; i < 14; i++)
       {
@@ -144,18 +149,25 @@ public:
 
   void update_colors_temps(int32_t temps[], int size)
   {
-    int sev = 3, max = 0, max_servo = 0;
+    int sev = BLACK, max = 0, max_servo = 0;
     for (int i = 0; i < size; i+=2)
       {
 	if(temps[i+1] > max){ max = temps[i+1]; max_servo=temps[i];}
-	if (temps[i+1] >= 55)
-	  sev = 0;
-	else if (temps[i+1] > 40)
-	  sev = 1;
-	else if (temps[i+1] > 0)
-	  sev = 2;
+	//Servos start shaking at 75
+	if (temps[i+1] >= 68) //Point at which lights turn red
+	  sev = RED;
+	else if (temps[i+1] > 60) //Orange
+	  sev = ORANGE;
+	else if (temps[i+1] > 50) //Point at which lights turn yellow
+	  sev = YELLOW;
+	else if (temps[i+1] > 35) //Green
+	  sev = GREEN;
+	else if (temps[i+1] == 1) // GREY STALE
+	  sev = GREY;
+	else if (temps[i+1] > 0) //BLUE
+	  sev = BLUE;
 	else
-	  sev = 3;
+	  sev = BLACK;
 
 	im = buttons.find(temps[i]);
 	if(im != buttons.end()) {
@@ -178,7 +190,7 @@ public:
 
   void update_sensors()
   {
-    int sev = 3;
+    int sev = GREY;
 
     //Update accel, gyro, compass 
     lblA0->set_text("A[0]: " + NumberToString(sensors.a[0]));
@@ -197,21 +209,21 @@ public:
     im = buttons.find(105);
     if(im != buttons.end()) {
       int r=255-sensors.s[0],g=255-sensors.s[1],b=255-sensors.s[2];
-      sev_colors[4].set_rgb(255*r,255*g,255*b); 
-      im->second->set_color(sev_colors[4]);
+      sev_colors[SAFETY].set_rgb(255*r,255*g,255*b); 
+      im->second->set_color(sev_colors[SAFETY]);
     }
     
     //Update leg pressures
     for(int i = 0; i < 4; i++)
       {
 	if (sensors.p[i] > 900)
-	  sev = 2;
+	  sev = GREEN;
 	else if (sensors.p[i] > 750)
-	  sev = 1;
+	  sev = YELLOW;
 	else if (sensors.p[i] >= 0)
-	  sev = 0;
+	  sev = RED;
 	else
-	  sev = 3;
+	  sev = BLACK;
 	
 	im = buttons.find(i + 101);
 	if(im != buttons.end()) {

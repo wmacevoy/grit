@@ -29,15 +29,15 @@ LidarMessage lidarMessage;
 volatile int mx = 0;
 volatile int my = 0;
 
-const int normalWidth = 320;
-const int normalHeight = 240;
+const int normalWidth = 160;
+const int normalHeight = 120;
 
 const int x_min = 34;
 const int x_max = 285;
 const int ind_min = 479;
 const int ind_max = 605;
 
-const int lidarLine = 105;
+const int lidarLine = 105 * 0.43;
 
 std::string convstr(const float t) {
 	std::stringstream ftoa;
@@ -71,7 +71,7 @@ std::string at(int index)
 
 void mouseEvent(int evt, int x, int y, int flags, void* param) {
 	if(evt == CV_EVENT_MOUSEMOVE) {
-		if(x >=0 && x <= normalWidth && y >= 100 && y <= 110) {
+		if(x >=0 && x <= normalWidth && y >= lidarLine - 5 && y <= lidarLine + 5) {
 			mx = x;
 			my = y;
 			inside = true;
@@ -105,7 +105,8 @@ int main(int argc, char** argv)
 	int imgNum = 0;
 	int sleep_time = sleep_time_gray;
 	int t1 = 0, t2 = 0;
-	bool CorG  = true;
+	char requestType  = 'g';
+	bool requesting = true;
 	float timeOut = 3.0;
 	Mat color(normalHeight, normalWidth, CV_8UC3);
 	Mat gray(normalHeight, normalWidth, CV_8UC1);
@@ -115,9 +116,9 @@ int main(int argc, char** argv)
 	std::string imageName = "";
 	namedWindow(winName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
 	
-	int fontFace = FONT_HERSHEY_SCRIPT_SIMPLEX;
-	double fontScale = 0.60;
-	int thickness = 2;
+	int fontFace =FONT_HERSHEY_SIMPLEX;
+	double fontScale = 0.35;
+	int thickness = 1;
 
 	std::string ip1 = cfg.str("webcam.provider.subscribe");
 	std::string ip2 = cfg.str("lidar.provider.subscribe");
@@ -127,9 +128,6 @@ int main(int argc, char** argv)
 
 	void* req_mat = zmq_socket(context_mat, ZMQ_REQ);
 	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);	
-
-	//	lidar_data = (int64_t*)calloc(sz_lidar_data, sizeof(int64_t));
-	//	assert(lidar_data != NULL);
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
@@ -149,20 +147,20 @@ int main(int argc, char** argv)
 	Point tick10r1(normalWidth, lidarLine - 10);
 	Point tick10r2(normalWidth - 5, lidarLine - 10);	
 	
-	Point textOrg(0, 40);
+	Point textOrg(0, 10);
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
 	zmq_msg_t msg;
 	while(!die) {
-		rcc = zmq_send(req_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT);
+		if(requesting) rcc = zmq_send(req_mat, &requestType, sizeof(char), ZMQ_DONTWAIT);
+		else rcc = 0;
 		if (rcc) {
 			rcc = zmq_msg_init (&msg);
 			if(rcc == 0) {			
-				switch(CorG) {
-				case false:
+				switch(requestType) {
+				case 'c':
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-					//zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);	
 					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);
 					if (verbose) {
 					  std::cout << "t=" << lidarMessage.t << " waist=" <<
@@ -192,7 +190,6 @@ int main(int argc, char** argv)
 						if(inside) {
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							text = at(index);
-							// text = convstr(lidar_data[index] * 0.00328084);
 							putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index <<
 									"  sleep_time: " << sleep_time << std::endl;
@@ -200,7 +197,7 @@ int main(int argc, char** argv)
 						imshow(winName, color);
 					}
 					break;
-				case true:
+				case 'g':
 					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
 					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
 					if (verbose) {
@@ -208,8 +205,7 @@ int main(int argc, char** argv)
 					    lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
 					    
 					    " data[0]=" << lidarMessage.data[0] << std::endl;
-					}
-					//					zmq_recv(sub_lidar, lidar_data, sz_lidar_data * sizeof(int64_t), ZMQ_DONTWAIT);		
+					}	
 					if(rcc == gray.total() * gray.elemSize()) {
 						t1 = time(0);
 						memcpy(gray.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
@@ -220,7 +216,6 @@ int main(int argc, char** argv)
 						line(gray, tick10r1, tick10r2, Scalar(0, 0, 0));
 
 						for(int i = 0; i < normalWidth; ++i) {
-						  //int ft = lidar_data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]  * 0.00328084;
 						  int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
 							if(ft <= 10) {
 								int y = lidarLine - ft;
@@ -234,7 +229,6 @@ int main(int argc, char** argv)
 							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
 							//index = 380 + mx;
 							text = at(index);
-							//text = convstr(lidar_data[index] * 0.00328084);
 							putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
 									"  sleep_time: " << sleep_time << std::endl;
@@ -248,20 +242,21 @@ int main(int argc, char** argv)
 		zmq_msg_close(&msg);
 		char c = waitKey(sleep_time);
 		if(c == 't') {
-			if(CorG == false) {
-				CorG = true;
+			if(requestType == 'c') {
+				requestType = 'g';
 				sleep_time = sleep_time_gray;
 			} else {
-				CorG = false;
+				requestType = 'c';
 				sleep_time = sleep_time_color;
 			}
 		}
+		else if(c =='p') requesting = !requesting;
 		else if(c == 'q') die = true;
 		else if(c == 's') {
 			imageName = "image";
 			imageName += itoa(imgNum++);
 			imageName += ".jpg";
-			if(CorG == true) {
+			if(requestType == 'g') {
 				imwrite(imageName,  gray);
 			}
 			else {
