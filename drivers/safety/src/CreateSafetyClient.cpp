@@ -12,6 +12,7 @@ struct SafetyClient : ZMQHub, Safety
   bool getSafe;
   bool setSafe;
   bool getWarn;
+  bool getStale;
 
   void safe(bool value)
   {
@@ -21,6 +22,11 @@ struct SafetyClient : ZMQHub, Safety
   bool safe() const
   {
     return getSafe;
+  }
+
+  bool stale() const
+  {
+    return getStale;
   }
 
   bool warn() const
@@ -36,6 +42,7 @@ struct SafetyClient : ZMQHub, Safety
     switch(data->messageId) {
     case SafetyMessage::GET_SAFE: getSafe = data->value; break;
     case SafetyMessage::GET_WARN: getWarn = data->value; break;
+    case SafetyMessage::GET_STALE: getStale = data->value; break;
     }
     return true;
   }
@@ -55,6 +62,7 @@ struct SafetyClient : ZMQHub, Safety
     setSafe = false;
     getSafe = false;
     getWarn = false;
+    getStale = false;
     rate=rate_;
     publish = me;
     subscribers.push_back(server);

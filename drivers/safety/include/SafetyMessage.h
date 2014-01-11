@@ -4,7 +4,7 @@
 
 struct SafetyMessage
 {
-  enum { SET_SAFE, GET_SAFE, GET_WARN };
+  enum { SET_SAFE, GET_SAFE, GET_WARN, GET_STALE };
   int8_t messageId;
   int8_t value;
 };

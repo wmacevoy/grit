@@ -17,10 +17,18 @@ using namespace std;
 struct DelayedSafety : Safety
 {
   bool m_safe;
+  bool m_stale;
   bool timerStarted;
   double timerValue;
   double delayOff;
 
+  void stale(bool value) {
+    m_stale = value;
+  }
+
+  bool stale() const {
+    return m_stale;
+  }
 
   void safe(bool value) {
     if (!value) { // 
@@ -103,11 +111,19 @@ struct SafetyServer : DelayedSafety, ZMQHub
       data->value = warn();
       if (msg.send(socket) == 0) ok = false;
     }
+    {
+      ZMQMessage msg(sizeof(SafetyMessage));
+      SafetyMessage *data = (SafetyMessage*)msg.data();
+      data->messageId = SafetyMessage::GET_STALE;
+      data->value = stale();
+      if (msg.send(socket) == 0) ok = false;
+    }
     return ok;
   }
 
   void report()
   {
+    bool newStale = false;
     if (verbose) {
       string color;
       if (safe()) {
@@ -124,6 +140,7 @@ struct SafetyServer : DelayedSafety, ZMQHub
       for (size_t i=0; i<subscribers.size(); ++i) {
 	if (timeouts[i]+rxTimeout < t) {
 	  cout << " " << subscribers[i] << " stale";
+	  newStale = true;
 	} else {
 	  if (safes[i]) {
 	    cout << " " << subscribers[i] << " safe";
@@ -133,6 +150,7 @@ struct SafetyServer : DelayedSafety, ZMQHub
 	}
       }
       cout << endl;
+      stale(newStale);
     }
   }
 
