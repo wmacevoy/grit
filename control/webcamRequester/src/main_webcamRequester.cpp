@@ -137,6 +137,7 @@ int main(int argc, char** argv)
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
+
 	p = SDLNet_AllocPacket(recvSize + sizeof(uint8_t));
 
 	void* context_lidar = zmq_ctx_new ();
@@ -149,7 +150,6 @@ int main(int argc, char** argv)
 	Point tick5l2(10, lidarLine - 5);
 	Point tick5r1(normalWidth, lidarLine - 5);
 	Point tick5r2(normalWidth - 10, lidarLine - 5);
-	
 	
 	Point tick10l1(0, lidarLine - 10);
 	Point tick10l2(5, lidarLine - 10);
