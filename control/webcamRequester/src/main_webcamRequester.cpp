@@ -32,12 +32,12 @@ const int normalWidth = 160;
 const int normalHeight = 120;
 const int recvSize = 80 * 60;
 
-const int x_min = 32;
-const int x_max = 50;
-const int ind_min = 517;
-const int ind_max = 551;
+const int x_min = 6;
+const int x_max = 146;
+const int ind_min = 494;
+const int ind_max = 588;
 
-const int lidarLine = 105 * 0.43;
+const int lidarLine = 55;
 
 //////////SDL
 UDPsocket sd;
@@ -135,7 +135,7 @@ int main(int argc, char** argv)
 	while(!(sd = SDLNet_UDP_Open(port))) {
     printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
-  }
+	}
 
 	p = SDLNet_AllocPacket(recvSize + sizeof(uint8_t));
 
@@ -218,7 +218,7 @@ int main(int argc, char** argv)
 
 				if(inside) {	
 					index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-					//index = 500 + mx;
+					//index = 480 + mx;
 					text = at(index);
 					putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
 					if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
