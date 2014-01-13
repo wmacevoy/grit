@@ -123,7 +123,7 @@ int main(int argc, char** argv)
 		}
 
 		memcpy(p->data, &areaOfFrame, sizeof(uint8_t));
-
+		
 		switch(areaOfFrame) {
 		case 1:
 			for(int i = 0; i < gray.cols / 2; ++i)
