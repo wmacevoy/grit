@@ -125,22 +125,22 @@ int main(int argc, char** argv)
 
 	int port = (int)cfg.num("webcam.provider.port");
 	std::string ip2 = cfg.str("lidar.provider.subscribe");
+
+	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
+	signal(SIGQUIT, quitproc);
 	
 	//Initialize SDL_net
 	SDLNet_Init();
-	sd = SDLNet_UDP_Open(port);
-	if(!sd) {
+	while(!(sd = SDLNet_UDP_Open(port))) {
     printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
   }
 
 	p = SDLNet_AllocPacket(recvSize + sizeof(uint8_t));
 
 	void* context_lidar = zmq_ctx_new ();
 	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);	
-
-	signal(SIGINT, quitproc);
-	signal(SIGTERM, quitproc);
-	signal(SIGQUIT, quitproc);
 
 	Point pt1(0, lidarLine);
 	Point pt2(normalWidth, lidarLine);
