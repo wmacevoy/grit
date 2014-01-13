@@ -137,7 +137,6 @@ int main(int argc, char** argv)
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
-
 	p = SDLNet_AllocPacket(recvSize + sizeof(uint8_t));
 
 	void* context_lidar = zmq_ctx_new ();

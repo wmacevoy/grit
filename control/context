@@ -220,7 +220,7 @@ start()
     if [ $# -gt 0 ] ; then
 	start_apps "$@"
      else
-	start_apps leapPublisher glovePublisher  heartBeatRequester joystickProvider gui glView guicmdr
+	start_apps leapPublisher glovePublisher  heartBeatRequester joystickProvider gui glView guicmdr webcamRequester
     fi
 }
 
