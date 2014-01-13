@@ -30,6 +30,7 @@ volatile int my = 0;
 
 const int normalWidth = 80;
 const int normalHeight = 60;
+const int recvSize = 80 * 60;
 
 const int x_min = 32;
 const int x_max = 50;
@@ -106,9 +107,12 @@ int main(int argc, char** argv)
 	int imgNum = 0;
 	int sleep_time = sleep_time_gray;
 	int t1 = 0, t2 = 0;
+	bool receiving = true;
+	uint8_t areaOfFrame = 1;
 
 	float timeOut = 3.0;
 	Mat gray(normalHeight, normalWidth, CV_8UC1);
+	gray.reshape(0,1);
 
 	std::string winName = "ICU";
 	std::string text = "0";
@@ -125,7 +129,7 @@ int main(int argc, char** argv)
 	//Initialize SDL_net
 	SDLNet_Init();
 	sd = SDLNet_UDP_Open(port);
-	p = SDLNet_AllocPacket(4800);
+	p = SDLNet_AllocPacket(recvSize + sizeof(uint8_t));
 	if(!sd) {
     printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
   }
@@ -157,43 +161,61 @@ int main(int argc, char** argv)
 
 	zmq_msg_t msg;
 	while(!die) {
-		rc = SDLNet_UDP_Recv(sd, p);
-		if(p->len > 4000) {
-			zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
-			if (verbose) {
-				std::cout << "t=" << lidarMessage.t << " waist=" <<
-				  lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
-				  
-				  " data[0]=" << lidarMessage.data[0] << std::endl;
-			}	
+		if(receiving) {
+			rc = SDLNet_UDP_Recv(sd, p);
+			if(p->len == recvSize + sizeof(uint8_t)) {
+				zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
+				if (verbose) {
+					std::cout << "t=" << lidarMessage.t << " waist=" <<
+						lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
+						
+						" data[0]=" << lidarMessage.data[0] << std::endl;
+				}	
 
-			t1 = time(0);
-			memcpy(gray.data, p->data, p->len);
-			line(gray, pt1, pt2, Scalar(50, 50, 50));
-			line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
-			line(gray, tick5r1, tick5r2, Scalar(0, 0, 0));
-			line(gray, tick10l1, tick10l2, Scalar(0, 0, 0));
-			line(gray, tick10r1, tick10r2, Scalar(0, 0, 0));
+				t1 = time(0);
+				memcpy(&areaOfFrame, p->data, sizeof(uint8_t));
 
-			for(int i = 0; i < normalWidth; ++i) {
-				int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
-				if(ft <= 10) {
-					int y = lidarLine - ft;
-					if(y <= normalHeight && y >= 0) { 							
-						line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
-					}
+				switch(areaOfFrame) {
+				case 1:
+					memcpy(gray.data, p->data + 1, p->len - 1);
+					break;
+				case 2:
+					//memcpy(gray.data, p->data + 1, p->len - 1);
+					break;
+				case 3:
+					//memcpy(gray.data, p->data + 1, p->len - 1);
+					break;
+				case 4:
+					//memcpy(gray.data, p->data + 1, p->len - 1);
+					break;
 				}
-			}				
 
-			if(inside) {	
-				index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-				//index = 500 + mx;
-				text = at(index);
-				putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-				if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
-						"  sleep_time: " << sleep_time << std::endl;
+				line(gray, pt1, pt2, Scalar(50, 50, 50));
+				line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
+				line(gray, tick5r1, tick5r2, Scalar(0, 0, 0));
+				line(gray, tick10l1, tick10l2, Scalar(0, 0, 0));
+				line(gray, tick10r1, tick10r2, Scalar(0, 0, 0));
+
+				for(int i = 0; i < normalWidth; ++i) {
+					int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
+					if(ft <= 10) {
+						int y = lidarLine - ft;
+						if(y <= normalHeight && y >= 0) { 							
+							line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
+						}
+					}
+				}				
+
+				if(inside) {	
+					index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+					//index = 500 + mx;
+					text = at(index);
+					putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+					if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
+							"  sleep_time: " << sleep_time << std::endl;
+				}
+				imshow(winName, gray);
 			}
-			imshow(winName, gray);
 		}
 
 		char c = waitKey(sleep_time);
@@ -203,6 +225,9 @@ int main(int argc, char** argv)
 			imageName += itoa(imgNum++);
 			imageName += ".jpg";
 			imwrite(imageName,  gray);
+		}
+		else if(c == 'p') {
+			receiving = !receiving;
 		}
 
 		t2 = time(0);
