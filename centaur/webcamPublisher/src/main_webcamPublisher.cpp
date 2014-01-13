@@ -64,16 +64,22 @@ int main(int argc, char** argv)
 	Mat frame;
 	Mat gray;
 
+	signal(SIGINT, quitproc);
+	signal(SIGTERM, quitproc);
+	signal(SIGQUIT, quitproc);
+
 	//Initialize SDL_net
 	SDLNet_Init();
 	
-	sd = SDLNet_UDP_Open(0);	
-	if(!sd) {
+	//sd = SDLNet_UDP_Open(0);	
+	while(!(sd = SDLNet_UDP_Open(0))) {
     printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
   }
 
-	if (SDLNet_ResolveHost(&ip, address.c_str(), port) == -1) {
+	while(SDLNet_ResolveHost(&ip, address.c_str(), port) == -1) {
 		fprintf(stderr, "SDLNet_ResolveHost(%s %d): %s\n", address.c_str(), port, SDLNet_GetError());
+		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
 
 	p = SDLNet_AllocPacket(4801);
@@ -102,11 +108,6 @@ int main(int argc, char** argv)
 
 	capture.set(CV_CAP_PROP_FRAME_WIDTH, 160);
 	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 120);
-
-	signal(SIGINT, quitproc);
-	signal(SIGTERM, quitproc);
-	signal(SIGQUIT, quitproc);
-
 	
 	if(verbose) std::cout << "Color: " << frame.channels() << " " << frame.depth() << std::endl;
 	if(verbose) std::cout << "Gray: " << gray.channels() << " " << gray.depth() << std::endl;
