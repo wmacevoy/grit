@@ -28,8 +28,8 @@ LidarMessage lidarMessage;
 volatile int mx = 0;
 volatile int my = 0;
 
-const int normalWidth = 80;
-const int normalHeight = 60;
+const int normalWidth = 160;
+const int normalHeight = 120;
 const int recvSize = 80 * 60;
 
 const int x_min = 32;
@@ -159,7 +159,7 @@ int main(int argc, char** argv)
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
-	zmq_msg_t msg;
+	int count = 0;
 	while(!die) {
 		if(receiving) {
 			rc = SDLNet_UDP_Recv(sd, p);
@@ -177,18 +177,27 @@ int main(int argc, char** argv)
 
 				switch(areaOfFrame) {
 				case 1:
-					memcpy(gray.data, p->data + 1, p->len - 1);
+					for(int i = 0; i < gray.cols / 2; ++i)
+						for(int j = 0; j < gray.rows / 2; ++j)
+							gray.at<uchar>(Point(i,j)) = p->data[1 + count++];			
 					break;
 				case 2:
-					//memcpy(gray.data, p->data + 1, p->len - 1);
+					for(int i = gray.cols / 2; i < gray.cols; ++i)
+						for(int j = 0; j < gray.rows / 2; ++j)
+							gray.at<uchar>(Point(i,j)) = p->data[1 + count++];
 					break;
 				case 3:
-					//memcpy(gray.data, p->data + 1, p->len - 1);
+					for(int i = 0; i < gray.cols / 2; ++i)
+						for(int j = gray.rows / 2; j < gray.rows; ++j)
+							gray.at<uchar>(Point(i,j)) = p->data[1 + count++];
 					break;
 				case 4:
-					//memcpy(gray.data, p->data + 1, p->len - 1);
+					for(int i = gray.cols / 2; i < gray.cols; ++i)
+						for(int j = gray.rows / 2; j < gray.rows; ++j)
+							gray.at<uchar>(Point(i,j)) = p->data[1 + count++];
 					break;
 				}
+				count = 0;
 
 				line(gray, pt1, pt2, Scalar(50, 50, 50));
 				line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
