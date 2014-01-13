@@ -129,10 +129,11 @@ int main(int argc, char** argv)
 	//Initialize SDL_net
 	SDLNet_Init();
 	sd = SDLNet_UDP_Open(port);
-	p = SDLNet_AllocPacket(recvSize + sizeof(uint8_t));
 	if(!sd) {
     printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
   }
+
+	p = SDLNet_AllocPacket(recvSize + sizeof(uint8_t));
 
 	void* context_lidar = zmq_ctx_new ();
 	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);	
