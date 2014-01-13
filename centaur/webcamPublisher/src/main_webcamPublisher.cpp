@@ -48,8 +48,8 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("webcam.provider.verbose", false);
 	if (verbose) cfg.show();
 
-	int index = cfg.num("webcam.provider.index", 0);
-	int sleep_time = cfg.num("webcam.provider.sleep_time");
+	int index = (int)cfg.num("webcam.provider.index", 0);
+	int sleep_time = (int)cfg.num("webcam.provider.sleep_time");
 	bool detect = cfg.flag("webcam.provider.detect");
 	std::string address = cfg.str("webcam.provider.ip").c_str();
 	int port = (int)cfg.num("webcam.provider.port");
@@ -58,6 +58,7 @@ int main(int argc, char** argv)
 	UDPpacket* p;
 	IPaddress ip;
 
+	uint8_t areaOfFrame = 1;
 	bool connected = false;
 	std::string cascadeName;
 	Mat frame;
@@ -66,23 +67,19 @@ int main(int argc, char** argv)
 	//Initialize SDL_net
 	SDLNet_Init();
 	
-	
 	sd = SDLNet_UDP_Open(0);	
 	if(!sd) {
     printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
   }
 
-	if (SDLNet_ResolveHost(&ip, address.c_str(), port) == -1)
-	{
-		fprintf(stderr, "SDLNet_ResolveHost(%s %d): %s\n", argv[1], atoi(argv[2]), SDLNet_GetError());
-		exit(EXIT_FAILURE);
+	if (SDLNet_ResolveHost(&ip, address.c_str(), port) == -1) {
+		fprintf(stderr, "SDLNet_ResolveHost(%s %d): %s\n", address.c_str(), port, SDLNet_GetError());
 	}
 
-	p = SDLNet_AllocPacket(4804);
-
+	p = SDLNet_AllocPacket(4801);
 	p->address.host = ip.host;
 	p->address.port = ip.port;
-	p->len = 4800;// + sizeof(uint32_t);
+	p->len = 4800 + sizeof(uint8_t);
 
 	if(detect) {
 		cascadeName = cfg.str("webcam.provider.cascade");
@@ -103,8 +100,8 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	capture.set(CV_CAP_PROP_FRAME_WIDTH, 160);
-	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 120);
+	capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
@@ -129,9 +126,15 @@ int main(int argc, char** argv)
 
 		Mat gray2;
 		resize(gray, gray2, Size(80, 60), 0, 0, CV_INTER_LINEAR);
-		memcpy(p->data, gray2.data, gray2.total());
+		gray2.reshape(0,1);
+		memcpy(p->data, &areaOfFrame, sizeof(uint8_t));
+		memcpy(p->data + 1, gray2.data, gray2.total());
 		SDLNet_UDP_Send(sd, -1, p);
 
+		++areaOfFrame;
+		if(areaOfFrame > 4 ) {
+			areaOfFrame = 1;
+		}
 
 		waitKey(sleep_time);
 	}
