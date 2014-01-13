@@ -1,7 +1,7 @@
 name,value
 control.ip,192.168.2.113
 xcontrol.ip,127.0.0.1
-control.user,mojavaton
+control.user,cogburn
 centaur.ip,192.168.2.101
 xcentaur.ip,127.0.0.1
 centaur.user,fit-pc
@@ -35,7 +35,7 @@ servos.verbose,true
 servos.type,real
 xservos.type,fake
 servos.deviceindex,1
-servos.baudnum,3
+servos.baudnum,8
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
 servos.dynamixel.rate.tx,20.0
 servos.publish.ip,${centaur.ip}
@@ -77,18 +77,17 @@ lidar.provider.sleep_time,"10"
 lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
 webcam.requester.calibration,"true"
-webcam.requester.sleep_time_color,"200"
-webcam.requester.sleep_time_gray,"200"
+webcam.requester.sleep_time_color,"25"
+webcam.requester.sleep_time_gray,"25"
 webcam.requester.oculus,"false"
 webcam.provider.verbose,"false"
 webcam.provider.index,"0"
-webcam.provider.sleep_time,"10"
-webcam.provider.detect,"true"
+webcam.provider.sleep_time,"50"
+webcam.provider.detect,"false"
 webcam.provider.cascade,"../cascades/cascade.xml"
 webcam.provider.port,9993
 webcam.provider.ip,"${centaur.ip}"
-webcam.provider.publish,"tcp://*:${webcam.provider.port}"
-webcam.provider.subscribe,"tcp://${webcam.provider.ip}:${webcam.provider.port}"
+webcam.provider.c_ip,"${control.ip}"
 leap.provider.verbose,"true"
 leap.provider.decay_time,1.0,seconds
 leap.provider.ip,"${control.ip}"
@@ -141,10 +140,10 @@ proxysensors.verbose,false
 gloves.publisher.dev_path,"/dev/ttyACM0"
 gloves.publisher.verbose,"true"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
-leg1.touchpressure,900
-leg2.touchpressure,900
-leg3.touchpressure,900
-leg4.touchpressure,900
+leg1.touchpressure,750
+leg2.touchpressure,750
+leg3.touchpressure,750
+leg4.touchpressure,750
 ik.epsilon,1e-2
 ik.steps,4
 ik.speed,4,"inches/sec"
