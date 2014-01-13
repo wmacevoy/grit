@@ -100,8 +100,8 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
-	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
+	capture.set(CV_CAP_PROP_FRAME_WIDTH, 160);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 120);
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
@@ -111,6 +111,7 @@ int main(int argc, char** argv)
 	if(verbose) std::cout << "Color: " << frame.channels() << " " << frame.depth() << std::endl;
 	if(verbose) std::cout << "Gray: " << gray.channels() << " " << gray.depth() << std::endl;
 
+	int count = 0;
 	while(!die)
 	{
 		capture >> frame;
@@ -121,14 +122,32 @@ int main(int argc, char** argv)
 			detectObjects(gray, gray);
 		}
 
-		frame.reshape(0,1);
-		gray.reshape(0,1);
-
-		Mat gray2;
-		resize(gray, gray2, Size(80, 60), 0, 0, CV_INTER_LINEAR);
-		gray2.reshape(0,1);
 		memcpy(p->data, &areaOfFrame, sizeof(uint8_t));
-		memcpy(p->data + 1, gray2.data, gray2.total());
+
+		switch(areaOfFrame) {
+		case 1:
+			for(int i = 0; i < gray.cols / 2; ++i)
+				for(int j = 0; j < gray.rows / 2; ++j)
+					p->data[1 + count++] = gray.at<uchar>(Point(i,j));
+			break;
+		case 2:
+			for(int i = gray.cols / 2; i < gray.cols; ++i)
+				for(int j = 0; j < gray.rows / 2; ++j)
+					p->data[1 + count++] = gray.at<uchar>(Point(i,j));
+			break;
+		case 3:
+			for(int i = 0; i < gray.cols / 2; ++i)
+				for(int j = gray.rows / 2; j < gray.rows; ++j)
+					p->data[1 + count++] = gray.at<uchar>(Point(i,j));
+			break;
+		case 4:
+			for(int i = gray.cols / 2; i < gray.cols; ++i)
+				for(int j = gray.rows / 2; j < gray.rows; ++j)
+					p->data[1 + count++] = gray.at<uchar>(Point(i,j));
+			break;
+		}
+		count = 0;
+
 		SDLNet_UDP_Send(sd, -1, p);
 
 		++areaOfFrame;
