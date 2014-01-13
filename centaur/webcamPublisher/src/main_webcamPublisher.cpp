@@ -7,7 +7,7 @@
 #include <signal.h>
 #include <thread>
 #include <chrono>
-#include <zmq.h>
+#include "SDL/SDL_net.h"
 #include "Configure.h"
 
 Configure cfg;
@@ -34,21 +34,6 @@ void detectObjects(Mat& frame, const Mat& gray_img) {
 	}
 }
 
-void publish_mat(Mat& mat, void* zmq_pub)
-{
-	zmq_msg_t msg;
-	int rc = zmq_msg_init_size(&msg, mat.total() * mat.elemSize());
-	memcpy(zmq_msg_data(&msg), mat.data, mat.total() * mat.elemSize());
-	if(rc == 0)
-	{
-		zmq_sendmsg(zmq_pub, &msg, ZMQ_DONTWAIT);
-	}
-
-	if(verbose) std::cout << "Sent: " << rc << std::endl;
-
-	zmq_msg_close(&msg);
-}
-
 void quitproc(int param)
 {
 	std::cout << "\nQuitting..." << std::endl;
@@ -66,15 +51,38 @@ int main(int argc, char** argv)
 	int index = cfg.num("webcam.provider.index", 0);
 	int sleep_time = cfg.num("webcam.provider.sleep_time");
 	bool detect = cfg.flag("webcam.provider.detect");
-	std::string address = cfg.str("webcam.provider.publish").c_str();
+	std::string address = cfg.str("webcam.provider.ip").c_str();
+	int port = (int)cfg.num("webcam.provider.port");
 
-	int hwm = 1;
-	int linger = 25;
-	int retries = 5;
-	bool CorG = false, connected = false;
+	UDPsocket sd;
+	UDPpacket* p;
+	IPaddress ip;
+
+	bool connected = false;
 	std::string cascadeName;
 	Mat frame;
 	Mat gray;
+
+	//Initialize SDL_net
+	SDLNet_Init();
+	
+	
+	sd = SDLNet_UDP_Open(0);	
+	if(!sd) {
+    printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+  }
+
+	if (SDLNet_ResolveHost(&ip, address.c_str(), port) == -1)
+	{
+		fprintf(stderr, "SDLNet_ResolveHost(%s %d): %s\n", argv[1], atoi(argv[2]), SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+	p = SDLNet_AllocPacket(4804);
+
+	p->address.host = ip.host;
+	p->address.port = ip.port;
+	p->len = 4800;// + sizeof(uint32_t);
 
 	if(detect) {
 		cascadeName = cfg.str("webcam.provider.cascade");
@@ -95,32 +103,8 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	capture.set(CV_CAP_PROP_FRAME_WIDTH, 320);
-	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
-
-	//Setup ZMQ
-	//tcp://*:9993
-	void* context_mat = zmq_ctx_new ();
-	void* rep_mat = zmq_socket(context_mat, ZMQ_REP);
-
-	while(!connected && retries--) {
-		if(zmq_setsockopt(rep_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-			if(zmq_setsockopt(rep_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-				if(zmq_setsockopt(rep_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-					if(zmq_bind(rep_mat, address.c_str()) == 0) {
-						connected = true;
-						std::cout << "Socket is bound and listening!" << std::endl;
-					}
-				}
-			}	
-		}
-		if(retries <= 0) {
-			int en=zmq_errno();
-	  		std::cout << "TCP Error Number " << en << " " << zmq_strerror(en) << std::endl;
-			die = true;
-		}
-		std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	}
+	capture.set(CV_CAP_PROP_FRAME_WIDTH, 160);
+	capture.set(CV_CAP_PROP_FRAME_HEIGHT, 120);
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
@@ -133,45 +117,34 @@ int main(int argc, char** argv)
 	while(!die)
 	{
 		capture >> frame;
+		gray = frame.clone();
 		cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			if(CorG == 0) {
-				detectObjects(frame, gray);			
-			}
-			else {
-				detectObjects(gray, gray);
-			}
+			detectObjects(gray, gray);
 		}
 
 		frame.reshape(0,1);
 		gray.reshape(0,1);
 
-		if(zmq_recv(rep_mat, &CorG, sizeof(bool), ZMQ_DONTWAIT) == 1) {
-			switch(CorG)
-			{
-			case 0:		
-				publish_mat(frame, rep_mat);
-				break;
+		Mat gray2;
+		resize(gray, gray2, Size(80, 60), 0, 0, CV_INTER_LINEAR);
+		memcpy(p->data, gray2.data, gray2.total());
+		SDLNet_UDP_Send(sd, -1, p);
 
-			case 1:
-				publish_mat(gray, rep_mat);
-				break;
-			}
-		}
+
 		waitKey(sleep_time);
 	}
 
 	//Cleanup
-	
 	std::cout << "releasing capture and freeing mat memory..." << std::endl;
 	capture.release();
 	frame.release();
 	gray.release();
 	std::cout << "--done!" << std::endl;
-	std::cout << "closing and destroying zmq..." << std::endl;
-	zmq_close(rep_mat);
-	zmq_ctx_destroy(context_mat);
+	std::cout << "closing SDL and freeing packet..." << std::endl;
+	SDLNet_FreePacket(p);
+	SDLNet_Quit();
 	std::cout << "--done!" << std::endl;
 	return 0;
 }
