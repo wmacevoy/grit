@@ -78,8 +78,6 @@ void run()
   commander.rxTimeout = 1e6;
   commander.start();
   pserver=&commander;
-  
-  signal(SIGINT, SigIntHandler);
 
   while (commander.running) {
     string command;
@@ -96,6 +94,11 @@ int main(int argc, char **argv)
   cfg.args("commander.",argv);
   if (argc == 1) cfg.load("config.csv");
   if (cfg.flag("commander.verbose",false)) cfg.show();
+
+	signal(SIGINT, SigIntHandler);
+	signal(SIGTERM, SigIntHandler);
+  signal(SIGQUIT, SigIntHandler);
+
   run();
   cout << "done" << endl;
   return 0;

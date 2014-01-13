@@ -40,7 +40,6 @@ const int lidarLine = 105 * 0.43;
 
 //////////SDL
 UDPsocket sd;
-IPaddress srvadd;
 UDPpacket* p;
 
 std::string convstr(const float t) {
@@ -97,22 +96,18 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("webcam.requester.verbose", false);
 	if (verbose) cfg.show();
 
-	int sleep_time_color = cfg.num("webcam.requester.sleep_time_color");
 	int sleep_time_gray = cfg.num("webcam.requester.sleep_time_gray");
 	bool calibration = cfg.flag("webcam.requester.calibration", false);
 	
 	int hwm = 10;
 	int linger = 25;
-	int rcc = 0;
-	int rcl = 0;
+	int rc = 0;
 	int index = 0;
 	int imgNum = 0;
 	int sleep_time = sleep_time_gray;
 	int t1 = 0, t2 = 0;
-	char requestType  = 'g';
-	bool requesting = true;
+
 	float timeOut = 3.0;
-	Mat color(normalHeight, normalWidth, CV_8UC3);
 	Mat gray(normalHeight, normalWidth, CV_8UC1);
 
 	std::string winName = "ICU";
@@ -124,19 +119,18 @@ int main(int argc, char** argv)
 	double fontScale = 0.35;
 	int thickness = 1;
 
-	std::string ip1 = cfg.str("webcam.provider.subscribe");
+	int port = (int)cfg.num("webcam.provider.port");
 	std::string ip2 = cfg.str("lidar.provider.subscribe");
-	std::string ip3 = ip1;
-	ip1+="9993";
 	
+	//Initialize SDL_net
 	SDLNet_Init();
-	sd = SDLNet_UDP_Open(9993);
+	sd = SDLNet_UDP_Open(port);
 	p = SDLNet_AllocPacket(4800);
+	if(!sd) {
+    printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+  }
 
-	void* context_mat = zmq_ctx_new ();
 	void* context_lidar = zmq_ctx_new ();
-
-	void* req_mat = zmq_socket(context_mat, ZMQ_REQ);
 	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);	
 
 	signal(SIGINT, quitproc);
@@ -163,164 +157,86 @@ int main(int argc, char** argv)
 
 	zmq_msg_t msg;
 	while(!die) {
-		//if(requesting) rcc = zmq_send(req_mat, &requestType, sizeof(char), ZMQ_DONTWAIT);
-		//else rcc = 0;
-		if (1) {
-			rcc = zmq_msg_init (&msg);
-			if(rcc == 0) {			
-				switch(requestType) {
-				case 'c':
-					rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);
-					if (verbose) {
-					  std::cout << "t=" << lidarMessage.t << " waist=" <<
-					    lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
-					    " data[0]=" << lidarMessage.data[0] << std::endl;
+		rc = SDLNet_UDP_Recv(sd, p);
+		if(p->len > 4000) {
+			zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
+			if (verbose) {
+				std::cout << "t=" << lidarMessage.t << " waist=" <<
+				  lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
+				  
+				  " data[0]=" << lidarMessage.data[0] << std::endl;
+			}	
+
+			t1 = time(0);
+			memcpy(gray.data, p->data, p->len);
+			line(gray, pt1, pt2, Scalar(50, 50, 50));
+			line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
+			line(gray, tick5r1, tick5r2, Scalar(0, 0, 0));
+			line(gray, tick10l1, tick10l2, Scalar(0, 0, 0));
+			line(gray, tick10r1, tick10r2, Scalar(0, 0, 0));
+
+			for(int i = 0; i < normalWidth; ++i) {
+				int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
+				if(ft <= 10) {
+					int y = lidarLine - ft;
+					if(y <= normalHeight && y >= 0) { 							
+						line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
 					}
-
-					if(rcc == color.total() * color.elemSize()) {
-						t1 = time(0);
-						memcpy(color.data, zmq_msg_data(&msg), zmq_msg_size(&msg));
-						line(color, pt1, pt2, Scalar(50, 50, 50));
-						line(color, tick5l1, tick5l2, Scalar(0, 0, 0));
-						line(color, tick5r1, tick5r2, Scalar(0, 0, 0));
-						line(color, tick10l1, tick10l2, Scalar(0, 0, 0));
-						line(color, tick10r1, tick10r2, Scalar(0, 0, 0));
-
-						for(int i = 0; i < normalWidth; ++i) {
-						  int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
-							if(ft <= 10) {
-								int y = lidarLine - ft;
-								if(y <= normalHeight && y >= 0) { 							
-									line(color, Point(i, y), Point(i, y), Scalar(0, 0, 0));
-								}
-							}
-						}	
-
-						if(inside) {
-							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-							text = at(index);
-							putText(color, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index <<
-									"  sleep_time: " << sleep_time << std::endl;
-						}
-						imshow(winName, color);
-					}
-					break;
-				case 'g':
-					//rcc = zmq_recvmsg(req_mat, &msg, ZMQ_DONTWAIT);
-					SDLNet_UDP_Recv(sd, p);
-					if(p->len > 4000) {
-					zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
-					if (verbose) {
-					  std::cout << "t=" << lidarMessage.t << " waist=" <<
-					    lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
-					    
-					    " data[0]=" << lidarMessage.data[0] << std::endl;
-					}	
-					if(1) {
-						t1 = time(0);
-						memcpy(gray.data, p->data, p->len);
-						line(gray, pt1, pt2, Scalar(50, 50, 50));
-						line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
-						line(gray, tick5r1, tick5r2, Scalar(0, 0, 0));
-						line(gray, tick10l1, tick10l2, Scalar(0, 0, 0));
-						line(gray, tick10r1, tick10r2, Scalar(0, 0, 0));
-
-						for(int i = 0; i < normalWidth; ++i) {
-						  int ft = lidarMessage.data[ind_max - ((i - x_min) * (ind_max - ind_min) / (x_max - x_min))]/12.0;
-							if(ft <= 10) {
-								int y = lidarLine - ft;
-								if(y <= normalHeight && y >= 0) { 							
-									line(gray, Point(i, y), Point(i, y), Scalar(0, 0, 0));
-								}
-							}
-						}				
-
-						if(inside) {	
-							index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
-							//index = 500 + mx;
-							text = at(index);
-							putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
-							if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
-									"  sleep_time: " << sleep_time << std::endl;
-						}
-						imshow(winName, gray);
-					}
-					}
-					break;
 				}
+			}				
+
+			if(inside) {	
+				index = ind_max - ((mx - x_min) * (ind_max - ind_min) / (x_max - x_min));
+				//index = 500 + mx;
+				text = at(index);
+				putText(gray, text, textOrg, fontFace, fontScale, Scalar::all(0), thickness, 8);
+				if(calibration) std::cout << "Pixel: " << mx << "   Index: " << index << 
+						"  sleep_time: " << sleep_time << std::endl;
 			}
+			imshow(winName, gray);
 		}
-	}
-		zmq_msg_close(&msg);
+
 		char c = waitKey(sleep_time);
-		if(c == 't') {
-			if(requestType == 'c') {
-				requestType = 'g';
-				sleep_time = sleep_time_gray;
-			} else {
-				requestType = 'c';
-				sleep_time = sleep_time_color;
-			}
-		}
-		else if(c =='p') requesting = !requesting;
-		else if(c == 'q') die = true;
+		if(c == 'q') die = true;
 		else if(c == 's') {
 			imageName = "image";
 			imageName += itoa(imgNum++);
 			imageName += ".jpg";
-			if(requestType == 'g') {
-				imwrite(imageName,  gray);
-			}
-			else {
-				imwrite(imageName,  color);
-			}
+			imwrite(imageName,  gray);
 		}
+
 		t2 = time(0);
 		if(t2 - t1 > timeOut) {
-			zmq_close(req_mat);
 			zmq_close(sub_lidar);
-			req_mat = zmq_socket(context_lidar, ZMQ_REQ);
-			sub_lidar = zmq_socket(context_mat, ZMQ_SUB);
+			sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
 		
-			if(zmq_setsockopt(req_mat, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-				if(zmq_setsockopt(req_mat, ZMQ_SNDHWM, &hwm, sizeof(hwm)) == 0) {
-					if(zmq_setsockopt(req_mat, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-						rcc = zmq_connect(req_mat, ip3.c_str());
-					}
-				}
-			}
 			if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {
 				if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
 					if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-						rcc = zmq_connect(sub_lidar, ip2.c_str());
+						rc = zmq_connect(sub_lidar, ip2.c_str());
 					}
 				}
 			}
-			if(rcc == 0) {
+			if(rc == 0) {
 				std::cout << "Connection successfully set/reset" << std::endl;				
 				t1 = time(0);
 			}
 			else std::cout << "Connection un-successfully set/reset" << std::endl;
-			
-		}
-	
+		}	
+	}
 
-	SDLNet_FreePacket(p);
-	SDLNet_Quit();
 	std::cout << std::endl << "Quitting..." << std::endl;
 	std::cout << "destroying window and freeing mat memory..." << std::endl;
 	destroyWindow(winName);
-	color.release();
 	gray.release();
 	std::cout << "--done!" << std::endl;
 	std::cout << "closing and destroying zmq..." << std::endl;
-	zmq_close(req_mat);
 	zmq_close(sub_lidar);
-	zmq_ctx_destroy(context_mat);
 	zmq_ctx_destroy(context_lidar);
 	std::cout << "--done!" << std::endl;
-
+	std::cout << "closing SDL and freeing packet..." << std::endl;
+	SDLNet_FreePacket(p);
+	SDLNet_Quit();
+	std::cout << "--done!" << std::endl;
 	return 0;
 }
