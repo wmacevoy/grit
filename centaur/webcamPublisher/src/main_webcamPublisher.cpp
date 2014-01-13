@@ -51,7 +51,7 @@ int main(int argc, char** argv)
 	int index = (int)cfg.num("webcam.provider.index", 0);
 	int sleep_time = (int)cfg.num("webcam.provider.sleep_time");
 	bool detect = cfg.flag("webcam.provider.detect");
-	std::string address = cfg.str("webcam.provider.ip").c_str();
+	std::string address = cfg.str("webcam.provider.c_ip").c_str();
 	int port = (int)cfg.num("webcam.provider.port");
 
 	UDPsocket sd;
@@ -70,14 +70,13 @@ int main(int argc, char** argv)
 
 	//Initialize SDL_net
 	SDLNet_Init();
-	
-	//sd = SDLNet_UDP_Open(0);	
-	while(!(sd = SDLNet_UDP_Open(0))) {
+		
+	while(!(sd = SDLNet_UDP_Open(port))) {
     printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
   }
 
-	while(SDLNet_ResolveHost(&ip, address.c_str(), port) == -1) {
+	while(SDLNet_ResolveHost(&ip, "192.168.2.113", port) == -1) {
 		fprintf(stderr, "SDLNet_ResolveHost(%s %d): %s\n", address.c_str(), port, SDLNet_GetError());
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
