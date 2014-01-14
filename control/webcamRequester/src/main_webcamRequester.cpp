@@ -132,7 +132,7 @@ int main(int argc, char** argv)
 	
 	//Initialize SDL_net
 	SDLNet_Init();
-	while(!(sd = SDLNet_UDP_Open(port))) {
+	while(!(sd = SDLNet_UDP_Open(port)) && !die) {
     printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
