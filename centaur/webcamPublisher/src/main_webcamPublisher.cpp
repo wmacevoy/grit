@@ -2,6 +2,8 @@
 #include "/usr/include/opencv2/objdetect/objdetect.hpp"
 #include "/usr/include/opencv2/highgui/highgui.hpp"
 #include "/usr/include/opencv2/imgproc/imgproc.hpp"
+#include "opencv2/features2d/features2d.hpp"
+#include "opencv2/calib3d/calib3d.hpp"
 
 #include <iostream>
 #include <signal.h>
@@ -17,22 +19,6 @@ using namespace cv;
 volatile bool die = false;
 bool verbose = false;
 CascadeClassifier cc;
-
-void detectObjects(Mat& frame, const Mat& gray_img) {
-	std::vector<Rect> objects;	
-	Mat temp;
-
-	temp = gray_img.clone();
-	
-	equalizeHist( temp, temp );
-	
-	cc.detectMultiScale( temp, objects, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(25, 25) );
-
-	for( size_t i = 0; i < objects.size(); i++ ) {
-		Point center( objects[i].x + objects[i].width*0.5, objects[i].y + objects[i].height*0.5 );
-		ellipse( frame, center, Size( objects[i].width*0.5, objects[i].height*0.5), 0, 0, 360, Scalar( 255, 0, 255 ), 4, 8, 0 );
-	}
-}
 
 void quitproc(int param)
 {
@@ -54,15 +40,36 @@ int main(int argc, char** argv)
 	std::string address = cfg.str("webcam.provider.c_ip").c_str();
 	int port = (int)cfg.num("webcam.provider.port");
 
+	//SDL items
 	UDPsocket sd;
 	UDPpacket* p;
 	IPaddress ip;
 
+	//SURF items
+	int minHessian = 400;
+	int minGoodMatches = 40; //The minimum number of matches necessary to be a detected object.  Needs to be found 40 is just a placeholder.
+	double maxDist = 0.0, minDist = 100.0;
+	std::vector<Mat> detectableObjects;
+	std::vector<KeyPoint> sceneKeypoints;
+	std::vector<std::vector<KeyPoint> > detectableKeypoints;
+	SurfFeatureDetector detector(minHessian);
+	SurfDescriptorExtractor extractor;
+  	Mat descriptors_object, descriptors_scene;
+	FlannBasedMatcher matcher;
+	std::vector< DMatch > matches;
+	std::vector< DMatch > good_matches;
+	Mat img_matches;
+	std::vector<Point2f> obj;
+	std::vector<Point2f> scene;
+	
+	
+
+	//Image items
 	uint8_t areaOfFrame = 1;
 	bool connected = false;
 	std::string cascadeName;
 	Mat frame;
-	Mat gray;
+	Mat gray;	
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
@@ -85,17 +92,6 @@ int main(int argc, char** argv)
 	p->address.host = ip.host;
 	p->address.port = ip.port;
 	p->len = 4800 + sizeof(uint8_t);
-
-	if(detect) {
-		cascadeName = cfg.str("webcam.provider.cascade");
-		if(!cc.load(cascadeName)) {
-			std::cout << "Could not load cascade. Object detection mode set to false..." << std::endl;
-			detect = false;		
-		}
-		else {
-			std::cout << "Loaded cascade:" << cascadeName << std::endl;
-		}
-	}
 	
 	VideoCapture capture(index);
 	if(!capture.isOpened())
@@ -119,7 +115,61 @@ int main(int argc, char** argv)
 		cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			detectObjects(gray, gray);
+			for(int i = 0; i < detectableObjects.size(); ++i) {
+				//Detect keypoints
+				detector.detect( detectableObjects[i], detectableKeypoints[i]);
+				detector.detect( gray, sceneKeypoints);
+
+				//Calculate descriptors
+				extractor.compute(detectableObjects[i], detectableKeypoints[i], descriptors_object);
+				extractor.compute(gray, sceneKeypoints, descriptors_scene);
+
+				//Matching descriptor vectors using FLANN matcher
+				matcher.match(descriptors_object, descriptors_scene, matches);
+				
+				for(int i = 0; i < descriptors_object.rows; i++) {
+					double dist = matches[i].distance;
+					if(dist < minDist) minDist = dist;
+					if(dist > maxDist) maxDist = dist;
+				}
+
+				//Get only good matches 3*min
+				for(int i = 0; i < descriptors_object.rows; i++) {
+					if(matches[i].distance < 3*minDist){
+						good_matches.push_back( matches[i]);
+					}
+				}
+
+				if(good_matches.size() >= minGoodMatches) {
+					drawMatches(detectableObjects[i], detectableKeypoints[i], gray, sceneKeypoints,
+						       good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
+						       vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+
+					//Homography
+					Mat H = findHomography(obj, scene, RANSAC);
+
+					//-- Get the corners from the image_1 ( the object to be "detected" )
+					std::vector<Point2f> obj_corners(4);
+					obj_corners[0] = Point(0,0); 
+					obj_corners[1] = Point(detectableObjects[i].cols, 0);
+					obj_corners[2] = Point(detectableObjects[i].cols, detectableObjects[i].rows); 
+					obj_corners[3] = Point(0, detectableObjects[i].rows);
+					std::vector<Point2f> scene_corners(4);
+
+					perspectiveTransform(obj_corners, scene_corners, H);
+
+
+					//-- Draw lines between the corners (the mapped object in the scene - image_2 )
+					Point2f offset( (float)detectableObjects[i].cols, 0);
+					line( img_matches, scene_corners[0] + offset, scene_corners[1] + offset, Scalar(0, 255, 0), 4 );
+					line( img_matches, scene_corners[1] + offset, scene_corners[2] + offset, Scalar( 0, 255, 0), 4 );
+					line( img_matches, scene_corners[2] + offset, scene_corners[3] + offset, Scalar( 0, 255, 0), 4 );
+					line( img_matches, scene_corners[3] + offset, scene_corners[0] + offset, Scalar( 0, 255, 0), 4 );
+
+					//-- Show detected matches
+					imshow( "Good Matches & Object detection", img_matches );
+				}
+			}
 		}
 
 		memcpy(p->data, &areaOfFrame, sizeof(uint8_t));
