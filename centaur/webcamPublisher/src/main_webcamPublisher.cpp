@@ -47,22 +47,20 @@ int main(int argc, char** argv)
 
 	//SURF items
 	int minHessian = 400;
-	int minGoodMatches = 40; //The minimum number of matches necessary to be a detected object.  Needs to be found 40 is just a placeholder.
+	int minGoodMatches = 50; //The minimum number of matches necessary to be a detected object.  Needs to be found 40 is just a placeholder.
 	double maxDist = 0.0, minDist = 100.0;
 	std::vector<Mat> detectableObjects;
 	std::vector<KeyPoint> sceneKeypoints;
-	std::vector<std::vector<KeyPoint> > detectableKeypoints;
+	std::vector<KeyPoint> detectableKeypoints;
 	SurfFeatureDetector detector(minHessian);
 	SurfDescriptorExtractor extractor;
   	Mat descriptors_object, descriptors_scene;
+	Mat img_matches;
 	FlannBasedMatcher matcher;
 	std::vector< DMatch > matches;
 	std::vector< DMatch > good_matches;
-	Mat img_matches;
 	std::vector<Point2f> obj;
 	std::vector<Point2f> scene;
-	
-	
 
 	//Image items
 	uint8_t areaOfFrame = 1;
@@ -107,6 +105,16 @@ int main(int argc, char** argv)
 	if(verbose) std::cout << "Color: " << frame.channels() << " " << frame.depth() << std::endl;
 	if(verbose) std::cout << "Gray: " << gray.channels() << " " << gray.depth() << std::endl;
 
+	//Load detectableObjects and detectableKeypoints here
+	//Testing
+		detectableObjects.push_back(imread("/home/fit-pc/centaur/webcamPublisher/detectableHand.jpg", CV_LOAD_IMAGE_GRAYSCALE));
+	
+	//If something went wrong loading the images or keypoints, turn off detection	
+	/*if(detectableObjects.size() <= 0 || detectableObjects.size() != detectableKeypoints.size()) {
+		detect = false;
+		std::cout << "detecting is off...\n";
+	}*/
+
 	int count = 0;
 	while(!die)
 	{
@@ -115,13 +123,16 @@ int main(int argc, char** argv)
 		cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			for(int i = 0; i < detectableObjects.size(); ++i) {
-				//Detect keypoints
-				detector.detect( detectableObjects[i], detectableKeypoints[i]);
-				detector.detect( gray, sceneKeypoints);
+			//Only detect the keypoints for the scene once
+			detector.detect(gray, sceneKeypoints);
 
+			for(int i = 0; i < detectableObjects.size(); ++i) {
+				//Detect keypoints, this is used as testing, we will make a document with all the keypoins
+				//that corresponds with detectableObjects and load in start
+				detector.detect(detectableObjects[i], detectableKeypoints);
+				
 				//Calculate descriptors
-				extractor.compute(detectableObjects[i], detectableKeypoints[i], descriptors_object);
+				extractor.compute(detectableObjects[i], detectableKeypoints, descriptors_object);
 				extractor.compute(gray, sceneKeypoints, descriptors_scene);
 
 				//Matching descriptor vectors using FLANN matcher
@@ -136,17 +147,18 @@ int main(int argc, char** argv)
 				//Get only good matches 3*min
 				for(int i = 0; i < descriptors_object.rows; i++) {
 					if(matches[i].distance < 3*minDist){
-						good_matches.push_back( matches[i]);
+						good_matches.push_back(matches[i]);
 					}
 				}
 
 				if(good_matches.size() >= minGoodMatches) {
-					drawMatches(detectableObjects[i], detectableKeypoints[i], gray, sceneKeypoints,
+					std::cout << "match\n";
+					drawMatches(detectableObjects[i], detectableKeypoints, gray, sceneKeypoints,
 						       good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
 						       vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
 					//Homography
-					Mat H = findHomography(obj, scene, RANSAC);
+					/*Mat H = findHomography(obj, scene, RANSAC);
 
 					//-- Get the corners from the image_1 ( the object to be "detected" )
 					std::vector<Point2f> obj_corners(4);
@@ -166,7 +178,7 @@ int main(int argc, char** argv)
 					line( img_matches, scene_corners[2] + offset, scene_corners[3] + offset, Scalar( 0, 255, 0), 4 );
 					line( img_matches, scene_corners[3] + offset, scene_corners[0] + offset, Scalar( 0, 255, 0), 4 );
 
-					//-- Show detected matches
+					//-- Show detected matches*/
 					imshow( "Good Matches & Object detection", img_matches );
 				}
 			}
@@ -211,8 +223,14 @@ int main(int argc, char** argv)
 	//Cleanup
 	std::cout << "releasing capture and freeing mat memory..." << std::endl;
 	capture.release();
+	descriptors_object.release();
+	descriptors_scene.release();
+	img_matches.release();
 	frame.release();
 	gray.release();
+	for(int i = 0; i < detectableObjects.size(); ++i) {
+		detectableObjects[i].release();	
+	}
 	std::cout << "--done!" << std::endl;
 	std::cout << "closing SDL and freeing packet..." << std::endl;
 	SDLNet_FreePacket(p);
