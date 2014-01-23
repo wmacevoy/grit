@@ -135,51 +135,55 @@ int main(int argc, char** argv)
 				extractor.compute(detectableObjects[i], detectableKeypoints, descriptors_object);
 				extractor.compute(gray, sceneKeypoints, descriptors_scene);
 
-				//Matching descriptor vectors using FLANN matcher
-				matcher.match(descriptors_object, descriptors_scene, matches);
+				if(!descriptors_object.empty() && !descriptors_scene.empty()) {
+					//Matching descriptor vectors using FLANN matcher
+					matcher.match(descriptors_object, descriptors_scene, matches);
 				
-				for(int i = 0; i < descriptors_object.rows; i++) {
-					double dist = matches[i].distance;
-					if(dist < minDist) minDist = dist;
-					if(dist > maxDist) maxDist = dist;
-				}
-
-				//Get only good matches 3*min
-				for(int i = 0; i < descriptors_object.rows; i++) {
-					if(matches[i].distance < 3*minDist){
-						good_matches.push_back(matches[i]);
+					for(int i = 0; i < descriptors_object.rows; i++) {
+						double dist = matches[i].distance;
+						if(dist < minDist) minDist = dist;
+						if(dist > maxDist) maxDist = dist;
 					}
-				}
 
-				if(good_matches.size() >= minGoodMatches) {
-					std::cout << "match\n";
-					drawMatches(detectableObjects[i], detectableKeypoints, gray, sceneKeypoints,
-						       good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
-						       vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
+					//Get only good matches 3*min
+					for(int i = 0; i < descriptors_object.rows; i++) {
+						if(matches[i].distance < 3*minDist){
+							good_matches.push_back(matches[i]);
+						}
+					}
 
-					//Homography
-					/*Mat H = findHomography(obj, scene, RANSAC);
+					if(good_matches.size() >= minGoodMatches) {
+						std::cout << "match\n";
+						drawMatches(detectableObjects[i], detectableKeypoints, gray, sceneKeypoints,
+							       good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
+							       vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
-					//-- Get the corners from the image_1 ( the object to be "detected" )
-					std::vector<Point2f> obj_corners(4);
-					obj_corners[0] = Point(0,0); 
-					obj_corners[1] = Point(detectableObjects[i].cols, 0);
-					obj_corners[2] = Point(detectableObjects[i].cols, detectableObjects[i].rows); 
-					obj_corners[3] = Point(0, detectableObjects[i].rows);
-					std::vector<Point2f> scene_corners(4);
+						//Homography
+						/*Mat H = findHomography(obj, scene, RANSAC);
 
-					perspectiveTransform(obj_corners, scene_corners, H);
+						//-- Get the corners from the image_1 ( the object to be "detected" )
+						std::vector<Point2f> obj_corners(4);
+						obj_corners[0] = Point(0,0); 
+						obj_corners[1] = Point(detectableObjects[i].cols, 0);
+						obj_corners[2] = Point(detectableObjects[i].cols, detectableObjects[i].rows); 
+						obj_corners[3] = Point(0, detectableObjects[i].rows);
+						std::vector<Point2f> scene_corners(4);
+
+						perspectiveTransform(obj_corners, scene_corners, H);
 
 
-					//-- Draw lines between the corners (the mapped object in the scene - image_2 )
-					Point2f offset( (float)detectableObjects[i].cols, 0);
-					line( img_matches, scene_corners[0] + offset, scene_corners[1] + offset, Scalar(0, 255, 0), 4 );
-					line( img_matches, scene_corners[1] + offset, scene_corners[2] + offset, Scalar( 0, 255, 0), 4 );
-					line( img_matches, scene_corners[2] + offset, scene_corners[3] + offset, Scalar( 0, 255, 0), 4 );
-					line( img_matches, scene_corners[3] + offset, scene_corners[0] + offset, Scalar( 0, 255, 0), 4 );
+						//-- Draw lines between the corners (the mapped object in the scene - image_2 )
+						Point2f offset( (float)detectableObjects[i].cols, 0);
+						line( img_matches, scene_corners[0] + offset, scene_corners[1] + offset, Scalar(0, 255, 0), 4 );
+						line( img_matches, scene_corners[1] + offset, scene_corners[2] + offset, Scalar( 0, 255, 0), 4 );
+						line( img_matches, scene_corners[2] + offset, scene_corners[3] + offset, Scalar( 0, 255, 0), 4 );
+						line( img_matches, scene_corners[3] + offset, scene_corners[0] + offset, Scalar( 0, 255, 0), 4 );
 
-					//-- Show detected matches*/
-					imshow( "Good Matches & Object detection", img_matches );
+						//-- Show detected matches*/
+						imshow( "Good Matches & Object detection", img_matches );
+						matches.clear();
+						good_matches.clear();
+					}
 				}
 			}
 		}
