@@ -46,8 +46,8 @@ int main(int argc, char** argv)
 	IPaddress ip;
 
 	//SURF items
-	int minHessian = 400;
-	int minGoodMatches = 50; //The minimum number of matches necessary to be a detected object.  Needs to be found 40 is just a placeholder.
+	int minHessian = 100;
+	int minGoodMatches = 50; //The minimum number of matches necessary to be a detected object.  Needs to be found 50 is just a placeholder.
 	double maxDist = 0.0, minDist = 100.0;
 	std::vector<Mat> detectableObjects;
 	std::vector<KeyPoint> sceneKeypoints;
@@ -59,8 +59,8 @@ int main(int argc, char** argv)
 	FlannBasedMatcher matcher;
 	std::vector< DMatch > matches;
 	std::vector< DMatch > good_matches;
-	std::vector<Point2f> obj;
-	std::vector<Point2f> scene;
+	std::vector<Point2f> obj(4);
+	std::vector<Point2f> scene(4);
 
 	//Image items
 	uint8_t areaOfFrame = 1;
@@ -153,33 +153,11 @@ int main(int argc, char** argv)
 					}
 
 					if(good_matches.size() >= minGoodMatches) {
-						std::cout << "match\n";
 						drawMatches(detectableObjects[i], detectableKeypoints, gray, sceneKeypoints,
 							       good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
 							       vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
 
-						//Homography
-						/*Mat H = findHomography(obj, scene, RANSAC);
-
-						//-- Get the corners from the image_1 ( the object to be "detected" )
-						std::vector<Point2f> obj_corners(4);
-						obj_corners[0] = Point(0,0); 
-						obj_corners[1] = Point(detectableObjects[i].cols, 0);
-						obj_corners[2] = Point(detectableObjects[i].cols, detectableObjects[i].rows); 
-						obj_corners[3] = Point(0, detectableObjects[i].rows);
-						std::vector<Point2f> scene_corners(4);
-
-						perspectiveTransform(obj_corners, scene_corners, H);
-
-
-						//-- Draw lines between the corners (the mapped object in the scene - image_2 )
-						Point2f offset( (float)detectableObjects[i].cols, 0);
-						line( img_matches, scene_corners[0] + offset, scene_corners[1] + offset, Scalar(0, 255, 0), 4 );
-						line( img_matches, scene_corners[1] + offset, scene_corners[2] + offset, Scalar( 0, 255, 0), 4 );
-						line( img_matches, scene_corners[2] + offset, scene_corners[3] + offset, Scalar( 0, 255, 0), 4 );
-						line( img_matches, scene_corners[3] + offset, scene_corners[0] + offset, Scalar( 0, 255, 0), 4 );
-
-						//-- Show detected matches*/
+						//-- Show detected matches
 						imshow( "Good Matches & Object detection", img_matches );
 						matches.clear();
 						good_matches.clear();
