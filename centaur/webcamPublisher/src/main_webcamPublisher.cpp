@@ -15,6 +15,7 @@
 Configure cfg;
 
 using namespace cv;
+using namespace std;
 
 volatile bool die = false;
 bool verbose = false;
@@ -23,6 +24,70 @@ void quitproc(int param)
 {
 	std::cout << "\nQuitting..." << std::endl;
 	die = true;
+}
+
+bool findObjectSURF( Mat img_1, Mat img_2 )
+{
+   //-- Step 1: Detect the keypoints using SURF Detector
+  static int minHessian = 400;
+	static int minGoodMatches = 7;
+
+  SurfFeatureDetector detector( minHessian );
+
+  std::vector<KeyPoint> keypoints_1, keypoints_2;
+
+  detector.detect( img_1, keypoints_1 );
+  detector.detect( img_2, keypoints_2 );
+
+  //-- Step 2: Calculate descriptors (feature vectors)
+  SurfDescriptorExtractor extractor;
+
+  Mat descriptors_1, descriptors_2;
+
+  extractor.compute( img_1, keypoints_1, descriptors_1 );
+  extractor.compute( img_2, keypoints_2, descriptors_2 );
+
+	if(!descriptors_1.empty() && !descriptors_2.empty()) {
+		//-- Step 3: Matching descriptor vectors using FLANN matcher
+		FlannBasedMatcher matcher;
+		std::vector< DMatch > matches;
+		matcher.match( descriptors_1, descriptors_2, matches );
+
+		double max_dist = 0; double min_dist = 100;
+
+		//-- Quick calculation of max and min distances between keypoints
+		for( int i = 0; i < descriptors_1.rows; i++ )
+		{ double dist = matches[i].distance;
+		  if( dist < min_dist ) min_dist = dist;
+		  if( dist > max_dist ) max_dist = dist;
+		}
+
+		if(verbose) printf("-- Max dist : %f \n", max_dist );
+		if(verbose) printf("-- Min dist : %f \n", min_dist );
+
+		//-- Draw only "good" matches (i.e. whose distance is less than 1.2*min_dist )
+		//-- PS.- radiusMatch can also be used here.
+		std::vector< DMatch > good_matches;
+
+		for( int i = 0; i < descriptors_1.rows; i++ ) { 
+			if( matches[i].distance < 1.2*min_dist ) { 
+				good_matches.push_back( matches[i] ); 
+			}
+		}
+
+		if(good_matches.size() >= minGoodMatches) {
+			//-- Draw only "good" matches
+			Mat img_matches;
+			drawMatches( img_1, keypoints_1, img_2, keypoints_2,
+				           good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
+				           vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+
+			//-- Show detected matches
+			imshow( "Good Matches", img_matches );
+		}
+	}
+	
+	return true;
 }
 
 int main(int argc, char** argv)
@@ -45,21 +110,7 @@ int main(int argc, char** argv)
 	IPaddress ip;
 
 	//SURF items
-	int minHessian = 200;
-	int minGoodMatches = 1000; //The minimum number of matches necessary to be a detected object.  Needs to be found 50 is just a placeholder.
-	double maxDist = 0.0, minDist = 100.0;
 	std::vector<Mat> detectableObjects;
-	std::vector<KeyPoint> sceneKeypoints;
-	std::vector<KeyPoint> detectableKeypoints;
-	SurfFeatureDetector detector(minHessian);
-	SurfDescriptorExtractor extractor;
-  	Mat descriptors_object, descriptors_scene;
-	Mat img_matches;
-	FlannBasedMatcher matcher;
-	std::vector< DMatch > matches;
-	std::vector< DMatch > good_matches;
-	std::vector<Point2f> obj(4);
-	std::vector<Point2f> scene(4);
 
 	//Image items
 	uint8_t areaOfFrame = 1;
@@ -75,7 +126,7 @@ int main(int argc, char** argv)
 	//Initialize SDL_net
 	SDLNet_Init();
 		
-	while(!(sd = SDLNet_UDP_Open(port)) && !die) {
+	while(!(sd = SDLNet_UDP_Open(0)) && !die) {
 		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
 	}
@@ -106,7 +157,7 @@ int main(int argc, char** argv)
 
 	//Load detectableObjects and detectableKeypoints here
 	//Testing
-		detectableObjects.push_back(imread("/home/fit-pc/centaur/webcamPublisher/detectableGear.jpg", CV_LOAD_IMAGE_GRAYSCALE));
+		detectableObjects.push_back(imread("detectableGear.jpg", CV_LOAD_IMAGE_GRAYSCALE));
 	
 	//If something went wrong loading the images or keypoints, turn off detection	
 	/*if(detectableObjects.size() <= 0 || detectableObjects.size() != detectableKeypoints.size()) {
@@ -122,48 +173,7 @@ int main(int argc, char** argv)
 		cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			//Only detect the keypoints for the scene once
-			detector.detect(gray, sceneKeypoints);
-
-			for(int i = 0; i < detectableObjects.size(); ++i) {
-				//Detect keypoints, this is used as testing, we will make a document with all the keypoins
-				//that corresponds with detectableObjects and load in start
-				detector.detect(detectableObjects[i], detectableKeypoints);
-				
-				//Calculate descriptors
-				extractor.compute(detectableObjects[i], detectableKeypoints, descriptors_object);
-				extractor.compute(gray, sceneKeypoints, descriptors_scene);
-
-				if(!descriptors_object.empty() && !descriptors_scene.empty()) {
-					//Matching descriptor vectors using FLANN matcher
-					matcher.match(descriptors_object, descriptors_scene, matches);
-				
-					for(int i = 0; i < descriptors_object.rows; i++) {
-						double dist = matches[i].distance;
-						if(dist < minDist) minDist = dist;
-						if(dist > maxDist) maxDist = dist;
-					}
-
-					//Get only good matches 3*min
-					for(int i = 0; i < descriptors_object.rows; i++) {
-						if(matches[i].distance < 3*minDist){
-							good_matches.push_back(matches[i]);
-						}
-					}
-				
-					//Also need to check that the matches are in the same vicinity, radius TBD
-					if(good_matches.size() >= minGoodMatches) {
-						drawMatches(detectableObjects[i], detectableKeypoints, gray, sceneKeypoints,
-							       good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
-							       vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS);
-
-						//-- Show detected matches
-						imshow( "Good Matches & Object detection", img_matches );
-						matches.clear();
-						good_matches.clear();
-					}
-				}
-			}
+			findObjectSURF(detectableObjects[0], frame);
 		}
 
 		memcpy(p->data, &areaOfFrame, sizeof(uint8_t));
@@ -205,9 +215,6 @@ int main(int argc, char** argv)
 	//Cleanup
 	std::cout << "releasing capture and freeing mat memory..." << std::endl;
 	capture.release();
-	descriptors_object.release();
-	descriptors_scene.release();
-	img_matches.release();
 	frame.release();
 	gray.release();
 	for(int i = 0; i < detectableObjects.size(); ++i) {
