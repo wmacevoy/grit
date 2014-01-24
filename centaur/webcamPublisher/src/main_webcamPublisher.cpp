@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 	IPaddress ip;
 
 	//SURF items
-	int minHessian = 100;
+	int minHessian = 200;
 	int minGoodMatches = 50; //The minimum number of matches necessary to be a detected object.  Needs to be found 50 is just a placeholder.
 	double maxDist = 0.0, minDist = 100.0;
 	std::vector<Mat> detectableObjects;
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 
 	//Load detectableObjects and detectableKeypoints here
 	//Testing
-		detectableObjects.push_back(imread("/home/fit-pc/centaur/webcamPublisher/detectableHand.jpg", CV_LOAD_IMAGE_GRAYSCALE));
+		detectableObjects.push_back(imread("/home/fit-pc/centaur/webcamPublisher/detectableGear.jpg", CV_LOAD_IMAGE_GRAYSCALE));
 	
 	//If something went wrong loading the images or keypoints, turn off detection	
 	/*if(detectableObjects.size() <= 0 || detectableObjects.size() != detectableKeypoints.size()) {
@@ -151,7 +151,8 @@ int main(int argc, char** argv)
 							good_matches.push_back(matches[i]);
 						}
 					}
-
+				
+					//Also need to check that the matches are in the same vicinity, radius TBD
 					if(good_matches.size() >= minGoodMatches) {
 						drawMatches(detectableObjects[i], detectableKeypoints, gray, sceneKeypoints,
 							       good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
