@@ -18,7 +18,6 @@ using namespace cv;
 
 volatile bool die = false;
 bool verbose = false;
-CascadeClassifier cc;
 
 void quitproc(int param)
 {
@@ -47,7 +46,7 @@ int main(int argc, char** argv)
 
 	//SURF items
 	int minHessian = 200;
-	int minGoodMatches = 50; //The minimum number of matches necessary to be a detected object.  Needs to be found 50 is just a placeholder.
+	int minGoodMatches = 1000; //The minimum number of matches necessary to be a detected object.  Needs to be found 50 is just a placeholder.
 	double maxDist = 0.0, minDist = 100.0;
 	std::vector<Mat> detectableObjects;
 	std::vector<KeyPoint> sceneKeypoints;
