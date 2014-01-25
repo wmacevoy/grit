@@ -4,6 +4,7 @@
 #include "/usr/include/opencv2/imgproc/imgproc.hpp"
 #include "opencv2/features2d/features2d.hpp"
 #include "opencv2/calib3d/calib3d.hpp"
+#include "boost/filesystem.hpp"
 
 #include <iostream>
 #include <signal.h>
@@ -29,7 +30,7 @@ void quitproc(int param)
 bool findObjectSURF( Mat img_1, Mat img_2 )
 {
    //-- Step 1: Detect the keypoints using SURF Detector
-  static int minHessian = 400;
+  static int minHessian = 600;
 	static int minGoodMatches = 7;
 
   SurfFeatureDetector detector( minHessian );
@@ -66,7 +67,7 @@ bool findObjectSURF( Mat img_1, Mat img_2 )
 		if(verbose) printf("-- Min dist : %f \n", min_dist );
 
 		//-- Draw only "good" matches (i.e. whose distance is less than 1.2*min_dist )
-		//-- PS.- radiusMatch can also be used here.
+		//-- p.s.- radiusMatch can also be used here.
 		std::vector< DMatch > good_matches;
 
 		for( int i = 0; i < descriptors_1.rows; i++ ) { 
@@ -76,6 +77,8 @@ bool findObjectSURF( Mat img_1, Mat img_2 )
 		}
 
 		if(good_matches.size() >= minGoodMatches) {
+			//Find distances between keypoints and make sure there are enough in a given area
+
 			//-- Draw only "good" matches
 			Mat img_matches;
 			drawMatches( img_1, keypoints_1, img_2, keypoints_2,
@@ -157,7 +160,7 @@ int main(int argc, char** argv)
 
 	//Load detectableObjects and detectableKeypoints here
 	//Testing
-		detectableObjects.push_back(imread("detectableGear.jpg", CV_LOAD_IMAGE_GRAYSCALE));
+		detectableObjects.push_back(imread("detectableScissors3.png", CV_LOAD_IMAGE_GRAYSCALE));
 	
 	//If something went wrong loading the images or keypoints, turn off detection	
 	/*if(detectableObjects.size() <= 0 || detectableObjects.size() != detectableKeypoints.size()) {
@@ -173,7 +176,7 @@ int main(int argc, char** argv)
 		cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			findObjectSURF(detectableObjects[0], frame);
+			findObjectSURF(detectableObjects[0], gray);
 		}
 
 		memcpy(p->data, &areaOfFrame, sizeof(uint8_t));
