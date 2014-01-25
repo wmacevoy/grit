@@ -10,6 +10,8 @@
 #include <signal.h>
 #include <thread>
 #include <chrono>
+#include <string>
+#include <fstream>
 #include "SDL/SDL_net.h"
 #include "Configure.h"
 
@@ -17,6 +19,7 @@ Configure cfg;
 
 using namespace cv;
 using namespace std;
+namespace fs = boost::filesystem;
 
 volatile bool die = false;
 bool verbose = false;
@@ -93,6 +96,34 @@ bool findObjectSURF( Mat img_1, Mat img_2 )
 	return true;
 }
 
+void loadImagesAndKeypoints(std::string _path, std::vector<Mat>& detectableObjects, std::vector<KeyPoint>& detectableKeypoints) {
+	_path = _path.substr(0, _path.find_last_of('/', _path.size())) + "/detectables";
+	fs::path p(_path);
+
+	if(fs::exists(p)) {
+		if(fs::is_directory(p)) {
+			typedef std::vector<fs::path> vec;
+			vec v, w;
+
+			copy(fs::directory_iterator(p), fs::directory_iterator(), back_inserter(v));
+
+			sort(v.begin(), v.end());
+
+			for (vec::const_iterator it(v.begin()); it != v.end(); ++it) {
+				//Load images
+				if(fs::extension(*it) == ".png") {
+					std::string load = it->string();
+					detectableObjects.push_back(imread(load, CV_LOAD_IMAGE_GRAYSCALE));
+				}
+				//Load keypoint data
+				else if(fs::extension(*it) == ".kpd") {
+				
+				}				
+			}
+		}
+	}
+}
+
 int main(int argc, char** argv)
 {
 	cfg.path("../../setup");
@@ -114,6 +145,7 @@ int main(int argc, char** argv)
 
 	//SURF items
 	std::vector<Mat> detectableObjects;
+	std::vector<KeyPoint> detectableKeypoints;
 
 	//Image items
 	uint8_t areaOfFrame = 1;
@@ -159,14 +191,13 @@ int main(int argc, char** argv)
 	if(verbose) std::cout << "Gray: " << gray.channels() << " " << gray.depth() << std::endl;
 
 	//Load detectableObjects and detectableKeypoints here
-	//Testing
-		detectableObjects.push_back(imread("detectableScissors3.png", CV_LOAD_IMAGE_GRAYSCALE));
+	loadImagesAndKeypoints(fs::system_complete(argv[0]).string(), detectableObjects, detectableKeypoints);
 	
 	//If something went wrong loading the images or keypoints, turn off detection	
-	/*if(detectableObjects.size() <= 0 || detectableObjects.size() != detectableKeypoints.size()) {
+	if(detectableObjects.empty()) { // || detectableObjects.size() != detectableKeypoints.size()) {
 		detect = false;
 		std::cout << "detecting is off...\n";
-	}*/
+	}
 
 	int count = 0;
 	while(!die)
