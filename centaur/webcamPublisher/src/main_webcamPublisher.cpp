@@ -30,66 +30,104 @@ void quitproc(int param)
 	die = true;
 }
 
-bool findObjectSURF( Mat img_1, Mat img_2 )
+/*The following is sample code to write and read keypoint data
+ *We can use it when ready
+
+//TO WRITE
+vector<Keypoint> myKpVec;
+FileStorage fs(filename,FileStorage::WRITE);
+
+ostringstream oss;
+for(size_t i;i<myKpVec.size();++i) {
+    oss << i;
+    fs << oss.str() << myKpVec[i];
+}
+  fs.release();
+
+//TO READ
+vector<Keypoint> myKpVec;
+FileStorage fs(filename,FileStorage::READ);
+ostringstream oss;
+Keypoint aKeypoint;
+for(size_t i;i<myKpVec.size();<++i) {
+    oss << i;
+    fs[oss.str()] >> aKeypoint;
+    myKpVec.push_back(aKeypoint);
+}
+fs.release();
+
+*/
+
+//img_1 are detectable objects, img_2 is the scene/camera image
+//TODO: when ready, remove _ from _keypoints_2 and update code to keypoints_2[i]
+//      then remove keypoint_2 detection from below
+bool findObjectSURF( std::vector<Mat>& img_1, Mat img_2, std::vector<KeyPoint>& _keypoints_2 )
 {
    //-- Step 1: Detect the keypoints using SURF Detector
   static int minHessian = 600;
 	static int minGoodMatches = 7;
 
   SurfFeatureDetector detector( minHessian );
+	SurfDescriptorExtractor extractor;
 
   std::vector<KeyPoint> keypoints_1, keypoints_2;
+	
+	//Detect the keypoints in the scene only once
+	Mat descriptors_2;
+	detector.detect( img_2, keypoints_2 );
 
-  detector.detect( img_1, keypoints_1 );
-  detector.detect( img_2, keypoints_2 );
+	//Extract the descriptors from the scene only once
+	extractor.compute( img_2, keypoints_2, descriptors_2 );
 
-  //-- Step 2: Calculate descriptors (feature vectors)
-  SurfDescriptorExtractor extractor;
+	//Loop through the detectable objects and check for matches
+	for(int i = 0; i < img_1.size(); ++i) {
+		detector.detect( img_1[0], keypoints_1 );
 
-  Mat descriptors_1, descriptors_2;
+		//-- Step 2: Calculate descriptors (feature vectors)
+		Mat descriptors_1;
 
-  extractor.compute( img_1, keypoints_1, descriptors_1 );
-  extractor.compute( img_2, keypoints_2, descriptors_2 );
+		extractor.compute( img_1[0], keypoints_1, descriptors_1 );
 
-	if(!descriptors_1.empty() && !descriptors_2.empty()) {
-		//-- Step 3: Matching descriptor vectors using FLANN matcher
-		FlannBasedMatcher matcher;
-		std::vector< DMatch > matches;
-		matcher.match( descriptors_1, descriptors_2, matches );
+		if(!descriptors_1.empty() && !descriptors_2.empty()) {
+			//-- Step 3: Matching descriptor vectors using FLANN matcher
+			FlannBasedMatcher matcher;
+			std::vector< DMatch > matches;
+			matcher.match( descriptors_1, descriptors_2, matches );
 
-		double max_dist = 0; double min_dist = 100;
+			double max_dist = 0; double min_dist = 100;
 
-		//-- Quick calculation of max and min distances between keypoints
-		for( int i = 0; i < descriptors_1.rows; i++ )
-		{ double dist = matches[i].distance;
-		  if( dist < min_dist ) min_dist = dist;
-		  if( dist > max_dist ) max_dist = dist;
-		}
-
-		if(verbose) printf("-- Max dist : %f \n", max_dist );
-		if(verbose) printf("-- Min dist : %f \n", min_dist );
-
-		//-- Draw only "good" matches (i.e. whose distance is less than 1.2*min_dist )
-		//-- p.s.- radiusMatch can also be used here.
-		std::vector< DMatch > good_matches;
-
-		for( int i = 0; i < descriptors_1.rows; i++ ) { 
-			if( matches[i].distance < 1.2*min_dist ) { 
-				good_matches.push_back( matches[i] ); 
+			//-- Quick calculation of max and min distances between keypoints
+			for( int i = 0; i < descriptors_1.rows; i++ )
+			{ double dist = matches[i].distance;
+				if( dist < min_dist ) min_dist = dist;
+				if( dist > max_dist ) max_dist = dist;
 			}
-		}
 
-		if(good_matches.size() >= minGoodMatches) {
-			//Find distances between keypoints and make sure there are enough in a given area
+			if(verbose) printf("-- Max dist : %f \n", max_dist );
+			if(verbose) printf("-- Min dist : %f \n", min_dist );
 
-			//-- Draw only "good" matches
-			Mat img_matches;
-			drawMatches( img_1, keypoints_1, img_2, keypoints_2,
-				           good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
-				           vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+			//-- Draw only "good" matches (i.e. whose distance is less than 1.2*min_dist )
+			//-- p.s.- radiusMatch can also be used here.
+			std::vector< DMatch > good_matches;
 
-			//-- Show detected matches
-			imshow( "Good Matches", img_matches );
+			for( int i = 0; i < descriptors_1.rows; i++ ) { 
+				if( matches[i].distance < 1.2*min_dist ) { 
+					good_matches.push_back( matches[i] ); 
+				}
+			}
+
+			if(good_matches.size() >= minGoodMatches) {
+				//Find distances between keypoints and make sure there are enough in a given area
+
+				//-- Draw only "good" matches
+				Mat img_matches;
+				drawMatches( img_1[0], keypoints_1, img_2, keypoints_2,
+						         good_matches, img_matches, Scalar::all(-1), Scalar::all(-1),
+						         vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+
+				//-- Show detected matches
+				imshow( "Good Matches", img_matches );
+			}
 		}
 	}
 	
@@ -163,12 +201,12 @@ int main(int argc, char** argv)
 		
 	while(!(sd = SDLNet_UDP_Open(0)) && !die) {
 		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	}
 
 	while((SDLNet_ResolveHost(&ip, address.c_str(), port) == -1) && !die) {
 		fprintf(stderr, "SDLNet_ResolveHost(%s %d): %s\n", address.c_str(), port, SDLNet_GetError());
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+		std::this_thread::sleep_for(std::chrono::milliseconds(200));
 	}
 
 	p = SDLNet_AllocPacket(4801);
@@ -207,7 +245,7 @@ int main(int argc, char** argv)
 		cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			findObjectSURF(detectableObjects[0], gray);
+			findObjectSURF(detectableObjects, gray, detectableKeypoints);
 		}
 
 		memcpy(p->data, &areaOfFrame, sizeof(uint8_t));
