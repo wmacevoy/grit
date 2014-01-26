@@ -13,7 +13,7 @@
 #include "Configure.h"
 #include "LidarMessage.h"
 #include "fk_lidar.h"
-#include "SDL/SDL_net.h"
+#include <boost/asio.hpp>
 
 using namespace cv;
 
@@ -28,9 +28,9 @@ LidarMessage lidarMessage;
 volatile int mx = 0;
 volatile int my = 0;
 
-const int normalWidth = 160;
-const int normalHeight = 120;
-const int recvSize = 80 * 60;
+const int normalWidth = 256;
+const int normalHeight = 144;
+const int recvSize = 256 * 144;
 
 const int x_min = 6;
 const int x_max = 146;
@@ -40,8 +40,7 @@ const int ind_max = 588;
 const int lidarLine = 55;
 
 //////////SDL
-UDPsocket sd;
-UDPpacket* p;
+
 
 std::string convstr(const float t) {
 	std::stringstream ftoa;
@@ -108,7 +107,6 @@ int main(int argc, char** argv)
 	int sleep_time = sleep_time_gray;
 	int t1 = 0, t2 = 0;
 	bool receiving = true;
-	uint8_t areaOfFrame = 1;
 
 	float timeOut = 3.0;
 	Mat gray(normalHeight, normalWidth, CV_8UC1);
@@ -130,15 +128,13 @@ int main(int argc, char** argv)
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 	
-	//Initialize SDL_net
-	SDLNet_Init();
-	while(!(sd = SDLNet_UDP_Open(port)) && !die) {
-    printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-		std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
-	}
-
-	p = SDLNet_AllocPacket(recvSize + sizeof(uint8_t));
-
+	//Initialize boost asio
+	std::vector<uchar>buff;
+	int MAX_SIZE = 9200;
+	boost::asio::io_service io_service;
+	boost::asio::ip::udp::socket socket(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(),port));
+	boost::asio::ip::udp::endpoint sender_endpoint;
+	
 	void* context_lidar = zmq_ctx_new ();
 	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);	
 
@@ -159,11 +155,11 @@ int main(int argc, char** argv)
 
 	cvSetMouseCallback(winName.c_str(), mouseEvent, 0);
 
-	int count = 0;
 	while(!die) {
 		if(receiving) {
-			rc = SDLNet_UDP_Recv(sd, p);
-			if(p->len == recvSize + sizeof(uint8_t)) {
+			buff.resize(MAX_SIZE);
+			size_t length = socket.receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint);
+			if(length > 0) {
 				zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
 				if (verbose) {
 					std::cout << "t=" << lidarMessage.t << " waist=" <<
@@ -173,31 +169,9 @@ int main(int argc, char** argv)
 				}	
 
 				t1 = time(0);
-				memcpy(&areaOfFrame, p->data, sizeof(uint8_t));
-
-				switch(areaOfFrame) {
-				case 1:
-					for(int i = 0; i < gray.cols / 2; ++i)
-						for(int j = 0; j < gray.rows / 2; ++j)
-							gray.at<uchar>(Point(i,j)) = p->data[1 + count++];			
-					break;
-				case 2:
-					for(int i = gray.cols / 2; i < gray.cols; ++i)
-						for(int j = 0; j < gray.rows / 2; ++j)
-							gray.at<uchar>(Point(i,j)) = p->data[1 + count++];
-					break;
-				case 3:
-					for(int i = 0; i < gray.cols / 2; ++i)
-						for(int j = gray.rows / 2; j < gray.rows; ++j)
-							gray.at<uchar>(Point(i,j)) = p->data[1 + count++];
-					break;
-				case 4:
-					for(int i = gray.cols / 2; i < gray.cols; ++i)
-						for(int j = gray.rows / 2; j < gray.rows; ++j)
-							gray.at<uchar>(Point(i,j)) = p->data[1 + count++];
-					break;
-				}
-				count = 0;
+				
+				buff.resize(length);
+				gray = imdecode(Mat(buff), CV_LOAD_IMAGE_COLOR);
 
 				line(gray, pt1, pt2, Scalar(50, 50, 50));
 				line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
@@ -268,9 +242,8 @@ int main(int argc, char** argv)
 	zmq_close(sub_lidar);
 	zmq_ctx_destroy(context_lidar);
 	std::cout << "--done!" << std::endl;
-	std::cout << "closing SDL and freeing packet..." << std::endl;
-	SDLNet_FreePacket(p);
-	SDLNet_Quit();
+	std::cout << "closing boost and freeing packet..." << std::endl;
+	socket.close();
 	std::cout << "--done!" << std::endl;
 	return 0;
 }
