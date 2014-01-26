@@ -12,22 +12,29 @@
 #include <chrono>
 #include <string>
 #include <fstream>
-#include "SDL/SDL_net.h"
+#include <atomic>
 #include "Configure.h"
+#include <boost/asio.hpp>
 
 Configure cfg;
 
 using namespace cv;
 using namespace std;
+using namespace std::chrono;
 namespace fs = boost::filesystem;
 
-volatile bool die = false;
+typedef std::chrono::duration<int,std::milli> millisecs_t;
+
+std::atomic<bool> die(false);
 bool verbose = false;
+std::atomic<int> detectionTime;
+
+const int IMAGE_QUALITY=70;
 
 void quitproc(int param)
 {
 	std::cout << "\nQuitting..." << std::endl;
-	die = true;
+	die.store(true);
 }
 
 /*The following is sample code to write and read keypoint data
@@ -63,14 +70,17 @@ fs.release();
 //      then remove keypoint_2 detection from below
 bool findObjectSURF( std::vector<Mat>& img_1, Mat img_2, std::vector<KeyPoint>& _keypoints_2 )
 {
-   //-- Step 1: Detect the keypoints using SURF Detector
-  static int minHessian = 600;
+  	//-- Step 1: Detect the keypoints using SURF Detector
+ 	static int minHessian = 600;
 	static int minGoodMatches = 7;
+	static high_resolution_clock timer;
 
-  SurfFeatureDetector detector( minHessian );
+	high_resolution_clock::time_point start = timer.now();
+
+ 	SurfFeatureDetector detector( minHessian );
 	SurfDescriptorExtractor extractor;
 
-  std::vector<KeyPoint> keypoints_1, keypoints_2;
+ 	std::vector<KeyPoint> keypoints_1, keypoints_2;
 	
 	//Detect the keypoints in the scene only once
 	Mat descriptors_2;
@@ -130,6 +140,11 @@ bool findObjectSURF( std::vector<Mat>& img_1, Mat img_2, std::vector<KeyPoint>& 
 			}
 		}
 	}
+	high_resolution_clock::time_point end = timer.now();
+	millisecs_t elapsed(std::chrono::duration_cast<millisecs_t>(end-start));
+	detectionTime.store(elapsed.count());
+	//std::cout << detectionTime << std::endl;
+	
 	
 	return true;
 }
@@ -174,19 +189,21 @@ int main(int argc, char** argv)
 	int sleep_time = (int)cfg.num("webcam.provider.sleep_time");
 	bool detect = cfg.flag("webcam.provider.detect");
 	std::string address = cfg.str("webcam.provider.c_ip").c_str();
-	int port = (int)cfg.num("webcam.provider.port");
+	std::string port = cfg.str("webcam.provider.port").c_str();
 
-	//SDL items
-	UDPsocket sd;
-	UDPpacket* p;
-	IPaddress ip;
+	//Boost items
+	boost::asio::io_service io_service;
+	boost::asio::ip::udp::resolver resolver(io_service);
+	boost::asio::ip::udp::resolver::query query(boost::asio::ip::udp::v4(), address, port);
+	boost::asio::ip::udp::endpoint receiver_endpoint = *resolver.resolve(query);
+	boost::asio::ip::udp::socket socket(io_service);
+	
 
 	//SURF items
 	std::vector<Mat> detectableObjects;
 	std::vector<KeyPoint> detectableKeypoints;
 
 	//Image items
-	uint8_t areaOfFrame = 1;
 	bool connected = false;
 	std::string cascadeName;
 	Mat frame;
@@ -196,23 +213,7 @@ int main(int argc, char** argv)
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
-	//Initialize SDL_net
-	SDLNet_Init();
-		
-	while(!(sd = SDLNet_UDP_Open(0)) && !die) {
-		printf("SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-		std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	}
-
-	while((SDLNet_ResolveHost(&ip, address.c_str(), port) == -1) && !die) {
-		fprintf(stderr, "SDLNet_ResolveHost(%s %d): %s\n", address.c_str(), port, SDLNet_GetError());
-		std::this_thread::sleep_for(std::chrono::milliseconds(200));
-	}
-
-	p = SDLNet_AllocPacket(4801);
-	p->address.host = ip.host;
-	p->address.port = ip.port;
-	p->len = 4800 + sizeof(uint8_t);
+	socket.open(boost::asio::ip::udp::v4());
 	
 	VideoCapture capture(index);
 	if(!capture.isOpened())
@@ -237,49 +238,26 @@ int main(int argc, char** argv)
 		std::cout << "detecting is off...\n";
 	}
 
+	std::vector<uchar> buff;
+	std::vector<int> param = std::vector<int>(2);
+	param[0]=CV_IMWRITE_JPEG_QUALITY;
+	param[1]=IMAGE_QUALITY;
+	std::string output_type = ".jpg";
+
 	int count = 0;
-	while(!die)
+	while(!die.load())
 	{
 		capture >> frame;
-		gray = frame.clone();
-		cvtColor(frame, gray, CV_RGB2GRAY);
+		//gray = frame.clone();
+		//cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			findObjectSURF(detectableObjects, gray, detectableKeypoints);
+			findObjectSURF(detectableObjects, frame, detectableKeypoints);
 		}
 
-		memcpy(p->data, &areaOfFrame, sizeof(uint8_t));
-		
-		switch(areaOfFrame) {
-		case 1:
-			for(int i = 0; i < gray.cols / 2; ++i)
-				for(int j = 0; j < gray.rows / 2; ++j)
-					p->data[1 + count++] = gray.at<uchar>(Point(i,j));
-			break;
-		case 2:
-			for(int i = gray.cols / 2; i < gray.cols; ++i)
-				for(int j = 0; j < gray.rows / 2; ++j)
-					p->data[1 + count++] = gray.at<uchar>(Point(i,j));
-			break;
-		case 3:
-			for(int i = 0; i < gray.cols / 2; ++i)
-				for(int j = gray.rows / 2; j < gray.rows; ++j)
-					p->data[1 + count++] = gray.at<uchar>(Point(i,j));
-			break;
-		case 4:
-			for(int i = gray.cols / 2; i < gray.cols; ++i)
-				for(int j = gray.rows / 2; j < gray.rows; ++j)
-					p->data[1 + count++] = gray.at<uchar>(Point(i,j));
-			break;
-		}
-		count = 0;
-
-		SDLNet_UDP_Send(sd, -1, p);
-
-		++areaOfFrame;
-		if(areaOfFrame > 4 ) {
-			areaOfFrame = 1;
-		}
+		imencode(output_type.c_str(), frame, buff, param);
+		std::cout<<"coded file size(jpg)"<<buff.size()<<std::endl;
+		socket.send_to(boost::asio::buffer(buff,buff.size()), receiver_endpoint);
 
 		waitKey(sleep_time);
 	}
@@ -293,9 +271,8 @@ int main(int argc, char** argv)
 		detectableObjects[i].release();	
 	}
 	std::cout << "--done!" << std::endl;
-	std::cout << "closing SDL and freeing packet..." << std::endl;
-	SDLNet_FreePacket(p);
-	SDLNet_Quit();
+	std::cout << "closing boost socket and freeing packet..." << std::endl;
+	socket.close();
 	std::cout << "--done!" << std::endl;
 	return 0;
 }
