@@ -28,11 +28,11 @@ bool RobotWatcher::setup(int port_)
 
 Mat RobotWatcher::grab_image()
 {
-  buff.resize(MAX_SIZE);
-  size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint);
-  buff.resize(length);
-  decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
-  return decoded;
+  	buff.resize(MAX_SIZE);
+  	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint);
+  	buff.resize(length);
+  	decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
+  	return decoded;
 }
 
 void RobotWatcher::run()
@@ -42,12 +42,11 @@ void RobotWatcher::run()
   while(!die) {
     if (receiving) {
       grab_image();
-      imshow("Camera",decoded);
+      //imshow("Camera",decoded);
       waitKey(20);
     }
   }
   destroyWindow("Camera");
-
 }
 
 void RobotWatcher::kill()
@@ -58,6 +57,7 @@ void RobotWatcher::kill()
   std::cout << "releasing capture and freeing mat memory..." << std::endl;
   decoded.release();
   my_socket->close();
+	free(my_socket);
 
   std::cout << "--done!" << std::endl;
 }

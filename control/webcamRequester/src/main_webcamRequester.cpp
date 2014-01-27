@@ -109,7 +109,7 @@ int main(int argc, char** argv)
 	bool receiving = true;
 
 	float timeOut = 3.0;
-	Mat frame;
+	Mat frame, gray;
 
 	std::string winName = "ICU";
 	std::string text = "0";
@@ -152,16 +152,13 @@ int main(int argc, char** argv)
 
 	while(!die) {
 		if(receiving) {
-		  if(true) { //change
-				zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
+				rc = zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
+				if(rc > 0) { std::cout << rc << std::endl; t1 = time(0); }
 				if (verbose) {
 					std::cout << "t=" << lidarMessage.t << " waist=" <<
 						lidarMessage.waist << " neckud=" << lidarMessage.neckud << " necklr=" << lidarMessage.necklr << 
-						
 						" data[0]=" << lidarMessage.data[0] << std::endl;
-				}	
-
-				t1 = time(0);
+				}
 				
 				gray = my_watcher.grab_image();
 
@@ -191,7 +188,6 @@ int main(int argc, char** argv)
 				}
 				imshow(winName, gray);
 			}
-		}
 
 		char c = waitKey(sleep_time);
 		if(c == 'q') die = true;
@@ -233,9 +229,6 @@ int main(int argc, char** argv)
 	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(sub_lidar);
 	zmq_ctx_destroy(context_lidar);
-	std::cout << "--done!" << std::endl;
-	std::cout << "closing boost and freeing packet..." << std::endl;
-	socket.close();
 	std::cout << "--done!" << std::endl;
 	return 0;
 }
