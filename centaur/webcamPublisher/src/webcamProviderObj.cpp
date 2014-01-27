@@ -55,7 +55,7 @@ bool webcamProvider::init() {
 
 	if(detect) {	
 		//Load detectableObjects and detectableKeypoints here
-		loadImagesAndKeypoints(path, detectableObjects, detectableKeypoints);
+		loadImagesAndKeypoints(path, detectableObjects);
 	
 		//If something went wrong loading the images or keypoints, turn off detection	
 		if(detectableObjects.empty()) { // || detectableObjects.size() != detectableKeypoints.size()) {
@@ -75,7 +75,7 @@ void webcamProvider::provide() {
 		//cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			findObjectSURF(detectableObjects, frame, detectableKeypoints);
+			findObjectSURF(detectableObjects, frame);
 		}
 
 		imencode(output_type.c_str(), frame, buff, param);
@@ -96,6 +96,7 @@ bool webcamProvider::setResolution(int _width, int _height) {
 	}
 	return false;
 }
+
 bool webcamProvider::setQuality(int _quality) {
 	if(_quality > 0 && _quality <= 100) {
 		param[1] = _quality;
@@ -139,9 +140,10 @@ webcamProvider::~webcamProvider() {
 //////////////////////////////////////DETECTABLE STUFF//////////////////////////////////////////////////////////////////
 
 //img_1 are detectable objects, img_2 is the scene/camera image
-//TODO: when ready, remove _ from _keypoints_2 and update code to keypoints_2[i]
-//      then remove keypoint_2 detection from below
-bool webcamProvider::findObjectSURF( std::vector<Mat>& img_1, Mat img_2, std::vector<KeyPoint>& _keypoints_2 ) {
+//TODO: when ready, remove _ from _descriptors_1 and remove keypoint detection 1
+//      then remove keypoint_1 detection and descriptor generation from below
+
+bool webcamProvider::findObjectSURF( std::vector<Mat>& img_1, Mat img_2) {
  	//-- Step 1: Detect the keypoints using SURF Detector
 	high_resolution_clock::time_point start = timer.now();
 
@@ -217,7 +219,7 @@ bool webcamProvider::findObjectSURF( std::vector<Mat>& img_1, Mat img_2, std::ve
 	return true;
 }
 
-void webcamProvider::loadImagesAndKeypoints(std::string _path, std::vector<Mat>& detectableObjects, std::vector<KeyPoint>& detectableKeypoints) {
+void webcamProvider::loadImagesAndKeypoints(std::string _path, std::vector<Mat>& detectableObjects) {
 	_path = _path.substr(0, _path.find_last_of('/', _path.size())) + "/detectables";
 	fs::path p(_path);
 
@@ -236,39 +238,7 @@ void webcamProvider::loadImagesAndKeypoints(std::string _path, std::vector<Mat>&
 					std::string load = it->string();
 					detectableObjects.push_back(imread(load, CV_LOAD_IMAGE_GRAYSCALE));
 				}
-				//Load keypoint data
-				else if(fs::extension(*it) == ".kpd") {
-				
-				}				
 			}
 		}
 	}
 }
-
-/*
-The following is sample code to write and read keypoint data
- *We can use it when ready
-
-//TO WRITE
-vector<KeyPoint> myKpVec;
-FileStorage fs(filename,FileStorage::WRITE);
-
-ostringstream oss;
-for(size_t i;i<myKpVec.size();++i) {
-    oss << i;
-    fs << oss.str() << myKpVec[i];
-}
-  fs.release();
-
-//TO READ
-vector<KeyPoint> myKpVec;
-FileStorage fs(filename,FileStorage::READ);
-ostringstream oss;
-KeyPoint aKeypoint;
-for(size_t i;i<myKpVec.size();<++i) {
-    oss << i;
-    fs[oss.str()] >> aKeypoint;
-    myKpVec.push_back(aKeypoint);
-}
-fs.release();
-*/

@@ -49,7 +49,6 @@ class webcamProvider {
 
 	//SURF items
 	std::vector<Mat> detectableObjects;
-	std::vector<KeyPoint> detectableKeypoints;
 	int minHessian;
 	int minGoodMatches;
 	high_resolution_clock timer;
@@ -72,8 +71,8 @@ public:
 	bool setQuality(int _quality);
 	bool setFramerate(int _framerate);
 	bool kill();
-	bool findObjectSURF( std::vector<Mat>& img_1, Mat img_2, std::vector<KeyPoint>& _keypoints_2 );
-	void loadImagesAndKeypoints(std::string _path, std::vector<Mat>& detectableObjects, std::vector<KeyPoint>& detectableKeypoints);
+	bool findObjectSURF( std::vector<Mat>& img_1, Mat img_2);
+	void loadImagesAndKeypoints(std::string _path, std::vector<Mat>& detectableObjects);
 	~webcamProvider();
 };
 
