@@ -13,7 +13,7 @@
 #include "Configure.h"
 #include "LidarMessage.h"
 #include "fk_lidar.h"
-#include <boost/asio.hpp>
+#include "robocam.h"
 
 using namespace cv;
 
@@ -39,8 +39,7 @@ const int ind_max = 588;
 
 const int lidarLine = 55;
 
-//////////SDL
-
+RobotWatcher my_watcher;
 
 std::string convstr(const float t) {
 	std::stringstream ftoa;
@@ -86,6 +85,7 @@ void mouseEvent(int evt, int x, int y, int flags, void* param) {
 
 void quitproc(int param) {
 	die = true;
+	my_watcher.kill();
 }
 
 int main(int argc, char** argv)
@@ -109,8 +109,7 @@ int main(int argc, char** argv)
 	bool receiving = true;
 
 	float timeOut = 3.0;
-	Mat gray(normalHeight, normalWidth, CV_8UC1);
-	gray.reshape(0,1);
+	Mat frame;
 
 	std::string winName = "ICU";
 	std::string text = "0";
@@ -128,12 +127,8 @@ int main(int argc, char** argv)
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 	
-	//Initialize boost asio
-	std::vector<uchar>buff;
-	int MAX_SIZE = 9200;
-	boost::asio::io_service io_service;
-	boost::asio::ip::udp::socket socket(io_service, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(),port));
-	boost::asio::ip::udp::endpoint sender_endpoint;
+	//Initialize watcher
+	my_watcher.setup(port);
 	
 	void* context_lidar = zmq_ctx_new ();
 	void* sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);	
@@ -157,9 +152,7 @@ int main(int argc, char** argv)
 
 	while(!die) {
 		if(receiving) {
-			buff.resize(MAX_SIZE);
-			size_t length = socket.receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint);
-			if(length > 0) {
+		  if(true) { //change
 				zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
 				if (verbose) {
 					std::cout << "t=" << lidarMessage.t << " waist=" <<
@@ -170,8 +163,7 @@ int main(int argc, char** argv)
 
 				t1 = time(0);
 				
-				buff.resize(length);
-				gray = imdecode(Mat(buff), CV_LOAD_IMAGE_COLOR);
+				gray = my_watcher.grab_image();
 
 				line(gray, pt1, pt2, Scalar(50, 50, 50));
 				line(gray, tick5l1, tick5l2, Scalar(0, 0, 0));
