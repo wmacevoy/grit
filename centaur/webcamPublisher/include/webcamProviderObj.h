@@ -37,6 +37,7 @@ class webcamProvider {
 	bool detect;
 	std::string address;
 	std::string port;
+	std::string path;
 
 	//Boost items
 	boost::asio::io_service io_service;
@@ -64,7 +65,7 @@ class webcamProvider {
 	std::string output_type;
 
 public:
-	webcamProvider(int, int, bool, std::string, std::string);
+	webcamProvider(int, int, bool, const char*, std::string, std::string);
 	bool init();
 	void provide();
 	bool setResolution(int _width, int _height);

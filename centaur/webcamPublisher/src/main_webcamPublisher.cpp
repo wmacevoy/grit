@@ -1,5 +1,5 @@
 #include <signal.h>
-#include "webcamProvideObjr.h"
+#include "webcamProviderObj.h"
 #include "Configure.h"
 Configure cfg;
 
@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
-	webcamProvider p(0, 20, false, "127.0.0.1", "9993");
+	webcamProvider p(0, 20, true, argv[0], "127.0.0.1", "9993");
 	ghost = &p;	
 	p.init();
 	p.provide();

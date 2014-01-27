@@ -1,6 +1,6 @@
 #include "webcamProviderObj.h"
 
-webcamProvider::webcamProvider(int _index, int _sleep_time, bool _detect, std::string _address, std::string _port) : resolver(this->io_service) {
+webcamProvider::webcamProvider(int _index, int _sleep_time, bool _detect, const char* _argv0, std::string _address, std::string _port) : resolver(this->io_service) {
 	die.store(false);
 	verbose = false;
 	detectionTime.store(0);
@@ -30,6 +30,7 @@ webcamProvider::webcamProvider(int _index, int _sleep_time, bool _detect, std::s
 	//Detection stuff
 	minHessian = 600;
 	minGoodMatches = 7;
+	path = fs::system_complete(_argv0).string();
 }
 
 bool webcamProvider::init() {
@@ -54,7 +55,7 @@ bool webcamProvider::init() {
 
 	if(detect) {	
 		//Load detectableObjects and detectableKeypoints here
-		//loadImagesAndKeypoints(fs::system_complete(argv[0]).string(), detectableObjects, detectableKeypoints);
+		loadImagesAndKeypoints(path, detectableObjects, detectableKeypoints);
 	
 		//If something went wrong loading the images or keypoints, turn off detection	
 		if(detectableObjects.empty()) { // || detectableObjects.size() != detectableKeypoints.size()) {
@@ -74,7 +75,7 @@ void webcamProvider::provide() {
 		//cvtColor(frame, gray, CV_RGB2GRAY);
 
 		if(detect) {
-			//findObjectSURF(detectableObjects, frame, detectableKeypoints);
+			findObjectSURF(detectableObjects, frame, detectableKeypoints);
 		}
 
 		imencode(output_type.c_str(), frame, buff, param);
@@ -129,7 +130,7 @@ webcamProvider::~webcamProvider() {
 		detectableObjects[i].release();	
 	}
 	std::cout << "--done!" << std::endl;
-	std::cout << "closing boost socket and freeing packet..." << std::endl;
+	std::cout << "closing boost socket..." << std::endl;
 	socket->close();
 	std::cout << "--done!" << std::endl;	
 }
