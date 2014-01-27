@@ -1,5 +1,5 @@
 #include <signal.h>
-#include "webcamProvider.h"
+#include "webcamProvideObjr.h"
 #include "Configure.h"
 Configure cfg;
 
