@@ -22,7 +22,6 @@ bool RobotWatcher::setup(int port_)
   receiving = true;
 
   my_socket = new udp::socket(my_io_service, udp::endpoint(udp::v4(), port));
-  namedWindow("Camera", CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
 
   return true; //get this better
 }
@@ -38,6 +37,7 @@ Mat RobotWatcher::grab_image()
 
 void RobotWatcher::run()
 {
+  namedWindow("Camera", CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
 
   while(!die) {
     if (receiving) {
@@ -46,6 +46,8 @@ void RobotWatcher::run()
       waitKey(20);
     }
   }
+  destroyWindow("Camera");
+
 }
 
 void RobotWatcher::kill()
@@ -56,7 +58,6 @@ void RobotWatcher::kill()
   std::cout << "releasing capture and freeing mat memory..." << std::endl;
   decoded.release();
   my_socket->close();
-  destroyWindow("Camera");
 
   std::cout << "--done!" << std::endl;
 }
