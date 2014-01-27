@@ -11,7 +11,6 @@
 #include <boost/asio.hpp>
 
 #include <iostream>
-#include <signal.h>
 #include <thread>
 #include <chrono>
 #include <string>
@@ -66,7 +65,7 @@ public:
 	bool setResolution(int _width, int _height);
 	bool setQuality(int _quality);
 	bool setFramerate(int _framerate);
-	bool quit();
+	bool kill();
 	~webcamProvider();
 };
 

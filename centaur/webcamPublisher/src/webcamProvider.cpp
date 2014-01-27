@@ -26,10 +26,6 @@ webcamProvider::webcamProvider(int _index, int _sleep_time, bool _detect, std::s
 
 	width = DEFAULT_WIDTH;
 	height = DEFAULT_HEIGHT;
-
-	//signal(SIGINT, webcamProvider::sigHandler);
-	//signal(SIGTERM, webcamProvider::sigHandler);
-	//signal(SIGQUIT, webcamProvider::static_sigHandler);
 }
 
 bool webcamProvider::init() {
@@ -103,7 +99,7 @@ bool webcamProvider::setFramerate(int _framerate) {
 	return false;
 }
 
-bool webcamProvider::quit() {
+bool webcamProvider::kill() {
 	if(!die.load()) {
 		die.store(true);
 		return die.load();
@@ -113,7 +109,7 @@ bool webcamProvider::quit() {
 
 webcamProvider::~webcamProvider() {
 	//Cleanup
-	std::cout << "releasing capture and freeing mat memory..." << std::endl;
+	std::cout << std::endl << "releasing capture and freeing mat memory..." << std::endl;
 	capture.release();
 	frame.release();
 	gray.release();
