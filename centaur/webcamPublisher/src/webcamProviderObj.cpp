@@ -1,8 +1,8 @@
 #include "webcamProviderObj.h"
 
-webcamProvider::webcamProvider(int _index, int _sleep_time, bool _detect, const char* _argv0, std::string _address, std::string _port) : resolver(this->io_service) {
+webcamProvider::webcamProvider(int _index, int _sleep_time, bool _verbose, bool _detect, const char* _argv0, std::string _address, std::string _port) : resolver(this->io_service) {
 	die.store(false);
-	verbose = false;
+	verbose = _verbose;
 	detectionTime.store(0);
 
 	index = _index;
@@ -213,7 +213,7 @@ bool webcamProvider::findObjectSURF( std::vector<Mat>& img_1, Mat img_2) {
 	high_resolution_clock::time_point end = timer.now();
 	millisecs_t elapsed(std::chrono::duration_cast<millisecs_t>(end-start));
 	detectionTime.store(elapsed.count());
-	//std::cout << detectionTime << std::endl;
+	if(verbose) std::cout << "Detection time: " << detectionTime << std::endl;
 	
 	
 	return true;

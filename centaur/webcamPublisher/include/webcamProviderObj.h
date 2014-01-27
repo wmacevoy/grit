@@ -25,8 +25,8 @@ namespace fs = boost::filesystem;
 typedef std::chrono::duration<int,std::milli> millisecs_t;
 
 const int IMAGE_QUALITY=70;
-const int DEFAULT_WIDTH = 160;
-const int DEFAULT_HEIGHT = 120;
+const int DEFAULT_WIDTH = 256;
+const int DEFAULT_HEIGHT = 144;
 
 class webcamProvider {
 	std::atomic<bool> die;
@@ -64,7 +64,7 @@ class webcamProvider {
 	std::string output_type;
 
 public:
-	webcamProvider(int, int, bool, const char*, std::string, std::string);
+	webcamProvider(int, int, bool, bool, const char*, std::string, std::string);
 	bool init();
 	void provide();
 	bool setResolution(int _width, int _height);

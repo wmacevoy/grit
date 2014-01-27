@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
 	/*int index = (int)cfg.num("webcam.provider.index");
 	int sleep_time = (int)cfg.num("webcam.provider.sleep_time");
 	bool detect = cfg.flag("webcam.provider.detect");
+	bool verbose = cfg.flag("webcam.provider.verbose");
 	std::string address = cfg.str("webcam.provider.c_ip").c_str();
 	std::string port = cfg.str("webcam.provider.port").c_str();*/
 
@@ -21,10 +22,11 @@ int main(int argc, char** argv) {
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
-	webcamProvider p(0, 20, true, argv[0], "127.0.0.1", "9993");
+	webcamProvider p(0, 20, true, true, argv[0], "127.0.0.1", "9993");
 	ghost = &p;	
-	p.init();
-	p.provide();
+	if(p.init()) {
+		p.provide();
+	}
 
 	return 0;
 }
