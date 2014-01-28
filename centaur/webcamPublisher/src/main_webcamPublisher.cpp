@@ -11,18 +11,23 @@ void quitproc(int sig) {
 }
 
 int main(int argc, char** argv) {
-	/*int index = (int)cfg.num("webcam.provider.index");
+	cfg.path("../../setup");
+	cfg.args("webcam.provider.", argv);
+	if (argc == 1) cfg.load("config.csv");
+	bool verbose = cfg.flag("webcam.provider.verbose", false);
+	if (verbose) cfg.show();
+		
+	int index = (int)cfg.num("webcam.provider.index");
 	int sleep_time = (int)cfg.num("webcam.provider.sleep_time");
 	bool detect = cfg.flag("webcam.provider.detect");
-	bool verbose = cfg.flag("webcam.provider.verbose");
 	std::string address = cfg.str("webcam.provider.c_ip").c_str();
-	std::string port = cfg.str("webcam.provider.port").c_str();*/
+	std::string port = cfg.str("webcam.provider.port").c_str();
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
-	webcamProvider p(0, 20, true, true, argv[0], "127.0.0.1", "9993");
+	webcamProvider p(index, sleep_time, verbose, detect, argv[0], address.c_str(), port);
 	ghost = &p;	
 	if(p.init()) {
 		p.provide();
