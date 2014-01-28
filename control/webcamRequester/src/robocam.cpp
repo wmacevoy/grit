@@ -11,7 +11,12 @@ RobotWatcher::RobotWatcher()
 
 RobotWatcher::~RobotWatcher()
 {
-
+	std::cout << "Quitting Robowatcher..." << std::endl;
+	std::cout << "releasing capture and freeing mat memory..." << std::endl;
+  decoded.release();
+  my_socket->close();
+	free(my_socket);
+  std::cout << "--done!" << std::endl;
 }
 
 bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false)
@@ -44,7 +49,7 @@ Mat RobotWatcher::grab_image()
   	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint);
   	buff.resize(length);
   	decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
-		if(verbose) std::cout <<decoded.cols << "  " << decoded.rows <<std::endl;
+		if(verbose) std::cout << decoded.cols << "  " << decoded.rows << std::endl;
 		d.setBounds(decoded.cols, decoded.rows);
 		if(hasLidar) {
 			d.recvData();
@@ -74,13 +79,6 @@ void RobotWatcher::kill()
 {
   receiving = false;
   die = true;
-
-  std::cout << "releasing capture and freeing mat memory..." << std::endl;
-  decoded.release();
-  my_socket->close();
-	free(my_socket);
-
-  std::cout << "--done!" << std::endl;
 }
 
 void RobotWatcher::setMouse(int _x, int _y) {

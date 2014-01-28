@@ -12,6 +12,8 @@
 
 using namespace cv;
 
+//Some sort of mapping needs to be created that allows these numbers to be dynamically set.
+//OR we can just map them for the resolutions we know we will use and store them all.
 const int x_min = 6;
 const int x_max = 146;
 const int ind_min = 494;

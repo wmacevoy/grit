@@ -27,7 +27,7 @@ LidarLayer::LidarLayer() {
 	t2 = 0;
 }
 
-bool LidarLayer::setup(std::string _address, bool _calibration, bool _verbose) {
+bool LidarLayer::setup(std::string _address, bool _calibration = false, bool _verbose = false) {
 	address = _address;
 	calibration = _calibration;
 	verbose = _verbose;
@@ -36,7 +36,7 @@ bool LidarLayer::setup(std::string _address, bool _calibration, bool _verbose) {
 int LidarLayer::recvData() {
 	int rc = zmq_recv(sub_lidar, &lidarMessage, sizeof(LidarMessage), ZMQ_DONTWAIT);		
 	if(rc > 0) {
-		std::cout << rc << std::endl;
+		if(verbose) std::cout << "Lidar data received " << rc << " bytes" << std::endl;
 		t1 = time(0);
 	}
 	if (verbose) {
@@ -146,6 +146,7 @@ int LidarLayer::getLine() {
 }
 
 LidarLayer::~LidarLayer() {
+	std::cout << "Quitting Lidar..." << std::endl;
 	std::cout << "closing and destroying zmq..." << std::endl;
 	zmq_close(sub_lidar);
 	zmq_ctx_destroy(context_lidar);
