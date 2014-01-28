@@ -39,8 +39,10 @@ bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false
 }
 
 bool RobotWatcher::setupLidar(std::string _address, bool _calibration, bool _verbose) {
-	d.setup(_address, _calibration, _verbose);
-	d.setBounds(currentWidth, currentHeight);
+	if(hasLidar) {
+		d.setup(_address, _calibration, _verbose);
+		d.setBounds(currentWidth, currentHeight);
+	}
 }
 
 Mat RobotWatcher::grab_image()

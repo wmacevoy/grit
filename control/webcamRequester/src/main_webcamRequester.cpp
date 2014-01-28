@@ -2,11 +2,8 @@
 #include "opencv2/highgui/highgui.hpp"
 #include <iostream>
 #include <signal.h>
-#include <thread>
-#include <chrono>
 #include <sstream>
 #include <string>
-#include <sstream>
 #include "Configure.h"
 #include "LidarMessage.h"
 #include "fk_lidar.h"
@@ -74,6 +71,7 @@ int main(int argc, char** argv)
 	//Initialize watcher
 	my_watcher.setup(port, true, verbose);
 	my_watcher.setupLidar(lidarAddress, lidarCalibration, verbose);
+
 	cvSetMouseCallback(windowName.c_str(), mouseEvent, 0);
 
 	while(!die) {
