@@ -5,7 +5,7 @@ control.user,cogburn
 centaur.ip,192.168.2.101
 xcentaur.ip,127.0.0.1
 centaur.user,fit-pc
-legs.minspeed,25,Degrees per second on the servo
+legs.minspeed,15,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,20,Degrees per second on the servo
 arms.maxspeed,40,Degrees per second on the servo 
@@ -76,16 +76,14 @@ lidar.provider.dev_path,"/dev/ttyACM0"
 lidar.provider.sleep_time,"10"
 lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
-webcam.requester.calibration,"true"
-webcam.requester.sleep_time_color,"25"
-webcam.requester.sleep_time_gray,"25"
+webcam.requester.calibration,"false"
+webcam.requester.sleep_time,"10"
 webcam.requester.oculus,"false"
-webcam.provider.verbose,"false"
+webcam.provider.verbose,"true"
 webcam.provider.index,"0"
-webcam.provider.sleep_time,"50"
-webcam.provider.detect,"false"
-webcam.provider.cascade,"../cascades/cascade.xml"
-webcam.provider.port,9993
+webcam.provider.sleep_time,"20"
+webcam.provider.detect,"true"
+webcam.provider.port,"9993"
 webcam.provider.ip,"${centaur.ip}"
 webcam.provider.c_ip,"${control.ip}"
 leap.provider.verbose,"true"
