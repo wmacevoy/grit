@@ -3,6 +3,8 @@ Methods to create a cascade
 A positive image should be a grayscale .bmp file cropped to only have the desired object to be detected.
 A negative image should be and image that is of where you will find the object to be detected but without the actual object.
 
+Recommend a  2:1 ratio pos/neg
+
 Place each type in it's respective folder. i.e. positve/ negative/
 
 In the negative folder run create_list.sh to generate a list of the negative images.
