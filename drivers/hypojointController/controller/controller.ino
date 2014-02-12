@@ -17,34 +17,35 @@ const int maxbuffer=4;
 
 
 //Default values are set but till be read from eeprom in setup()
-int id=1;
-int potPin=A3;
-int dirPin=8;
-int stepPin=9;
-int minFrequency = 0;
-int maxFrequency = 3000;
-int minPosition = 0;
-int maxPosition = 190;
+byte id;
+int potPin;
+int dirPin;
+int stepPin;
+int minFrequency;
+long maxFrequency;
+int minPosition;
+long maxPosition;
 
 char input[maxbuffer];
 int goal;
 int position=0;
 int dir;          // 1 counter clockwise/0 stop/-1 clockwise
 int wait=100;
+
 int addr=0;       //eeprom memory address
 
 void setup()
 {
    Serial.begin(9600);
    
-   addr=EEPROM_readAnything(addr, id); //Read ID
-   addr=EEPROM_readAnything(addr, potPin); //Read potPin
-   addr=EEPROM_readAnything(addr, dirPin); //Read dirPin
-   addr=EEPROM_readAnything(addr, stepPin); //Read stepPin
-   addr=EEPROM_readAnything(addr, minFrequency); //Read minFrequency
-   addr=EEPROM_readAnything(addr, maxFrequency); //Read maxFrequency
-   addr=EEPROM_readAnything(addr, minPosition); //Read minPosition
-   addr=EEPROM_readAnything(addr, maxPosition); //Read maxPosition
+   addr+=EEPROM_readAnything(addr, id); //Read ID
+   addr+=EEPROM_readAnything(addr, potPin); //Read potPin
+   addr+=EEPROM_readAnything(addr, dirPin); //Read dirPin
+   addr+=EEPROM_readAnything(addr, stepPin); //Read stepPin
+   addr+=EEPROM_readAnything(addr, minFrequency); //Read minFrequency
+   addr+=EEPROM_readAnything(addr, maxFrequency); //Read maxFrequency
+   addr+=EEPROM_readAnything(addr, minPosition); //Read minPosition
+   addr+=EEPROM_readAnything(addr, maxPosition); //Read maxPosition
      
    Wire.begin(id);                // join i2c bus with address read from above
    Wire.onRequest(requestEvent);
@@ -56,25 +57,7 @@ void setup()
 
 
 void loop()
-{
-   Serial.print(id, DEC);
-   Serial.print(' ');
-   Serial.print(potPin, DEC);
-   Serial.print(' ');
-   Serial.print(dirPin, DEC);
-   Serial.print(' ');
-   Serial.print(stepPin, DEC);
-   Serial.print(' ');
-   Serial.print(minFrequency, DEC);
-   Serial.print(' ');
-   Serial.print(maxFrequency, DEC);
-   Serial.print(' ');
-   Serial.print(minPosition, DEC);
-   Serial.print(' ');
-   Serial.print(maxPosition, DEC);
-   Serial.print('\n');
-   delay(1000);
-  
+{  
   //this code is only used to test that the motor will go to designated position
    if (Serial.available() > 0) {
     Serial.readBytes(input,maxbuffer);//need to check to see if this is in degrees or steps
