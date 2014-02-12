@@ -34,10 +34,12 @@ int  wait=100;
 int  addr=0;       //eeprom memory address
 
 struct Response{
-  
-};
+  int pos;
+  int temp;
+  int checksum;
+} response;
 
-union Step{
+struct Step{
  int freq;
  int goal;
  int checksum;
@@ -47,17 +49,17 @@ void setup()
 {
    Serial.begin(9600);
    
-   addr+=EEPROM_readAnything(addr, id); //Read ID
-   addr+=EEPROM_readAnything(addr, potPin); //Read potPin
-   addr+=EEPROM_readAnything(addr, dirPin); //Read dirPin
-   addr+=EEPROM_readAnything(addr, stepPin); //Read stepPin
-   addr+=EEPROM_readAnything(addr, ledPin); //Read stepPin
-   addr+=EEPROM_readAnything(addr, minFrequency); //Read minFrequency
-   addr+=EEPROM_readAnything(addr, maxFrequency); //Read maxFrequency
-   addr+=EEPROM_readAnything(addr, minPosition); //Read minPosition
-   addr+=EEPROM_readAnything(addr, maxPosition); //Read maxPosition
+   addr+=EEPROM_readAnything(addr, id);             //Read ID
+   addr+=EEPROM_readAnything(addr, potPin);         //Read potPin
+   addr+=EEPROM_readAnything(addr, dirPin);         //Read dirPin
+   addr+=EEPROM_readAnything(addr, stepPin);        //Read stepPin
+   addr+=EEPROM_readAnything(addr, ledPin);         //Read stepPin
+   addr+=EEPROM_readAnything(addr, minFrequency);   //Read minFrequency
+   addr+=EEPROM_readAnything(addr, maxFrequency);   //Read maxFrequency
+   addr+=EEPROM_readAnything(addr, minPosition);    //Read minPosition
+   addr+=EEPROM_readAnything(addr, maxPosition);    //Read maxPosition
      
-   Wire.begin(id);                // join i2c bus with address read from above
+   Wire.begin(id);                                  // join i2c bus with address read from above
    Wire.onRequest(requestEvent);
    pinMode(dirPin,OUTPUT);
    pinMode(stepPin,OUTPUT);
