@@ -27,7 +27,7 @@ void setup()
   digitalWrite(ledPin, HIGH);
   
   //Clear the eeprom
-  // write a 0 to all 512 bytes of the EEPROM
+  //Write a 0 to all 512 bytes of the EEPROM
   for (int i = 0; i < 512; i++)
     EEPROM.write(i, 0);
   

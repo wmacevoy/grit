@@ -88,8 +88,7 @@ void loop()
    }
   
    //Read six incoming bytes, 
-   /*if(Wire.available() == byteBuffer) {
-    byte *b = &step;
+   /*if(Wire.available() % byteBuffer == 0) {
     for(int i = 0; i < byteBuffer; ++i){
      bytes[i] = Wire.read();
     }
