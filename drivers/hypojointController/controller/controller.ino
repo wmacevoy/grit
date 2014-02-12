@@ -30,7 +30,7 @@ long maxFrequency;
 int  minPosition;
 long maxPosition;
 
-const int  byteBuffer = 6;
+const int byteBuffer = 6;
 byte bytes[byteBuffer];
 
 int  i        = 0;
@@ -88,12 +88,14 @@ void loop()
    }
   
    //Read six incoming bytes, 
-   /*i = 0;
-   while(Wire.available()){
-     bytes[i++] = Wire.read();
-   }
-   if(i == 6){
-    memcpy(&step, bytes, i);
+   /*if(Wire.available() == byteBuffer) {
+    byte *b = &step;
+    for(int i = 0; i < byteBuffer; ++i){
+     bytes[i] = Wire.read();
+    }
+    //Check validity of packet
+    //if(valid) {
+    memcpy(&step, bytes, byteBuffer); 
    }*/
    
    position = map(analogRead(potPin),0,1023,0,199);
