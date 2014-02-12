@@ -5,7 +5,17 @@
 #include "EEPROMAnything.h"
 
 int addr   = 0;
-const int ledPin = 13;
+
+const byte id          = 'a';
+const int  potPin      = A3;
+const int  dirPin      = 8;
+const int  stepPin     = 9;
+const int  ledPin      = 13;
+const int  minFreq     = 0;
+const long maxFreq     = 3500;
+const int  minPos      = 0;
+const long maxPos      = 1024;
+
 
 void setup()
 {
@@ -22,81 +32,73 @@ void setup()
     EEPROM.write(i, 0);
   
   //Write device id
-  byte id = 'a';
-  addr += EEPROM_writeAnything(addr, id);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, id);
   Serial.print("   Value is: ");
   Serial.print(id);
   Serial.print('\n'); 
   
   //Write potentiometer pin
-  int potPin = A3;
-  addr += EEPROM_writeAnything(addr, potPin);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, potPin);
   Serial.print("   Value is: ");
   Serial.print(potPin);
   Serial.print('\n');
 
   //Write direction pin
-  int dirPin = 8;
-  addr += EEPROM_writeAnything(addr, dirPin);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, dirPin);
   Serial.print("   Value is: ");
   Serial.print(dirPin);
   Serial.print('\n');
   
   //Write stepper motor pin
-  int stepPin = 9;
-  addr += EEPROM_writeAnything(addr, stepPin);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, stepPin);
   Serial.print("   Value is: ");
   Serial.print(stepPin);
   Serial.print('\n');
   
   //Write led pin
-  addr += EEPROM_writeAnything(addr, ledPin);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, ledPin);
   Serial.print("   Value is: ");
   Serial.print(ledPin);
   Serial.print('\n');
   
   //Write minFrequency
-  int minFreq = 0;
-  addr += EEPROM_writeAnything(addr, minFreq);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, minFreq);
   Serial.print("   Value is: ");
   Serial.print(minFreq);
   Serial.print('\n');
   
   //Write maxFrequency
-  long maxFreq = 3500;
-  addr += EEPROM_writeAnything(addr, maxFreq);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, maxFreq);
   Serial.print("   Value is: ");
   Serial.print(maxFreq);
   Serial.print('\n');
   
   //Write minPosition
-  int minPos = 0;
-  addr += EEPROM_writeAnything(addr, minPos);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, minPos);
   Serial.print("   Value is: ");
   Serial.print(minPos);
   Serial.print('\n');
   
   //Write maxPosition
-  long maxPos = 1024;
-  addr += EEPROM_writeAnything(addr, maxPos);
   Serial.print("Address is: ");
   Serial.print(addr);
+  addr += EEPROM_writeAnything(addr, maxPos);
   Serial.print("   Value is: ");
   Serial.print(maxPos);
   Serial.print('\n');
