@@ -1,9 +1,11 @@
+// Motor Controller
 // this is the code for the individual joints..... the master is located on the main body
 // and will have a different code uploaded to it.
-
-//////////////////////////////input/////////////////////////////
-
-//input is 3 characters    026=26    100=100 001=1
+//
+//
+//
+//
+//
 
 
 #include <Wire.h>
@@ -13,6 +15,7 @@
 //These 2 will be deprecated soon
 const int cutoff=4;
 const int maxbuffer=4;
+char input[maxbuffer];
 /////////////////////////////////
 
 
@@ -27,11 +30,14 @@ long maxFrequency;
 int  minPosition;
 long maxPosition;
 
-char input[maxbuffer];
-int  position=0;
-int  dir=0;          // 1 counter clockwise/0 stop/-1 clockwise
-int  wait=100;
-int  addr=0;       //eeprom memory address
+const int  byteBuffer = 6;
+byte bytes[byteBuffer];
+
+int  i        = 0;
+int  position = 0;
+int  dir      = 0;          // 1 counter clockwise/0 stop/-1 clockwise
+int  wait     = 100;
+int  addr     = 0;       //eeprom memory address
 
 struct Response{
   int pos;
@@ -72,20 +78,24 @@ void loop()
 {  
   //this code is only used to test that the motor will go to designated position
    if (Serial.available() > 0) {
-    Serial.readBytes(input,maxbuffer);//need to check to see if this is in degrees or steps
+    Serial.readBytes(input,maxbuffer);
     step.goal=0;
     for(int i=0;i<maxbuffer-1;i++)
     {
       step.goal*=10;
       step.goal += input[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
     }
-  }
-  /*if(Wire.available()){
-     byte *b = &step;
-     for(int i = 0; i < 6; ++i) {
-      b++ = Wire.read();
-     }
-  }*/
+   }
+  
+   //Read six incoming bytes, 
+   /*i = 0;
+   while(Wire.available()){
+     bytes[i++] = Wire.read();
+   }
+   if(i == 6){
+    memcpy(&step, bytes, i);
+   }*/
+   
    position = map(analogRead(potPin),0,1023,0,199);
    
    if (step.goal < 10) step.goal=10;
