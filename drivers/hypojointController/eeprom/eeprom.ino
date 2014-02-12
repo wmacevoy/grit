@@ -1,19 +1,21 @@
 //EEPROM initial setup
+//LED will stay on while writing, when program exits, LED will go off
 
 #include <EEPROM.h>
 #include "EEPROMAnything.h"
 
-int addr = 0;
+int addr   = 0;
+const int ledPin = 13;
 
 void setup()
 {
   Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
   delay(1000);
-}
-
-void loop()
-{  
+  
   Serial.print("Writing values to memory...\n");
+  digitalWrite(ledPin, HIGH);
+  
   //Clear the eeprom
   // write a 0 to all 512 bytes of the EEPROM
   for (int i = 0; i < 512; i++)
@@ -24,6 +26,8 @@ void loop()
   addr += EEPROM_writeAnything(addr, id);
   Serial.print("Address is: ");
   Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(id);
   Serial.print('\n'); 
   
   //Write potentiometer pin
@@ -31,6 +35,8 @@ void loop()
   addr += EEPROM_writeAnything(addr, potPin);
   Serial.print("Address is: ");
   Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(potPin);
   Serial.print('\n');
 
   //Write direction pin
@@ -38,6 +44,8 @@ void loop()
   addr += EEPROM_writeAnything(addr, dirPin);
   Serial.print("Address is: ");
   Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(dirPin);
   Serial.print('\n');
   
   //Write stepper motor pin
@@ -45,6 +53,16 @@ void loop()
   addr += EEPROM_writeAnything(addr, stepPin);
   Serial.print("Address is: ");
   Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(stepPin);
+  Serial.print('\n');
+  
+  //Write led pin
+  addr += EEPROM_writeAnything(addr, ledPin);
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(ledPin);
   Serial.print('\n');
   
   //Write minFrequency
@@ -52,6 +70,8 @@ void loop()
   addr += EEPROM_writeAnything(addr, minFreq);
   Serial.print("Address is: ");
   Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(minFreq);
   Serial.print('\n');
   
   //Write maxFrequency
@@ -59,6 +79,8 @@ void loop()
   addr += EEPROM_writeAnything(addr, maxFreq);
   Serial.print("Address is: ");
   Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(maxFreq);
   Serial.print('\n');
   
   //Write minPosition
@@ -66,6 +88,8 @@ void loop()
   addr += EEPROM_writeAnything(addr, minPos);
   Serial.print("Address is: ");
   Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(minPos);
   Serial.print('\n');
   
   //Write maxPosition
@@ -73,14 +97,18 @@ void loop()
   addr += EEPROM_writeAnything(addr, maxPos);
   Serial.print("Address is: ");
   Serial.print(addr);
+  Serial.print("   Value is: ");
+  Serial.print(maxPos);
   Serial.print('\n');
 
   //Return address to 0
   addr = 0;
   
   Serial.print("Done writing values to memory");
-  digitalWrite(13, HIGH);
-  delay(1000);
-  digitalWrite(13, LOW);
-  exit(0);
+  delay(200);
+  digitalWrite(ledPin, LOW);
+}
+
+void loop()
+{  
 }

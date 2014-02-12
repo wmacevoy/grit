@@ -18,21 +18,30 @@ const int maxbuffer=4;
 
 //Default values are set but till be read from eeprom in setup()
 byte id;
-int potPin;
-int dirPin;
-int stepPin;
-int minFrequency;
+int  potPin;
+int  dirPin;
+int  stepPin;
+int  ledPin;
+int  minFrequency;
 long maxFrequency;
-int minPosition;
+int  minPosition;
 long maxPosition;
 
 char input[maxbuffer];
-int goal;
-int position=0;
-int dir;          // 1 counter clockwise/0 stop/-1 clockwise
-int wait=100;
+int  position=0;
+int  dir=0;          // 1 counter clockwise/0 stop/-1 clockwise
+int  wait=100;
+int  addr=0;       //eeprom memory address
 
-int addr=0;       //eeprom memory address
+struct Response{
+  
+};
+
+union Step{
+ int freq;
+ int goal;
+ int checksum;
+} step;
 
 void setup()
 {
@@ -42,6 +51,7 @@ void setup()
    addr+=EEPROM_readAnything(addr, potPin); //Read potPin
    addr+=EEPROM_readAnything(addr, dirPin); //Read dirPin
    addr+=EEPROM_readAnything(addr, stepPin); //Read stepPin
+   addr+=EEPROM_readAnything(addr, ledPin); //Read stepPin
    addr+=EEPROM_readAnything(addr, minFrequency); //Read minFrequency
    addr+=EEPROM_readAnything(addr, maxFrequency); //Read maxFrequency
    addr+=EEPROM_readAnything(addr, minPosition); //Read minPosition
@@ -61,43 +71,46 @@ void loop()
   //this code is only used to test that the motor will go to designated position
    if (Serial.available() > 0) {
     Serial.readBytes(input,maxbuffer);//need to check to see if this is in degrees or steps
-    goal=0;
+    step.goal=0;
     for(int i=0;i<maxbuffer-1;i++)
     {
-      goal*=10;
-      goal += input[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
+      step.goal*=10;
+      step.goal += input[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
     }
   }
   /*if(Wire.available()){
-    goal = Wire.read();
+     byte *b = &step;
+     for(int i = 0; i < 6; ++i) {
+      b++ = Wire.read();
+     }
   }*/
    position = map(analogRead(potPin),0,1023,0,199);
    
-   if (goal < 10) goal=10;
-   if (goal > 190) goal=190;
+   if (step.goal < 10) step.goal=10;
+   if (step.goal > 190) step.goal=190;
    digitalWrite(stepPin,LOW);
-   if (dir == 0 && abs(goal-position) <= cutoff) {
+   if (dir == 0 && abs(step.goal-position) <= cutoff) {
      return;
    }
-   if (position < goal) {
+   if (position < step.goal) {
       if (dir != 1) {
         digitalWrite(dirPin,0); 
       }
       dir = 1;
       int f;
-      int d=goal-position;
+      int d=step.goal-position;
       if (d > 100) {
         f=maxFrequency;
       } else {
         f=map(d,0,100,0,maxFrequency);
       }
       tone(stepPin,f);
-   } else if (position > goal) {
+   } else if (position > step.goal) {
       if (dir != -1) {
         digitalWrite(dirPin,1);
       }
       int f;
-      int d=position-goal;
+      int d=position-step.goal;
       if (d > 100) {
         f=maxFrequency;
       } else {
