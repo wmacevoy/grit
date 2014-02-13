@@ -45,7 +45,7 @@ struct MaxFreq{
 struct MinPos{
  int val;
  static const int address = 15;
- MinPos(){val = 0;}
+ MinPos(){val = 4;}
 }minPos;
 struct MaxPos{
  long val;
@@ -145,7 +145,7 @@ void setup()
   Serial.print("Checksum is: ");
   Serial.print(b);
   Serial.print('\n');
-  EEPROM.write(totalBytes, b);
+  //EEPROM.write(totalBytes, b);
   
   Serial.print("Done writing values to memory");
   delay(1000);
