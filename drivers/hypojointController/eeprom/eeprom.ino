@@ -9,7 +9,7 @@ int addr   = 0;
 struct Id{
  byte val;
  int   address;
- Id(){ val = 'a'; address = 0;}
+ Id(){ val = 0; address = 0;}
 }id;
 struct PotPin{
  int val;
@@ -61,11 +61,6 @@ void setup()
   
   Serial.print("Writing values to memory...\n");
   digitalWrite(ledPin.val, HIGH);
-  
-  //Clear the eeprom
-  //Write a 0 to all 512 bytes of the EEPROM
-  for (int i = 0; i < 512; i++)
-    EEPROM.write(i, 0);
   
   //Write device id
   Serial.print("Address is: ");
