@@ -14,12 +14,12 @@
 
 //These 2 will be deprecated soon
 const int cutoff=4;
-const int maxbuffer=4;
+const int maxbuffer=5;
 char input[maxbuffer];
 /////////////////////////////////
 
 
-//Default values are set but till be read from eeprom in setup()
+//Items to be read from eeprom in setup()
 byte id;
 int  potPin;
 int  dirPin;
@@ -71,6 +71,8 @@ void setup()
    pinMode(stepPin,OUTPUT);
    digitalWrite(dirPin,LOW);
    digitalWrite(stepPin,LOW);
+   
+   step.freq = maxFrequency;
 }
 
 
@@ -85,6 +87,12 @@ void loop()
       step.goal*=10;
       step.goal += input[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
     }
+    if(step.goal > maxPosition) {
+      step.goal = maxPosition;
+    }
+    
+    Serial.print(step.goal);
+    Serial.print('\n');
    }
   
    //Read six incoming bytes, 
@@ -97,11 +105,11 @@ void loop()
     memcpy(&step, bytes, byteBuffer); 
    }*/
    
-   position = map(analogRead(potPin),0,1023,0,199);
-   
    if (step.goal < 10) step.goal=10;
-   if (step.goal > 190) step.goal=190;
-   digitalWrite(stepPin,LOW);
+   if (step.goal > 1010) step.goal=1010;
+   
+   position = analogRead(potPin);
+   
    if (dir == 0 && abs(step.goal-position) <= cutoff) {
      return;
    }
@@ -113,9 +121,9 @@ void loop()
       int f;
       int d=step.goal-position;
       if (d > 100) {
-        f=maxFrequency;
+        f=step.freq;
       } else {
-        f=map(d,0,100,0,maxFrequency);
+        f=map(d,0,100,0,step.freq);
       }
       tone(stepPin,f);
    } else if (position > step.goal) {
@@ -125,9 +133,9 @@ void loop()
       int f;
       int d=position-step.goal;
       if (d > 100) {
-        f=maxFrequency;
+        f=step.freq;
       } else {
-        f=map(d,0,100,0,maxFrequency);
+        f=map(d,0,100,0,step.freq);
       }
       tone(stepPin,f);
       dir = -1;

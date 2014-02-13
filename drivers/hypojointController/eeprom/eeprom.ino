@@ -6,25 +6,61 @@
 
 int addr   = 0;
 
-const byte id          = 'a';
-const int  potPin      = A3;
-const int  dirPin      = 8;
-const int  stepPin     = 9;
-const int  ledPin      = 13;
-const int  minFreq     = 0;
-const long maxFreq     = 3500;
-const int  minPos      = 0;
-const long maxPos      = 1024;
+struct Id{
+ byte val;
+ int   address;
+ Id(){ val = 'a'; address = 0;}
+}id;
+struct PotPin{
+ int val;
+ int   address;
+ PotPin(){val = A3; address = 1;}
+}potPin; 
+struct DirPin{
+ int val;
+ int   address;
+ DirPin(){val = 8; address = 3;}
+}dirPin;
+struct StepPin{
+ int val;
+ int   address;
+ StepPin(){val = 9; address = 5;}
+}stepPin;
+struct LedPin{
+ int val;
+ int   address;
+ LedPin(){val = 13; address = 7;}
+}ledPin;
+struct MinFreq{
+ int val;
+ int   address;
+ MinFreq(){val = 0; address = 9;}
+}minFreq;
+struct MaxFreq{
+ long val;
+ int   address;
+ MaxFreq(){val = 3500; address = 11;}
+}maxFreq;
+struct MinPos{
+ int val;
+ int   address;
+ MinPos(){val = 0; address = 15;}
+}minPos;
+struct MaxPos{
+ long val;
+ int   address;
+ MaxPos(){val = 1024; address = 17;}
+}maxPos;
 
 
 void setup()
 {
   Serial.begin(9600);
-  pinMode(ledPin, OUTPUT);
+  pinMode(ledPin.val, OUTPUT);
   delay(1000);
   
   Serial.print("Writing values to memory...\n");
-  digitalWrite(ledPin, HIGH);
+  digitalWrite(ledPin.val, HIGH);
   
   //Clear the eeprom
   //Write a 0 to all 512 bytes of the EEPROM
@@ -34,73 +70,73 @@ void setup()
   //Write device id
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, id);
+  addr += EEPROM_writeAnything(id.address, id.val);
   Serial.print("   Value is: ");
-  Serial.print(id);
+  Serial.print(id.val);
   Serial.print('\n'); 
   
   //Write potentiometer pin
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, potPin);
+  addr += EEPROM_writeAnything(potPin.address, potPin.val);
   Serial.print("   Value is: ");
-  Serial.print(potPin);
+  Serial.print(potPin.val);
   Serial.print('\n');
 
   //Write direction pin
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, dirPin);
+  addr += EEPROM_writeAnything(dirPin.address, dirPin.val);
   Serial.print("   Value is: ");
-  Serial.print(dirPin);
+  Serial.print(dirPin.val);
   Serial.print('\n');
   
   //Write stepper motor pin
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, stepPin);
+  addr += EEPROM_writeAnything(stepPin.address, stepPin.val);
   Serial.print("   Value is: ");
-  Serial.print(stepPin);
+  Serial.print(stepPin.val);
   Serial.print('\n');
   
   //Write led pin
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, ledPin);
+  addr += EEPROM_writeAnything(ledPin.address, ledPin.val);
   Serial.print("   Value is: ");
-  Serial.print(ledPin);
+  Serial.print(ledPin.val);
   Serial.print('\n');
   
   //Write minFrequency
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, minFreq);
+  addr += EEPROM_writeAnything(minFreq.address, minFreq.val);
   Serial.print("   Value is: ");
-  Serial.print(minFreq);
+  Serial.print(minFreq.val);
   Serial.print('\n');
   
   //Write maxFrequency
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, maxFreq);
+  addr += EEPROM_writeAnything(maxFreq.address, maxFreq.val);
   Serial.print("   Value is: ");
-  Serial.print(maxFreq);
+  Serial.print(maxFreq.val);
   Serial.print('\n');
   
   //Write minPosition
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, minPos);
+  addr += EEPROM_writeAnything(minPos.address, minPos.val);
   Serial.print("   Value is: ");
-  Serial.print(minPos);
+  Serial.print(minPos.val);
   Serial.print('\n');
   
   //Write maxPosition
   Serial.print("Address is: ");
   Serial.print(addr);
-  addr += EEPROM_writeAnything(addr, maxPos);
+  addr += EEPROM_writeAnything(maxPos.address, maxPos.val);
   Serial.print("   Value is: ");
-  Serial.print(maxPos);
+  Serial.print(maxPos.val);
   Serial.print('\n');
 
   //Return address to 0
@@ -108,7 +144,7 @@ void setup()
   
   Serial.print("Done writing values to memory");
   delay(200);
-  digitalWrite(ledPin, LOW);
+  digitalWrite(ledPin.val, LOW);
 }
 
 void loop()
