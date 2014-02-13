@@ -4,6 +4,7 @@
 #include <EEPROM.h>
 #include "EEPROMAnything.h"
 
+const int totalBytes = 21;
 int addr   = 0;
 
 struct Id{
@@ -137,8 +138,17 @@ void setup()
   //Return address to 0
   addr = 0;
   
+  byte b = 0;
+  for(int i = 0; i < totalBytes; ++i){
+   b ^= EEPROM.read(i);
+  }
+  Serial.print("Checksum is: ");
+  Serial.print(b);
+  Serial.print('\n');
+  EEPROM.write(totalBytes, b);
+  
   Serial.print("Done writing values to memory");
-  delay(200);
+  delay(1000);
   digitalWrite(ledPin.val, LOW);
 }
 
