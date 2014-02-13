@@ -8,48 +8,48 @@ int addr   = 0;
 
 struct Id{
  byte val;
- int   address;
- Id(){ val = 0; address = 0;}
+ static const int address = 0;
+ Id(){ val = 0;}
 }id;
 struct PotPin{
  int val;
- int   address;
- PotPin(){val = A3; address = 1;}
+ static const int address = 1;
+ PotPin(){val = A3;}
 }potPin; 
 struct DirPin{
  int val;
- int   address;
- DirPin(){val = 8; address = 3;}
+ static const int address = 3;
+ DirPin(){val = 8;}
 }dirPin;
 struct StepPin{
  int val;
- int   address;
- StepPin(){val = 9; address = 5;}
+ static const int address = 5;
+ StepPin(){val = 9;}
 }stepPin;
 struct LedPin{
  int val;
- int   address;
- LedPin(){val = 13; address = 7;}
+ static const int address = 7;
+ LedPin(){val = 13;}
 }ledPin;
 struct MinFreq{
  int val;
- int   address;
- MinFreq(){val = 0; address = 9;}
+ static const int address = 9; 
+ MinFreq(){val = 0;}
 }minFreq;
 struct MaxFreq{
  long val;
- int   address;
- MaxFreq(){val = 3500; address = 11;}
+ static const int address = 11;
+ MaxFreq(){val = 3500;}
 }maxFreq;
 struct MinPos{
  int val;
- int   address;
- MinPos(){val = 0; address = 15;}
+ static const int address = 15;
+ MinPos(){val = 0;}
 }minPos;
 struct MaxPos{
  long val;
- int   address;
- MaxPos(){val = 1024; address = 17;}
+ static const int address = 17;
+ MaxPos(){val = 1024;}
 }maxPos;
 
 
