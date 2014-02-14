@@ -3,7 +3,7 @@
 // and will have a different code uploaded to it.
 //
 //
-//
+//CRC code from - http://www.barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code
 //
 //
 
@@ -13,13 +13,20 @@
 #include "EEPROMAnything.h"
 //#include "default.hpp"
 
+#define WIDTH  (8 * sizeof(crc))
+#define TOPBIT (1 << (WIDTH - 1))
+#define POLYNOMIAL 0xD8
+
 //These 2 will be deprecated soon
-const int cutoff=4;
-const int maxbuffer=5;
+const int maxbuffer=4;
 char serialInput[maxbuffer];
 /////////////////////////////////
 
 const int totalBytes = 21;
+const int cutoff=5;
+
+typedef uint8_t crc;
+uint8_t crcTable[256];
 
 //Items to be read from eeprom in setup()
 byte id;
@@ -35,7 +42,6 @@ long maxPosition;
 const int byteBuffer = 6;
 byte bytes[byteBuffer];
 
-int  i        = 0;
 int  position = 0;
 int  dir      = 0;          // 1 counter clockwise/0 stop/-1 clockwise
 int  wait     = 100;
@@ -44,7 +50,7 @@ int  addr     = 0;          //eeprom memory address
 struct Id{
  byte val;
  static const int address = 0;
- Id(){ val = 0;}
+ Id(){val = 0;}
 }_id;
 struct PotPin{
  int val;
@@ -101,6 +107,8 @@ struct Step{
 
 bool checksum();
 void configure();
+void crcInit();
+uint8_t crcFast(const uint8_t message[], int nBytes);
 
 void setup()
 {
@@ -166,9 +174,11 @@ void loop()
    }*/
    
    if (step.goal < 10) step.goal=10;
-   if (step.goal > 1010) step.goal=1010;
+   if (step.goal > 900) step.goal=900;
    
    position = analogRead(potPin);
+//   Serial.print(position);
+//   Serial.print('\n');
    
    if (dir == 0 && abs(step.goal-position) <= cutoff) {
      return;
@@ -214,16 +224,22 @@ void requestEvent()
 }
 
 bool checksum(){
-  byte b = 0, c;
+  byte b[totalBytes];
+  
+  crcInit();
+  
   for(int i = 0; i < totalBytes; ++i){
-   b ^= EEPROM.read(i);
+   b[i] = EEPROM.read(i);
   }
+  
+  int checksum = crcFast(b, totalBytes);
+  
   Serial.print("Checksum is: ");
-  Serial.print(b);
+  Serial.print(checksum);
   Serial.print('\n');
   
-  c = EEPROM.read(totalBytes);
-  if(b == c){
+  int c = EEPROM.read(totalBytes);
+  if(checksum == c){
     return true;
   } else {
     return false;
@@ -309,19 +325,90 @@ void defaultConfigure(){
   //Return address to 0
   addr = 0;
   
-  byte b = 0;
+  //Do CRC
+  byte b[totalBytes];
+  crcInit();
   for(int i = 0; i < totalBytes; ++i){
-   b ^= EEPROM.read(i);
+   b[i] = EEPROM.read(i);
   }
+  int checksum = crcFast(b, totalBytes);
+  
   Serial.print("Checksum is: ");
-  Serial.print(b);
+  Serial.print(checksum);
   Serial.print('\n');
-  EEPROM.write(totalBytes, b);
+  EEPROM.write(totalBytes, checksum);
   
   Serial.print("Done writing values to memory");
   delay(1000);
   digitalWrite(_ledPin.val, LOW);
 }
+
+
+//CRC lookupTable
+void
+crcInit(void)
+{
+    uint8_t  remainder;
+
+
+    /*
+     * Compute the remainder of each possible dividend.
+     */
+    for (int dividend = 0; dividend < 256; ++dividend)
+    {
+        /*
+         * Start with the dividend followed by zeros.
+         */
+        remainder = dividend << (WIDTH - 8);
+
+        /*
+         * Perform modulo-2 division, a bit at a time.
+         */
+        for (uint8_t bit = 8; bit > 0; --bit)
+        {
+            /*
+             * Try to divide the current data bit.
+             */			
+            if (remainder & TOPBIT)
+            {
+                remainder = (remainder << 1) ^ POLYNOMIAL;
+            }
+            else
+            {
+                remainder = (remainder << 1);
+            }
+        }
+
+        /*
+         * Store the result into the table.
+         */
+        crcTable[dividend] = remainder;
+    }
+
+}   /* crcInit() */
+
+uint8_t
+crcFast(uint8_t const message[], int nBytes)
+{
+    uint8_t data;
+    uint8_t remainder = 0;
+
+
+    /*
+     * Divide the message by the polynomial, a byte at a time.
+     */
+    for (int byte = 0; byte < nBytes; ++byte)
+    {
+        data = message[byte] ^ (remainder >> (WIDTH - 8));
+        remainder = crcTable[data] ^ (remainder << 8);
+    }
+
+    /*
+     * The final remainder is the CRC.
+     */
+    return (remainder);
+
+}   /* crcFast() */
 
 
 
