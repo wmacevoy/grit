@@ -20,7 +20,7 @@ char serialInput[maxbuffer];
 /////////////////////////////////
 
 const int totalBytes = 21;
-const int cutoff=5;
+const int cutoff=10;
 
 //CRC stuffs
 crc crcTable[256];
@@ -56,6 +56,7 @@ long error, previous_error;
 long integral, derivative;
 float Kp, Ki, Kd;
 
+//A struct to hold the response from the joint
 struct Response{
   int pos;
   int temp;
@@ -137,14 +138,14 @@ void loop()
     //Check validity of packet
     //if(valid) {
     memcpy(&step, bytes, byteBuffer); 
-    previous_error = 0;
-    integral = 0;
    }*/
    
    if (step.goal < 5) step.goal=5;
    if (step.goal > 900) step.goal=900;
    
    position = analogRead(potPin);
+   Serial.print(position);
+   Serial.print('\n');
 
    //Calculate the change in time
    t2 = millis();
