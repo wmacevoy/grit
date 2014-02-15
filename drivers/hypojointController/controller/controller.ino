@@ -10,6 +10,7 @@
 
 #include <Wire.h>
 #include <EEPROM.h>
+#include "typedef.h"
 #include "EEPROMAnything.h"
 #include "default.h"
 
@@ -21,7 +22,6 @@ char serialInput[maxbuffer];
 const int totalBytes = 21;
 const int cutoff=5;
 
-typedef uint8_t crc;
 crc crcTable[256];
 #define WIDTH  (8 * sizeof(crc))
 #define TOPBIT (1 << (WIDTH - 1))
