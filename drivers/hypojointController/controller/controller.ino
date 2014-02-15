@@ -22,6 +22,7 @@ char serialInput[maxbuffer];
 const int totalBytes = 21;
 const int cutoff=5;
 
+//CRC stuffs
 crc crcTable[256];
 #define WIDTH  (8 * sizeof(crc))
 #define TOPBIT (1 << (WIDTH - 1))
@@ -38,13 +39,22 @@ long maxFrequency;
 int  minPosition;
 long maxPosition;
 
+//Receive buffer and length
 const int byteBuffer = 6;
 byte bytes[byteBuffer];
 
 int  position = 0;
 int  dir      = 0;          // 1 counter clockwise/0 stop/-1 clockwise
 int  wait     = 100;
-int  addr     = 0;          //eeprom memory address
+int  addr     = 0;          //eeprom starting memory address
+
+//Time stuffs
+unsigned long t1, t2, dt;
+
+//PID stuffs
+long error, previous_error;
+long integral, derivative;
+float Kp, Ki, Kd;
 
 struct Response{
   int pos;
@@ -52,6 +62,7 @@ struct Response{
   int checksum;
 } response;
 
+//A struct to receive a message over the Wire
 struct Step{
  int freq;
  int goal;
@@ -93,6 +104,13 @@ void setup()
    digitalWrite(stepPin,LOW);
    
    step.freq = maxFrequency;
+   
+   t1 = millis();
+   t2 = 0;
+   dt = 0;
+   
+   previous_error = 0;
+   integral = 0;
 }
 
 
@@ -108,12 +126,6 @@ void loop()
       step.goal*=10;
       step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
     }
-    if(step.goal > maxPosition) {
-      step.goal = maxPosition;
-    }
-    
-    Serial.print(step.goal);
-    Serial.print('\n');
     //End testing
    }
   
@@ -125,16 +137,22 @@ void loop()
     //Check validity of packet
     //if(valid) {
     memcpy(&step, bytes, byteBuffer); 
+    previous_error = 0;
+    integral = 0;
    }*/
    
-   if (step.goal < 10) step.goal=10;
+   if (step.goal < 5) step.goal=5;
    if (step.goal > 900) step.goal=900;
    
    position = analogRead(potPin);
-//   Serial.print(position);
-//   Serial.print('\n');
+
+   //Calculate the change in time
+   t2 = millis();
+   dt = t2 - t1;
+   t1 = t2;
    
    if (dir == 0 && abs(step.goal-position) <= cutoff) {
+     noTone(stepPin);
      return;
    }
    if (position < step.goal) {
