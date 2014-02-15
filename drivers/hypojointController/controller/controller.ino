@@ -13,10 +13,6 @@
 #include "EEPROMAnything.h"
 #include "default.h"
 
-#define WIDTH  (8 * sizeof(crc))
-#define TOPBIT (1 << (WIDTH - 1))
-#define POLYNOMIAL 0xD8
-
 //These 2 will be deprecated soon
 const int maxbuffer=4;
 char serialInput[maxbuffer];
@@ -26,7 +22,10 @@ const int totalBytes = 21;
 const int cutoff=5;
 
 typedef uint8_t crc;
-uint8_t crcTable[256];
+crc crcTable[256];
+#define WIDTH  (8 * sizeof(crc))
+#define TOPBIT (1 << (WIDTH - 1))
+#define POLYNOMIAL 0xD8
 
 //Items to be read from eeprom in setup()
 byte id;
@@ -62,7 +61,7 @@ struct Step{
 bool checksum();
 void configure();
 void crcInit();
-uint8_t crcFast(const uint8_t message[], int nBytes);
+crc crcFast(const uint8_t message[], int nBytes);
 
 void setup()
 {
@@ -185,13 +184,13 @@ bool checksum(){
    b[i] = EEPROM.read(i);
   }
   
-  int checksum = crcFast(b, totalBytes);
+  crc checksum = crcFast(b, totalBytes);
   
   Serial.print("Checksum is: ");
   Serial.print(checksum);
   Serial.print('\n');
   
-  int c = EEPROM.read(totalBytes);
+  crc c = EEPROM.read(totalBytes);
   if(checksum == c){
     return true;
   } else {
@@ -300,7 +299,7 @@ void defaultConfigure(){
 void
 crcInit(void)
 {
-    uint8_t  remainder;
+    crc remainder;
 
 
     /*
@@ -339,11 +338,11 @@ crcInit(void)
 
 }   /* crcInit() */
 
-uint8_t
+crc
 crcFast(uint8_t const message[], int nBytes)
 {
-    uint8_t data;
-    uint8_t remainder = 0;
+    crc data;
+    crc remainder = 0;
 
 
     /*
