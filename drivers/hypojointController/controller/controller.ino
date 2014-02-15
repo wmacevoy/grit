@@ -118,6 +118,7 @@ uint8_t crcFast(const uint8_t message[], int nBytes);
 void setup()
 {
    Serial.begin(9600);
+   crcInit();
    delay(1000);
    
    if(!checksum()) {
@@ -231,8 +232,6 @@ void requestEvent()
 bool checksum(){
   byte b[totalBytes];
   
-  crcInit();
-  
   for(int i = 0; i < totalBytes; ++i){
    b[i] = EEPROM.read(i);
   }
@@ -332,7 +331,6 @@ void defaultConfigure(){
   
   //Do CRC
   byte b[totalBytes];
-  crcInit();
   for(int i = 0; i < totalBytes; ++i){
    b[i] = EEPROM.read(i);
   }
