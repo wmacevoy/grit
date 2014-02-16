@@ -117,6 +117,8 @@ void setup()
    
    previous_error = 0;
    integral = 0;
+   
+   step.goal = 250;
 }
 
 
