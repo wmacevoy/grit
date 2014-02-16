@@ -146,7 +146,7 @@ void loop()
    }*/
    
    if (step.goal < 250) step.goal=250;
-   if (step.goal > 750) step.goal=750;
+   if (step.goal > 745) step.goal=750;
    
    position = analogRead(potPin);
    //Serial.print(position);
