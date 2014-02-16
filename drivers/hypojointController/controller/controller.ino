@@ -43,10 +43,11 @@ long maxPosition;
 const int byteBuffer = 6;
 byte bytes[byteBuffer];
 
-int  position = 0;
-int  dir      = 0;          // 1 counter clockwise/0 stop/-1 clockwise
-int  wait     = 100;
-int  addr     = 0;          //eeprom starting memory address
+int  frequency = 0;
+int  position  = 0;
+int  dir       = 0;          // 1 counter clockwise/0 stop/-1 clockwise
+int  wait      = 100;
+int  addr      = 0;          //eeprom starting memory address
 
 //Time stuffs
 unsigned long t1, t2, dt;
@@ -105,6 +106,7 @@ void setup()
    digitalWrite(stepPin,LOW);
    
    step.freq = maxFrequency;
+   frequency = 0;
    
    t1 = millis();
    t2 = 0;
@@ -112,6 +114,9 @@ void setup()
    
    previous_error = 0;
    integral = 0;
+   Kp = 1;
+   Ki = 0;
+   Kd = 0;
 }
 
 
@@ -140,20 +145,26 @@ void loop()
     memcpy(&step, bytes, byteBuffer); 
    }*/
    
-   if (step.goal < 5) step.goal=5;
-   if (step.goal > 900) step.goal=900;
+   if (step.goal < 250) step.goal=250;
+   if (step.goal > 750) step.goal=750;
    
    position = analogRead(potPin);
-   Serial.print(position);
-   Serial.print('\n');
+   //Serial.print(position);
+   //Serial.print('\n');
 
    //Calculate the change in time
    t2 = millis();
    dt = t2 - t1;
    t1 = t2;
    
+   error = step.goal-position;
+   integral = integral + error*dt;
+   derivative = (error - previous_error)/dt;
+   frequency = Kp*error + Ki*integral + Kd*derivative;
+   frequency = 3000-(6*abs(frequency));
+   previous_error = error;
+   
    if (dir == 0 && abs(step.goal-position) <= cutoff) {
-     noTone(stepPin);
      return;
    }
    if (position < step.goal) {
@@ -161,26 +172,12 @@ void loop()
         digitalWrite(dirPin,0); 
       }
       dir = 1;
-      int f;
-      int d=step.goal-position;
-      if (d > 100) {
-        f=step.freq;
-      } else {
-        f=map(d,0,100,0,step.freq);
-      }
-      tone(stepPin,f);
+      tone(stepPin,frequency);
    } else if (position > step.goal) {
       if (dir != -1) {
         digitalWrite(dirPin,1);
       }
-      int f;
-      int d=position-step.goal;
-      if (d > 100) {
-        f=step.freq;
-      } else {
-        f=map(d,0,100,0,step.freq);
-      }
-      tone(stepPin,f);
+      tone(stepPin,frequency);
       dir = -1;
    } else {
      if (dir != 0) {

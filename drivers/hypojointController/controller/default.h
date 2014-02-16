@@ -40,9 +40,9 @@ struct MinFreq{
 
 struct MaxFreq{
  long val;
- static const long limit = 3500;
+ static const long limit = 3000;
  static const int address = 11;
- MaxFreq(){val = 3500;}
+ MaxFreq(){val = 3000;}
 }_maxFreq;
 
 struct MinPos{
