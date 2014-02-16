@@ -58,3 +58,24 @@ struct MaxPos{
  static const int address = 17;
  MaxPos(){val = 1024;}
 }_maxPos;
+
+struct KP{
+  float val;
+  static const float limit = 1;
+  static const int address = 21;
+  KP(){val = 1.0;}
+}_Kp;
+
+struct KI{
+  float val;
+  static const float limit = 0.0;
+  static const int address = 25;
+  KI(){val = 0.0;}
+}_Ki;
+
+struct KD{
+  float val;
+  static const float limit = 0.0;
+  static const int address = 29;
+  KD(){val = 0.0;}
+}_Kd;

@@ -19,7 +19,7 @@ const int maxbuffer=4;
 char serialInput[maxbuffer];
 /////////////////////////////////
 
-const int totalBytes = 21;
+const int totalBytes = 33;
 const int cutoff=10;
 
 //CRC stuffs
@@ -43,7 +43,7 @@ long maxPosition;
 const int byteBuffer = 6;
 byte bytes[byteBuffer];
 
-int  frequency = 0;
+float frequency = 0;
 int  position  = 0;
 int  dir       = 0;          // 1 counter clockwise/0 stop/-1 clockwise
 int  wait      = 100;
@@ -96,6 +96,9 @@ void setup()
    addr+=EEPROM_readAnything(addr, maxFrequency);   //Read maxFrequency
    addr+=EEPROM_readAnything(addr, minPosition);    //Read minPosition
    addr+=EEPROM_readAnything(addr, maxPosition);    //Read maxPosition
+   addr+=EEPROM_readAnything(addr, Kp);             //Read Kp
+   addr+=EEPROM_readAnything(addr, Ki);             //Read Ki
+   addr+=EEPROM_readAnything(addr, Kd);             //Read Kd
      
    Wire.begin(id);                                  // join i2c bus with address read from above
    Wire.onRequest(requestEvent);
@@ -114,9 +117,6 @@ void setup()
    
    previous_error = 0;
    integral = 0;
-   Kp = 1;
-   Ki = 0;
-   Kd = 0;
 }
 
 
@@ -161,7 +161,9 @@ void loop()
    integral = integral + error*dt;
    derivative = (error - previous_error)/dt;
    frequency = Kp*error + Ki*integral + Kd*derivative;
-   frequency = 3000-(6*abs(frequency));
+   frequency = (2900.0 - (frequency*frequency) / 86.2) + 100;
+   if(frequency < 100) frequency=100;
+   if(frequency > 3000) frequency=3000;
    previous_error = error;
    
    if (dir == 0 && abs(step.goal-position) <= cutoff) {
@@ -172,12 +174,12 @@ void loop()
         digitalWrite(dirPin,0); 
       }
       dir = 1;
-      tone(stepPin,frequency);
+      tone(stepPin,(int)frequency);
    } else if (position > step.goal) {
       if (dir != -1) {
         digitalWrite(dirPin,1);
       }
-      tone(stepPin,frequency);
+      tone(stepPin,(int)frequency);
       dir = -1;
    } else {
      if (dir != 0) {
@@ -288,6 +290,30 @@ void defaultConfigure(){
   addr += EEPROM_writeAnything(_maxPos.address, _maxPos.val);
   Serial.print("   Value is: ");
   Serial.print(_maxPos.val);
+  Serial.print('\n');
+  
+  //Write Kp
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  addr += EEPROM_writeAnything(_Kp.address, _Kp.val);
+  Serial.print("   Value is: ");
+  Serial.print(_Kp.val);
+  Serial.print('\n');
+  
+  //Write Ki
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  addr += EEPROM_writeAnything(_Ki.address, _Ki.val);
+  Serial.print("   Value is: ");
+  Serial.print(_Ki.val);
+  Serial.print('\n');
+  
+  //Write Kd
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  addr += EEPROM_writeAnything(_Kd.address, _Kd.val);
+  Serial.print("   Value is: ");
+  Serial.print(_Kd.val);
   Serial.print('\n');
 
   //Return address to 0
