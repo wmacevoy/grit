@@ -173,13 +173,13 @@ void loop()
    }
    if (position < step.goal) {
       if (dir != 1) {
-        digitalWrite(dirPin,0); 
+        digitalWrite(dirPin,1); 
       }
       dir = 1;
       tone(stepPin,(int)frequency);
    } else if (position > step.goal) {
       if (dir != -1) {
-        digitalWrite(dirPin,1);
+        digitalWrite(dirPin,0);
       }
       tone(stepPin,(int)frequency);
       dir = -1;
