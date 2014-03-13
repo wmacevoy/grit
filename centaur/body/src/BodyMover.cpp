@@ -783,7 +783,11 @@ void BodyMover::dynamicWalk(WalkParameters wp) {
 
       //Check if enough data is in the vector to create a curve
       //If so, push it to from tips
-      if(data.size() == 3) {
+      if(data.size() >= 3) {
+				if(data.size() > 3)
+					{
+					data.resize(3);
+					}
         logPosition(data);
         fromTips(data);
 
