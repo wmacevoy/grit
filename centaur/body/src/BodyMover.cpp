@@ -700,9 +700,7 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
 std::thread *walkThread;
 std::atomic<bool> walking;
 
-void BodyMover::dynamicWalk() {
-  //Need to populate walk parameters dynamically in here
-  WalkParameters wp(0.0,0.0,0.0,0.0,0.0,0.0,0.0);
+void BodyMover::dynamicWalk(WalkParameters wp) {
 
   vector<vector<double>> data;
   double direction=(wp.direction*M_PI)/180.0;
@@ -730,7 +728,7 @@ void BodyMover::dynamicWalk() {
   double zRise = wp.zOffset * wp.step / (wp.y1 - wp.y4);
 
   //Keep track of the wall clock time passing
-  double t1 = 0.0, t2 = 0.0, framerate = 0.2;
+  double t1 = 0.0, t2 = 0.0, framerate = 0.1;
 
   float l1a;
   float l2a;
@@ -743,14 +741,15 @@ void BodyMover::dynamicWalk() {
             Function to check leg pressures, determine which legs should have pressure and adjust if needed
             Function to check accelerometers and level chassis accordingly using zOffset
       */
+
       l1a=a;
       l2a=a+M_PI_2;
       l3a=a+M_PI;
       l4a=a+3*M_PI_2;
-
+ 
 			//Regulate how fast moves are generated. This may need to be placed elsewhere if at all needed?
       t1 = now();
-      if(t1 - t2 >= framerate) {
+      if( (data.size() > 3) || (t1 - t2 >= framerate)) {
 
 		    p.push_back(t);
 		    { // leg 1
@@ -795,7 +794,7 @@ void BodyMover::dynamicWalk() {
       t+=dt;
 
       a+=da;
-      if(a>=fullCircle) { a=0.0; }
+      if(a>=fullCircle) { a-=2.0 * M_PI; }
   }
 }
 
