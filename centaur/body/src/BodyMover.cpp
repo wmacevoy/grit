@@ -696,11 +696,12 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   return true;
 }
 
-//EXPERIMENT - DO NOT RUN
+//EXPERIMENT - TIME TO RUN!
 std::thread *walkThread;
 std::atomic<bool> walking;
 
-void BodyMover::dynamicWalk(WalkParameters wp) {
+void BodyMover::dynamicWalk(void* _wp) {
+  WalkParameters wp = *(WalkParameters*)_wp;
 
   vector<vector<double>> data;
   double direction=(wp.direction*M_PI)/180.0;
