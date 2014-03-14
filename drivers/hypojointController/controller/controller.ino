@@ -15,7 +15,7 @@
 #include "default.h"
 
 //These 2 will be deprecated soon
-const int maxbuffer=4;
+const int maxbuffer=5;
 char serialInput[maxbuffer];
 /////////////////////////////////
 
@@ -44,18 +44,20 @@ const int byteBuffer = 6;
 byte bytes[byteBuffer];
 
 float frequency = 0;
-int  position  = 0;
-int  dir       = 0;          // 1 counter clockwise/0 stop/-1 clockwise
-int  wait      = 100;
-int  addr      = 0;          //eeprom starting memory address
+int  position   = 0;
+int  dir        = 0;          // 1 counter clockwise/0 stop/-1 clockwise
+int  wait       = 100;
+int  addr       = 0;          //eeprom starting memory address
 
 //Time stuffs
 unsigned long t1, t2, dt;
 
 //PID stuffs
-long error, previous_error;
-long integral, derivative;
+long  error, previous_error;
+long  integral, derivative;
 float Kp, Ki, Kd;
+float dp,dp0;
+int   lastp;
 
 //A struct to hold the response from the joint
 struct Response{
@@ -119,6 +121,9 @@ void setup()
    integral = 0;
    
    step.goal = 250;
+   dp = 0;
+   dp0=0;
+   lastp = 0;
 }
 
 
@@ -131,11 +136,20 @@ void loop()
     step.goal=0;
     for(int i=0;i<maxbuffer-1;i++)
     {
-      step.goal*=10;
-      step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
+      frequency *= 10;
+      frequency += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
+      //step.goal*=10;
+      //step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
     }
+    if(frequency > 3500) frequency = 3500;
     //End testing
    }
+   
+   
+   ///////////////////////////////////////////FOR SKYLER/////////////////////////////////////////////////////////
+   tone(stepPin,frequency);
+   digitalWrite(dirPin,1);
+   ///////////////////////////////////////////FOR SKYLER/////////////////////////////////////////////////////////
   
    //Read six incoming bytes, 
    /*if(Wire.available() % byteBuffer == 0) {
@@ -147,48 +161,58 @@ void loop()
     memcpy(&step, bytes, byteBuffer); 
    }*/
    
-   if (step.goal < 250) step.goal=250;
-   if (step.goal > 745) step.goal=750;
+   //if (step.goal < 250) step.goal=250;
+   //if (step.goal > 745) step.goal=750;
    
-   position = analogRead(potPin);
-   //Serial.print(position);
-   //Serial.print('\n');
+   //position = analogRead(potPin);
+   
 
    //Calculate the change in time
-   t2 = millis();
-   dt = t2 - t1;
-   t1 = t2;
+   //t2 = millis();
+   //dt = t2 - t1;
+   //t1 = t2;
    
-   error = step.goal-position;
-   integral = integral + error*dt;
-   derivative = (error - previous_error)/dt;
-   frequency = Kp*error + Ki*integral + Kd*derivative;
-   frequency = (2900.0 - (frequency*frequency) / 86.2) + 100;
-   if(frequency < 100) frequency=100;
-   if(frequency > 3000) frequency=3000;
-   previous_error = error;
+   //dp0 = (float)abs(position - lastp) / (float)dt;
+   //dp=1.00*dp0+0.00*dp;
+   //float mult=(dp/10.0);
+   //if (mult>1.0) mult=1.0;
+   //lastp = position;
+  //  if(dp > 0.5){
+  // Serial.print(dp);
+  // Serial.print('\n');}
    
-   if (dir == 0 && abs(step.goal-position) <= cutoff) {
-     return;
-   }
-   if (position < step.goal) {
-      if (dir != 1) {
-        digitalWrite(dirPin,1); 
-      }
-      dir = 1;
-      tone(stepPin,(int)frequency);
-   } else if (position > step.goal) {
-      if (dir != -1) {
-        digitalWrite(dirPin,0);
-      }
-      tone(stepPin,(int)frequency);
-      dir = -1;
-   } else {
-     if (dir != 0) {
-       noTone(stepPin);
-     }
-     dir = 0;
-   }
+   
+//   error = step.goal-position;
+//   integral = integral + error*dt;
+//   derivative = (error - previous_error)/dt;
+//   frequency = Kp*error + Ki*integral + Kd*derivative;
+//   frequency = mult*((2900.0 - (frequency*frequency) / 86.2) + 100);
+//   //frequency = dp * 300;
+//   if(frequency < 100) frequency=100;
+//   if(frequency > 3000) frequency=3000;
+//   previous_error = error;
+   
+//   if (dir == 0 && abs(step.goal-position) <= cutoff) {
+//     return;
+//   }
+//   if (position < step.goal) {
+//      if (dir != 1) {
+//        digitalWrite(dirPin,1); 
+//      }
+//      dir = 1;
+//      tone(stepPin,(int)frequency);
+//   } else if (position > step.goal) {
+//      if (dir != -1) {
+//        digitalWrite(dirPin,00);
+//      }
+//      tone(stepPin,(int)frequency);
+//      dir = -1;
+//   } else {
+//     if (dir != 0) {
+//       noTone(stepPin);
+//     }
+//     dir = 0;
+//   }
 }
 
 void requestEvent()
