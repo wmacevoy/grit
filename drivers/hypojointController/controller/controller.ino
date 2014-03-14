@@ -133,12 +133,13 @@ void loop()
    if (Serial.available() > 0) {
     Serial.readBytes(serialInput,maxbuffer);
     //Will be deprecated, for testing only
-    step.goal=0;
+    //step.goal=0;
+    frequency = 0;
     for(int i=0;i<maxbuffer-1;i++)
     {
       frequency *= 10;
       frequency += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
-      //step.goal*=10;
+      //step.goal *= 10;
       //step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
     }
     if(frequency > 3500) frequency = 3500;
