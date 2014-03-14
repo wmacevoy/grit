@@ -142,6 +142,7 @@ void loop()
       //step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
     }
     if(frequency > 3500) frequency = 3500;
+    if(frequency == 0) noTone(stepPin);
     //End testing
    }
    
