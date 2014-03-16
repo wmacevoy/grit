@@ -1,8 +1,6 @@
 #include <vector>
 #include <string>
 #include <fstream>
-#include <thread>
-#include <atomic>
 
 #include "BodyMover.h"
 #include "CSVRead.h"
@@ -697,11 +695,9 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
 }
 
 //EXPERIMENT - TIME TO RUN!
-std::thread *walkThread;
-std::atomic<bool> walking;
 
-void BodyMover::dynamicWalk(void* _wp) {
-  WalkParameters wp = *(WalkParameters*)_wp;
+void BodyMover::dynamicWalk(WalkParameters wp) {
+  //WalkParameters wp = *(WalkParameters*)_wp;
 
   vector<vector<double>> data;
   double direction=(wp.direction*M_PI)/180.0;

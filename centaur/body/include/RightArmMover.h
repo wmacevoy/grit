@@ -11,6 +11,7 @@ class RightArmMover : public ArmMover
   RightArmGeometry rightArmGeometry;
   Mat3d pose();
   RightArmMover(BodyMover *bodyMover);
+  RightArmMover();
 };
 
 

@@ -106,6 +106,8 @@ void ArmMover::leapAdjust(LeapHandMessage &hand)
   lastLeapForearm=_forearm;
 }
 
+Mat3d ArmMover::pose(){}
+
 void ArmMover::pose(const Mat3d &value)
 {
   Vec3d at=value.o();

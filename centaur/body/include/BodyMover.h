@@ -2,6 +2,8 @@
 
 #include <memory>
 #include <vector>
+#include <thread>
+#include <atomic>
 
 #include "Body.h"
 #include "LegsMover.h"
@@ -36,6 +38,11 @@ class BodyMover
   LeftArmMover left;
   RightArmMover right;
 
+  //Walking thread variables. 
+  static std::thread *walkThread;
+  static std::atomic<bool> walking;
+
+
   BodyMover();
 //  std::vector<std::vector<double> > bMove(double radius,double x,double y,double z,double step,double direction,double zStep,int repeat=1,float rotation=0.0,float zoffset=0.0);
   std::vector<std::vector<double> > bMove(WalkParameters wp);
@@ -49,7 +56,7 @@ class BodyMover
   void stepMerge(WalkParameters start,WalkParameters end);
   void logPosition(std::vector<std::vector <double> > data);
   void fromTips(std::vector<std::vector <double> > data);  
-  void dynamicWalk();
+  void dynamicWalk(WalkParameters wp);
   void move(Body &body);
   bool load(const std::string &file);
   bool play(const std::string &file);

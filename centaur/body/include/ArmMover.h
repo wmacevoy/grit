@@ -33,7 +33,7 @@ class ArmMover
   float lastLeapBicep;
   float lastLeapElbow;
   float lastLeapForearm;
-  virtual Mat3d pose()=0;
+  virtual Mat3d pose();
   virtual void pose(const Mat3d &value);
   virtual void shift(float dx, float dy, float dz, float df);
   void leapAdjust(LeapHandMessage &leapHandMessage);

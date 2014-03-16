@@ -11,4 +11,5 @@ class LeftArmMover : public ArmMover
   LeftArmGeometry leftArmGeometry;
   Mat3d pose();
   LeftArmMover(BodyMover *bodyMover_);
+  LeftArmMover();
 };
