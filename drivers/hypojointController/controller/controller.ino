@@ -14,8 +14,25 @@
 #include "EEPROMAnything.h"
 #include "default.h"
 
+#define A 5
+#define B 8
+#define C 7
+#define D 6
+
+#define AC digitalWrite(A, HIGH);digitalWrite(C, HIGH);digitalWrite(B, LOW);digitalWrite(D, LOW);
+#define CB digitalWrite(B, HIGH);digitalWrite(C, HIGH);digitalWrite(D, LOW);digitalWrite(A, LOW);
+#define BD digitalWrite(D, HIGH);digitalWrite(B, HIGH);digitalWrite(A, LOW);digitalWrite(C, LOW);
+#define DA digitalWrite(D, HIGH);digitalWrite(A, HIGH);digitalWrite(B, LOW);digitalWrite(C, LOW);
+
+#define A1 digitalWrite(A, HIGH);digitalWrite(D, LOW);digitalWrite(B, LOW);digitalWrite(C, LOW);
+#define B1 digitalWrite(B, HIGH);digitalWrite(D, LOW);digitalWrite(A, LOW);digitalWrite(C, LOW);
+#define C1 digitalWrite(C, HIGH);digitalWrite(D, LOW);digitalWrite(B, LOW);digitalWrite(A, LOW);
+#define D1 digitalWrite(D, HIGH);digitalWrite(A, LOW);digitalWrite(B, LOW);digitalWrite(C, LOW);
+
+#define OFF digitalWrite(A, LOW);digitalWrite(D, LOW);digitalWrite(B, LOW);digitalWrite(C, LOW);
+
 //These 2 will be deprecated soon
-const int maxbuffer=5;
+const int maxbuffer=8;
 char serialInput[maxbuffer];
 /////////////////////////////////
 
@@ -58,6 +75,8 @@ long  integral, derivative;
 float Kp, Ki, Kd;
 float dp,dp0;
 int   lastp;
+
+int steps = 0;
 
 //A struct to hold the response from the joint
 struct Response{
@@ -124,6 +143,44 @@ void setup()
    dp = 0;
    dp0=0;
    lastp = 0;
+   
+   pinMode(A, OUTPUT);
+   pinMode(B, OUTPUT);
+   pinMode(C, OUTPUT);
+   pinMode(D, OUTPUT);
+}
+
+void stepperF(int _s, int _d)
+{
+  float d = 1000.0/(float)_d;
+  for(int i=0; i < _s; ++i)
+    {
+      AC
+      delayMicroseconds(d);
+      CB
+      delayMicroseconds(d);
+      BD
+      delayMicroseconds(d);
+      DA
+      delayMicroseconds(d);
+    }
+    //OFF
+}
+
+void stepperB(int _s, int _d)
+{
+  float d = 1000.0/(float)_d;
+  for(int i=0; i < _s; ++i)
+    {
+      DA
+      delay(d);
+      BD
+      delay(d);
+      CB
+      delay(d);
+      AC
+      delay(d);
+    }
 }
 
 
@@ -135,21 +192,32 @@ void loop()
     //Will be deprecated, for testing only
     //step.goal=0;
     frequency = 0;
-    for(int i=0;i<maxbuffer-1;i++)
+    for(int i=0;i<4;++i)
     {
-      step.goal *= 10;
-      step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
+      steps *= 10;
+      steps += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");
+      //step.goal *= 10;
+      //step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");
     }
-    if(frequency > 3500) frequency = 3500;
-    if(frequency == 0) noTone(stepPin);
+    for(int i=4;i<7;++i)
+    {
+      frequency *= 10;
+      frequency += serialInput[i]-'0';
+    }
+    if(frequency > 999) frequency = 999;
+    //if(frequency == 0) noTone(stepPin);
     //End testing
    }
    
+   Serial.print(steps);
+   Serial.print('\n');
+   Serial.print(frequency);
+   Serial.print('\n');
+   delay(500);
    
-   ///////////////////////////////////////////FOR SKYLER/////////////////////////////////////////////////////////
-   tone(stepPin,frequency);
-   digitalWrite(dirPin,1);
-   ///////////////////////////////////////////FOR SKYLER/////////////////////////////////////////////////////////
+   stepperF(steps, frequency);
+   steps = 0;
+   frequency = 0;
   
    //Read six incoming bytes, 
    /*if(Wire.available() % byteBuffer == 0) {
@@ -161,16 +229,16 @@ void loop()
     memcpy(&step, bytes, byteBuffer); 
    }*/
    
-   if (step.goal < 250) step.goal=250;
-   if (step.goal > 745) step.goal=750;
-   
-   position = analogRead(potPin);
-   
-
-   //Calculate the change in time
-   t2 = millis();
-   dt = t2 - t1;
-   t1 = t2;
+//   if (step.goal < 250) step.goal=250;
+//   if (step.goal > 745) step.goal=750;
+//   
+//   position = analogRead(potPin);
+//   
+//
+//   //Calculate the change in time
+//   t2 = millis();
+//   dt = t2 - t1;
+//   t1 = t2;
    
    //dp0 = (float)abs(position - lastp) / (float)dt;
    //dp=1.00*dp0+0.00*dp;
@@ -182,37 +250,37 @@ void loop()
   // Serial.print('\n');}
    
    
-     error = step.goal-position;
-     integral = integral + error*dt;
-     derivative = (error - previous_error)/dt;
-     frequency = Kp*error + Ki*integral + Kd*derivative;
-     frequency = ((2900.0 - (frequency*frequency) / 86.2) + 100);
-     //frequency = dp * 300;
-     if(frequency < 100) frequency=100;
-     if(frequency > 3000) frequency=3000;
-     previous_error = error;
-   
-   if (dir == 0 && abs(step.goal-position) <= cutoff) {
-     return;
-   }
-   if (position < step.goal) {
-      if (dir != 1) {
-        digitalWrite(dirPin,1); 
-      }
-      dir = 1;
-      tone(stepPin,(int)frequency);
-   } else if (position > step.goal) {
-      if (dir != -1) {
-        digitalWrite(dirPin,00);
-      }
-      tone(stepPin,(int)frequency);
-      dir = -1;
-   } else {
-     if (dir != 0) {
-       noTone(stepPin);
-     }
-     dir = 0;
-   }
+//     error = step.goal-position;
+//     integral = integral + error*dt;
+//     derivative = (error - previous_error)/dt;
+//     frequency = Kp*error + Ki*integral + Kd*derivative;
+//     frequency = ((2900.0 - (frequency*frequency) / 86.2) + 100);
+//     //frequency = dp * 300;
+//     if(frequency < 100) frequency=100;
+//     if(frequency > 3000) frequency=3000;
+//     previous_error = error;
+//   
+//   if (dir == 0 && abs(step.goal-position) <= cutoff) {
+//     return;
+//   }
+//   if (position < step.goal) {
+//      if (dir != 1) {
+//        digitalWrite(dirPin,1); 
+//      }
+//      dir = 1;
+//      tone(stepPin,(int)frequency);
+//   } else if (position > step.goal) {
+//      if (dir != -1) {
+//        digitalWrite(dirPin,00);
+//      }
+//      tone(stepPin,(int)frequency);
+//      dir = -1;
+//   } else {
+//     if (dir != 0) {
+//       noTone(stepPin);
+//     }
+//     dir = 0;
+//   }
 }
 
 void requestEvent()
