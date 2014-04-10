@@ -15,9 +15,11 @@
 #include "default.h"
 
 #define A 5
-#define B 8
+#define B 6
 #define C 7
-#define D 6
+#define D 8
+
+#define P 3
 
 #define AC digitalWrite(A, HIGH);digitalWrite(C, HIGH);digitalWrite(B, LOW);digitalWrite(D, LOW);
 #define CB digitalWrite(B, HIGH);digitalWrite(C, HIGH);digitalWrite(D, LOW);digitalWrite(A, LOW);
@@ -108,28 +110,28 @@ void setup()
     defaultConfigure();    
    }
    
-   addr+=EEPROM_readAnything(addr, id);             //Read ID
-   addr+=EEPROM_readAnything(addr, potPin);         //Read potPin
-   addr+=EEPROM_readAnything(addr, dirPin);         //Read dirPin
-   addr+=EEPROM_readAnything(addr, stepPin);        //Read stepPin
-   addr+=EEPROM_readAnything(addr, ledPin);         //Read stepPin
-   addr+=EEPROM_readAnything(addr, minFrequency);   //Read minFrequency
-   addr+=EEPROM_readAnything(addr, maxFrequency);   //Read maxFrequency
-   addr+=EEPROM_readAnything(addr, minPosition);    //Read minPosition
-   addr+=EEPROM_readAnything(addr, maxPosition);    //Read maxPosition
-   addr+=EEPROM_readAnything(addr, Kp);             //Read Kp
-   addr+=EEPROM_readAnything(addr, Ki);             //Read Ki
-   addr+=EEPROM_readAnything(addr, Kd);             //Read Kd
+//   addr+=EEPROM_readAnything(addr, id);             //Read ID
+//   addr+=EEPROM_readAnything(addr, potPin);         //Read potPin
+//   addr+=EEPROM_readAnything(addr, dirPin);         //Read dirPin
+//   addr+=EEPROM_readAnything(addr, stepPin);        //Read stepPin
+//   addr+=EEPROM_readAnything(addr, ledPin);         //Read stepPin
+//   addr+=EEPROM_readAnything(addr, minFrequency);   //Read minFrequency
+//   addr+=EEPROM_readAnything(addr, maxFrequency);   //Read maxFrequency
+//   addr+=EEPROM_readAnything(addr, minPosition);    //Read minPosition
+//   addr+=EEPROM_readAnything(addr, maxPosition);    //Read maxPosition
+//   addr+=EEPROM_readAnything(addr, Kp);             //Read Kp
+//   addr+=EEPROM_readAnything(addr, Ki);             //Read Ki
+//   addr+=EEPROM_readAnything(addr, Kd);             //Read Kd
      
-   Wire.begin(id);                                  // join i2c bus with address read from above
-   Wire.onRequest(requestEvent);
-   pinMode(dirPin,OUTPUT);
-   pinMode(stepPin,OUTPUT);
-   pinMode(ledPin, OUTPUT);
-   digitalWrite(dirPin,LOW);
-   digitalWrite(stepPin,LOW);
+//   Wire.begin(id);                                  // join i2c bus with address read from above
+//   Wire.onRequest(requestEvent);
+//   pinMode(dirPin,OUTPUT);
+//   pinMode(stepPin,OUTPUT);
+//   pinMode(ledPin, OUTPUT);
+//   digitalWrite(dirPin,LOW);
+//   digitalWrite(stepPin,LOW);
    
-   step.freq = maxFrequency;
+   //step.freq = maxFrequency;
    frequency = 0;
    
    t1 = millis();
@@ -148,6 +150,9 @@ void setup()
    pinMode(B, OUTPUT);
    pinMode(C, OUTPUT);
    pinMode(D, OUTPUT);
+   pinMode(P, OUTPUT);
+   
+   digitalWrite(P, HIGH);
 }
 
 void stepperF(int _s, int _d)
@@ -156,13 +161,13 @@ void stepperF(int _s, int _d)
   for(int i=0; i < _s; ++i)
     {
       AC
-      delayMicroseconds(d);
+      delay((int)d);
       CB
-      delayMicroseconds(d);
+      delay((int)d);
       BD
-      delayMicroseconds(d);
+      delay((int)d);
       DA
-      delayMicroseconds(d);
+      delay((int)d);
     }
     //OFF
 }
@@ -173,13 +178,13 @@ void stepperB(int _s, int _d)
   for(int i=0; i < _s; ++i)
     {
       DA
-      delay(d);
+      delay((int)d);
       BD
-      delay(d);
+      delay((int)d);
       CB
-      delay(d);
+      delay((int)d);
       AC
-      delay(d);
+      delay((int)d);
     }
 }
 
@@ -215,7 +220,7 @@ void loop()
    Serial.print('\n');
    delay(500);
    
-   stepperF(steps, frequency);
+   stepperB(steps, frequency);
    steps = 0;
    frequency = 0;
   
