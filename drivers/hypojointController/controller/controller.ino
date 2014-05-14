@@ -10,24 +10,16 @@
 
 #include <Wire.h>
 #include <EEPROM.h>
-#include <Stepper.h>
 #include "typedef.h"
 #include "EEPROMAnything.h"
 #include "default.h"
 
-#define A 5
-#define B 6
-#define C 7
-#define D 8
-
-#define P 3
-
 //These 2 will be deprecated soon
-const int maxbuffer=8;
+const int maxbuffer=4;
 char serialInput[maxbuffer];
 /////////////////////////////////
 
-const int totalBytes = 27;
+const int totalBytes = 35;
 const int cutoff=10;
 
 //CRC stuffs
@@ -39,34 +31,48 @@ crc crcTable[256];
 //Items to be read from eeprom in setup()
 byte id;
 int  potPin;
+int  dirPin;
+int  stepPin;
+int  enablePin;
 int  ledPin;
+int  minFrequency;
+long maxFrequency;
 int  minPosition;
 long maxPosition;
-int  numSteps;
 
 //Receive buffer and length
 const int byteBuffer = 6;
 byte bytes[byteBuffer];
 
-int  addr       = 0;          //eeprom starting memory address
+float frequency = 0;
+int  position  = 0;
+int  dir       = 0;          // 1 counter clockwise/0 stop/-1 clockwise
+int  wait      = 100;
+int  addr      = 0;          //eeprom starting memory address
 
 //Time stuffs
 unsigned long t1, t2, dt;
 
 //PID stuffs
-long  error, previous_error;
-long  integral, derivative;
+long error, previous_error;
+long integral, derivative;
 float Kp, Ki, Kd;
-float dp,dp0;
-int   lastp;
 
-int steps;
-int rpms;
-int checksum;
- 
-Stepper *stepDriver;
+//A struct to hold the response from the joint
+struct Response{
+  int pos;
+  int temp;
+  int checksum;
+} response;
 
-bool getChecksum();
+//A struct to receive a message over the Wire
+struct Step{
+ int freq;
+ int goal;
+ int checksum;
+} step;
+
+bool checksum();
 void configure();
 void crcInit();
 crc crcFast(const uint8_t message[], int nBytes);
@@ -77,27 +83,51 @@ void setup()
    crcInit();
    delay(1000);
    
-   if(!getChecksum()) {
+   if(!checksum()) {
     Serial.print("Checksum no matchy...\nDefaulting...\n");
     defaultConfigure();    
    }
    
    addr+=EEPROM_readAnything(addr, id);             //Read ID
    addr+=EEPROM_readAnything(addr, potPin);         //Read potPin
-   addr+=EEPROM_readAnything(addr, ledPin);         //Read ledPin
+   addr+=EEPROM_readAnything(addr, dirPin);         //Read dirPin
+   addr+=EEPROM_readAnything(addr, stepPin);        //Read stepPin
+   addr+=EEPROM_readAnything(addr, enablePin);      //Read enablePin
+   addr+=EEPROM_readAnything(addr, ledPin);         //Read stepPin
+   addr+=EEPROM_readAnything(addr, minFrequency);   //Read minFrequency
+   addr+=EEPROM_readAnything(addr, maxFrequency);   //Read maxFrequency
    addr+=EEPROM_readAnything(addr, minPosition);    //Read minPosition
    addr+=EEPROM_readAnything(addr, maxPosition);    //Read maxPosition
-   addr+=EEPROM_readAnything(addr, numSteps);       //Read numSteps
    addr+=EEPROM_readAnything(addr, Kp);             //Read Kp
    addr+=EEPROM_readAnything(addr, Ki);             //Read Ki
    addr+=EEPROM_readAnything(addr, Kd);             //Read Kd
-     
-   //   Wire.begin(id);                                  // join i2c bus with address read from above
-   //   Wire.onRequest(requestEvent);
-
-   stepDriver = new Stepper(numSteps, A, B, C, D);
    
-   rpms = 0;
+   
+   Serial.print(id);
+   Serial.print(potPin);
+   Serial.print(dirPin);
+   Serial.print(stepPin);
+   Serial.print(enablePin);
+   Serial.print(ledPin);
+   Serial.print(minFrequency);
+   Serial.print(maxFrequency);
+   Serial.print(minPosition);
+   Serial.print(maxPosition);
+   Serial.print(Kp);
+   Serial.print(Ki);
+   Serial.print(Kd);
+   
+     
+   Wire.begin(id);                                  // join i2c bus with address read from above
+   Wire.onRequest(requestEvent);
+   pinMode(dirPin,OUTPUT);
+   pinMode(stepPin,OUTPUT);
+   pinMode(ledPin, OUTPUT);
+   digitalWrite(dirPin,LOW);
+   digitalWrite(stepPin,LOW);
+   
+   step.freq = maxFrequency;
+   frequency = 0;
    
    t1 = millis();
    t2 = 0;
@@ -106,13 +136,7 @@ void setup()
    previous_error = 0;
    integral = 0;
    
-   dp = 0;
-   dp0=0;
-   lastp = 0;
-   
-   pinMode(ledPin, OUTPUT);
-   pinMode(P, OUTPUT);
-   digitalWrite(P, HIGH);
+   step.goal = 250;
 }
 
 
@@ -122,36 +146,14 @@ void loop()
    if (Serial.available() > 0) {
     Serial.readBytes(serialInput,maxbuffer);
     //Will be deprecated, for testing only
-    //step.goal=0;
-    rpms = 0;
-    for(int i=0;i<4;++i)
+    step.goal=0;
+    for(int i=0;i<maxbuffer-1;i++)
     {
-      steps *= 10;
-      steps += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");
-      //step.goal *= 10;
-      //step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");
+      step.goal*=10;
+      step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
     }
-    for(int i=4;i<7;++i)
-    {
-      rpms *= 10;
-      frequency += serialInput[i]-'0';
-    }
-    if(rpms > 999) frequency = 999;
-    //if(frequency == 0) noTone(stepPin);
     //End testing
    }
-   
-   Serial.print(steps);
-   Serial.print('\n');
-   Serial.print(frequency);
-   Serial.print('\n');
-   delay(500);
-   
-   stepDriver.setSpeed(90);
-   stepDriver.step(steps);
-   
-   steps = 0;
-   rpms = 0;
   
    //Read six incoming bytes, 
    /*if(Wire.available() % byteBuffer == 0) {
@@ -163,58 +165,48 @@ void loop()
     memcpy(&step, bytes, byteBuffer); 
    }*/
    
-//   if (step.goal < 250) step.goal=250;
-//   if (step.goal > 745) step.goal=750;
-//   
-//   position = analogRead(potPin);
-//   
-//
-//   //Calculate the change in time
-//   t2 = millis();
-//   dt = t2 - t1;
-//   t1 = t2;
+   if (step.goal < 250) step.goal=250;
+   if (step.goal > 745) step.goal=750;
    
-   //dp0 = (float)abs(position - lastp) / (float)dt;
-   //dp=1.00*dp0+0.00*dp;
-   //float mult=(dp/10.0);
-   //if (mult>1.0) mult=1.0;
-   //lastp = position;
-  //  if(dp > 0.5){
-  // Serial.print(dp);
-  // Serial.print('\n');}
+   position = analogRead(potPin);
+   //Serial.print(position);
+   //Serial.print('\n');
+
+   //Calculate the change in time
+   t2 = millis();
+   dt = t2 - t1;
+   t1 = t2;
    
+   error = step.goal-position;
+   integral = integral + error*dt;
+   derivative = (error - previous_error)/dt;
+   frequency = Kp*error + Ki*integral + Kd*derivative;
+   frequency = (2900.0 - (frequency*frequency) / 86.2) + 100;
+   if(frequency < 100) frequency=100;
+   if(frequency > 3000) frequency=3000;
+   previous_error = error;
    
-//     error = step.goal-position;
-//     integral = integral + error*dt;
-//     derivative = (error - previous_error)/dt;
-//     frequency = Kp*error + Ki*integral + Kd*derivative;
-//     frequency = ((2900.0 - (frequency*frequency) / 86.2) + 100);
-//     //frequency = dp * 300;
-//     if(frequency < 100) frequency=100;
-//     if(frequency > 3000) frequency=3000;
-//     previous_error = error;
-//   
-//   if (dir == 0 && abs(step.goal-position) <= cutoff) {
-//     return;
-//   }
-//   if (position < step.goal) {
-//      if (dir != 1) {
-//        digitalWrite(dirPin,1); 
-//      }
-//      dir = 1;
-//      tone(stepPin,(int)frequency);
-//   } else if (position > step.goal) {
-//      if (dir != -1) {
-//        digitalWrite(dirPin,00);
-//      }
-//      tone(stepPin,(int)frequency);
-//      dir = -1;
-//   } else {
-//     if (dir != 0) {
-//       noTone(stepPin);
-//     }
-//     dir = 0;
-//   }
+   if (dir == 0 && abs(step.goal-position) <= cutoff) {
+     return;
+   }
+   if (position < step.goal) {
+      if (dir != 1) {
+        digitalWrite(dirPin,1); 
+      }
+      dir = 1;
+      tone(stepPin,(int)frequency);
+   } else if (position > step.goal) {
+      if (dir != -1) {
+        digitalWrite(dirPin,0);
+      }
+      tone(stepPin,(int)frequency);
+      dir = -1;
+   } else {
+     if (dir != 0) {
+       noTone(stepPin);
+     }
+     dir = 0;
+   }
 }
 
 void requestEvent()
@@ -223,7 +215,7 @@ void requestEvent()
                           // as expected by master
 }
 
-bool getChecksum(){
+bool checksum(){
   byte b[totalBytes];
   
   for(int i = 0; i < totalBytes; ++i){
@@ -263,6 +255,30 @@ void defaultConfigure(){
   Serial.print("   Value is: ");
   Serial.print(_potPin.val);
   Serial.print('\n');
+
+  //Write direction pin
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  addr += EEPROM_writeAnything(_dirPin.address, _dirPin.val);
+  Serial.print("   Value is: ");
+  Serial.print(_dirPin.val);
+  Serial.print('\n');
+  
+  //Write stepper motor pin
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  addr += EEPROM_writeAnything(_stepPin.address, _stepPin.val);
+  Serial.print("   Value is: ");
+  Serial.print(_stepPin.val);
+  Serial.print('\n');
+  
+  //Write enable pin
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  addr += EEPROM_writeAnything(_enablePin.address, _enablePin.val);
+  Serial.print("   Value is: ");
+  Serial.print(_enablePin.val);
+  Serial.print('\n');
   
   //Write led pin
   Serial.print("Address is: ");
@@ -270,6 +286,22 @@ void defaultConfigure(){
   addr += EEPROM_writeAnything(_ledPin.address, _ledPin.val);
   Serial.print("   Value is: ");
   Serial.print(_ledPin.val);
+  Serial.print('\n');
+  
+  //Write minFrequency
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  addr += EEPROM_writeAnything(_minFreq.address, _minFreq.val);
+  Serial.print("   Value is: ");
+  Serial.print(_minFreq.val);
+  Serial.print('\n');
+  
+  //Write maxFrequency
+  Serial.print("Address is: ");
+  Serial.print(addr);
+  addr += EEPROM_writeAnything(_maxFreq.address, _maxFreq.val);
+  Serial.print("   Value is: ");
+  Serial.print(_maxFreq.val);
   Serial.print('\n');
   
   //Write minPosition
@@ -286,14 +318,6 @@ void defaultConfigure(){
   addr += EEPROM_writeAnything(_maxPos.address, _maxPos.val);
   Serial.print("   Value is: ");
   Serial.print(_maxPos.val);
-  Serial.print('\n');
-  
-  //Write numSteps
-  Serial.print("Address is: ");
-  Serial.print(addr);
-  addr += EEPROM_writeAnything(_numSteps.address, _numSteps.val);
-  Serial.print("   Value is: ");
-  Serial.print(_numSteps.val);
   Serial.print('\n');
   
   //Write Kp
