@@ -22,6 +22,8 @@ char serialInput[maxbuffer];
 const int totalBytes = 35;
 const int cutoff=10;
 
+float ratio = 32000/512;
+
 //CRC stuffs
 crc crcTable[256];
 #define WIDTH  (8 * sizeof(crc))
@@ -186,11 +188,22 @@ void loop()
    //position = analogRead(potPin);
    
   long position=analogRead(potPin);
-  if (abs(position-512)<16) digitalWrite(enablePin,LOW);
-  else digitalWrite(enablePin,HIGH);
-  if(position<512) digitalWrite(dirPin,LOW);
-  else          digitalWrite(dirPin,HIGH);
-  tone(stepPin,abs(position-512)*32767/512);
+  
+  if (abs(position-512)<16) 
+    digitalWrite(enablePin,LOW);
+  else 
+    digitalWrite(enablePin,HIGH);
+  
+  if(position<512) 
+    digitalWrite(dirPin,LOW);
+  else
+    digitalWrite(dirPin,HIGH);
+  
+  frequency = abs(position-512)*ratio;
+  if(frequency > maxFrequency) frequency = maxFrequency;
+  if(frequency < minFrequency) frequency = minFrequency;
+  
+  tone(stepPin,frequency);
 
    //Calculate the change in time
 //   t2 = millis();
