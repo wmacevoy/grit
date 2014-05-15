@@ -191,7 +191,6 @@ void loop()
   if(position<512) digitalWrite(dirPin,LOW);
   else          digitalWrite(dirPin,HIGH);
   tone(stepPin,abs(position-512)*32767/512);
-  Serial.println(position);
 
    //Calculate the change in time
 //   t2 = millis();
