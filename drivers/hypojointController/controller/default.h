@@ -28,7 +28,7 @@ struct StepPin{
 struct EnablePin{
  int val;
  static const int address = 7;
- EnablePin(){val = 4;}
+ EnablePin(){val = 6;}
 }_enablePin;
 
 struct LedPin{
@@ -48,7 +48,7 @@ struct MaxFreq{
  long val;
  static const long limit = 3200;
  static const int address = 13;
- MaxFreq(){val = 3200;}
+ MaxFreq(){val = 32000;}
 }_maxFreq;
 
 struct MinPos{

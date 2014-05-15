@@ -104,29 +104,43 @@ void setup()
    
    
    Serial.print(id);
+   Serial.print("\n");
    Serial.print(potPin);
+   Serial.print("\n");
    Serial.print(dirPin);
+   Serial.print("\n");
    Serial.print(stepPin);
+   Serial.print("\n");
    Serial.print(enablePin);
+   Serial.print("\n");
    Serial.print(ledPin);
+   Serial.print("\n");
    Serial.print(minFrequency);
+   Serial.print("\n");
    Serial.print(maxFrequency);
+   Serial.print("\n");
    Serial.print(minPosition);
+   Serial.print("\n");
    Serial.print(maxPosition);
+   Serial.print("\n");
    Serial.print(Kp);
+   Serial.print("\n");
    Serial.print(Ki);
+   Serial.print("\n");
    Serial.print(Kd);
+   Serial.print("\n");
    
      
    Wire.begin(id);                                  // join i2c bus with address read from above
    Wire.onRequest(requestEvent);
    pinMode(dirPin,OUTPUT);
    pinMode(stepPin,OUTPUT);
+   pinMode(enablePin, OUTPUT);
    pinMode(ledPin, OUTPUT);
-   digitalWrite(dirPin,LOW);
    digitalWrite(stepPin,LOW);
+   digitalWrite(enablePin, LOW);
    
-   step.freq = maxFrequency;
+   step.freq = 0;
    frequency = 0;
    
    t1 = millis();
@@ -143,17 +157,21 @@ void setup()
 void loop()
 {  
    //Serial will be used when a config manager connects to the board
-   if (Serial.available() > 0) {
-    Serial.readBytes(serialInput,maxbuffer);
-    //Will be deprecated, for testing only
-    step.goal=0;
-    for(int i=0;i<maxbuffer-1;i++)
-    {
-      step.goal*=10;
-      step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
-    }
-    //End testing
-   }
+//   if (Serial.available() > 0) {
+//    Serial.readBytes(serialInput,maxbuffer);
+//    //Will be deprecated, for testing only
+//    step.goal=0;
+//    for(int i=0;i<3;i++)
+//    {
+//      step.goal*=10;
+//      step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
+//    }
+//    Serial.print(frequency);
+//    Serial.print('\n');
+//    Serial.print(step.goal);
+//    Serial.print('\n');
+//    //End testing
+//   }
   
    //Read six incoming bytes, 
    /*if(Wire.available() % byteBuffer == 0) {
@@ -165,48 +183,51 @@ void loop()
     memcpy(&step, bytes, byteBuffer); 
    }*/
    
-   if (step.goal < 250) step.goal=250;
-   if (step.goal > 745) step.goal=750;
+   //position = analogRead(potPin);
    
-   position = analogRead(potPin);
-   //Serial.print(position);
-   //Serial.print('\n');
+  long position=analogRead(potPin);
+  if (abs(position-512)<16) digitalWrite(enablePin,LOW);
+  else digitalWrite(enablePin,HIGH);
+  if(position<512) digitalWrite(dirPin,LOW);
+  else          digitalWrite(dirPin,HIGH);
+  tone(stepPin,abs(position-512)*32767/512);
+  Serial.println(position);
 
    //Calculate the change in time
-   t2 = millis();
-   dt = t2 - t1;
-   t1 = t2;
+//   t2 = millis();
+//   dt = t2 - t1;
+//   t1 = t2;
    
-   error = step.goal-position;
-   integral = integral + error*dt;
-   derivative = (error - previous_error)/dt;
-   frequency = Kp*error + Ki*integral + Kd*derivative;
-   frequency = (2900.0 - (frequency*frequency) / 86.2) + 100;
-   if(frequency < 100) frequency=100;
-   if(frequency > 3000) frequency=3000;
-   previous_error = error;
+//   error = step.goal-position;
+//   integral = integral + error*dt;
+//   derivative = (error - previous_error)/dt;
+//   frequency = Kp*error + Ki*integral + Kd*derivative;
+//   frequency = (2900.0 - (frequency*frequency) / 86.2) + 100;
+//   if(frequency < minFrequency) frequency=100;
+//   if(frequency > maxFrequency) frequency=3000;
+//   previous_error = error;
    
-   if (dir == 0 && abs(step.goal-position) <= cutoff) {
-     return;
-   }
-   if (position < step.goal) {
-      if (dir != 1) {
-        digitalWrite(dirPin,1); 
-      }
-      dir = 1;
-      tone(stepPin,(int)frequency);
-   } else if (position > step.goal) {
-      if (dir != -1) {
-        digitalWrite(dirPin,0);
-      }
-      tone(stepPin,(int)frequency);
-      dir = -1;
-   } else {
-     if (dir != 0) {
-       noTone(stepPin);
-     }
-     dir = 0;
-   }
+//   if (dir == 0 && abs(step.goal-position) <= cutoff) {
+//     return;
+//   }
+//   if (position < step.goal) {
+//      if (dir != 1) {
+//        digitalWrite(dirPin,1); 
+//      }
+//      dir = 1;
+//      tone(stepPin,(int)frequency);
+//   } else if (position > step.goal) {
+//      if (dir != -1) {
+//        digitalWrite(dirPin,0);
+//      }
+//      tone(stepPin,(int)frequency);
+//      dir = -1;
+//   } else {
+//     if (dir != 0) {
+//       noTone(stepPin);
+//     }
+//     dir = 0;
+//   }
 }
 
 void requestEvent()
