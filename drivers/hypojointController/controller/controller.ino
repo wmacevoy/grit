@@ -42,6 +42,8 @@ long maxFrequency;
 int  minPosition;
 long maxPosition;
 
+volatile int count=0;
+
 //Receive buffer and length
 const int byteBuffer = 6;
 byte bytes[byteBuffer];
@@ -51,14 +53,6 @@ int  position  = 0;
 int  dir       = 0;          // 1 counter clockwise/0 stop/-1 clockwise
 int  wait      = 100;
 int  addr      = 0;          //eeprom starting memory address
-
-//Time stuffs
-unsigned long t1, t2, dt;
-
-//PID stuffs
-long error, previous_error;
-long integral, derivative;
-float Kp, Ki, Kd;
 
 //A struct to hold the response from the joint
 struct Response{
@@ -78,6 +72,7 @@ bool checksum();
 void configure();
 void crcInit();
 crc crcFast(const uint8_t message[], int nBytes);
+
 
 void setup()
 {
@@ -100,10 +95,6 @@ void setup()
    addr+=EEPROM_readAnything(addr, maxFrequency);   //Read maxFrequency
    addr+=EEPROM_readAnything(addr, minPosition);    //Read minPosition
    addr+=EEPROM_readAnything(addr, maxPosition);    //Read maxPosition
-   addr+=EEPROM_readAnything(addr, Kp);             //Read Kp
-   addr+=EEPROM_readAnything(addr, Ki);             //Read Ki
-   addr+=EEPROM_readAnything(addr, Kd);             //Read Kd
-   
    
    Serial.print(id);
    Serial.print("\n");
@@ -125,12 +116,6 @@ void setup()
    Serial.print("\n");
    Serial.print(maxPosition);
    Serial.print("\n");
-   Serial.print(Kp);
-   Serial.print("\n");
-   Serial.print(Ki);
-   Serial.print("\n");
-   Serial.print(Kd);
-   Serial.print("\n");
    
      
    Wire.begin(id);                                  // join i2c bus with address read from above
@@ -144,14 +129,7 @@ void setup()
    
    step.freq = 0;
    frequency = 0;
-   
-   t1 = millis();
-   t2 = 0;
-   dt = 0;
-   
-   previous_error = 0;
-   integral = 0;
-   
+   dir = 0;
    step.goal = 250;
 }
 
@@ -159,21 +137,21 @@ void setup()
 void loop()
 {  
    //Serial will be used when a config manager connects to the board
-//   if (Serial.available() > 0) {
-//    Serial.readBytes(serialInput,maxbuffer);
-//    //Will be deprecated, for testing only
-//    step.goal=0;
-//    for(int i=0;i<3;i++)
-//    {
-//      step.goal*=10;
-//      step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
-//    }
+   if (Serial.available() > 0) {
+    Serial.readBytes(serialInput,maxbuffer);
+    //Will be deprecated, for testing only
+    step.goal=0;
+    for(int i=0;i<3;i++)
+    {
+      step.goal*=10;
+      step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
+    }
 //    Serial.print(frequency);
 //    Serial.print('\n');
 //    Serial.print(step.goal);
 //    Serial.print('\n');
 //    //End testing
-//   }
+}
   
    //Read six incoming bytes, 
    /*if(Wire.available() % byteBuffer == 0) {
@@ -185,61 +163,35 @@ void loop()
     memcpy(&step, bytes, byteBuffer); 
    }*/
    
-   //position = analogRead(potPin);
-   
-  long position=analogRead(potPin);
-  
-  if (abs(position-512)<16) 
-    digitalWrite(enablePin,LOW);
-  else 
-    digitalWrite(enablePin,HIGH);
-  
-  if(position<512) 
-    digitalWrite(dirPin,LOW);
-  else
-    digitalWrite(dirPin,HIGH);
-  
-  frequency = abs(position-512)*ratio;
-  if(frequency > maxFrequency) frequency = maxFrequency;
-  if(frequency < minFrequency) frequency = minFrequency;
-  
-  tone(stepPin,frequency);
+//  long position=analogRead(potPin);
+//  
+//  if (abs(position-512)<16) 
+//    digitalWrite(enablePin,LOW);
+//  else 
+//    digitalWrite(enablePin,HIGH);
+//  
+//  if(position<512) 
+//    digitalWrite(dirPin,LOW);
+//  else
+//    digitalWrite(dirPin,HIGH);
+//  
+//  frequency = abs(position-512)*ratio;
+//  if(frequency > maxFrequency) frequency = maxFrequency;
+//  if(frequency < minFrequency) frequency = minFrequency;
+//  
+//  tone(stepPin,frequency);
 
-   //Calculate the change in time
-//   t2 = millis();
-//   dt = t2 - t1;
-//   t1 = t2;
+  position = analogRead(potPin);
+  
+  frequency = (1.0)*fabs(position-step.goal)*ratio;
+
+  if(frequency > maxFrequency) frequency = maxFrequency;
+  if(frequency < minFrequency) frequency = 0;
    
-//   error = step.goal-position;
-//   integral = integral + error*dt;
-//   derivative = (error - previous_error)/dt;
-//   frequency = Kp*error + Ki*integral + Kd*derivative;
-//   frequency = (2900.0 - (frequency*frequency) / 86.2) + 100;
-//   if(frequency < minFrequency) frequency=100;
-//   if(frequency > maxFrequency) frequency=3000;
-//   previous_error = error;
-   
-//   if (dir == 0 && abs(step.goal-position) <= cutoff) {
-//     return;
-//   }
-//   if (position < step.goal) {
-//      if (dir != 1) {
-//        digitalWrite(dirPin,1); 
-//      }
-//      dir = 1;
-//      tone(stepPin,(int)frequency);
-//   } else if (position > step.goal) {
-//      if (dir != -1) {
-//        digitalWrite(dirPin,0);
-//      }
-//      tone(stepPin,(int)frequency);
-//      dir = -1;
-//   } else {
-//     if (dir != 0) {
-//       noTone(stepPin);
-//     }
-//     dir = 0;
-//   }
+  digitalWrite(dirPin,(position>step.goal));
+  digitalWrite(enablePin,frequency != 0);
+  tone(stepPin,(int)frequency);
+  
 }
 
 void requestEvent()

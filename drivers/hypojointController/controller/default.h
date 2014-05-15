@@ -41,7 +41,7 @@ struct MinFreq{
  int val;
  static const int limit = 0;
  static const int address = 11; 
- MinFreq(){val = 0;}
+ MinFreq(){val = 1000;}
 }_minFreq;
 
 struct MaxFreq{
