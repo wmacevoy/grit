@@ -1,3 +1,4 @@
+
 // Motor Controller
 // this is the code for the individual joints..... the master is located on the main body
 // and will have a different code uploaded to it.
@@ -10,6 +11,7 @@
 
 #include <Wire.h>
 #include <EEPROM.h>
+#include "NewTone.h"
 #include "typedef.h"
 #include "EEPROMAnything.h"
 #include "default.h"
@@ -190,7 +192,7 @@ void loop()
    
   digitalWrite(dirPin,(position>step.goal));
   digitalWrite(enablePin,frequency != 0);
-  tone(stepPin,(int)frequency);
+  NewTone(stepPin,(int)frequency);
   
 }
 
