@@ -7,6 +7,7 @@
 //CRC code from - http://www.barrgroup.com/Embedded-Systems/How-To/CRC-Calculation-C-Code
 //
 //
+//32000 TONE @ 16th Steps
 
 
 #include <Wire.h>
@@ -24,7 +25,7 @@ char serialInput[maxbuffer];
 const int totalBytes = 35;
 const int cutoff=10;
 
-float ratio = 32000/512;
+float ratio = 50000/1024;
 
 //CRC stuffs
 crc crcTable[256];
@@ -51,6 +52,8 @@ const int byteBuffer = 6;
 byte bytes[byteBuffer];
 
 float frequency = 0;
+float frequencyVelocity = 0;
+float goalFrequency = 0;
 int  position  = 0;
 int  dir       = 0;          // 1 counter clockwise/0 stop/-1 clockwise
 int  wait      = 100;
@@ -75,6 +78,7 @@ void configure();
 void crcInit();
 crc crcFast(const uint8_t message[], int nBytes);
 
+unsigned long t;
 
 void setup()
 {
@@ -97,7 +101,7 @@ void setup()
    addr+=EEPROM_readAnything(addr, maxFrequency);   //Read maxFrequency
    addr+=EEPROM_readAnything(addr, minPosition);    //Read minPosition
    addr+=EEPROM_readAnything(addr, maxPosition);    //Read maxPosition
-   
+    
    Serial.print(id);
    Serial.print("\n");
    Serial.print(potPin);
@@ -133,11 +137,14 @@ void setup()
    frequency = 0;
    dir = 0;
    step.goal = 250;
+   t=millis();
 }
 
 
 void loop()
 {  
+  int dt = millis()-t;
+  t += dt;
    //Serial will be used when a config manager connects to the board
    if (Serial.available() > 0) {
     Serial.readBytes(serialInput,maxbuffer);
@@ -185,6 +192,32 @@ void loop()
 
   position = analogRead(potPin);
   
+  if (fabs(position-step.goal) < 4) {
+    goalFrequency = 0;
+  } else if (position-step.goal < 0) {
+    goalFrequency = maxFrequency;
+  } else {
+    goalFrequency = -maxFrequency;
+  }
+  
+//  frequencyVelocity = frequencyVelocity + dt*((-0.01) * frequencyVelocity +(0.001)/0.005*(position-step.goal));
+//  frequency = frequency + dt*(0.001)*frequencyVelocity;
+//  if (frequency > maxFrequency) {
+//    frequency = maxFrequency;
+//    frequencyVelocity = 0;
+//  }
+//  if (frequency < -maxFrequency) {
+//    frequency = -maxFrequency;
+//    frequencyVelocity = 0;
+//  }
+//  Serial.print("f="); Serial.print(frequency); Serial.print("v="); Serial.print(frequencyVelocity); Serial.println();
+//  int toneGoal = fabs(frequency);
+//  if(toneGoal > maxFrequency) toneGoal = maxFrequency;
+//  if(toneGoal < minFrequency) toneGoal = 0;
+  
+  Serial.print(frequency);
+  Serial.print('\n');
+
   frequency = (1.0)*fabs(position-step.goal)*ratio;
 
   if(frequency > maxFrequency) frequency = maxFrequency;
