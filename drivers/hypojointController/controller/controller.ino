@@ -25,7 +25,7 @@ char serialInput[maxbuffer];
 const int totalBytes = 35;
 const int cutoff=10;
 
-float ratio = 50000/1024;
+float ratio = 32000/1024;
 
 //CRC stuffs
 crc crcTable[256];
@@ -44,8 +44,6 @@ int  minFrequency;
 long maxFrequency;
 int  minPosition;
 long maxPosition;
-
-volatile int count=0;
 
 //Receive buffer and length
 const int byteBuffer = 6;
@@ -68,7 +66,7 @@ struct Response{
 
 //A struct to receive a message over the Wire
 struct Step{
- int freq;
+ int id;
  int goal;
  int checksum;
 } step;
@@ -133,7 +131,6 @@ void setup()
    digitalWrite(stepPin,LOW);
    digitalWrite(enablePin, LOW);
    
-   step.freq = 0;
    frequency = 0;
    dir = 0;
    step.goal = 250;
@@ -143,34 +140,15 @@ void setup()
 
 void loop()
 {  
-  int dt = millis()-t;
-  t += dt;
-   //Serial will be used when a config manager connects to the board
-   if (Serial.available() > 0) {
-    Serial.readBytes(serialInput,maxbuffer);
-    //Will be deprecated, for testing only
-    step.goal=0;
-    for(int i=0;i<3;i++)
-    {
-      step.goal*=10;
-      step.goal += serialInput[i]-'0';//Serial.print(goal);Serial.print(" ");delay(500);
-    }
-//    Serial.print(frequency);
-//    Serial.print('\n');
-//    Serial.print(step.goal);
-//    Serial.print('\n');
-//    //End testing
-}
-  
    //Read six incoming bytes, 
-   /*if(Wire.available() % byteBuffer == 0) {
+   if(Wire.available() % byteBuffer == 0) {
     for(int i = 0; i < byteBuffer; ++i){
      bytes[i] = Wire.read();
     }
     //Check validity of packet
     //if(valid) {
     memcpy(&step, bytes, byteBuffer); 
-   }*/
+   }
    
 //  long position=analogRead(potPin);
 //  
