@@ -9,6 +9,8 @@
 //
 //32000 TONE @ 16th Steps
 
+//EEPROM bytes 0-33 are taken for configuration
+
 
 #include <Wire.h>
 #include <EEPROM.h>
@@ -17,12 +19,7 @@
 #include "EEPROMAnything.h"
 #include "default.h"
 
-//These 2 will be deprecated soon
-const int maxbuffer=4;
-char serialInput[maxbuffer];
-/////////////////////////////////
-
-const int totalBytes = 35;
+const int totalBytes = 32;
 const int cutoff=10;
 
 float ratio = 32000/1024;
@@ -46,8 +43,8 @@ int  minPosition;
 long maxPosition;
 
 //Receive buffer and length
-const int byteBuffer = 6;
-byte bytes[byteBuffer];
+const int maxBuffer = 3;
+byte msg[maxBuffer];
 
 float frequency = 0;
 float frequencyVelocity = 0;
@@ -61,31 +58,28 @@ int  addr      = 0;          //eeprom starting memory address
 struct Response{
   int pos;
   int temp;
-  int checksum;
+  byte checksum;
 } response;
 
 //A struct to receive a message over the Wire
 struct Step{
- int id;
- int goal;
- int checksum;
+ uint16_t goal;
+ byte checksum;
 } step;
 
 bool checksum();
 void configure();
 void crcInit();
-crc crcFast(const uint8_t message[], int nBytes);
+crc crcFast(const crc message[], int nBytes);
 
 unsigned long t;
 
 void setup()
 {
-   Serial.begin(9600);
    crcInit();
-   delay(1000);
    
    if(!checksum()) {
-    Serial.print("Checksum no matchy...\nDefaulting...\n");
+    Serial.print("Checksum does not match...\nDefaulting...\n");
     defaultConfigure();    
    }
    
@@ -120,10 +114,10 @@ void setup()
    Serial.print("\n");
    Serial.print(maxPosition);
    Serial.print("\n");
-   
      
    Wire.begin(id);                                  // join i2c bus with address read from above
    Wire.onRequest(requestEvent);
+   Wire.onReceive(wireReceiver);
    pinMode(dirPin,OUTPUT);
    pinMode(stepPin,OUTPUT);
    pinMode(enablePin, OUTPUT);
@@ -137,37 +131,25 @@ void setup()
    t=millis();
 }
 
+void wireReceiver(int count)
+{
+  if(count == maxBuffer)
+   {
+      for(int i = 0; i < maxBuffer; ++i)
+      {
+      msg[i] = Wire.read();
+      }
+      //Check validity of packet
+      int checksum = crcFast(msg, maxBuffer-1);
+      if(checksum == msg[maxBuffer-1]) 
+      {
+        memcpy(&step, msg, maxBuffer);
+      }
+   } 
+}
 
 void loop()
-{  
-   //Read six incoming bytes, 
-   if(Wire.available() % byteBuffer == 0) {
-    for(int i = 0; i < byteBuffer; ++i){
-     bytes[i] = Wire.read();
-    }
-    //Check validity of packet
-    //if(valid) {
-    memcpy(&step, bytes, byteBuffer); 
-   }
-   
-//  long position=analogRead(potPin);
-//  
-//  if (abs(position-512)<16) 
-//    digitalWrite(enablePin,LOW);
-//  else 
-//    digitalWrite(enablePin,HIGH);
-//  
-//  if(position<512) 
-//    digitalWrite(dirPin,LOW);
-//  else
-//    digitalWrite(dirPin,HIGH);
-//  
-//  frequency = abs(position-512)*ratio;
-//  if(frequency > maxFrequency) frequency = maxFrequency;
-//  if(frequency < minFrequency) frequency = minFrequency;
-//  
-//  tone(stepPin,frequency);
-
+{
   position = analogRead(potPin);
   
   if (fabs(position-step.goal) < 4) {
@@ -192,9 +174,6 @@ void loop()
 //  int toneGoal = fabs(frequency);
 //  if(toneGoal > maxFrequency) toneGoal = maxFrequency;
 //  if(toneGoal < minFrequency) toneGoal = 0;
-  
-  Serial.print(frequency);
-  Serial.print('\n');
 
   frequency = (1.0)*fabs(position-step.goal)*ratio;
 
@@ -209,7 +188,7 @@ void loop()
 
 void requestEvent()
 {
-  Wire.write("Address "); // respond with message of 6 bytes
+  Wire.write("Address"); // respond with message of 6 bytes
                           // as expected by master
 }
 
@@ -350,7 +329,7 @@ void defaultConfigure(){
   for(int i = 0; i < totalBytes; ++i){
    b[i] = EEPROM.read(i);
   }
-  int checksum = crcFast(b, totalBytes);
+  crc checksum = crcFast(b, totalBytes);
   
   Serial.print("Checksum is: ");
   Serial.print(checksum);

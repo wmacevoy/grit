@@ -1,87 +1,87 @@
 #include <Arduino.h>
 
 struct Id{
- byte val;
- static const byte limit = 255;
- static const int address = 0;
+ uuint16_t16_t val;
+ static const uuint16_t16_t limit = 127;
+ static const uuint16_t16_t address = 0;
  Id(){val = 0;}
 }_id;
 
 struct PotPin{
- int val;
- static const int address = 1;
+ uint16_t val;
+ static const uuint16_t16_t address = 2;
  PotPin(){val = A0;}
 }_potPin; 
 
 struct DirPin{
- int val;
- static const int address = 3;
+ uint16_t val;
+ static const uuint16_t16_t address = 4;
  DirPin(){val = 5;}
 }_dirPin;
 
 struct StepPin{
- int val;
- static const int address = 5;
+ uint16_t val;
+ static const uint16_t address = 6;
  StepPin(){val = 4;}
 }_stepPin;
 
 struct EnablePin{
- int val;
- static const int address = 7;
+ uint16_t val;
+ static const uint16_t address = 8;
  EnablePin(){val = 6;}
 }_enablePin;
 
 struct LedPin{
- int val;
- static const int address = 9;
+ uint16_t val;
+ static const uint16_t address = 10;
  LedPin(){val = 13;}
 }_ledPin;
 
 struct MinFreq{
- int val;
- static const int limit = 0;
- static const int address = 11; 
+ uint16_t val;
+ static const uint16_t limit = 0;
+ static const uint16_t address = 12; 
  MinFreq(){val = 1000;}
 }_minFreq;
 
 struct MaxFreq{
- long val;
- static const long limit = 3200;
- static const int address = 13;
+ uint16_t val;
+ static const uint16_t limit = 3200;
+ static const uint16_t address = 14;
  MaxFreq(){val = 32000;}
 }_maxFreq;
 
 struct MinPos{
- int val;
- static const int limit = 0;
- static const int address = 17;
+ uint16_t val;
+ static const uint16_t limit = 0;
+ static const uint16_t address = 16;
  MinPos(){val = 0;}
 }_minPos;
 
 struct MaxPos{
- long val;
- static const long limit = 1024;
- static const int address = 19;
+ uint16_t val;
+ static const uint16_t limit = 1024;
+ static const uint16_t address = 18;
  MaxPos(){val = 1024;}
 }_maxPos;
 
 struct KP{
   float val;
   static const float limit = 1;
-  static const int address = 23;
+  static const uint16_t address = 20;
   KP(){val = 1.0;}
 }_Kp;
 
 struct KI{
   float val;
   static const float limit = 0.0;
-  static const int address = 27;
+  static const uint16_t address = 24;
   KI(){val = 0.0;}
 }_Ki;
 
 struct KD{
   float val;
   static const float limit = 0.0;
-  static const int address = 31;
+  static const uint16_t address = 28;
   KD(){val = 0.0;}
 }_Kd;
