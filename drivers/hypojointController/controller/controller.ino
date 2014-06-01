@@ -25,6 +25,13 @@ const int cutoff=10;
 
 float ratio = 32000/1024;
 
+float frequencyVelocity = 0;
+float goalFrequency = 0;
+int  wait      = 100;
+int  addr      = 0;          //eeprom starting memory address
+
+unsigned long t;
+
 //CRC stuffs
 crc crcTable[256];
 #define WIDTH  (8 * sizeof(crc))
@@ -60,11 +67,6 @@ uint16_t registers[maxRegisters];
 #define SAVE registers[30]
 #define _DEFAULT registers[31]
 
-float frequencyVelocity = 0;
-float goalFrequency = 0;
-int  wait      = 100;
-int  addr      = 0;          //eeprom starting memory address
-
 //A struct to hold the response from the joint
 struct Response{
   uint16_t pos;
@@ -79,11 +81,10 @@ struct Step{
 } step;
 
 bool checksum();
-void configure();
+void defaultConfigure();
+void writeConfig();
 void crcInit();
 crc crcFast(const crc message[], int nBytes);
-
-unsigned long t;
 
 void setup()
 {
@@ -126,7 +127,7 @@ void setup()
    Serial.print(MAXPOS);
    Serial.print("\n");
      
-   Wire.begin((int)ID);                                  // join i2c bus with address read from above
+   Wire.begin((int)ID);            // join i2c bus with address read from above
    Wire.onRequest(requestEvent);
    Wire.onReceive(wireReceiver);
    pinMode(DIRPIN,OUTPUT);
@@ -220,6 +221,7 @@ void loop()
   digitalWrite(ENABLEPIN,FREQ != 0);
   NewTone((uint8_t)STEPPIN, (long)FREQ);
   
+  delay(wait);
 }
 
 bool checksum(){
