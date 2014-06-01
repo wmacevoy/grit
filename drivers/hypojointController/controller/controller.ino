@@ -10,6 +10,7 @@
 //32000 TONE @ 16th Steps
 
 //EEPROM bytes 0-34 are taken for configuration
+//To set default config, simple set _DEFAULT to a non-zero value
 
 
 #include <Wire.h>
@@ -32,7 +33,7 @@ crc crcTable[256];
 
 //Register set
 //first 17 registers are data from the EEPROM
-const int maxRegisters = 31;
+const int maxRegisters = 32;
 uint16_t registers[maxRegisters];
 
 #define ID registers[0] 
@@ -53,18 +54,14 @@ uint16_t registers[maxRegisters];
 #define TEMP registers[24]
 #define FREQ registers[25]
 #define DIR registers[26]
-#define GOAL registers[27]
-#define REBOOT registers[28]
-#define SAVE registers[29]
-#define _DEFAULT registers[30]
-
-//Receive buffer and length
-const int maxBuffer = 3;
-byte msg[maxBuffer];
+#define POSITION registers[27]
+#define GOAL registers[28]
+#define REBOOT registers[29]
+#define SAVE registers[30]
+#define _DEFAULT registers[31]
 
 float frequencyVelocity = 0;
 float goalFrequency = 0;
-int  position  = 0;
 int  wait      = 100;
 int  addr      = 0;          //eeprom starting memory address
 
@@ -144,6 +141,11 @@ void setup()
    t=millis();
 }
 
+void requestEvent()
+{
+  //Wire.write("Address");
+}
+
 void wireReceiver(int count)
 {
   byte * b = (byte*) calloc(count, sizeof(byte));
@@ -165,7 +167,23 @@ void wireReceiver(int count)
 
 void loop()
 {
-  position = analogRead(POTPIN);
+  //Check registers
+  if(_DEFAULT)
+  {
+    defaultConfigure();
+    _DEFAULT = 0;
+  }
+  if(SAVE)
+  {
+    writeConfig();
+    SAVE = 0;
+  }
+  if(REBOOT)
+  {
+   //handle reboot somehow. 
+  }
+  
+  POSITION = (uint16_t) analogRead(POTPIN);
   
 //  if (fabs(position-step.goal) < 4) {
 //    goalFrequency = 0;
@@ -190,7 +208,7 @@ void loop()
 //  if(toneGoal > maxFrequency) toneGoal = maxFrequency;
 //  if(toneGoal < minFrequency) toneGoal = 0;
 
-  FREQ = (1.0)*fabs(position-step.goal)*ratio;
+  FREQ = (1.0)*fabs(POSITION-GOAL)*ratio;
 
   Serial.print(FREQ);
   Serial.print('\n');
@@ -198,16 +216,10 @@ void loop()
   if(FREQ > MAXFREQ) FREQ = MAXFREQ;
   if(FREQ < MINFREQ) FREQ = 0;
    
-  digitalWrite(DIRPIN,(position>GOAL));
+  digitalWrite(DIRPIN,(POSITION>GOAL));
   digitalWrite(ENABLEPIN,FREQ != 0);
   NewTone((uint8_t)STEPPIN, (long)FREQ);
   
-}
-
-void requestEvent()
-{
-  Wire.write("Address"); // respond with message of 6 bytes
-                          // as expected by master
 }
 
 bool checksum(){
