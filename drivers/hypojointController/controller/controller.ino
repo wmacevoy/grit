@@ -9,7 +9,7 @@
 //
 //32000 TONE @ 16th Steps
 
-//EEPROM bytes 0-33 are taken for configuration
+//EEPROM bytes 0-34 are taken for configuration
 
 
 #include <Wire.h>
@@ -70,8 +70,8 @@ int  addr      = 0;          //eeprom starting memory address
 
 //A struct to hold the response from the joint
 struct Response{
-  int pos;
-  int temp;
+  uint16_t pos;
+  uint16_t temp;
   byte checksum;
 } response;
 
@@ -97,16 +97,16 @@ void setup()
     defaultConfigure();    
    }
    
-   addr+=EEPROM_readAnything(addr, registers[addr]);             //Read ID
-   addr+=EEPROM_readAnything(addr, registers[addr]);         //Read potPin
-   addr+=EEPROM_readAnything(addr, registers[addr]);         //Read dirPin
-   addr+=EEPROM_readAnything(addr, registers[addr]);        //Read stepPin
-   addr+=EEPROM_readAnything(addr, registers[addr]);      //Read enablePin
-   addr+=EEPROM_readAnything(addr, registers[addr]);         //Read stepPin
+   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read ID
+   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read potPin
+   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read dirPin
+   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read stepPin
+   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read enablePin
+   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read stepPin
    addr+=EEPROM_readAnything(addr, registers[addr]);   //Read minFrequency
    addr+=EEPROM_readAnything(addr, registers[addr]);   //Read maxFrequency
-   addr+=EEPROM_readAnything(addr, registers[addr]);    //Read minPosition
-   addr+=EEPROM_readAnything(addr, registers[addr]);    //Read maxPosition
+   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read minPosition
+   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read maxPosition
 
    Serial.print(ID);
    Serial.print("\n");
@@ -146,20 +146,21 @@ void setup()
 
 void wireReceiver(int count)
 {
-  if(count == maxBuffer)
+  byte * b = (byte*) calloc(count, sizeof(byte));
+  for(int i=0; i < count; ++i)
+  {
+    b[i] = Wire.read();
+  }
+  
+  crc checksum = crcFast(b, totalBytes);
+  if(checksum == b[count-1])
+  {
+   for(int j=0; j < count-1; j += 3)
    {
-      for(int i = 0; i < maxBuffer; ++i)
-      {
-      msg[i] = Wire.read();
-      }
-      //Check validity of packet
-      int checksum = crcFast(msg, maxBuffer-1);
-      if(checksum == msg[maxBuffer-1]) 
-      {
-        memcpy(&step, msg, maxBuffer);
-        GOAL = step.goal;
-      }
+    //Is this correct?
+    registers[b[j]] = (uint16_t) b[j+1];
    } 
+  }
 }
 
 void loop()
@@ -228,6 +229,51 @@ bool checksum(){
   } else {
     return false;
   }
+}
+
+bool writeConfig(){
+  Serial.print("Writing configuration to memory...\n");
+  digitalWrite(_ledPin.val, HIGH);
+
+  addr += EEPROM_writeAnything(_id.address, ID);
+  addr += EEPROM_writeAnything(_potPin.address, POTPIN);
+  addr += EEPROM_writeAnything(_dirPin.address, DIRPIN);
+  addr += EEPROM_writeAnything(_stepPin.address, STEPPIN);
+  addr += EEPROM_writeAnything(_enablePin.address, ENABLEPIN);
+  addr += EEPROM_writeAnything(_ledPin.address, LEDPIN);
+  addr += EEPROM_writeAnything(_minFreq.address, MINFREQ);
+  addr += EEPROM_writeAnything(_maxFreq.address, MAXFREQ);
+  addr += EEPROM_writeAnything(_minPos.address, MINPOS);
+  addr += EEPROM_writeAnything(_maxPos.address, MAXPOS);
+  addr += EEPROM_writeAnything(_maxTemp.address, MAXTEMP);
+  
+  addr += EEPROM_writeAnything(_Kp.address, KP);
+  addr += EEPROM_writeAnything(_Kp.address + 2, ++KP);
+  
+  addr += EEPROM_writeAnything(_Ki.address, KI);
+  addr += EEPROM_writeAnything(_Ki.address + 2, KI);
+  
+  addr += EEPROM_writeAnything(_Kd.address, KD);
+  addr += EEPROM_writeAnything(_Kd.address + 2, KD);
+  
+  //Return address to 0
+  addr = 0;
+  
+  //Do CRC
+  byte b[totalBytes];
+  for(int i = 0; i < totalBytes; ++i){
+   b[i] = EEPROM.read(i);
+  }
+  crc checksum = crcFast(b, totalBytes);
+  
+  Serial.print("Checksum is: ");
+  Serial.print(checksum);
+  Serial.print('\n');
+  EEPROM.write(totalBytes, checksum);
+  
+  Serial.print("Done writing values to memory");
+  delay(1000);
+  digitalWrite(_ledPin.val, LOW);
 }
 
 void defaultConfigure(){
