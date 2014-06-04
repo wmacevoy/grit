@@ -82,7 +82,7 @@ struct Step{
 
 bool checksum();
 void defaultConfigure();
-void writeConfig();
+bool writeConfig();
 void crcInit();
 crc crcFast(const crc message[], int nBytes);
 
@@ -171,16 +171,19 @@ void loop()
   //Check registers
   if(_DEFAULT)
   {
+    Serial.print("Got Default flag");
     defaultConfigure();
     _DEFAULT = 0;
   }
   if(SAVE)
   {
+        Serial.print("Got SAVE flag"); 
     writeConfig();
     SAVE = 0;
   }
   if(REBOOT)
   {
+        Serial.print("Got REBOOT flag");
    //handle reboot somehow. 
   }
   
