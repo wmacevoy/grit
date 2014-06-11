@@ -29,6 +29,7 @@ float frequencyVelocity = 0;
 float goalFrequency = 0;
 int  wait      = 100;
 int  addr      = 0;          //eeprom starting memory address
+int totalError;
 
 unsigned long t;
 
@@ -86,25 +87,99 @@ bool writeConfig();
 void crcInit();
 crc crcFast(const crc message[], int nBytes);
 
+void printRegisters()
+{
+Serial.print("Registers:\nID: ");
+uint16_t p=ID;
+Serial.print(p);
+Serial.print("\nPotpin: \n");
+p=POTPIN;
+Serial.print(p);
+Serial.print("\nDirpin: \n");
+p=DIRPIN;
+Serial.print(p);
+Serial.print("\nSteppin: \n");
+p=STEPPIN;
+Serial.print(p);
+Serial.print("\nEnablepin: \n");
+p=ENABLEPIN;
+Serial.print(p);
+Serial.print("\nLedpin: \n");
+p=LEDPIN;
+Serial.print(p);
+Serial.print("\nMinfreq: \n");
+p=MINFREQ;
+Serial.print(p);
+Serial.print("\nMaxfreq: \n");
+p=MAXFREQ;
+Serial.print(p);
+Serial.print("\nMinpos: \n");
+p=MINPOS;
+Serial.print(p);
+Serial.print("\nMaxpos: \n");
+p=MAXPOS;
+Serial.print(p);
+Serial.print("\nMaxtemp: \n");
+p=MAXTEMP;
+Serial.print(p);
+Serial.print("\nKp: \n");
+float f=KP;
+Serial.print(f);
+Serial.print("\nKi: \n");
+f=KI;
+Serial.print(f);
+Serial.print("\nKd: \n");
+f=KD;
+Serial.print(f);
+
+Serial.print("\nTemp: \n");
+p=TEMP;
+Serial.print(p);
+Serial.print("\nFreq: \n");
+p=FREQ;
+Serial.print(p);
+Serial.print("\nDir: \n");
+p=DIR;
+Serial.print(p);
+Serial.print("\nPosition: \n");
+p=POSITION;
+Serial.print(p);
+Serial.print("\nGOAL: \n");
+p=GOAL;
+Serial.print(p);
+Serial.print("\nReboot: \n");
+p=REBOOT;
+Serial.print(p);
+Serial.print("\nSave: \n");
+p=SAVE;
+Serial.print(p);
+Serial.print("\n_Default: \n");
+p=_DEFAULT;
+Serial.print(p);
+Serial.print("\n \n \n \n \n ");
+}
+
 void setup()
 {
    crcInit();
+   Serial.begin(9600);
    
-   if(!checksum()) {
+   if(!checksum()) 
+   {
     Serial.print("Checksum does not match...\nDefaulting...\n");
     defaultConfigure();    
    }
    
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read ID
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read potPin
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read dirPin
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read stepPin
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read enablePin
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read stepPin
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read minFrequency
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read maxFrequency
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read minPosition
-   addr+=EEPROM_readAnything(addr, registers[addr]);   //Read maxPosition
+   addr+=EEPROM_readAnything(addr, ID);   //Read ID
+   addr+=EEPROM_readAnything(addr, POTPIN);   //Read potPin
+   addr+=EEPROM_readAnything(addr, DIRPIN);   //Read dirPin
+   addr+=EEPROM_readAnything(addr, STEPPIN);   //Read stepPin
+   addr+=EEPROM_readAnything(addr, ENABLEPIN);   //Read enablePin
+   addr+=EEPROM_readAnything(addr, LEDPIN);   //Read stepPin
+   addr+=EEPROM_readAnything(addr, MINFREQ);   //Read minFrequency
+   addr+=EEPROM_readAnything(addr, MAXFREQ);   //Read maxFrequency
+   addr+=EEPROM_readAnything(addr, MINPOS);   //Read minPosition
+   addr+=EEPROM_readAnything(addr, MAXPOS);   //Read maxPosition
 
    Serial.print(ID);
    Serial.print("\n");
@@ -127,7 +202,7 @@ void setup()
    Serial.print(MAXPOS);
    Serial.print("\n");
      
-   Wire.begin((int)ID);            // join i2c bus with address read from above
+   Wire.begin(4);            // join i2c bus with address read from above
    Wire.onRequest(requestEvent);
    Wire.onReceive(wireReceiver);
    pinMode(DIRPIN,OUTPUT);
@@ -149,19 +224,40 @@ void requestEvent()
 
 void wireReceiver(int count)
 {
+  Serial.print("\nGot a message of ");
+  Serial.print(count);
+  Serial.print(" bytes.\n");
+  
   byte * b = (byte*) calloc(count, sizeof(byte));
   for(int i=0; i < count; ++i)
   {
     b[i] = Wire.read();
+    //Serial.print((int)b[i]);
   }
   
-  crc checksum = crcFast(b, totalBytes);
+  crc checksum = crcFast(b, count-1);
+  //Serial.print("Checksum: ");
+  //Serial.print(checksum);
   if(checksum == b[count-1])
   {
+   //Serial.print("YAAAAY");
    for(int j=0; j < count-1; j += 3)
    {
-    //Is this correct?
-    registers[b[j]] = (uint16_t) b[j+1];
+    Serial.print("address: ");
+    Serial.print(b[j]);
+    
+    uint8_t address = b[j];
+    uint16_t value = (uint16_t) b[j+1];
+    
+    Serial.print("value: ");
+    Serial.print((uint16_t) b[j+1]);
+    Serial.print("\n ");
+    registers[address] = value;
+    
+    //get the total error, needs to be more dynamic in actual FREQ calculation
+    if(address == 27)
+      totalError = abs(POSITION - GOAL);
+    
    } 
   }
 }
@@ -171,59 +267,44 @@ void loop()
   //Check registers
   if(_DEFAULT)
   {
-    Serial.print("Got Default flag");
+    Serial.print("If check got DEFAULT flag");
     defaultConfigure();
     _DEFAULT = 0;
   }
   if(SAVE)
   {
-        Serial.print("Got SAVE flag"); 
+    Serial.print("If check got SAVE flag"); 
     writeConfig();
     SAVE = 0;
   }
   if(REBOOT)
   {
-        Serial.print("Got REBOOT flag");
+    Serial.print("If check got REBOOT flag");
+    REBOOT = 0;
    //handle reboot somehow. 
   }
   
   POSITION = (uint16_t) analogRead(POTPIN);
-  
-//  if (fabs(position-step.goal) < 4) {
-//    goalFrequency = 0;
-//  } else if (position-step.goal < 0) {
-//    goalFrequency = maxFrequency;
-//  } else {
-//    goalFrequency = -maxFrequency;
-//  }
-  
-//  frequencyVelocity = frequencyVelocity + dt*((-0.01) * frequencyVelocity +(0.001)/0.005*(position-step.goal));
-//  frequency = frequency + dt*(0.001)*frequencyVelocity;
-//  if (frequency > maxFrequency) {
-//    frequency = maxFrequency;
-//    frequencyVelocity = 0;
-//  }
-//  if (frequency < -maxFrequency) {
-//    frequency = -maxFrequency;
-//    frequencyVelocity = 0;
-//  }
-//  Serial.print("f="); Serial.print(frequency); Serial.print("v="); Serial.print(frequencyVelocity); Serial.println();
-//  int toneGoal = fabs(frequency);
-//  if(toneGoal > maxFrequency) toneGoal = maxFrequency;
-//  if(toneGoal < minFrequency) toneGoal = 0;
 
-  FREQ = (1.0)*fabs(POSITION-GOAL)*ratio;
-
-  Serial.print(FREQ);
-  Serial.print('\n');
-
-  if(FREQ > MAXFREQ) FREQ = MAXFREQ;
-  if(FREQ < MINFREQ) FREQ = 0;
+  int currentError = abs(POSITION - GOAL);
+  if(FREQ < MAXFREQ && (totalError / 2) < currentError)
+    { //Ramp up
+      FREQ += 50;
+    }
+  else if( currentError - (totalError - (totalError / 3)) <= 0)
+   { //Ramp down
+      FREQ -= 50;
+   }
+  else
+   {
+     FREQ = MAXFREQ;
+   }
    
   digitalWrite(DIRPIN,(POSITION>GOAL));
   digitalWrite(ENABLEPIN,FREQ != 0);
   NewTone((uint8_t)STEPPIN, (long)FREQ);
   
+  //printRegisters();
   delay(wait);
 }
 
@@ -252,17 +333,17 @@ bool writeConfig(){
   Serial.print("Writing configuration to memory...\n");
   digitalWrite(_ledPin.val, HIGH);
 
-  addr += EEPROM_writeAnything(_id.address, ID);
-  addr += EEPROM_writeAnything(_potPin.address, POTPIN);
-  addr += EEPROM_writeAnything(_dirPin.address, DIRPIN);
-  addr += EEPROM_writeAnything(_stepPin.address, STEPPIN);
-  addr += EEPROM_writeAnything(_enablePin.address, ENABLEPIN);
-  addr += EEPROM_writeAnything(_ledPin.address, LEDPIN);
-  addr += EEPROM_writeAnything(_minFreq.address, MINFREQ);
-  addr += EEPROM_writeAnything(_maxFreq.address, MAXFREQ);
-  addr += EEPROM_writeAnything(_minPos.address, MINPOS);
-  addr += EEPROM_writeAnything(_maxPos.address, MAXPOS);
-  addr += EEPROM_writeAnything(_maxTemp.address, MAXTEMP);
+  addr += EEPROM_writeAnything(_id.address, (uint16_t)ID);
+  addr += EEPROM_writeAnything(_potPin.address, (uint16_t)POTPIN);
+  addr += EEPROM_writeAnything(_dirPin.address, (uint16_t)DIRPIN);
+  addr += EEPROM_writeAnything(_stepPin.address, (uint16_t)STEPPIN);
+  addr += EEPROM_writeAnything(_enablePin.address, (uint16_t)ENABLEPIN);
+  addr += EEPROM_writeAnything(_ledPin.address, (uint16_t)LEDPIN);
+  addr += EEPROM_writeAnything(_minFreq.address, (uint16_t)MINFREQ);
+  addr += EEPROM_writeAnything(_maxFreq.address, (uint16_t)MAXFREQ);
+  addr += EEPROM_writeAnything(_minPos.address, (uint16_t)MINPOS);
+  addr += EEPROM_writeAnything(_maxPos.address, (uint16_t)MAXPOS);
+  addr += EEPROM_writeAnything(_maxTemp.address, (uint16_t)MAXTEMP);
   
   addr += EEPROM_writeAnything(_Kp.address, KP);
   addr += EEPROM_writeAnything(_Kp.address + 2, ++KP);
@@ -424,7 +505,7 @@ void defaultConfigure(){
   Serial.print('\n');
   EEPROM.write(totalBytes, checksum);
   
-  Serial.print("Done writing values to memory");
+  Serial.print("Done writing values to memory\n");
   delay(1000);
   digitalWrite(_ledPin.val, LOW);
 }
