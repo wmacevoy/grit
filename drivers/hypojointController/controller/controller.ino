@@ -68,6 +68,9 @@ uint16_t registers[maxRegisters];
 #define SAVE registers[30]
 #define _DEFAULT registers[31]
 
+float f;
+int dt;
+
 //A struct to hold the response from the joint
 struct Response{
   uint16_t pos;
@@ -262,8 +265,11 @@ void wireReceiver(int count)
   }
 }
 
+
 void loop()
 {
+  dt=millis()-t;
+  t += dt;
   //Check registers
   if(_DEFAULT)
   {
@@ -286,21 +292,31 @@ void loop()
   
   POSITION = (uint16_t) analogRead(POTPIN);
 
-  int currentError = abs(POSITION - GOAL);
-  if(FREQ < MAXFREQ && (totalError / 2) < currentError)
-    { //Ramp up
-      FREQ += 50;
-    }
-  else if( currentError - (totalError - (totalError / 3)) <= 0)
-   { //Ramp down
-      FREQ -= 50;
-   }
-  else
-   {
-     FREQ = MAXFREQ;
-   }
-   
-  digitalWrite(DIRPIN,(POSITION>GOAL));
+  if (POSITION < GOAL) {
+    f += dt*0.001*(MAXFREQ)*0.25; // 4 sec ramp
+  } 
+  if (POSITION > GOAL) {
+    f -= dt*0.001*(MAXFREQ)*0.25; // 4 sec ramp
+  }
+  if (f > MAXFREQ) {
+    f=MAXFREQ;
+  }
+  if (FREQ < -MAXFREQ) {
+    f=-MAXFREQ;
+  }
+
+  if (f < 0) {
+    FREQ=-f;
+  } else {
+    FREQ=f;
+  }
+
+  if (FREQ != 0 && FREQ < MINFREQ) {
+    FREQ=MINFREQ;
+  }
+  
+
+  digitalWrite(DIRPIN,f>0);
   digitalWrite(ENABLEPIN,FREQ != 0);
   NewTone((uint8_t)STEPPIN, (long)FREQ);
   
@@ -576,14 +592,3 @@ crcFast(uint8_t const message[], int nBytes)
     return (remainder);
 
 }   /* crcFast() */
-
-
-
-
-
-
-
-
-
-
-
