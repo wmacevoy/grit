@@ -25,11 +25,7 @@ const int cutoff=10;
 
 float ratio = 32000/1024;
 
-float frequencyVelocity = 0;
-float goalFrequency = 0;
-int  wait      = 100;
 int  addr      = 0;          //eeprom starting memory address
-int totalError;
 
 unsigned long t;
 
@@ -68,8 +64,9 @@ uint16_t registers[maxRegisters];
 #define SAVE registers[30]
 #define _DEFAULT registers[31]
 
-float f;
-int dt;
+float f=0;
+float df=0;
+int dt=0;
 
 //A struct to hold the response from the joint
 struct Response{
@@ -215,6 +212,7 @@ void setup()
    digitalWrite(STEPPIN,LOW);
    digitalWrite(ENABLEPIN, LOW);
    
+   GOAL=512;
    FREQ = 0;
    DIR = 0;
    t=millis();
@@ -257,10 +255,6 @@ void wireReceiver(int count)
     Serial.print("\n ");
     registers[address] = value;
     
-    //get the total error, needs to be more dynamic in actual FREQ calculation
-    if(address == 27)
-      totalError = abs(POSITION - GOAL);
-    
    } 
   }
 }
@@ -293,16 +287,17 @@ void loop()
   POSITION = (uint16_t) analogRead(POTPIN);
 
   if (POSITION < GOAL) {
-    f += dt*0.001*(MAXFREQ)*0.25; // 4 sec ramp
+    df= dt*0.001*float(MAXFREQ)*0.1;
   } 
   if (POSITION > GOAL) {
-    f -= dt*0.001*(MAXFREQ)*0.25; // 4 sec ramp
+    df= -dt*0.001*float(MAXFREQ)*0.1;
   }
-  if (f > MAXFREQ) {
-    f=MAXFREQ;
+  f += df;
+  if (f > float(MAXFREQ)) {
+    f=float(MAXFREQ);
   }
-  if (FREQ < -MAXFREQ) {
-    f=-MAXFREQ;
+  if (FREQ < -float(MAXFREQ)) {
+    f=-float(MAXFREQ);
   }
 
   if (f < 0) {
@@ -319,9 +314,14 @@ void loop()
   digitalWrite(DIRPIN,f>0);
   digitalWrite(ENABLEPIN,FREQ != 0);
   NewTone((uint8_t)STEPPIN, (long)FREQ);
+
+  Serial.print(" dt="); Serial.print(dt);
+  Serial.print(" f="); Serial.print(f);
+  Serial.print(" df="); Serial.print(df);
+  Serial.print(" MAXFREQ="); Serial.print(MAXFREQ); Serial.println();
   
   //printRegisters();
-  delay(wait);
+  // delay(wait);
 }
 
 bool checksum(){
