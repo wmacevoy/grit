@@ -48,7 +48,7 @@ struct MaxFreq{
  uint16_t val;
  static const uint16_t limit = 3200;
  static const uint16_t address = 14;
- MaxFreq(){val = 50000;}
+ MaxFreq(){val = 32000;}
 }_maxFreq;
 //16
 struct MinPos{
