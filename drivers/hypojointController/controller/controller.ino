@@ -213,8 +213,9 @@ void setup()
    digitalWrite(ENABLEPIN, LOW);
    
    GOAL=512;
+   MAXFREQ=6000;
    FREQ = 0;
-   DIR = 0;
+   //DIR = 0;
    t=millis();
 }
 
@@ -285,20 +286,25 @@ void loop()
   }
   
   POSITION = (uint16_t) analogRead(POTPIN);
-
-  if (POSITION < GOAL) {
-    df= dt*0.001*float(MAXFREQ)*0.1;
+// f positive increases POSITION
+  df=0;
+  if (POSITION < GOAL-4) {
+    df= dt*0.001*float(MAXFREQ);
+ //   if (f < 0) f=0;
   } 
-  if (POSITION > GOAL) {
-    df= -dt*0.001*float(MAXFREQ)*0.1;
+  if (POSITION > GOAL+4) {
+    df= -dt*0.001*float(MAXFREQ);
+//    if (f > 0) f=0;
   }
   f += df;
   if (f > float(MAXFREQ)) {
     f=float(MAXFREQ);
   }
-  if (FREQ < -float(MAXFREQ)) {
+  if (f < -float(MAXFREQ)) {
     f=-float(MAXFREQ);
   }
+  
+  // f=3000;
 
   if (f < 0) {
     FREQ=-f;
@@ -306,15 +312,22 @@ void loop()
     FREQ=f;
   }
 
-  if (FREQ != 0 && FREQ < MINFREQ) {
-    FREQ=MINFREQ;
-  }
+ // if (FREQ != 0 && FREQ < MINFREQ) {
+ //   FREQ=MINFREQ;
+ // }
   
-
-  digitalWrite(DIRPIN,f>0);
+  if (f > 0.0) {
+    digitalWrite(DIRPIN,0);
+    Serial.println(" dir=0");
+  } else {
+    digitalWrite(DIRPIN,1);
+    Serial.println(" dir=1");
+  }
   digitalWrite(ENABLEPIN,FREQ != 0);
-  NewTone((uint8_t)STEPPIN, (long)FREQ);
-
+  //NewTone((uint8_t)STEPPIN, (long)FREQ);
+  tone(STEPPIN,FREQ);
+  Serial.print(" P="); Serial.print(POSITION);
+  Serial.print(" G="); Serial.print(GOAL);
   Serial.print(" dt="); Serial.print(dt);
   Serial.print(" f="); Serial.print(f);
   Serial.print(" df="); Serial.print(df);
@@ -379,7 +392,7 @@ bool writeConfig(){
    b[i] = EEPROM.read(i);
   }
   crc checksum = crcFast(b, totalBytes);
-  
+ 
   Serial.print("Checksum is: ");
   Serial.print(checksum);
   Serial.print('\n');
