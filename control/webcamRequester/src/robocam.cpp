@@ -34,6 +34,7 @@ bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false
 	currentHeight = normalHeight;
 
   my_socket = new udp::socket(my_io_service, udp::endpoint(udp::v4(), port));
+  my_socket->non_blocking(true);
 
   return true; //get this better
 }
@@ -47,19 +48,26 @@ bool RobotWatcher::setupLidar(std::string _address, bool _calibration, bool _ver
 
 Mat RobotWatcher::grab_image()
 {
+    boost::system::error_code ec;
+
   	buff.resize(MAX_SIZE);
-  	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint);
-  	buff.resize(length);
-  	decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
-		if(verbose) std::cout << decoded.cols << "  " << decoded.rows << std::endl;
-		d.setBounds(decoded.cols, decoded.rows);
-		if(hasLidar) {
-			d.recvData();
-			d.drawGraph(decoded, decoded.cols, decoded.rows);
-			if(inside) {
-				d.writeDistance(decoded, mx);			
-			}
-		}
+  	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
+    std::cout << "lenght = " << length << std::endl;
+  	
+    if(length > 0)
+     {
+		 buff.resize(length);
+  	 decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
+		 if(verbose) std::cout << decoded.cols << "  " << decoded.rows << std::endl;
+		 d.setBounds(decoded.cols, decoded.rows);
+		 if(hasLidar) {
+			 d.recvData();
+			 d.drawGraph(decoded, decoded.cols, decoded.rows);
+			 if(inside) {
+				 d.writeDistance(decoded, mx);			
+			 }
+		  }
+     }
   	return decoded;
 }
 

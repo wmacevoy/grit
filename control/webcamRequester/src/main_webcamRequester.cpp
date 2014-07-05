@@ -31,7 +31,6 @@ void quitproc(int param) {
 	ghost->kill();
 }
 
-
 void mouseEvent(int evt, int x, int y, int flags, void* param) {
 	if(evt == CV_EVENT_MOUSEMOVE) {
 		ghost->setMouse(x, y);
@@ -76,8 +75,19 @@ int main(int argc, char** argv)
 
 	while(!die) {
 		if(receiving) {
-				frame = my_watcher.grab_image();
-				imshow(windowName, frame);
+        try
+          {
+				  frame = my_watcher.grab_image();
+          }
+        catch(int e)
+          {
+          std::cout << "No data available!" << std::endl;
+          }
+
+        if(!frame.empty())
+         {
+				 imshow(windowName, frame);
+         }
 			}
 
 		char c = waitKey(sleep_time);
