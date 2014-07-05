@@ -46,7 +46,7 @@ int main(int argc, char** argv)
 	verbose = cfg.flag("webcam.requester.verbose", false);
 	if (verbose) cfg.show();
 
-	int sleep_time_gray = cfg.num("webcam.requester.sleep_time_gray");
+	int sleep_time_gray = cfg.num("webcam.requester.sleep_time");
 	int port = (int)cfg.num("webcam.provider.port");
 	std::string lidarAddress = cfg.str("lidar.provider.subscribe");
 	bool lidarCalibration = cfg.flag("webcam.requester.calibration", false);
