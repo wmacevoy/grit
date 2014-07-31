@@ -29,6 +29,11 @@ int  addr      = 0;          //eeprom starting memory address
 
 unsigned long t;
 
+//PID stuffs
+long  error, previous_error;
+long  integral, derivative;
+
+
 //CRC stuffs
 crc crcTable[256];
 #define WIDTH  (8 * sizeof(crc))
@@ -51,9 +56,9 @@ uint16_t registers[maxRegisters];
 #define MINPOS registers[8]
 #define MAXPOS registers[9]
 #define MAXTEMP registers[10]
-#define KP registers[12]
-#define KI registers[16]
-#define KD registers[20]
+#define KP (*(float*)(&registers[12]))
+#define KI (*(float*)(&registers[16]))
+#define KD (*(float*)(&registers[20]))
 
 #define TEMP registers[24]
 #define FREQ registers[25]
@@ -180,28 +185,23 @@ void setup()
    addr+=EEPROM_readAnything(addr, MAXFREQ);   //Read maxFrequency
    addr+=EEPROM_readAnything(addr, MINPOS);   //Read minPosition
    addr+=EEPROM_readAnything(addr, MAXPOS);   //Read maxPosition
+   addr+=EEPROM_readAnything(addr, KP);
+   addr+=EEPROM_readAnything(addr, KI);
+   addr+=EEPROM_readAnything(addr, KD);
 
-   Serial.print(ID);
-   Serial.print("\n");
-   Serial.print(POTPIN);
-   Serial.print("\n");
-   Serial.print(DIRPIN);
-   Serial.print("\n");
-   Serial.print(STEPPIN);
-   Serial.print("\n");
-   Serial.print(ENABLEPIN);
-   Serial.print("\n");
-   Serial.print(LEDPIN);
-   Serial.print("\n");
-   Serial.print(MINFREQ);
-   Serial.print("\n");
-   Serial.print(MAXFREQ);
-   Serial.print("\n");
-   Serial.print(MINPOS);
-   Serial.print("\n");
-   Serial.print(MAXPOS);
-   Serial.print("\n");
-     
+   Serial.println(ID);
+   Serial.println(POTPIN);
+   Serial.println(DIRPIN);
+   Serial.println(STEPPIN);
+   Serial.println(ENABLEPIN);
+   Serial.println(LEDPIN);
+   Serial.println(MINFREQ);
+   Serial.println(MAXFREQ);
+   Serial.println(MINPOS);
+   Serial.println(MAXPOS);
+   Serial.println((float)KP);
+   Serial.println((float)KI);
+   Serial.println((float)KD);
    Wire.begin(4);            // join i2c bus with address read from above
    Wire.onRequest(requestEvent);
    Wire.onReceive(wireReceiver);
@@ -213,9 +213,7 @@ void setup()
    digitalWrite(ENABLEPIN, LOW);
    
    GOAL=512;
-   MAXFREQ=6000;
-   FREQ = 0;
-   //DIR = 0;
+
    t=millis();
 }
 
@@ -286,55 +284,97 @@ void loop()
   }
   
   POSITION = (uint16_t) analogRead(POTPIN);
-// f positive increases POSITION
-  df=0;
-  if (POSITION < GOAL-4) {
-    df= dt*0.001*float(MAXFREQ);
- //   if (f < 0) f=0;
-  } 
-  if (POSITION > GOAL+4) {
-    df= -dt*0.001*float(MAXFREQ);
-//    if (f > 0) f=0;
-  }
-  f += df;
-  if (f > float(MAXFREQ)) {
-    f=float(MAXFREQ);
-  }
-  if (f < -float(MAXFREQ)) {
-    f=-float(MAXFREQ);
-  }
-  
-  // f=3000;
+ // f positive increases POSITION
+   df=0;
+   
+   int error = POSITION-GOAL;
+   
+   if (abs(error)>100) {
+      if (error < 0) {
+       f += dt*0.001*float(MAXFREQ);   
+      } else {
+       f -= dt*0.001*float(MAXFREQ);
+      }
+   } else if (abs(error) > 10) {
+      f = -KP*float(MAXFREQ)/200.0*error; 
+   } else {
+     f=0;
+   }
 
-  if (f < 0) {
-    FREQ=-f;
-  } else {
-    FREQ=f;
-  }
+   if (f > float(MAXFREQ)) {
+     f=float(MAXFREQ);
+   }
+   if (f < -float(MAXFREQ)) {
+     f=-float(MAXFREQ);
+   }
+  
+   // f=3000;
 
- // if (FREQ != 0 && FREQ < MINFREQ) {
- //   FREQ=MINFREQ;
- // }
+   if (f < 0) {
+     FREQ=-f;
+   } else {
+     FREQ=f;
+   }
+
+  // if (FREQ != 0 && FREQ < MINFREQ) {
+  //   FREQ=MINFREQ;
+  // }
   
-  if (f > 0.0) {
-    digitalWrite(DIRPIN,0);
-    Serial.println(" dir=0");
-  } else {
-    digitalWrite(DIRPIN,1);
-    Serial.println(" dir=1");
+   if (f > 0.0) {
+     digitalWrite(DIRPIN,0);
+     Serial.println(" dir=0");
+   } else {
+     digitalWrite(DIRPIN,1);
+     Serial.println(" dir=1");
+   }
+   digitalWrite(ENABLEPIN,FREQ != 0);
+   //NewTone((uint8_t)STEPPIN, (long)FREQ);
+   tone(STEPPIN,FREQ);
+   Serial.print(" P="); Serial.print(POSITION);
+   Serial.print(" G="); Serial.print(GOAL);
+   Serial.print(" dt="); Serial.print(dt);
+   Serial.print(" f="); Serial.print(f);
+   Serial.print(" df="); Serial.print(df);
+   Serial.print(" MAXFREQ="); Serial.print(MAXFREQ); Serial.println();
+  
+#if 0 
+  error = GOAL-POSITION;
+  integral = integral + error*dt;
+  derivative = (error - previous_error)/dt;
+  FREQ = KP*error + KI*integral + KD*derivative;
+  FREQ = ((MAXFREQ - (FREQ*FREQ) / 860.2));
+//  if(FREQ < MINFREQ) FREQ=MINFREQ;
+  if(FREQ > MAXFREQ) FREQ=MAXFREQ;
+  previous_error = error;
+   
+  if (DIR == 0 && abs(GOAL-POSITION) <= cutoff) {
+    return;
   }
-  digitalWrite(ENABLEPIN,FREQ != 0);
-  //NewTone((uint8_t)STEPPIN, (long)FREQ);
-  tone(STEPPIN,FREQ);
-  Serial.print(" P="); Serial.print(POSITION);
-  Serial.print(" G="); Serial.print(GOAL);
-  Serial.print(" dt="); Serial.print(dt);
-  Serial.print(" f="); Serial.print(f);
-  Serial.print(" df="); Serial.print(df);
-  Serial.print(" MAXFREQ="); Serial.print(MAXFREQ); Serial.println();
-  
-  //printRegisters();
-  // delay(wait);
+  if (POSITION < GOAL) {
+      if (DIR != 1) {
+        digitalWrite(DIRPIN,1); 
+      }
+      DIR = 1;
+      tone(STEPPIN,(int)FREQ);
+   } else if (POSITION > GOAL) {
+      if (DIR != -1) {
+        digitalWrite(DIRPIN,00);
+      }
+      tone(STEPPIN,(int)FREQ);
+      DIR = -1;
+   } else {
+     if (DIR != 0) {
+       noTone(STEPPIN);
+     }
+     DIR = 0;
+   }
+   
+   Serial.print(" P="); Serial.print(POSITION);
+   Serial.print(" G="); Serial.print(GOAL);
+   Serial.print(" dt="); Serial.print(dt);
+   Serial.print(" f="); Serial.print(FREQ);
+   Serial.println();
+#endif
 }
 
 bool checksum(){
@@ -455,7 +495,7 @@ void defaultConfigure(){
   Serial.print(_ledPin.val);
   Serial.print('\n');
   
-  //Write minFrequency
+  //Write minFREQ
   Serial.print("Address is: ");
   Serial.print(addr);
   addr += EEPROM_writeAnything(_minFreq.address, _minFreq.val);
@@ -463,7 +503,7 @@ void defaultConfigure(){
   Serial.print(_minFreq.val);
   Serial.print('\n');
   
-  //Write maxFrequency
+  //Write maxFREQ
   Serial.print("Address is: ");
   Serial.print(addr);
   addr += EEPROM_writeAnything(_maxFreq.address, _maxFreq.val);
