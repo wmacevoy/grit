@@ -4,7 +4,7 @@ struct Id{
  uint16_t val;
  static const uint16_t limit = 127;
  static const uint16_t address = 0;
- Id(){val = 0;}
+ Id(){val = 4;}
 }_id;
 //2
 struct PotPin{
@@ -46,9 +46,9 @@ struct MinFreq{
 //14
 struct MaxFreq{
  uint16_t val;
- static const uint16_t limit = 3200;
+ static const uint16_t limit = 31000;
  static const uint16_t address = 14;
- MaxFreq(){val = 32000;}
+ MaxFreq(){val = 31000;}
 }_maxFreq;
 //16
 struct MinPos{
@@ -67,28 +67,28 @@ struct MaxPos{
 //20
 struct MaxTemp{
  uint16_t val;
- static const uint16_t limit = 1024;
- static const uint16_t address = 18;
- MaxTemp(){val = 1024;}
+ static const uint16_t limit = 85;
+ static const uint16_t address = 20;
+ MaxTemp(){val = 85;}
 }_maxTemp;
 //22
 struct KP{
   float val;
-  static const float limit = 1;
-  static const uint16_t address = 20;
-  KP(){val = 1.0;}
+  static const float limit = 2.0;
+  static const uint16_t address = 22;
+  KP(){val = 2.0;}
 }_Kp;
 //26
 struct KI{
   float val;
   static const float limit = 0.0;
-  static const uint16_t address = 24;
+  static const uint16_t address = 26;
   KI(){val = 0.0;}
 }_Ki;
 //30
 struct KD{
   float val;
   static const float limit = 0.0;
-  static const uint16_t address = 28;
+  static const uint16_t address = 30;
   KD(){val = 0.0;}
 }_Kd;
