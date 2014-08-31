@@ -1,0 +1,17 @@
+sudo apt-get install git-core git-svn ruby rubygems
+sudo gem install svn2git
+mkdir grit
+cd grit
+svn2git http://www.gjmakerspace.org/mojavaton --nobranches --notags --exclude mechanical --username warren
+echo "password: ShU3VD3L"
+cd ..
+git clone --mirror grit
+wget http://repo1.maven.org/maven2/com/madgag/bfg/1.11.7/bfg-1.11.7.jar
+cd grit.git
+java -jar ../bfg-1.11.7.jar --strip-blobs-bigger-than 99M 
+git gc
+cd ..
+git clone grit.git
+cd grit
+git remote set-url origin git@github.com:wmacevoy/grit.git
+git push
