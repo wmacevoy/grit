@@ -2,7 +2,7 @@ URG=urg-0.8.18
 
 all :   $(URG)/config.status
 	$(MAKE) -C $(URG) all
-	$(MAKE) -C $(URG) install
+#	$(MAKE) -C $(URG) install
 
 $(URG)/config.status :  $(URG)/configure
 	cd $(URG); ./configure --prefix=`realpath ../../../libs`
