@@ -6,7 +6,6 @@ Grit Robotics Repository
 This DOES NOT contain mechanical drawing or videos --- they are too big.
 
 # Linux Software Setup Instructions
-====
 ## Cloning the GitHub repository
 Open a `Terminal` and run this set of commands. It will ask you for your login details for GitHub and may also ask for a Username and Email, they don't have to match your GitHub Username and Email but should be something we can recognize.
 ````
