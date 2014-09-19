@@ -22,3 +22,6 @@ sudo ./setup/setup_dev_environment.sh
 sudo ./setup/setup_environment_packages.sh
 ````
 See the README inside of /setup/ for more info on each of the setup scripts.
+
+
+Notes!
