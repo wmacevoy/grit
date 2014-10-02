@@ -1,0 +1,8 @@
+gcc -fPIC -g -Wall -Wextra -Iinclude   -c -o src/SerialInterface.o src/SerialInterface.c
+gcc -fPIC -g -Wall -Wextra -Iinclude   -c -o src/VehicleInterface.o src/VehicleInterface.c
+mkdir -p lib/
+gcc  -fPIC -g -Wall -Wextra -Iinclude  -o lib/hri_vsc_interface.1.1.so -shared src/SerialInterface.o src/VehicleInterface.o
+gcc -fPIC -g -Wall -Wextra -Iinclude tutorials/vsc_tutorial_1.c lib/hri_vsc_interface.1.1.so -o tutorials/vsc_tutorial_1 -Iinclude -lrt
+gcc -fPIC -g -Wall -Wextra -Iinclude tutorials/vsc_tutorial_2.c lib/hri_vsc_interface.1.1.so -o tutorials/vsc_tutorial_2 -Iinclude -lrt
+gcc -fPIC -g -Wall -Wextra -Iinclude tutorials/vsc_tutorial_3.c lib/hri_vsc_interface.1.1.so -o tutorials/vsc_tutorial_3 -Iinclude -lrt
+gcc -fPIC -g -Wall -Wextra -Iinclude tutorials/vsc_tutorial_4.c lib/hri_vsc_interface.1.1.so -o tutorials/vsc_tutorial_4 -Iinclude -lrt

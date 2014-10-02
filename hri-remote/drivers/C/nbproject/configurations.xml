@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <df root="." name="0">
+      <df name="src">
+        <in>SerialInterface.c</in>
+        <in>VehicleInterface.c</in>
+      </df>
+      <df name="tutorials">
+        <in>test_messages.c</in>
+        <in>vsc_tutorial_1.c</in>
+        <in>vsc_tutorial_2.c</in>
+        <in>vsc_tutorial_3.c</in>
+        <in>vsc_tutorial_4.c</in>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-fPIC -g"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>.</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean</cleanCommand>
+          <executablePath></executablePath>
+          <cTool>
+            <incDir>
+              <pElem>include</pElem>
+              <pElem>.</pElem>
+            </incDir>
+          </cTool>
+        </makeTool>
+      </makefileType>
+      <item path="src/SerialInterface.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/VehicleInterface.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tutorials/test_messages.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tutorials/vsc_tutorial_1.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tutorials/vsc_tutorial_2.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tutorials/vsc_tutorial_3.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="tutorials/vsc_tutorial_4.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
