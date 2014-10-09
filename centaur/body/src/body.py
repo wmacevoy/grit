@@ -356,6 +356,9 @@ class ArmMover(_object):
     __swig_getmethods__ = {}
     __getattr__ = lambda self, name: _swig_getattr(self, ArmMover, name)
     __repr__ = _swig_repr
+    __swig_setmethods__["bodyMover"] = _body.ArmMover_bodyMover_set
+    __swig_getmethods__["bodyMover"] = _body.ArmMover_bodyMover_get
+    if _newclass:bodyMover = _swig_property(_body.ArmMover_bodyMover_get, _body.ArmMover_bodyMover_set)
     __swig_setmethods__["geometry"] = _body.ArmMover_geometry_set
     __swig_getmethods__["geometry"] = _body.ArmMover_geometry_get
     if _newclass:geometry = _swig_property(_body.ArmMover_geometry_get, _body.ArmMover_geometry_set)
@@ -408,6 +411,8 @@ class ArmMover(_object):
     __swig_setmethods__["lastLeapForearm"] = _body.ArmMover_lastLeapForearm_set
     __swig_getmethods__["lastLeapForearm"] = _body.ArmMover_lastLeapForearm_get
     if _newclass:lastLeapForearm = _swig_property(_body.ArmMover_lastLeapForearm_get, _body.ArmMover_lastLeapForearm_set)
+    def pose(self, *args): return _body.ArmMover_pose(self, *args)
+    def shift(self, *args): return _body.ArmMover_shift(self, *args)
     def leapAdjust(self, *args): return _body.ArmMover_leapAdjust(self, *args)
     __swig_destroy__ = _body.delete_ArmMover
     __del__ = lambda self : None;
@@ -492,8 +497,9 @@ class RightArmMover(ArmMover):
     __swig_setmethods__["rightArmGeometry"] = _body.RightArmMover_rightArmGeometry_set
     __swig_getmethods__["rightArmGeometry"] = _body.RightArmMover_rightArmGeometry_get
     if _newclass:rightArmGeometry = _swig_property(_body.RightArmMover_rightArmGeometry_get, _body.RightArmMover_rightArmGeometry_set)
-    def __init__(self): 
-        this = _body.new_RightArmMover()
+    def pose(self): return _body.RightArmMover_pose(self)
+    def __init__(self, *args): 
+        this = _body.new_RightArmMover(*args)
         try: self.this.append(this)
         except: self.this = this
     __swig_destroy__ = _body.delete_RightArmMover
@@ -597,6 +603,12 @@ class BodyMover(_object):
     __swig_setmethods__["right"] = _body.BodyMover_right_set
     __swig_getmethods__["right"] = _body.BodyMover_right_get
     if _newclass:right = _swig_property(_body.BodyMover_right_get, _body.BodyMover_right_set)
+    __swig_setmethods__["walkThread"] = _body.BodyMover_walkThread_set
+    __swig_getmethods__["walkThread"] = _body.BodyMover_walkThread_get
+    if _newclass:walkThread = _swig_property(_body.BodyMover_walkThread_get, _body.BodyMover_walkThread_set)
+    __swig_setmethods__["walking"] = _body.BodyMover_walking_set
+    __swig_getmethods__["walking"] = _body.BodyMover_walking_get
+    if _newclass:walking = _swig_property(_body.BodyMover_walking_get, _body.BodyMover_walking_set)
     def __init__(self): 
         this = _body.new_BodyMover()
         try: self.this.append(this)
@@ -610,7 +622,7 @@ class BodyMover(_object):
     def stepMerge(self, *args): return _body.BodyMover_stepMerge(self, *args)
     def logPosition(self, *args): return _body.BodyMover_logPosition(self, *args)
     def fromTips(self, *args): return _body.BodyMover_fromTips(self, *args)
-    def dynamicWalk(self): return _body.BodyMover_dynamicWalk(self)
+    def dynamicWalk(self, *args): return _body.BodyMover_dynamicWalk(self, *args)
     def move(self, *args): return _body.BodyMover_move(self, *args)
     def load(self, *args): return _body.BodyMover_load(self, *args)
     def play(self, *args): return _body.BodyMover_play(self, *args)
@@ -620,6 +632,7 @@ class BodyMover(_object):
     __del__ = lambda self : None;
 BodyMover_swigregister = _body.BodyMover_swigregister
 BodyMover_swigregister(BodyMover)
+cvar = _body.cvar
 
 class LeftArmMover(ArmMover):
     __swig_setmethods__ = {}
@@ -632,8 +645,9 @@ class LeftArmMover(ArmMover):
     __swig_setmethods__["leftArmGeometry"] = _body.LeftArmMover_leftArmGeometry_set
     __swig_getmethods__["leftArmGeometry"] = _body.LeftArmMover_leftArmGeometry_get
     if _newclass:leftArmGeometry = _swig_property(_body.LeftArmMover_leftArmGeometry_get, _body.LeftArmMover_leftArmGeometry_set)
-    def __init__(self): 
-        this = _body.new_LeftArmMover()
+    def pose(self): return _body.LeftArmMover_pose(self)
+    def __init__(self, *args): 
+        this = _body.new_LeftArmMover(*args)
         try: self.this.append(this)
         except: self.this = this
     __swig_destroy__ = _body.delete_LeftArmMover
@@ -774,7 +788,6 @@ class Tape(_object):
         except: self.this = this
 Tape_swigregister = _body.Tape_swigregister
 Tape_swigregister(Tape)
-cvar = _body.cvar
 
 # This file is compatible with both classic and new-style classes.
 

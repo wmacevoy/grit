@@ -694,6 +694,7 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   return true;
 }
 
+/*
 //EXPERIMENT - TIME TO RUN!
 
 void BodyMover::dynamicWalk(WalkParameters wp) {
@@ -714,10 +715,10 @@ void BodyMover::dynamicWalk(WalkParameters wp) {
   double l2d=direction;
   double l3d=direction;
   double l4d=direction;
-  double l1z=wp.z/*+zoffset/2.0*/;
-  double l2z=wp.z/*+zoffset/2.0*/;
-  double l3z=wp.z/*-zoffset/2.0*/;
-  double l4z=wp.z/*-zoffset/2.0*/;
+  double l1z=wp.z;
+  double l2z=wp.z;
+  double l3z=wp.z;
+  double l4z=wp.z;
   l2d+=wp.rotation*3.0*M_PI_2;
   l3d+=wp.rotation*M_PI;
   l4d+=wp.rotation*M_PI_2;
@@ -734,10 +735,6 @@ void BodyMover::dynamicWalk(WalkParameters wp) {
 
   while(walking) {
       vector<double> p;
-      /*Check bots sensors to determine next move
-            Function to check leg pressures, determine which legs should have pressure and adjust if needed
-            Function to check accelerometers and level chassis accordingly using zOffset
-      */
 
       l1a=a;
       l2a=a+M_PI_2;
@@ -800,7 +797,7 @@ void BodyMover::dynamicWalk(WalkParameters wp) {
 }
 
 //END EXPERIMENT
-
+*/
 ServoMover* BodyMover::getMover(const std::string &name)
 {
   if (name == "LEFTARM_SHOULDER_IO") return &left.inOut;

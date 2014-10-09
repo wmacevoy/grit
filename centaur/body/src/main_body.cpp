@@ -775,6 +775,7 @@ void leapHand() {
     sensorsRx.join();
   }
 
+/*
   void walkOn()
   {
      double step=4.0;
@@ -785,7 +786,7 @@ void leapHand() {
 
      if(BodyMover::walkThread == 0) {
        BodyMover::walking.store(true);
-       BodyMover::walkThread = new std::thread(&BodyMover::dynamicWalk, &wp);
+       BodyMover::walkThread = new std::thread &BodyMover::dynamicWalk, &wp);
      }
   }
 
@@ -797,7 +798,7 @@ void leapHand() {
        delete BodyMover::walkThread;
        BodyMover::walkThread = 0;
      }
-  }
+  }*/
 
   void neckOn()
   {
@@ -1340,7 +1341,7 @@ void leapHand() {
       }
     }
 
-    if (head=="walk") {
+    /*if (head=="walk") {
       string value;
       iss >> value;
       if (value == "on") {
@@ -1350,7 +1351,7 @@ void leapHand() {
          walkOff();
 	 answer("I have stopped walking.");
       }
-    }
+    }*/
 
     if (head=="leap"){
       string value;
