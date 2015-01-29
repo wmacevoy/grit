@@ -204,12 +204,18 @@ void output(union XYZBuffer xyz) {
   Serial.print(xyz.value.z);
 }
 
+#define MODE_DIGITAL_IN         0
+#define MODE_DIGITAL_IN_PULLUP  1
+#define MODE_ANALOG_IN          2
+#define MODE_DIGITAL_OUT        3
+#define MODE_ANALOG_OUT         4
+#define MODE_TONE               5
+
+
 typedef struct {
-  int pin;
-  bool output; // input/output
-  bool analog; // analog/digital
-  bool pullup; // pullup/no pullup
-  int value;
+  uint8_t pin;
+  uint8_t mode;   // analog/digital/digital_pullup/tone
+  uint16_t value; // 16 bit for tone
 } io_t;
 
 int nios=0;
@@ -231,46 +237,62 @@ void setup()
   
   // safe light
   ios[nios].pin=9;
-  ios[nios].output=true;
-  ios[nios].analog=true;
-  ios[nios].pullup=false;
+  ios[nios].mode=MODE_ANALOG_OUT;
   ios[nios].value=0;
   ++nios;
 
   ios[nios].pin = 10;
   ios[nios].output = true;
-  ios[nios].analog = true;
-  ios[nios].pullup = false;
+  ios[nios].mode = MODE_ANALOG_OUT;
   ios[nios].value = 0;
   ++nios;
 
+  // relay
   ios[nios].pin = 11;
   ios[nios].output = true;
-  ios[nios].analog = true;
-  ios[nios].pullup = false;
+  ios[nios].mode = MODE_ANALOG_OUT;
   ios[nios].value = 0;
+  ++nios;
+
+  ios[nios].pin = 12;
+  ios[nios].output = true;
+  ios[nios].mode= MODE_DIGITAL_OUT;
+  ios[nios].value = 1;
+  ++nios;
+
+  ios[nios].pin = 8;
+  ios[nios].output = true;
+  ios[nios].mode= MODE_TONE;
+  ios[nios].value = 1;
   ++nios;
 
   for (int i=0; i<nios; ++i) {
-    if (ios[i].output) {
-      if (ios[i].analog) {
-        analogWrite(ios[i].pin,ios[i].value);
+    switch(ios[i].mode) {
+    case MODE_DIGITAL_IN:
+      pinMode(ios[i].pin,INPUT);
+      ios[i].value = digitalRead(ios[i].pin);
+      break;
+    case MODE_DIGITAL_IN_PULLUP:
+      pinMode(ios[i].pin,INPUT_PULLUP);
+      ios[i].value = digitalRead(ios[i].pin);
+      break;
+    case MODE_DIGITAL_OUT:
+      pinMode(ios[i].pin,OUTPUT);
+      digitalWrite(ios[i].pin,ios[i].value);
+      break;
+    case MODE_ANALOG_IN:
+      ios[i].value = analogRead(ios[i].pin);
+      break;
+    case MODE_ANALOG_OUT:
+      analogWrite(ios[i].pin,ios[i].value);
+      break;
+    case MODE_TONE:
+      if (ios[i].value == 0) {
+	noTone(ios[i].pin);
       } else {
-        digitalWrite(ios[i].pin,ios[i].value);
-        pinMode(ios[i].pin,OUTPUT);
+	tone(ios[i].pin,ios[i].value);
       }
-    } else {
-      if (ios[i].analog) {
-        ios[i].value = analogRead(ios[i].pin);
-      } else {
-        if (ios[i].pullup) {
-          pinMode(ios[i].pin,INPUT);
-          digitalWrite(ios[i].pin,HIGH);
-        } else {
-          pinMode(ios[i].pin,INPUT);
-        }
-	ios[i].value = digitalRead(ios[i].pin);
-      }
+      break;
     }
   }
 }
@@ -282,6 +304,36 @@ int state = 0;
 int index = 0;
 int value = 0;
 
+
+void update_io(io_t *io)
+{
+    switch(io->mode) {
+    case MODE_DIGITAL_IN:
+      io->value = digitalRead(io->pin);
+      break;
+    case MODE_DIGITAL_IN_PULLUP:
+      io->value = digitalRead(io->pin);
+      break;
+    case MODE_DIGITAL_OUT:
+      digitalWrite(io->pin,io->value);
+      break;
+    case MODE_ANALOG_IN:
+      io->value = analogRead(io->pin);
+      break;
+    case MODE_ANALOG_OUT:
+      analogWrite(io->pin,io->value);
+      break;
+    case MODE_TONE:
+      if (io->value == 0) {
+	noTone(io->pin);
+      } else {
+	tone(io->pin,io->value);
+      }
+      break;
+    }
+  }
+
+}
 void process(char ch)
 {
   switch(state) {
@@ -297,6 +349,11 @@ void process(char ch)
     } else if (ch == '=') {
       value = 0;
       state = 2;
+    } else if (ch == '$' || ch == ',') {
+      if (index < nios) {
+	update_io(&ios[index]);
+      }
+      state = 0;
     } else {
       state = 0;
     }
@@ -305,13 +362,9 @@ void process(char ch)
     if (ch >= '0' && ch <= '9') {
       value = value*10 + (ch-'0');
     } else if (ch == '$' || ch == ',') {
-      if (index < nios && ios[index].output) {
+      if (index < nios && ios[index].mode > MODE_ANALOG_IN) {
         ios[index].value = value;
-        if (ios[index].analog) {
-          analogWrite(ios[index].pin,value);
-        } else {
-          digitalWrite(ios[index].pin,value);
-        }
+	update_io(&ios[index]);
       }
       state = 0;
     } else {
@@ -378,12 +431,8 @@ void write()
   int l1,l2,l3,l4;
 
   for (int i=0; i<nios; ++i) {
-    if (!ios[i].output) {
-      if (ios[i].analog) {
-        ios[i].value = analogRead(ios[i].pin);
-      } else {
-        ios[i].value = digitalRead(ios[i].pin);
-      }
+    if (!ios[i].mode <= MODE_ANALOG_IN) {
+      update_io(&ios[i]);
     }
   }
 
