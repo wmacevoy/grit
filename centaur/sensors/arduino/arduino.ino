@@ -12,6 +12,25 @@
 #include <Wire.h>
 #include <avr/pgmspace.h>
 
+#define MODE_DIGITAL_IN         0
+#define MODE_DIGITAL_IN_PULLUP  1
+#define MODE_ANALOG_IN          2
+#define MODE_DIGITAL_OUT        3
+#define MODE_ANALOG_OUT         4
+#define MODE_TONE               5
+
+
+typedef struct {
+  uint8_t pin;
+  uint8_t mode;   // analog/digital/digital_pullup/tone
+  uint16_t value; // 16 bit for tone
+} io_t;
+
+void update_io(io_t *io);
+
+int nios=0;
+io_t ios[8]; // at least as many as are setup()
+
 static const unsigned short crc_table[256] PROGMEM = {
   0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
   0x8c48, 0x9dc1, 0xaf5a, 0xbed3, 0xca6c, 0xdbe5, 0xe97e, 0xf8f7,
@@ -204,22 +223,6 @@ void output(union XYZBuffer xyz) {
   Serial.print(xyz.value.z);
 }
 
-#define MODE_DIGITAL_IN         0
-#define MODE_DIGITAL_IN_PULLUP  1
-#define MODE_ANALOG_IN          2
-#define MODE_DIGITAL_OUT        3
-#define MODE_ANALOG_OUT         4
-#define MODE_TONE               5
-
-
-typedef struct {
-  uint8_t pin;
-  uint8_t mode;   // analog/digital/digital_pullup/tone
-  uint16_t value; // 16 bit for tone
-} io_t;
-
-int nios=0;
-io_t ios[8]; // at least as many as are setup()
 
 unsigned long nextWrite;
 
@@ -242,28 +245,24 @@ void setup()
   ++nios;
 
   ios[nios].pin = 10;
-  ios[nios].output = true;
   ios[nios].mode = MODE_ANALOG_OUT;
   ios[nios].value = 0;
   ++nios;
 
   // relay
   ios[nios].pin = 11;
-  ios[nios].output = true;
   ios[nios].mode = MODE_ANALOG_OUT;
   ios[nios].value = 0;
   ++nios;
 
   ios[nios].pin = 12;
-  ios[nios].output = true;
   ios[nios].mode= MODE_DIGITAL_OUT;
   ios[nios].value = 1;
   ++nios;
 
   ios[nios].pin = 8;
-  ios[nios].output = true;
   ios[nios].mode= MODE_TONE;
-  ios[nios].value = 1;
+  ios[nios].value = 0;
   ++nios;
 
   for (int i=0; i<nios; ++i) {
@@ -273,7 +272,8 @@ void setup()
       ios[i].value = digitalRead(ios[i].pin);
       break;
     case MODE_DIGITAL_IN_PULLUP:
-      pinMode(ios[i].pin,INPUT_PULLUP);
+      pinMode(ios[i].pin,INPUT);
+      digitalWrite(ios[i].pin,HIGH);
       ios[i].value = digitalRead(ios[i].pin);
       break;
     case MODE_DIGITAL_OUT:
@@ -307,33 +307,32 @@ int value = 0;
 
 void update_io(io_t *io)
 {
-    switch(io->mode) {
-    case MODE_DIGITAL_IN:
-      io->value = digitalRead(io->pin);
-      break;
-    case MODE_DIGITAL_IN_PULLUP:
-      io->value = digitalRead(io->pin);
-      break;
-    case MODE_DIGITAL_OUT:
-      digitalWrite(io->pin,io->value);
-      break;
-    case MODE_ANALOG_IN:
-      io->value = analogRead(io->pin);
-      break;
-    case MODE_ANALOG_OUT:
-      analogWrite(io->pin,io->value);
-      break;
-    case MODE_TONE:
-      if (io->value == 0) {
-	noTone(io->pin);
-      } else {
-	tone(io->pin,io->value);
-      }
-      break;
+  switch(io->mode) {
+  case MODE_DIGITAL_IN:
+    io->value = digitalRead(io->pin);
+    break;
+  case MODE_DIGITAL_IN_PULLUP:
+    io->value = digitalRead(io->pin);
+    break;
+  case MODE_DIGITAL_OUT:
+    digitalWrite(io->pin,io->value);
+    break;
+  case MODE_ANALOG_IN:
+    io->value = analogRead(io->pin);
+    break;
+  case MODE_ANALOG_OUT:
+    analogWrite(io->pin,io->value);
+    break;
+  case MODE_TONE:
+    if (io->value == 0) {
+      noTone(io->pin);
+    } else {
+      tone(io->pin,io->value);
     }
+    break;
   }
-
 }
+
 void process(char ch)
 {
   switch(state) {
@@ -349,11 +348,6 @@ void process(char ch)
     } else if (ch == '=') {
       value = 0;
       state = 2;
-    } else if (ch == '$' || ch == ',') {
-      if (index < nios) {
-	update_io(&ios[index]);
-      }
-      state = 0;
     } else {
       state = 0;
     }

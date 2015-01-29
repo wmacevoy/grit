@@ -97,7 +97,7 @@ void writeSafe()
   // Msg to send to controller for this color (with checksum)
 
   char tmp[80];
-  snprintf(tmp,sizeof(tmp),"S0=%d,S1=%d,S2=%d",255-R,255-G,255-B);
+  snprintf(tmp,sizeof(tmp),"S0=%d,S1=%d,S2=%d,S3=%d",255-R,255-G,255-B,red);
   size_t n=strlen(tmp);
   snprintf(tmp+n,sizeof(tmp)-n,"$%04x\n",CRC16(tmp,n));
   write(fd,tmp,strlen(tmp));
@@ -165,7 +165,7 @@ void process(const std::string &line)
 
   vector<string> vals;
   CSVSplit(line,vals);
-  if (vals.size() == 21) {
+  if (vals.size() >= 21) {
     bool ok = true;
     int i = -1;
 
