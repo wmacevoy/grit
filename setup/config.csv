@@ -25,7 +25,7 @@ gui.safety.port,5604
 gui.safety.publish,"tcp://*:${gui.safety.port}"
 gui.verbose,true
 gui.address_t,"tcp://${centaur.ip}:9001"
-gui.address_s,"tcp://${centaur.ip}:5506"
+gui.address_s,"tcp://${centaur.ip}:5508"
 gui.sleep_t,"200"
 servos.ip,${centaur.ip}
 servos.safety.port,5601

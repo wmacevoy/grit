@@ -120,14 +120,14 @@ class guicmdr : public Gtk::Window
 {
 protected:
   Glib::RefPtr<Gtk::Builder> builder;
-  Gtk::Button *send, *f, *ff, *b, *r, *l, *sr, *sl, *h, *safe_on, *safe_off;
+  Gtk::Button *send, *f, *ff, *b, *r, *l, *sr, *sl, *h, *safe_on, *safe_off, *mh, *mf, *mb, *ml, *mr;
 	Gtk::Button *hy_n175, *hy_n90, *hy_0, *hy_90, *hy_175, *hp_0, *hp_20, *hp_65, *hy_l, *hy_r, *hp_u, *hp_d;
 	Gtk::Button *halx1, *halx2, *haly1, *haly2, *halz1, *halz2, *harx1, *harx2, *hary1, *hary2, *harz1, *harz2, *hald1, *hald2, *hard1, *hard2;
-	Gtk::CheckButton *chk_left, *chk_right, *chk_leap, *chk_neck, *chk_hands;
+	Gtk::CheckButton *chk_left, *chk_right, *chk_leap, *chk_neck, *chk_hands, *chk_mec_enable;
 	Gtk::ToggleButton *btn_mode;
     Gtk::ColorButton *btn_safe;
 	Glib::RefPtr<Gtk::EntryBuffer> cmdBuf;
-	Gtk::Entry *ent_cmd, *txtlhand, *txtrhand;
+	Gtk::Entry *ent_cmd, *txtlhand, *txtrhand, *inp_mec_speed;
 	Glib::RefPtr<Gtk::TextBuffer> tb_old, tb_resp, tb_handAdjust;
 	Gtk::TextView *tv_old, *tv_resp;
 	Gdk::Color clr_safe;
@@ -160,6 +160,7 @@ public:
 		builder->get_widget("response", tv_resp);
 		builder->get_widget("inp_hand_left", txtlhand);
 		builder->get_widget("inp_hand_right", txtrhand);
+		builder->get_widget("inp_mec_speed", inp_mec_speed);
 		builder->get_widget("btn_safe_on", safe_on);
 		builder->get_widget("btn_safe_off", safe_off);
 		builder->get_widget("btn_mode", btn_mode);
@@ -172,6 +173,7 @@ public:
 		builder->get_widget("chk_leap", chk_leap);
 		builder->get_widget("chk_neck", chk_neck);
 		builder->get_widget("chk_hands", chk_hands);
+		builder->get_widget("chk_mecanum", chk_mec_enable);
 		builder->get_widget("btn_lh_x1", halx1);
 		builder->get_widget("btn_lh_x2", halx2);
 		builder->get_widget("btn_lh_y1", haly1);
@@ -188,6 +190,11 @@ public:
 		builder->get_widget("btn_hand_lr+", hald2);
 		builder->get_widget("btn_hand_rr-", hard1);
 		builder->get_widget("btn_hand_rr+", hard2);
+		builder->get_widget("btn_mh", mh);
+		builder->get_widget("btn_mf", mf);
+		builder->get_widget("btn_mb", mb);
+		builder->get_widget("btn_ml", ml);
+		builder->get_widget("btn_mr", mr);
 		
 
 		tb_old = Gtk::TextBuffer::create();
@@ -222,6 +229,7 @@ public:
 		chk_leap->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_chk_leap_toggled) );
 		chk_neck->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_chk_neck_toggled) );
 		chk_hands->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_chk_hands_toggled) );
+		chk_mec_enable->signal_toggled().connect( sigc::mem_fun(*this, &guicmdr::on_chk_mec_toggled) );
 		halx1->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_halx1_clicked) );
 		halx2->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_halx2_clicked) );
 		haly1->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_haly1_clicked) );
@@ -238,6 +246,11 @@ public:
 		hald2->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hald2_clicked) );
 		hard1->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hard1_clicked) );
 		hard2->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_hard2_clicked) );
+		mh->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_mh_clicked) );
+		mf->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_mf_clicked) );
+		mb->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_mb_clicked) );
+		ml->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_ml_clicked) );
+		mr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_mr_clicked) );
 
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
@@ -360,6 +373,62 @@ public:
 		if(verbose) std::cout << "btn_hp_65 clicked" << std::endl;
 		hp = 65;
 		ent_cmd->set_text("hp " + NumberToString(hp));
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+	
+	void on_button_mh_clicked() {
+		if(verbose) std::cout << "btn_mh clicked" << std::endl;
+		ent_cmd->set_text("mecanum stop");
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+	
+	void on_button_mf_clicked() {
+		if(verbose) std::cout << "btn_mf clicked" << std::endl;
+		ent_cmd->set_text("mecanum speed " + NumberToString(inp_mec_speed->get_text()));
+		if(mode) {
+			on_button_send_clicked();
+		}
+		ent_cmd->set_text("mecanum forward");
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+	
+	void on_button_mb_clicked() {
+		if(verbose) std::cout << "btn_mb clicked" << std::endl;
+		ent_cmd->set_text("mecanum speed " + NumberToString(inp_mec_speed->get_text()));
+		if(mode) {
+			on_button_send_clicked();
+		}
+		ent_cmd->set_text("mecanum backward");
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+	
+	void on_button_ml_clicked() {
+		if(verbose) std::cout << "btn_ml clicked" << std::endl;
+		ent_cmd->set_text("mecanum speed " + NumberToString(inp_mec_speed->get_text()));
+		if(mode) {
+			on_button_send_clicked();
+		}
+		ent_cmd->set_text("mecanum left");
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+	
+	void on_button_mr_clicked() {
+		if(verbose) std::cout << "btn_mr clicked" << std::endl;
+		ent_cmd->set_text("mecanum speed " + NumberToString(inp_mec_speed->get_text()));
+		if(mode) {
+			on_button_send_clicked();
+		}
+		ent_cmd->set_text("mecanum right");
 		if(mode) {
 			on_button_send_clicked();
 		}
@@ -511,6 +580,18 @@ public:
 			ent_cmd->set_text("neck on");
 		}else{
 			ent_cmd->set_text("neck off");
+		}
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+	
+	void on_chk_mec_toggled() {
+		if(verbose) std::cout << "chk_mecanum_clicked" << std::endl;
+		if(chk_mec_enable->get_active()) {
+			ent_cmd->set_text("mecanum enable");
+		}else{
+			ent_cmd->set_text("mecanum disable");
 		}
 		if(mode) {
 			on_button_send_clicked();

@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <!-- interface-requires gtk+ 3.0 -->
+  <!-- interface-naming-policy toplevel-contextual -->
+  <object class="GtkImage" id="img_b_btn">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-down</property>
+  </object>
+  <object class="GtkImage" id="img_b_btn1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-down</property>
+  </object>
   <object class="GtkImage" id="img_f_btn">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-up</property>
+  </object>
+  <object class="GtkImage" id="img_f_btn1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">go-up</property>
@@ -12,6 +28,11 @@
     <property name="icon_name">go-top</property>
   </object>
   <object class="GtkImage" id="img_h_btn">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">media-playback-stop</property>
+  </object>
+  <object class="GtkImage" id="img_h_btn1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">media-playback-stop</property>
@@ -55,11 +76,6 @@
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="stock">gtk-missing-image</property>
-  </object>
-  <object class="GtkImage" id="img_b_btn">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">go-down</property>
   </object>
   <object class="GtkImage" id="img_lh_x10">
     <property name="visible">True</property>
@@ -126,13 +142,23 @@
     <property name="can_focus">False</property>
     <property name="icon_name">go-previous</property>
   </object>
+  <object class="GtkImage" id="img_sl_btn1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-previous</property>
+  </object>
   <object class="GtkImage" id="img_sr_btn">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">go-next</property>
   </object>
+  <object class="GtkImage" id="img_sr_btn1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">go-next</property>
+  </object>
   <object class="GtkWindow" id="main_window">
-    <property name="width_request">675</property>
+    <property name="width_request">725</property>
     <property name="height_request">500</property>
     <property name="can_focus">False</property>
     <child>
@@ -164,7 +190,6 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn_safe_on">
-                    <property name="use_action_appearance">False</property>
                     <property name="width_request">25</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
@@ -179,7 +204,6 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn_safe_off">
-                    <property name="use_action_appearance">False</property>
                     <property name="width_request">25</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
@@ -207,7 +231,6 @@
                 </child>
                 <child>
                   <object class="GtkToggleButton" id="btn_mode">
-                    <property name="use_action_appearance">False</property>
                     <property name="width_request">85</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
@@ -259,6 +282,8 @@
                             <property name="activates_default">True</property>
                             <property name="primary_icon_activatable">False</property>
                             <property name="secondary_icon_activatable">False</property>
+                            <property name="primary_icon_sensitive">True</property>
+                            <property name="secondary_icon_sensitive">True</property>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -269,7 +294,6 @@
                         <child>
                           <object class="GtkButton" id="send">
                             <property name="label" translatable="yes">Go</property>
-                            <property name="use_action_appearance">False</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="can_default">True</property>
@@ -327,7 +351,6 @@
             <property name="can_focus">False</property>
             <child>
               <object class="GtkButton" id="btn_f">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -343,7 +366,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_ff">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -359,7 +381,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_r">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -375,7 +396,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_l">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -391,7 +411,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_h">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -407,7 +426,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_sr">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -423,7 +441,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_sl">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -439,7 +456,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_b">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -483,7 +499,6 @@
             <child>
               <object class="GtkButton" id="btn_hy_0">
                 <property name="label" translatable="yes">0</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -499,7 +514,6 @@
             <child>
               <object class="GtkButton" id="btn_hy_-175">
                 <property name="label" translatable="yes">-175</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">40</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -515,7 +529,6 @@
             <child>
               <object class="GtkButton" id="btn_hy_175">
                 <property name="label" translatable="yes">175</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">40</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -699,7 +712,6 @@
             <child>
               <object class="GtkButton" id="btn_hy_-90">
                 <property name="label" translatable="yes">-90</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">32</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -715,7 +727,6 @@
             <child>
               <object class="GtkButton" id="btn_hy_90">
                 <property name="label" translatable="yes">90</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">32</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -757,7 +768,6 @@
             <child>
               <object class="GtkButton" id="btn_hp_0">
                 <property name="label" translatable="yes">0</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -773,7 +783,6 @@
             <child>
               <object class="GtkButton" id="btn_hp_20">
                 <property name="label" translatable="yes">20</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -789,7 +798,6 @@
             <child>
               <object class="GtkButton" id="btn_hp_65">
                 <property name="label" translatable="yes">65</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -804,7 +812,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_hy_l">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">25</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -821,7 +828,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_hy_r">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">25</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -837,7 +843,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_hp_u">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">25</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -853,7 +858,6 @@
             </child>
             <child>
               <object class="GtkButton" id="btn_hp_d">
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">25</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -870,7 +874,6 @@
             <child>
               <object class="GtkCheckButton" id="chk_right">
                 <property name="label" translatable="yes">right arm</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">90</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -888,7 +891,6 @@
             <child>
               <object class="GtkCheckButton" id="chk_left">
                 <property name="label" translatable="yes">left arm</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">90</property>
                 <property name="height_request">26</property>
                 <property name="visible">True</property>
@@ -919,7 +921,6 @@
             <child>
               <object class="GtkCheckButton" id="chk_leap">
                 <property name="label" translatable="yes">Leap</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">60</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -937,7 +938,6 @@
             <child>
               <object class="GtkCheckButton" id="chk_neck">
                 <property name="label" translatable="yes">Neck</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">60</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -955,7 +955,6 @@
             <child>
               <object class="GtkCheckButton" id="chk_hands">
                 <property name="label" translatable="yes">Hands</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">60</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
@@ -973,7 +972,6 @@
             <child>
               <object class="GtkButton" id="btn_lh_x1">
                 <property name="label" translatable="yes">- x</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -990,7 +988,6 @@
             <child>
               <object class="GtkButton" id="btn_lh_x2">
                 <property name="label" translatable="yes">+ x</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1007,7 +1004,6 @@
             <child>
               <object class="GtkButton" id="btn_lh_z1">
                 <property name="label" translatable="yes">- z</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1024,8 +1020,7 @@
             <child>
               <object class="GtkButton" id="btn_lh_z2">
                 <property name="label" translatable="yes">+ z</property>
-                <property name="use_action_appearance">False</property>
-                 <property name="width_request">30</property>
+                <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -1041,7 +1036,6 @@
             <child>
               <object class="GtkButton" id="btn_lh_y1">
                 <property name="label" translatable="yes">- y</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1056,22 +1050,8 @@
               </packing>
             </child>
             <child>
-              <object class="GtkSeparator" id="separator1">
-                <property name="width_request">5</property>
-                <property name="height_request">91</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="orientation">vertical</property>
-              </object>
-              <packing>
-                <property name="x">209</property>
-                <property name="y">156</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkButton" id="btn_lh_y2">
                 <property name="label" translatable="yes">+ y</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1088,7 +1068,6 @@
             <child>
               <object class="GtkButton" id="btn_rh_x1">
                 <property name="label" translatable="yes">- x</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1105,7 +1084,6 @@
             <child>
               <object class="GtkButton" id="btn_rh_x2">
                 <property name="label" translatable="yes">+ x </property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1122,7 +1100,6 @@
             <child>
               <object class="GtkButton" id="btn_rh_y1">
                 <property name="label" translatable="yes">- y</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1139,7 +1116,6 @@
             <child>
               <object class="GtkButton" id="btn_rh_y2">
                 <property name="label" translatable="yes">+ y</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1162,6 +1138,10 @@
                 <property name="max_length">3</property>
                 <property name="invisible_char">•</property>
                 <property name="width_chars">3</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
               </object>
               <packing>
                 <property name="x">250</property>
@@ -1178,6 +1158,10 @@
                 <property name="invisible_char">•</property>
                 <property name="width_chars">3</property>
                 <property name="invisible_char_set">True</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
               </object>
               <packing>
                 <property name="x">375</property>
@@ -1187,7 +1171,6 @@
             <child>
               <object class="GtkButton" id="btn_rh_z1">
                 <property name="label" translatable="yes">- z</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1204,7 +1187,6 @@
             <child>
               <object class="GtkButton" id="btn_rh_z2">
                 <property name="label" translatable="yes"> + z</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1247,7 +1229,6 @@
             <child>
               <object class="GtkButton" id="btn_hand_lr-">
                 <property name="label" translatable="yes">-lr</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1265,7 +1246,6 @@
             <child>
               <object class="GtkButton" id="btn_hand_lr+">
                 <property name="label" translatable="yes">lr+</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1281,7 +1261,6 @@
             <child>
               <object class="GtkButton" id="btn_hand_rr+">
                 <property name="label" translatable="yes">rr+</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1297,7 +1276,6 @@
             <child>
               <object class="GtkButton" id="btn_hand_rr-">
                 <property name="label" translatable="yes">-rr</property>
-                <property name="use_action_appearance">False</property>
                 <property name="width_request">30</property>
                 <property name="height_request">25</property>
                 <property name="visible">True</property>
@@ -1308,6 +1286,147 @@
               <packing>
                 <property name="x">342</property>
                 <property name="y">158</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lbl_mechanum">
+                <property name="width_request">135</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="xalign">0.40000000596046448</property>
+                <property name="label" translatable="yes">Mechanum controls:</property>
+              </object>
+              <packing>
+                <property name="x">287</property>
+                <property name="y">10</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_ml">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_sl_btn1</property>
+              </object>
+              <packing>
+                <property name="x">305</property>
+                <property name="y">65</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_mf">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_f_btn1</property>
+              </object>
+              <packing>
+                <property name="x">340</property>
+                <property name="y">35</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_mr">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_sr_btn1</property>
+              </object>
+              <packing>
+                <property name="x">375</property>
+                <property name="y">65</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_mb">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_b_btn1</property>
+              </object>
+              <packing>
+                <property name="x">340</property>
+                <property name="y">95</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_mh">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_h_btn1</property>
+              </object>
+              <packing>
+                <property name="x">340</property>
+                <property name="y">65</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="inp_mec_speed">
+                <property name="width_request">45</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="max_length">3</property>
+                <property name="invisible_char">•</property>
+                <property name="width_chars">4</property>
+                <property name="text" translatable="yes">750</property>
+                <property name="invisible_char_set">True</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="secondary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">True</property>
+                <property name="secondary_icon_sensitive">True</property>
+              </object>
+              <packing>
+                <property name="x">471</property>
+                <property name="y">45</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkCheckButton" id="chk_mecanum">
+                <property name="label" translatable="yes">Enable</property>
+                <property name="width_request">75</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">False</property>
+                <property name="use_action_appearance">False</property>
+                <property name="draw_indicator">True</property>
+              </object>
+              <packing>
+                <property name="x">415</property>
+                <property name="y">100</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lbl_mecanum_speed">
+                <property name="width_request">80</property>
+                <property name="height_request">20</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="xalign">0.44999998807907104</property>
+                <property name="label" translatable="yes">speed:
+</property>
+              </object>
+              <packing>
+                <property name="x">405</property>
+                <property name="y">45</property>
               </packing>
             </child>
           </object>
