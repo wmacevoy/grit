@@ -14,6 +14,10 @@
 
 //Write a '1' or other non-zero number to address 34 to turn on debug serial messages.
 
+//B+ = Green
+//B- = Black
+//A+ = Red
+//A- = White
 
 #include <Wire.h>
 #include <EEPROM.h>
@@ -254,30 +258,30 @@ void loop()
   t += dt;
   POSITION = (uint16_t) analogRead(POTPIN);
   
-  //If motot is stalled, reset f.
-  dp = myabs(POSITION - lastpos);
-  lastpos = POSITION;
-  if(myabs(error) > cutoff)
-     {
-     if(dp < 4)
-       {
-       stalltime += dt;
-       if(stalltime >= 500)
-         {
-          f = MINFREQ;
-          stalltime = 0;
-          dp = 0;
-          if(DEBUG) {
-          Serial.println("motor stalled");
-          }
-         }
-       }
-     else
-       {
-       dp = 0;
-       stalltime = 0;
-       }
-     }
+//  //If motot is stalled, reset f.
+//  dp = myabs(POSITION - lastpos);
+//  lastpos = POSITION;
+//  if(myabs(error) > cutoff)
+//     {
+//     if(dp < 4)
+//       {
+//       stalltime += dt;
+//       if(stalltime >= 500)
+//         {
+//          f = MINFREQ;
+//          stalltime = 0;
+//          dp = 0;
+//          if(DEBUG) {
+//          Serial.println("motor stalled");
+//          }
+//         }
+//       }
+//     else
+//       {
+//       dp = 0;
+//       stalltime = 0;
+//       }
+//     }
      
   //Check registers
   if(READREG)
