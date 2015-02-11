@@ -223,7 +223,7 @@ void LegMover::setup(Leg &leg, const std::map < float , std::pair<Point,int> > &
     float femur;
     float hip;
     leg.compute3D(p.x,p.y,p.z,knee,femur,hip);
-    cout << leg.name << "," << t << "," << p.x << "," << p.y << "," << p.z << "," << knee << "," << femur << "," << hip << "," << i->second.second << endl;
+    //    cout << leg.name << "," << t << "," << p.x << "," << p.y << "," << p.z << "," << knee << "," << femur << "," << hip << "," << i->second.second << endl;
     t2knee[t]=knee;
     t2femur[t]=femur;
     t2hip[t]=hip;
@@ -250,7 +250,7 @@ void LegMover::setup(Leg &leg, const std::map < float , Point > &t2tips,
     float femur;
     float hip;
     leg.compute3D(p.x,p.y,p.z,knee,femur,hip);
-    cout << leg.name << "," << t << "," << p.x << "," << p.y << "," << p.z << "," << knee << "," << femur << "," << hip << endl;
+    //    cout << leg.name << "," << t << "," << p.x << "," << p.y << "," << p.z << "," << knee << "," << femur << "," << hip << endl;
     t2knee[t]=knee;
     t2femur[t]=femur;
     t2hip[t]=hip;

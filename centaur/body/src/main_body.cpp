@@ -29,6 +29,8 @@
 #include "ZMQHub.h"
 #include "CSVRead.h"
 #include "BodyMessage.h"
+#include "SensorsMecanumMessage.h"
+#include "SensorsMessage.h"
 #include "Lock.h"
 #include "now.h"
 #include "BodyMover.h"
@@ -39,7 +41,7 @@
 #include "Arc3d.h"
 #include "Mat3d.h"
 
-#define USE_PY 1
+#define USE_PY 0
 
 #if USE_PY != 0
 #include "Script.h"
@@ -99,11 +101,20 @@ public:
   bool tx(ZMQPublishSocket &socket) { return true; }
 };
 
-class SensorsRx : public ZMQHub
+class Sensors : public ZMQHub
 {
 public:
-  SensorsRx() {
+  SensorsMessage sensors;
+  SensorsMecanumMessage mecanum;
+  Sensors() {
     subscribers.push_back(cfg->str("sensors.subscribe"));
+    publish=cfg->str("sensorscontrol.publish");
+    rate = cfg->num("sensorscontrol.rate");
+    mecanum.enabled=0;
+    mecanum.speed=0;
+    for (int i=0;i<4; ++i) {
+      mecanum.directions[i]=0;
+    }
   }
 
   bool rx(ZMQSubscribeSocket &socket) {
@@ -113,7 +124,15 @@ public:
     return true;
   }
 
-  bool tx(ZMQPublishSocket &socket) { return true; }
+  bool tx(ZMQPublishSocket &socket) { 
+    bool ok = true;
+
+    ZMQMessage msg(sizeof(SensorsMecanumMessage));
+    SensorsMecanumMessage *data = (SensorsMecanumMessage*)msg.data();
+    memcpy(data,&mecanum,sizeof(sizeof(SensorsMecanumMessage)));
+    if (msg.send(socket) == 0) ok = false;
+    return ok;
+  }
 };
 
 class BodyController : public ZMQHub
@@ -165,7 +184,7 @@ public:
 
   LeapRx leapRx;
 
-  SensorsRx sensorsRx;
+  Sensors sensors;
 
   std::thread* neckThread;
   std::atomic < bool > neck_on;
@@ -405,7 +424,7 @@ public:
   
   void balancedRampUp()
   {
-      zoffset = ( ( (sensors.a[0] - Amin) * (zmin - zmax) ) / (Amin - Amax) ) + 8;
+      zoffset = ( ( (sensors.sensors.a[0] - Amin) * (zmin - zmax) ) / (Amin - Amax) ) + 8;
       WalkParameters wp(2.5,12.0,17.25,-15.,4.0,90.0,1.0);
       wp.repeat=4;
       wp.zOffset=zoffset;
@@ -414,7 +433,7 @@ public:
   
   void balancedRampDown()
   {
-      zoffset = ( ( (sensors.a[0] - Amin) * (zmin - zmax) ) / (Amin - Amax) ) + 8;
+      zoffset = ( ( (sensors.sensors.a[0] - Amin) * (zmin - zmax) ) / (Amin - Amax) ) + 8;
       WalkParameters wp(2.5,12.0,17.25,-15.,4.0,90.0,1.0);
       wp.repeat=4;
       wp.zOffset=zoffset;
@@ -766,39 +785,14 @@ void leapHand() {
 
   void sensorsOn()
   {
-    sensorsRx.start();
+    sensors.start();
   }
 
   void sensorsOff()
   {
-    sensorsRx.stop();
-    sensorsRx.join();
+    sensors.stop();
+    sensors.join();
   }
-
-/*
-  void walkOn()
-  {
-     double step=4.0;
-     WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0,2);
-     wp.y3-=step;  // move back legs back 
-     wp.y4-=step;    
-     wp.repeat=0;
-
-     if(BodyMover::walkThread == 0) {
-       BodyMover::walking.store(true);
-       BodyMover::walkThread = new std::thread &BodyMover::dynamicWalk, &wp);
-     }
-  }
-
-  void walkOff()
-  {
-     if (BodyMover::walkThread != 0) {
-       BodyMover::walking.store(false);
-       BodyMover::walkThread->join();
-       delete BodyMover::walkThread;
-       BodyMover::walkThread = 0;
-     }
-  }*/
 
   void neckOn()
   {
@@ -1235,10 +1229,10 @@ void leapHand() {
       string value;
       iss >> value;
       if (value == "on") {
-	sensorsRx.start();
+	sensors.start();
 	answer("my sensors are on.");
       } else if (value == "off") {
-	sensorsRx.stop();
+	sensors.stop();
 	answer("my sensors are off.");
       }
     }
@@ -1252,6 +1246,42 @@ void leapHand() {
       answer(oss.str());
       }
     }
+
+    if (head == "mecanum") {
+      string flag;
+      if (iss >> flag) {
+	if (flag == "disable") {
+	  sensors.mecanum.enabled = 0;
+	  answer("mecanum disabled");
+	}
+	if (flag == "enable") {
+	  sensors.mecanum.enabled = 1;
+	  answer("mecanum enabled");
+	}
+	if (flag == "speed") {
+	  double value;
+	  if (iss >> value) {
+	    sensors.mecanum.speed = value;
+	    std::ostringstream oss;
+	    oss << "mecanum speed " << value;
+	    answer(oss.str());
+	  }
+	}
+	if (flag == "forward") {
+	  sensors.mecanum.enabled = 1;
+	  sensors.mecanum.directions[0]=1;
+	  sensors.mecanum.directions[1]=1;
+	  sensors.mecanum.directions[2]=1;
+	  sensors.mecanum.directions[3]=1;
+	  answer("mecanum forward");
+	}
+	if (flag == "stop") {
+	  sensors.mecanum.speed = 0;
+	  answer("mecanum stopped");
+	}
+      }
+    }
+      
     if (head == "safe") {
       string flag;
       if (iss >> flag) {
@@ -1341,17 +1371,17 @@ void leapHand() {
       }
     }
 
-    /*if (head=="walk") {
+    if (head=="walkt") {
       string value;
       iss >> value;
       if (value == "on") {
-         walkOn();
+         mover->walkOn();
 	 answer("I am walking, mistress.");
       } else if (value == "off") {
-         walkOff();
+         mover->walkOff();
 	 answer("I have stopped walking.");
       }
-    }*/
+    }
 
     if (head=="leap"){
       string value;
@@ -2081,25 +2111,25 @@ void leapHand() {
     if (head == "sense") {
       ostringstream out;
       out << " a=[" 
-	  << sensors.a[0] << ","
-	  << sensors.a[1] << ","
-	  << sensors.a[2] << "]";
+	  << sensors.sensors.a[0] << ","
+	  << sensors.sensors.a[1] << ","
+	  << sensors.sensors.a[2] << "]";
       
       out << " c=[" 
-	  << sensors.c[0] << ","
-	  << sensors.c[1] << ","
-	  << sensors.c[2] << "]";
+	  << sensors.sensors.c[0] << ","
+	  << sensors.sensors.c[1] << ","
+	  << sensors.sensors.c[2] << "]";
       
       out << " g=[" 
-	  << sensors.g[0] << ","
-	  << sensors.g[1] << ","
-	  << sensors.g[2] << "]";
+	  << sensors.sensors.g[0] << ","
+	  << sensors.sensors.g[1] << ","
+	  << sensors.sensors.g[2] << "]";
       
       out << " p=[" 
-	  << sensors.p[0] << ","
-	  << sensors.p[1] << ","
-	  << sensors.p[2] << ","
-	  << sensors.p[3] << "]";
+	  << sensors.sensors.p[0] << ","
+	  << sensors.sensors.p[1] << ","
+	  << sensors.sensors.p[2] << ","
+	  << sensors.sensors.p[3] << "]";
       
       answer(out.str());
     }

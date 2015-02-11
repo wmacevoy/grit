@@ -67,7 +67,7 @@ void LegGeometry::compute2D(float x,float z,float &knee,float &femur) {
   femur=(theta2+theta3)-ANGLE90;
 }
 void LegGeometry::compute3D(float x,float y,float z,float &knee,float &femur,float &hip) {
-  cout << "3D x="<<x << " y="<<y << " z="<<z<<endl;
+  //  cout << "3D x="<<x << " y="<<y << " z="<<z<<endl;
   float nx=x;
   float ny=y;
   
@@ -82,7 +82,7 @@ void LegGeometry::compute3D(float x,float y,float z,float &knee,float &femur,flo
   hip+=hipOffset;
   if (hip<-ANGLE180) hip+=ANGLE360;  	    
   compute2D(d-l0,z-zoffset,knee,femur);
-  cout << "knee=" << knee << " femur=" << femur << " hip=" << hip << endl;
+  //  cout << "knee=" << knee << " femur=" << femur << " hip=" << hip << endl;
 }
 
 void LegGeometry::forward3D(float knee,float femur,float hip, float &x,float &y,float &z)
@@ -98,7 +98,7 @@ void LegGeometry::forward3D(float knee,float femur,float hip, float &x,float &y,
   float afemur = M_PI/180.0*femur;
   float ahip = M_PI/180.0*hip;
 
-  cout << "achasis=" << ((360.0/(2.0*M_PI))*achasis) << endl;
+  //  cout << "achasis=" << ((360.0/(2.0*M_PI))*achasis) << endl;
   achasis = -achasis;
 
   float dhip2femur=l0;
