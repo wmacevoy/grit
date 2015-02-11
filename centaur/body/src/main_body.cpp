@@ -1270,9 +1270,9 @@ void leapHand() {
 	if (flag == "forward") {
 	  sensors.mecanum.enabled = 1;
 	  sensors.mecanum.directions[0]=1;
-	  sensors.mecanum.directions[1]=1;
+	  sensors.mecanum.directions[1]=0;
 	  sensors.mecanum.directions[2]=1;
-	  sensors.mecanum.directions[3]=1;
+	  sensors.mecanum.directions[3]=0;
 	  answer("mecanum forward");
 	}
 	if (flag == "stop") {
@@ -1371,17 +1371,17 @@ void leapHand() {
       }
     }
 
-    if (head=="walkt") {
-      string value;
-      iss >> value;
-      if (value == "on") {
-         mover->walkOn();
-	 answer("I am walking, mistress.");
-      } else if (value == "off") {
-         mover->walkOff();
-	 answer("I have stopped walking.");
-      }
-    }
+    // if (head=="walkt") {
+    //   string value;
+    //   iss >> value;
+    //   if (value == "on") {
+    //      mover->walkOn();
+    // 	 answer("I am walking, mistress.");
+    //   } else if (value == "off") {
+    //      mover->walkOff();
+    // 	 answer("I have stopped walking.");
+    //   }
+    // }
 
     if (head=="leap"){
       string value;
