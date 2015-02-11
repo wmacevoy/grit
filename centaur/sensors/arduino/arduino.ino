@@ -29,11 +29,7 @@ typedef struct {
 void update_io(io_t *io);
 
 int nios=0;
-<<<<<<< HEAD
 io_t ios[16]; // at least as many as are setup()
-=======
-io_t ios[8]; // at least as many as are setup()
->>>>>>> a2455d1e4a7b8136d3136e191f36c94b98aee515
 
 static const unsigned short crc_table[256] PROGMEM = {
   0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x6536, 0x74bf,
@@ -254,26 +250,18 @@ void setup()
   ios[nios].value = 0;
   ++nios;
 
-<<<<<<< HEAD
   // S2 safe light blue
-=======
-  // relay
->>>>>>> a2455d1e4a7b8136d3136e191f36c94b98aee515
   ios[nios].pin = 11;
   ios[nios].mode = MODE_ANALOG_OUT;
   ios[nios].value = 0;
   ++nios;
 
-<<<<<<< HEAD
   // S3 relay
-=======
->>>>>>> a2455d1e4a7b8136d3136e191f36c94b98aee515
   ios[nios].pin = 12;
   ios[nios].mode= MODE_DIGITAL_OUT;
   ios[nios].value = 1;
   ++nios;
 
-<<<<<<< HEAD
   ios[nios].pin = 2; // S4 dir leg 10
   ios[nios].mode= MODE_DIGITAL_OUT;
   ios[nios].value = 0;
@@ -301,10 +289,6 @@ void setup()
 
   ios[nios].pin = 8; // S9 enable all legs
   ios[nios].mode= MODE_DIGITAL_OUT;
-=======
-  ios[nios].pin = 8;
-  ios[nios].mode= MODE_TONE;
->>>>>>> a2455d1e4a7b8136d3136e191f36c94b98aee515
   ios[nios].value = 0;
   ++nios;
 

@@ -9,7 +9,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include "Configure.h"
+#include "ZMQHub.h"
 #include "SensorsMessage.h"
+#include "SensorsMecanumMessage.h"
 #include "now.h"
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -41,6 +43,27 @@ char buffer[N];
 
 int fd=-1;
 string line;
+
+struct SensorsMecanumRx : public ZMQHub
+{
+  SensorsMecanumMessage mecanum;
+  SensorsMecanumRx()
+  {
+    memset(&mecanum,0,sizeof(SensorsMecanumMessage));
+    subscribers.push_back(cfg.str("sensorscontrol.subscribe"));
+    start();
+  }
+
+  bool rx(ZMQSubscribeSocket &socket) { 
+    ZMQMessage msg;
+    if (msg.recv(socket) == 0) return false;
+    memcpy(&mecanum,msg.data(),sizeof(SensorsMecanumMessage));
+  }
+
+  bool tx(ZMQPublishSocket &socket) { return true; }
+};
+
+SensorsMecanumRx *sensorsMecanumRx=0;
 
 void write_close()
 {
@@ -96,8 +119,17 @@ void writeSafe()
 
   // Msg to send to controller for this color (with checksum)
 
-  char tmp[80];
-  snprintf(tmp,sizeof(tmp),"S0=%d,S1=%d,S2=%d,S3=%d",255-R,255-G,255-B,red);
+  char tmp[256];
+  snprintf(tmp,sizeof(tmp),
+	   "S0=%d,S1=%d,S2=%d,S3=%d,S4=%d,S5=%d,S6=%d,S7=%d,S8=%d,S9=%d",
+	   255-R,255-G,255-B,red,
+	   sensorsMecanumRx->mecanum.directions[0],
+	   sensorsMecanumRx->mecanum.directions[1],
+	   sensorsMecanumRx->mecanum.directions[2],
+	   sensorsMecanumRx->mecanum.directions[3],
+	   sensorsMecanumRx->mecanum.speed,
+	   sensorsMecanumRx->mecanum.enabled);
+
   size_t n=strlen(tmp);
   snprintf(tmp+n,sizeof(tmp)-n,"$%04x\n",CRC16(tmp,n));
   write(fd,tmp,strlen(tmp));
@@ -303,6 +335,9 @@ int main(int argc, char** argv)
 
   signal(SIGINT, quit);
   signal(SIGQUIT, quit);
+
+  sensorsMecanumRx = new SensorsMecanumRx();
+  sensorsMecanumRx->start();
 
   safety = CreateSafetyClient(cfg.str("sensors.safety.publish"),cfg.str("safety.subscribe"),cfg.num("safety.rate"));
   safety->safe(true);
