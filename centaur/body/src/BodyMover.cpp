@@ -36,7 +36,6 @@ WalkParameters::WalkParameters(double newRadius,double x,double y,double newZ,do
 BodyMover::BodyMover()
   : legs(this), left(this), right(this)
 {
- walkThread = 0;
 }
 
 void BodyMover::move(Body &body)
@@ -695,33 +694,11 @@ bool BodyMover::stepMove(double radius,double x,double y,double z,double xstep,d
   return true;
 }
 
+/*
 //EXPERIMENT - TIME TO RUN!
 
-void BodyMover::walkOff()
- {
-   if (walkThread != 0) {
-       walking.store(false);
-       walkThread->join();
-       delete walkThread;
-       walkThread = 0;
-     }
- }
-
-void BodyMover::walkOn()
- {
-  if(walkThread == 0) {
-   walking.store(true);
-   walkThread = new std::thread(&BodyMover::dynamicWalk, this);
-  }
- }
-
-void BodyMover::dynamicWalk() {
-std:cout << "In walk thread!" << std::endl;
-  double step=4.0;
-  WalkParameters wp(2.5,12.0,17.25,-15.,step,90.0,2);
-  wp.y3-=step;  // move back legs back 
-  wp.y4-=step;    
-  wp.repeat=0;
+void BodyMover::dynamicWalk(WalkParameters wp) {
+  //WalkParameters wp = *(WalkParameters*)_wp;
 
   vector<vector<double>> data;
   double direction=(wp.direction*M_PI)/180.0;
@@ -731,22 +708,20 @@ std:cout << "In walk thread!" << std::endl;
   double fullCircle=2.0*M_PI;
   double da=fullCircle/steps;
   double waist=0.0;
-  double t = 0.0;
-  double dt = 0.0;
+  double dt=0.1;
+  double t=0.0;
   double a = 0.0; //Current index of a regular walk, same as in the original -- for(double a=0;a<fullCircle;a+=da)
   double l1d=direction; // All same direction is a translation
   double l2d=direction;
   double l3d=direction;
   double l4d=direction;
-  double l1z=wp.z/*+zoffset/2.0*/;
-  double l2z=wp.z/*+zoffset/2.0*/;
-  double l3z=wp.z/*-zoffset/2.0*/;
-  double l4z=wp.z/*-zoffset/2.0*/;
+  double l1z=wp.z;
+  double l2z=wp.z;
+  double l3z=wp.z;
+  double l4z=wp.z;
   l2d+=wp.rotation*3.0*M_PI_2;
   l3d+=wp.rotation*M_PI;
   l4d+=wp.rotation*M_PI_2;
-
-  vector<double> p;
 
   double zRise = wp.zOffset * wp.step / (wp.y1 - wp.y4);
 
@@ -758,26 +733,19 @@ std:cout << "In walk thread!" << std::endl;
   float l3a;
   float l4a;
 
-  while(walking.load()) {
-      p.clear();
-      /*Check bots sensors to determine next move
-            Function to check leg pressures, determine which legs should have pressure and adjust if needed
-            Function to check accelerometers and level chassis accordingly using zOffset
-      */
+  while(walking) {
+      vector<double> p;
 
-
+      l1a=a;
+      l2a=a+M_PI_2;
+      l3a=a+M_PI;
+      l4a=a+3*M_PI_2;
  
-      //Regulate how fast moves are generated. This may need to be placed elsewhere if at all needed?
+			//Regulate how fast moves are generated. This may need to be placed elsewhere if at all needed?
       t1 = now();
-      dt = abs(t1 - t2);
-      t += dt;
-      if(dt >= framerate) {
-         l1a=a;
-         l2a=a+M_PI_2;
-         l3a=a+M_PI;
-         l4a=a+3*M_PI_2;
+      if( (data.size() > 3) || (t1 - t2 >= framerate)) {
 
-		    p.push_back(t+2*dt);
+		    p.push_back(t);
 		    { // leg 1
 		      p.push_back(circulateX(wp.x1,wp.radius,a)+stepX(wp.step,l1d,l1a)); 
 		      p.push_back(circulateY(wp.y1,wp.radius,a) +stepY(wp.step,l1d,l1a)); 
@@ -803,39 +771,33 @@ std:cout << "In walk thread!" << std::endl;
 		    p.push_back(legDirection(l4a));
 
 		    data.push_back(p);
-	           
-                    //Check if enough data is in the vector to create a curve
-	            //If so, push it to from tips
-		    if (data.size() >= 3) {
-		      //		     logPosition(data);
-			fromTips(data);
-    	 		}
-	            if(data.size() >= 10) 
-                     {
-		     if(data.size() > 10)
-			{
-			data.resize(10);
-			}
-
-		     //Erase first move to allow for next move to be pushed
-		     data.erase(data.begin());
-	             }
-                     
-                    a+=da*(dt/0.1);
-		    // a += da;
-                    if(a>=fullCircle) { a-=fullCircle; }
-
-                    t2 = now();
-std::cout << "Time: " << t1 - t2 << ", a:" << a << std::endl;
+				
+				t2 = now();
       }
-  std::this_thread::sleep_for(std::chrono::milliseconds(25));	
+
+      //Check if enough data is in the vector to create a curve
+      //If so, push it to from tips
+      if(data.size() >= 3) {
+				if(data.size() > 3)
+					{
+					data.resize(3);
+					}
+        logPosition(data);
+        fromTips(data);
+
+        //Erase first move to allow for next move to be pushed
+        data.erase(data.begin());
+      }
+      
+      t+=dt;
+
+      a+=da;
+      if(a>=fullCircle) { a-=2.0 * M_PI; }
   }
 }
 
 //END EXPERIMENT
-
-
-
+*/
 ServoMover* BodyMover::getMover(const std::string &name)
 {
   if (name == "LEFTARM_SHOULDER_IO") return &left.inOut;
