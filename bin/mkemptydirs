@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# find mojavaton base directory
+if [ -z "$MOJAVATON_DIR" -o ! -d $MOJAVATON_DIR/drivers ]
+then
+  for ups in . .. ../.. ../../.. ../../../..
+  do
+    if [ -d $(dirname $0)/$ups/drivers ]
+    then
+      export MOJAVATON_DIR=$(realpath $(dirname $0)/$ups)
+      break
+    fi
+  done
+fi
+
+if [ -z "$MOJAVATON_DIR" -o ! -d $MOJAVATON_DIR/drivers ]
+then
+  echo "could not determine base mojavaton directory"
+  exit 1
+fi
+
+cd "$MOJAVATON_DIR"
+
+for dir in $(find . -type d \( -path './.git' -o -path './haarkit' -o -path  './setup'  -o -path './libs' \) -prune -o -type d -print)
+do
+  if [ -f $dir/Makefile -a -f $dir/../rules.mk ] ; then
+    for subdir in tmp lib bin
+    do
+       echo "gitignore for $dir/$subdir"
+       mkdir -p $dir/$subdir
+       cp bin/gitignoreempty $dir/$subdir/.gitignore
+       git add $dir/$subdir/.gitignore
+    done
+  fi
+done
