@@ -1275,6 +1275,22 @@ void leapHand() {
 	  sensors.mecanum.directions[3]=0;
 	  answer("mecanum forward");
 	}
+	if (flag == "strafel") {
+	  sensors.mecanum.enabled = 1;
+	  sensors.mecanum.directions[0]=1;
+	  sensors.mecanum.directions[1]=0;
+	  sensors.mecanum.directions[2]=0;
+	  sensors.mecanum.directions[3]=1;
+	  answer("mecanum strafe left");
+	}
+	if (flag == "strafer") {
+	  sensors.mecanum.enabled = 1;
+	  sensors.mecanum.directions[0]=0;
+	  sensors.mecanum.directions[1]=1;
+	  sensors.mecanum.directions[2]=1;
+	  sensors.mecanum.directions[3]=0;
+	  answer("mecanum strafe right");
+	}	
 	if (flag == "stop") {
 	  sensors.mecanum.speed = 0;
 	  answer("mecanum stopped");
