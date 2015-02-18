@@ -1267,6 +1267,17 @@ void leapHand() {
 	    answer(oss.str());
 	  }
 	}
+	if (flag == "go") {
+		bool b1,b2,b3,b4;
+		if (iss >> b1 >> b2 >> b3 >> b4) {
+ 		  sensors.mecanum.enabled = 1;
+		  sensors.mecanum.directions[0]=(b1 ? 1 : 0);
+		  sensors.mecanum.directions[1]=(b2 ? 1 : 0);
+		  sensors.mecanum.directions[2]=(b3 ? 1 : 0);
+		  sensors.mecanum.directions[3]=(b4 ? 1 : 0);
+                  answer("mecanum goes!");
+		}
+	}
 	if (flag == "forward") {
 	  sensors.mecanum.enabled = 1;
 	  sensors.mecanum.directions[0]=1;
@@ -1275,21 +1286,45 @@ void leapHand() {
 	  sensors.mecanum.directions[3]=0;
 	  answer("mecanum forward");
 	}
-	if (flag == "strafel") {
+	if (flag == "backward") {
 	  sensors.mecanum.enabled = 1;
-	  sensors.mecanum.directions[0]=1;
-	  sensors.mecanum.directions[1]=0;
+	  sensors.mecanum.directions[0]=0;
+	  sensors.mecanum.directions[1]=1;
 	  sensors.mecanum.directions[2]=0;
 	  sensors.mecanum.directions[3]=1;
+	  answer("mecanum forward");
+	}
+	if (flag == "strafel") {
+	  sensors.mecanum.enabled = 1;
+	  sensors.mecanum.directions[0]=0;
+	  sensors.mecanum.directions[1]=0;
+	  sensors.mecanum.directions[2]=0;
+	  sensors.mecanum.directions[3]=0;
 	  answer("mecanum strafe left");
 	}
 	if (flag == "strafer") {
 	  sensors.mecanum.enabled = 1;
-	  sensors.mecanum.directions[0]=0;
+	  sensors.mecanum.directions[0]=1;
 	  sensors.mecanum.directions[1]=1;
 	  sensors.mecanum.directions[2]=1;
-	  sensors.mecanum.directions[3]=0;
+	  sensors.mecanum.directions[3]=1;
 	  answer("mecanum strafe right");
+	}
+	if (flag == "rotatel") {
+	  sensors.mecanum.enabled = 1;
+	  sensors.mecanum.directions[0]=1;
+	  sensors.mecanum.directions[1]=1;
+	  sensors.mecanum.directions[2]=0;
+	  sensors.mecanum.directions[3]=0;
+	  answer("mecanum rotate left");
+	}	
+	if (flag == "rotater") {
+	  sensors.mecanum.enabled = 1;
+	  sensors.mecanum.directions[0]=0;
+	  sensors.mecanum.directions[1]=0;
+	  sensors.mecanum.directions[2]=1;
+	  sensors.mecanum.directions[3]=1;
+	  answer("mecanum rotate right");
 	}	
 	if (flag == "stop") {
 	  sensors.mecanum.speed = 0;
