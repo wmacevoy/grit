@@ -1389,11 +1389,11 @@
             </child>
             <child>
               <object class="GtkEntry" id="inp_mec_speed">
-                <property name="width_request">45</property>
+                <property name="width_request">50</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="max_length">3</property>
+                <property name="max_length">4</property>
                 <property name="invisible_char">•</property>
                 <property name="width_chars">4</property>
                 <property name="text" translatable="yes">750</property>
@@ -1404,7 +1404,7 @@
                 <property name="secondary_icon_sensitive">True</property>
               </object>
               <packing>
-                <property name="x">471</property>
+                <property name="x">465</property>
                 <property name="y">45</property>
               </packing>
             </child>
@@ -1435,7 +1435,7 @@
 </property>
               </object>
               <packing>
-                <property name="x">405</property>
+                <property name="x">400</property>
                 <property name="y">45</property>
               </packing>
             </child>
