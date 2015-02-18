@@ -72,6 +72,11 @@
     <property name="can_focus">False</property>
     <property name="icon_name">edit-undo</property>
   </object>
+  <object class="GtkImage" id="img_l_btn1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">edit-undo</property>
+  </object>
   <object class="GtkImage" id="img_lh_x1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -133,6 +138,11 @@
     <property name="stock">gtk-missing-image</property>
   </object>
   <object class="GtkImage" id="img_r_btn">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">edit-redo</property>
+  </object>
+  <object class="GtkImage" id="img_r_btn1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">edit-redo</property>
@@ -1427,6 +1437,36 @@
               <packing>
                 <property name="x">405</property>
                 <property name="y">45</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_mrl">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_l_btn1</property>
+              </object>
+              <packing>
+                <property name="x">305</property>
+                <property name="y">35</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_mrr">
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_r_btn1</property>
+              </object>
+              <packing>
+                <property name="x">375</property>
+                <property name="y">35</property>
               </packing>
             </child>
           </object>
