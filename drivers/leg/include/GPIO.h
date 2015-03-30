@@ -22,8 +22,8 @@ class GPIO
 
  public: GPIO(int _pin);
  public: GPIO(int _pin, char _mode);
- public: inline void mode(int value)  { write(fdMode,value); }
- public: inline int mode() const      { return read(fdMode); }
+ public: inline void mode(int value)   { write(fdMode,value); }
+ public: inline int mode() const       { return read(fdMode); }
  public: inline void modeInput()       { write(fdMode,INPUT);  }
  public: inline void modeInputPullup() { write(fdMode,INPUT_PULLUP);  }
  public: inline void modeOutput()      { write(fdMode,OUTPUT); }
