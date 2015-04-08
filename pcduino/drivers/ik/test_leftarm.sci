@@ -1,0 +1,16 @@
+LEFT_SHOULDER_IO=0
+LEFT_SHOULDER_UD=0
+LEFT_BICEP_ROTATE=ik_leftarmparameters(3);
+  LEFT_ELBOW=ik_leftarmparameters(4);
+  LEFT_FOREARM_ROTATE=ik_leftarmparameters(5);
+  LEFTARM_BICEP_ROTATE=ik_leftarmparameters(6);
+  LEFTARM_ELBOW=ik_leftarmparameters(7);
+  LEFTARM_FOREARM_ROTATE=ik_leftarmparameters(8);
+  LEFTARM_SHOULDER_IO=ik_leftarmparameters(9);
+  LEFTARM_SHOULDER_UD=ik_leftarmparameters(10);
+  nx=ik_leftarmparameters(11);
+  ny=ik_leftarmparameters(12);
+  px=ik_leftarmparameters(13);
+  py=ik_leftarmparameters(14);
+  pz=ik_leftarmparameters(15);
+  residual=ik_leftarmparameters(16);

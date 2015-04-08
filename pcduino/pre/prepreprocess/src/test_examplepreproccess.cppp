@@ -1,0 +1,22 @@
+#!#include <iostream>
+#!#include <string>
+#!
+#!using namespace std;
+#!
+#! ostream& o() { return cout; }
+#!
+#!int main()
+#!{
+#!  string greeting="hello";
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  cout << "$(greeting+" world")" << endl;
+  return 0;
+}
+
+#! return 0;
+#!}

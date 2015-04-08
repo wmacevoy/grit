@@ -1,0 +1,430 @@
+#!#include "utilities.hpp"
+#!#include "preprocess.hpp"
+#!#include "symbolic.hpp"
+#!#include "formatter.hpp"
+#!#include <iostream>
+#!#include <iomanip>
+#!
+#!#include <fstream>
+#!#include <sstream>
+#!#include <assert.h>
+#!
+#!using namespace std;
+#!using namespace utilities;
+#!using namespace symbolic;
+#!
+#!namespace preprocess {
+#!
+#!class ScilabCodeGenerator : public CodeGenerator {
+#!public:
+#!  string file;
+#!  string prefix;
+#!
+#!  std::string format(const std::string &s) const { 
+#!    symbolic::Expression *e=parse(s);
+#!    std::ostringstream oss;
+#!    oss << format_scilab(e);
+#!    delete e;
+#!    return oss.str();
+#!  }
+#!
+#!  symbolic::FormatResult format ( const symbolic::Expression * e ) const {
+#!    return format_scilab(e);
+#!  }
+#!
+#!  void declare_globals()
+#!  {
+
+// declare globals
+
+#!    std::ostringstream oss;
+#!    FOREACH_GLOBAL(i) {
+#!      oss << " " << prefix << format(*i);
+#!    }
+global $(oss.str());
+#!  }
+#!
+#!  void import_globals()
+#!  {
+
+  // import globals
+
+#!    std::ostringstream oss;
+#!    FOREACH_GLOBAL(i) {
+  $(format(*i))=$(prefix)$(format(*i)); // $(*i)
+#!    }
+#!  }
+#!
+#!  void import_parameters()
+#!  {
+
+  // import parameters
+
+#!    { int count=1; FOREACH_PARAMETER(i)  {
+$(format(*i))=$(prefix)parameters($(count));
+#!	++count;
+#!      }}
+#!  }
+#!
+#!  void import_variables()
+#!  {
+
+// import variables
+
+#!    { int count=1; FOREACH_VARIABLE(i) {
+$(format(*i))=$(prefix)x($(count));
+#!	++count;
+#!      }}
+#!  }
+#!
+#!  void define_function()
+#!  {
+
+// define function
+
+function $(prefix)y=$(prefix)f($(prefix)parameters,$(prefix)x)
+#!    indent += 2;    
+#!    declare_globals();
+#!    import_globals();
+#!    import_parameters();
+#!    import_variables();
+#!    
+#!    FOREACH_EQUATION(i) {
+$(format(i->first))=$(format(i->second));
+#!    }
+#!
+$(prefix)y=zeros($(nequations()),1);
+#!    { int count=1; FOREACH_EQUATION(i) {
+$(prefix)y($count)=$(format(i->first));
+#!	++count;
+#!      }}
+#!    
+#!    indent -= 2;
+endfunction
+
+#!  }
+#!
+#!  void define_jacobian()
+#!  {
+function $(prefix)dy=$(prefix)df($(prefix)parameters,$(prefix)x)
+#!    indent += 2;
+#!
+#!    declare_globals();
+#!    import_globals();
+#!    import_parameters();
+#!    import_variables();
+#!
+#!    // define derivates
+#!    FOREACH_EQUATION(i)
+#!    {
+#!      Expression *ri = new Variable(i->first);
+#!	Expression *yi = parse(i->second);
+#!	FOREACH_VARIABLE(j)
+#!	{
+#!        Expression *xj = new Variable(*j);
+#!	  Expression *dy_dx=differentiate(yi,*j);
+d$(format(ri))_d$(format(xj))=$(format(dy_dx));
+#!	  delete dy_dx;
+#!        delete xj;
+#!	}
+#!      delete ri;
+#!	delete yi;
+#!    }
+#!
+// place derivatives in dy
+$(prefix)dy=zeros($(nequations()),$(nvariables()));
+#!    {int counti=1; FOREACH_EQUATION(i) {
+#!	{int countj=1; FOREACH_VARIABLE(j) {
+$(prefix)dy($counti,$countj)=d$(format(i->first))_d$(format(*j));
+#!	    ++countj;
+#!	  }}
+#!	++counti;
+#!      }}
+#!    
+#!    indent -= 2;
+endfunction
+
+#!  }
+#!
+#!  void define_solve()
+#!  {
+function $(prefix)x=$(prefix)solve($(prefix)parameters)
+#!    indent += 2;
+#!
+#!    declare_globals();
+#!    import_globals();
+#!    import_parameters();
+#!
+$(prefix)residual=0;
+
+// initialize unknowns from parameters
+
+$(prefix)x=zeros($(nvariables()),1);
+#!    FOREACH_INITIALIZER(i) {
+$(format(i->first))=$(format(i->second));
+#!    }
+
+// setup unknown vector x
+
+$(prefix)x=zeros($(nvariables()),1);
+#!    { int count=1; FOREACH_VARIABLE(i) {
+$(prefix)x($count)=$(format(*i));
+#!	++count;
+#!      }}
+
+// newton iteration
+for step=1:steps
+  $(prefix)y=$(prefix)f($(prefix)parameters,$(prefix)x);
+  $(prefix)dy=$(prefix)df($(prefix)parameters,$(prefix)x);
+#! if (nequations() < nvariables()) {
+  $(prefix)dyt=$(prefix)dy'
+  $(prefix)dydyt=$(prefix)dy*$(prefix)dyt;
+  $(prefix)x=$(prefix)x-$(prefix)dyt*($(prefix)dydyt\$(prefix)y);  
+#! } else {
+  $(prefix)x=$(prefix)x-$(prefix)dy\$(prefix)y;
+#! }
+  $(prefix)residual=norm($(prefix)y);
+  if ($(prefix)residual <= epsilon) then
+    break;
+  end
+end
+#!if (unchecked_parameter_index_of("residual") != -1) {
+$(prefix)parameters($(parameter_index_of("residual") + 1))=$(prefix)residual;
+#!}
+#!    indent -= 2;
+endfunction
+
+#!  }
+#!
+#!  void define_update()
+#!  {
+function $(prefix)new_parameters=$(prefix)update($(prefix)parameters)
+#!    
+#!    indent += 2;
+#!
+#!    declare_globals();
+#!    import_globals();
+#!    import_parameters();
+#!    
+$(prefix)x=$(prefix)solve($(prefix)parameters);
+#!
+#!    import_variables();
+#!
+#!    FOREACH_UPDATE(i)
+#!    {
+$(format(i->first))=$(format(i->second));
+#!    }
+
+// assign to new_parameters
+
+$(prefix)new_parameters=zeros($(nparameters()),1);
+#!    { int count=1; FOREACH_PARAMETER(i) {
+$(prefix)new_parameters($count)=$(format(*i));
+#!	++count;
+#!    }}
+#!    
+#!    indent -= 2;
+#!
+endfunction
+
+#!  }
+#!
+#!  void define_tests()
+#!  {
+#!    o() << "function " << prefix << "tests(" << prefix << "name)" << endl;
+#!    
+#!    indent += 2;
+#!
+#!    declare_globals();
+#!
+#!    o() << prefix << "case_name='';" << endl;
+#!    o() << prefix << "case_count=1;" << endl;
+#!    o() << prefix << "max_x_error_name=\"none\";" << endl;
+#!    o() << prefix << "max_x_error_count=0;" << endl;
+#!    o() << prefix << "max_x_error=0;" << endl;
+#!    o() << prefix << "x_error=0;" << endl;
+#!
+#!    o() << prefix << "max_y_error_name=\"none\";" << endl;
+#!    o() << prefix << "max_y_error_count=0;" << endl;
+#!    o() << prefix << "max_y_error=0;" << endl;
+#!    o() << prefix << "y_error=0;" << endl;
+#!
+#!    FOREACH_TEST(i)
+#!    {
+#!      Configuration::Case &test = *i;
+#!      o() << prefix << "case_name=" << encode_string_always(test.name) << ";" << endl;
+#!      o() << "if (" << prefix << "name == " << prefix << "case_name | " << prefix << "name == \"all\") then" << endl;
+#!      indent += 2;
+#!
+#!      std::list < std::pair < std::string , double > > &setup = test.setup;      
+#!      for (std::list < std::pair < std::string , double > > :: iterator j = setup.begin(); j!= setup.end(); ++j) {
+#!	o() << format(j->first) << "=" << setprecision(15) << j->second << ";" << endl;
+#!      }
+#!
+#!      FOREACH_GLOBAL(j) {
+#!	o() << prefix << format(*j) << "=" << format(*j) << ";" << endl;
+#!      }
+#!      o() << endl;
+#!
+#!      o() << prefix << "parameters=[";
+#!      { int count=1; FOREACH_PARAMETER(j) {
+#!	  if (count > 1) (*out) << ";";
+#!	  (*out) << format(*j);
+#!	  ++count;
+#!	}}
+#!      (*out) << "];" << endl;
+#!
+#!      o() << prefix << "x=[";
+#!      { int count=1; FOREACH_VARIABLE(j) {
+#!	  if (count > 1) (*out) << ";";
+#!	  (*out) << format(*j);
+#!	  ++count;
+#!	}}
+#!      (*out) << "];" << endl;
+#!
+#!      o() << prefix << "x_test=" << prefix << "solve(" << prefix << "parameters);" << endl;
+#!      o() << prefix << "y_test=" << prefix << "f(" << prefix << "parameters," << prefix << "x_test);" << endl;
+#!      o() << prefix << "x_error=norm(" << prefix << "x-" << prefix << "x_test);" << endl;
+#!      o() << prefix << "y_error=norm(" << prefix << "y_test);" << endl;
+#!
+#!      o() << "if (" << prefix << "x_error > " << prefix << "max_x_error) then" << endl;
+#!      indent += 2;
+#!      o() << prefix << "max_x_error=" << prefix << "x_error;" << endl;
+#!      o() << prefix << "max_x_error_name=" << prefix << "case_name;" << endl;
+#!      o() << prefix << "max_x_error_count=" << prefix << "case_count;" << endl;
+#!      indent -= 2;
+#!      o() << "end" << endl;
+#!
+#!      o() << "if (" << prefix << "y_error > " << prefix << "max_y_error) then" << endl;
+#!      indent += 2;
+#!      o() << prefix << "max_y_error=" << prefix << "y_error;" << endl;
+#!      o() << prefix << "max_y_error_name=" << prefix << "case_name;" << endl;
+#!      o() << prefix << "max_y_error_count=" << prefix << "case_count;" << endl;
+#!      indent -= 2;
+#!      o() << "end" << endl;
+#!
+#!      o() << "printf(\"test %d/\"\"%s\"\": x_error=%1.15g, y_error=%1.15g\\n\"," << prefix << "case_count" << "," << prefix << "case_name" << "," << prefix << "x_error" << "," << prefix << "y_error);" << endl;
+#!
+#!      indent -= 2;
+#!      o() << "end" << endl;
+#!      o() << prefix << "case_count=" << prefix << "case_count+1;" << endl;
+#!    }
+#!
+#!    o() << "if (" << prefix << "name == \"all\") then" << endl;
+#!    indent +=2;
+#!    o() << "printf(\"test summary: max_x_error=%1.15g from %d/\"\"%s\"\", max_y_error=%1.15g from %d/\"\"%s\"\"\\n\"," << prefix << "max_x_error" << "," << prefix << "max_x_error_count" << "," << prefix << "max_x_error_name" << "," << prefix << "max_y_error" << "," << prefix << "max_y_error_count" << "," << prefix << "max_y_error_name);" << endl;
+#!    indent -= 2;
+#!    o() << "end" << endl;
+#!
+#!    indent -= 2;
+#!
+#!    o() << "endfunction" << endl;
+#!  }
+#!
+#!  void define_runs()
+#!  {
+#!    o() << "function " << prefix << "runs(name)" << endl;
+#!    
+#!    indent += 2;
+#!
+#!    declare_globals();
+#!
+#!    o() << prefix << "case_count=1;" << endl;
+#!    FOREACH_RUN(i) 
+#!    {
+#!      Configuration::Case &run = *i;
+#!      o() << "if (name == " << encode_string_always(run.name) << " | name == \"all\") then" << endl;
+#!      indent += 2;
+#!      std::list < std::pair < std::string , double > > &setup = run.setup;
+#!      for (std::list < std::pair < std::string , double > > :: iterator j = setup.begin(); j!= setup.end(); ++j) {
+#!	o() << format(j->first) << "=" << setprecision(15) << j->second << ";" << endl;
+#!      }
+#!      
+#!      FOREACH_GLOBAL(j) {
+#!	o() << prefix << format(*j) << "=" << format(*j) << ";" << endl;
+#!      }
+#!      o() << endl;
+#!
+#!      o() << prefix << "parameters=[";
+#!      { int count=1; FOREACH_PARAMETER(j) {
+#!	  if (count > 1) (*out) << ";";
+#!	  (*out) << format(*j);
+#!	  ++count;
+#!	}}
+#!      (*out) << "];" << endl;
+#!
+#!      o() << prefix << "x=" << prefix << "solve(" << prefix << "parameters);" << endl;
+#!
+#!      { int count=1; FOREACH_VARIABLE(j) {
+#!	  o() << format(*j) << "=" << prefix << "x(" << count << ");" << endl;
+#!	  ++count;
+#!	}}
+#!
+#!      o() << "printf(\"[case] # %d\\n\"," << prefix << "case_count);" << endl;
+#!      o() << "printf(\"name=\"\"%s\"\"\\n\"," << encode_string_always(run.name) << ");" << endl;
+#!
+#!      FOREACH_GLOBAL(j) {
+#!	o() << "printf(\"" << *j << "=%1.15g\\n\"," << format(*j) << ");" << endl;
+#!      }
+#!
+#!      FOREACH_PARAMETER(j) {
+#!	o() << "printf(\"" << *j << "=%1.15g\\n\"," << format(*j) << ");" << endl;
+#!      }
+#!
+#!      FOREACH_VARIABLE(j) {
+#!	o() << "printf(\"" << *j << "=%1.15g\\n\"," << format(*j) << ");" << endl;
+#!      }
+#!
+#!      indent -= 2;
+#!      o() << "end" << endl;
+#!      o() << prefix << "case_count=" << prefix << "case_count+1;" << endl;
+#!    }
+#!
+#!    indent -= 2;
+#!
+#!    o() << "endfunction" << endl;
+#!  }
+#!
+#!  void generate()
+#!  {
+#!#ifdef SYMBOLIC_OUT_MODE
+#!    symbolic::Expression::outMode=symbolic::Expression::OUT_MODE_SCI;
+#!#endif
+#!    file=configuration->flags["file"];
+#!    if (file.length() < 4 || file.substr(file.length()-4) != ".sci") {
+#!      file += ".sci";
+#!    }
+#!    ofstream outstream(file.c_str());
+#!    out=&outstream;
+#!    if (!*out) {
+#!      cerr << "scilabcodegenerator: could not write to configured output file " << encode_string(file) << endl;
+#!      return;
+#!    }
+#!
+#!    prefix=configuration->flags["prefix"];
+#!    indent=0;
+#!
+#!    declare_globals();
+#!    define_function();
+#!    define_jacobian();
+#!    define_solve();
+#!    define_update();
+#!    define_tests();
+#!    define_runs();
+#!  }
+#!
+#!};
+#!
+#!class ScilabRegister {
+#!public:
+#!  ScilabRegister()
+#!  {
+#!    CodeGenerator *generator = new ScilabCodeGenerator();
+#!    CodeGenerator::registry_add("scilab",generator);
+#!  }
+#!};
+#!
+#!static const ScilabRegister SCILAB_REGISTER;
+#!
+#!}
+#!

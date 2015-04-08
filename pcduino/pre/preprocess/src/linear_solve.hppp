@@ -1,0 +1,101 @@
+$(target) int $(prefix)Doolittle_LU_Decomposition_with_Pivoting($(type) *A, int pivot[], int n)
+{
+   int i, j, k;
+   $(type) *p_k, *p_row, *p_col;
+   $(type) max;
+
+
+//         For each row and column, k = 0, ..., n-1,
+ 
+   for (k = 0, p_k = A; k < n; p_k += n, k++) {
+
+//            find the pivot row
+
+      pivot[k] = k;
+      max = fabs( *(p_k + k) );
+      for (j = k + 1, p_row = p_k + n; j < n; j++, p_row += n) {
+         if ( max < fabs(*(p_row + k)) ) {
+            max = fabs(*(p_row + k));
+            pivot[k] = j;
+            p_col = p_row;
+         }
+      }
+
+//     and if the pivot row differs from the current row, then
+//     interchange the two rows.
+   
+      if (pivot[k] != k)
+         for (j = 0; j < n; j++) {
+            max = *(p_k + j);
+            *(p_k + j) = *(p_col + j);
+            *(p_col + j) = max;
+         }
+
+//                and if the matrix is singular, return error
+
+
+      if ( *(p_k + k) == 0.0 ) return -1;
+
+//      otherwise find the lower triangular matrix elements for column k. 
+
+      for (i = k+1, p_row = p_k + n; i < n; p_row += n, i++) {
+         *(p_row + k) /= *(p_k + k);
+      }  
+
+//            update remaining matrix
+
+      for (i = k+1, p_row = p_k + n; i < n; p_row += n, i++)
+         for (j = k+1; j < n; j++)
+            *(p_row + j) -= *(p_row + k) * *(p_k + j);
+
+   }
+
+   return 0;
+}
+
+
+$(target) int $(prefix)Doolittle_LU_with_Pivoting_Solve($(type) *A, $(type) B[], int pivot[],
+                                                              $(type) x[], int n)
+{
+   int i, k;
+   $(type) *p_k;
+   $(type) dum;
+
+//         Solve the linear equation Lx = B for x, where L is a lower
+//         triangular matrix with an implied 1 along the diagonal.
+   
+   for (k = 0, p_k = A; k < n; p_k += n, k++) {
+      if (pivot[k] != k) {dum = B[k]; B[k] = B[pivot[k]]; B[pivot[k]] = dum; }
+      x[k] = B[k];
+      for (i = 0; i < k; i++) x[k] -= x[i] * *(p_k + i);
+   }
+
+//         Solve the linear equation Ux = y, where y is the solution
+//         obtained above of Lx = B and U is an upper triangular matrix.
+
+   for (k = n-1, p_k = A + n*(n-1); k >= 0; k--, p_k -= n) {
+      if (pivot[k] != k) {dum = B[k]; B[k] = B[pivot[k]]; B[pivot[k]] = dum; }
+      for (i = k + 1; i < n; i++) x[k] -= x[i] * *(p_k + i);
+      if (*(p_k + k) == 0.0) return -1;
+      x[k] /= *(p_k + k);
+   }
+  
+   return 0;
+}
+
+$(target) void $(prefix)linear_solve(int dim, int *ipiv, $(type) *A, $(type) *b, $(type) *x)
+{
+    $(type) tmp;
+    for (int ii=0;ii<dim; ++ii) {
+      for (int jj=ii+1;jj<dim; ++jj) {
+        $(type) *x=&A[ii*dim+jj];
+        $(type) *y=&A[jj*dim+ii];
+	tmp=*x;
+	*x=*y;
+	*y=tmp;
+      }
+    }
+  
+    $(prefix)Doolittle_LU_Decomposition_with_Pivoting(A,ipiv,dim);
+    $(prefix)Doolittle_LU_with_Pivoting_Solve(A,b,ipiv,x,dim);
+}
