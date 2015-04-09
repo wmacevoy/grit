@@ -1,0 +1,24 @@
+GPIO::GPIO(int _pin)
+  : pin(_pin) 
+  {
+    init();
+  }
+
+GPIO::GPIO(int _pin, char _mode);
+  : pin(_pin)
+  {
+    init();
+    mode(_mode);
+  }
+
+
+void GPIO::init()
+  {
+    char path[256];
+    snprintf(path, sizeof(path), "%s%s%d", GPIO_MODE_PATH, "gpio", pin);
+    fdMode = open(path, O_RDWR);
+    assert(fdMode >= 0);
+    snprintf(path, sizeof(path), "%s%s%d", GPIO_PIN_PATH, "gpio", pin);
+    fdPin = open(path, O_RDWR);
+    assert(fdPin >= 0);
+  }
