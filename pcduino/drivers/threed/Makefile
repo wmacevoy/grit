@@ -1,8 +1,8 @@
-all : libs progs py
+all : libs progs
 
 DEPS=
-MY_FLAGS=`python2.7-config --cflags`
-MY_LIBS=-larmadillo `python2.7-config --ldflags`
+MY_FLAGS=
+MY_LIBS=-larmadillo
 
 include ../rules.mk
 

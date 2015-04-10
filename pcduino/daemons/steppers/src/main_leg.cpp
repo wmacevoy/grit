@@ -7,12 +7,15 @@
 #include "AnalogIn.h"
 #include "Tone.h"
 #include "now.h"
+#include "Configure.h"
+
+Configure cfg;
 
 //# 7 - dir
 //#   - tone
 //# 5 - en
 
-class Servo
+class StepperServo
 {
   AnalogIn position;
   DigitalOut enable;
@@ -34,7 +37,7 @@ class Servo
 public: 
   
 
-  Servo(int _position, int _enable, int _direction, int _pulse) 
+  StepperServo(int _position, int _enable, int _direction, int _pulse) 
     : position(_position), 
       enable(_enable), 
       direction(_direction), 
@@ -60,7 +63,7 @@ public:
   {
     if (thread == 0) {
       running = true;
-      thread = new std::thread(&Servo::run,this);
+      thread = new std::thread(&StepperServo::run,this);
     }
   }
 
@@ -111,11 +114,13 @@ public:
     }
   }
 
-  ~Servo()
+  ~StepperServo()
   {
     stop();
   }
 };
+
+std::map < int , std::shared_ptr < StepperServo > > servos;
 
 void test1()
 {
@@ -138,6 +143,7 @@ void test1()
 
 int main(int argc, char *argv[])
 {
-  test1();
+  system("sudo modprobe adc");
+
   return 0;
 }

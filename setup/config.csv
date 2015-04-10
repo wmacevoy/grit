@@ -1,6 +1,16 @@
 name,value
 control.ip,192.168.2.102
 xcontrol.ip,127.0.0.1
+rsync.parts,"pcduino"
+rsync.dests,"${leg1.user}@${leg1.ip}:grit"
+sync.ip,192.168.1.116
+leg1.ip,leg1
+leg1.user,ubuntu
+sync.user,wmacevoy
+sync.remote,${sync.user}@${sync.ip}:/grit
+sync.local,"~/grit"
+sync.files,"setup/config.csv,setup/servomap.csv"
+sync.onchange,"../context restart"
 control.user,cogburn
 centaur.ip,192.168.2.104
 xcentaur.ip,127.0.0.1

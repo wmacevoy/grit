@@ -1,4 +1,4 @@
-all : libs progs py
+all : libs progs
 
 DEPS=
 MY_FLAGS=`python2.7-config --cflags`

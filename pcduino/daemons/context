@@ -88,8 +88,7 @@ prioritize()
 	    priority=0
 	    app_pid=$(pid $app)
 	    case $app in
-		body) priority=-10;;
-		servos) priority=-15;;
+		steppers) priority=-10;;
 	    esac
 	    if renice -n $priority -p $(pid $app)
 	    then
