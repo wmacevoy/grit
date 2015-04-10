@@ -1,0 +1,38 @@
+#!/bin/bash
+
+scan() {
+  nmap --host-timeout 2000ms -sP 192.168.100.1 10.0.1.0/24 192.168.2.0/24 192.168.1.0/24 2>/dev/null
+}
+
+is_up() {
+  prev=""
+  while read line
+  do 
+    if [[ "$line" =~ ^Host\ is\ up ]]
+    then
+      if [[ "$prev" =~ ([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+) ]]
+      then
+        echo ${BASH_REMATCH[0]}
+      fi
+    fi
+    prev="$line"
+  done
+}
+
+hosts() {
+  while read ip
+  do
+    for user in ubuntu fit-pc user
+    do
+      id=$(ssh -o BatchMode=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o ConnectTimeout=1 $user@$ip "test -f grit/id && cat grit/id" 2>/dev/null)
+      echo "ip=$ip user=$user id=$id"
+      if [ "$id" != "" ] ; then
+        echo "$ip $id #grit-auto > /etc/hosts"
+	sudo sed -i -e 's/^\([0-9.]\+\|#unknown\)[ \t]\+'"$id"'[ \t]\+#grit-auto[ \t]*$/'"$ip $id #grit-auto"'/' /etc/hosts
+	break
+      fi
+    done
+  done
+}
+
+scan | is_up | hosts
