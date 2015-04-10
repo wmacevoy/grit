@@ -7,7 +7,7 @@ EOF
     exit 0
 fi
 scan() {
-  nmap --host-timeout 2000ms -sP 192.168.100.1 10.0.1.0/24 192.168.2.0/24 192.168.1.0/24 2>/dev/null
+  nmap --host-timeout 10000ms -sP 192.168.100.1 10.0.1.0/24 192.168.2.0/24 192.168.1.0/24 2>/dev/null
 }
 
 is_up() {

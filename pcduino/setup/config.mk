@@ -3,7 +3,7 @@
 #
 
 # TRUNK_FLAGS=-O2 -g -Wall -fPIC -pthread
-TRUNK_FLAGS=-g -Wall -fPIC -pthread
+TRUNK_FLAGS=-g -Wall -fPIC -pthread -O3
 TRUNK_LIBS=
 
 CFLAGS += $(TRUNK_FLAGS)
