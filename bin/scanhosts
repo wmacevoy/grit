@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ "$1" = "--help" -o "$1" = "--h" ] ; then
+    echo <<EOF
+scanhosts scans the network for grit devices and edits /etc/hosts to reflect found ids (~/grit/id -> ip id #grit-auto in /etc/hosts)
+EOF
+    exit 0
+fi
 scan() {
   nmap --host-timeout 2000ms -sP 192.168.100.1 10.0.1.0/24 192.168.2.0/24 192.168.1.0/24 2>/dev/null
 }

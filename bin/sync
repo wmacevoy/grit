@@ -1,5 +1,12 @@
 #!/bin/bash
 
+if [ "$1" = "--help" -o "$1" = "--h" ] ; then
+    echo <<EOF
+sync synchronizes the files/folders on this system under version control with systems described in the rsync lines of the setup/config.csv file
+EOF
+    exit 0
+fi
+
 dir=$(mktemp -d)
 trap '/bin/rm -rf $dir' EXIT
 
