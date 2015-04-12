@@ -15,10 +15,10 @@ class Foot
 	private: double error;
 	private: double pos;
 	private: double tmp_destination;
-	private: std::atomic<double> spd_rotate, spd_move;
-	private: std::atomic<double> destination;
-	private: std::atomic<int> direction;
-	public:  std::atomic<bool> running;
+	private: double spd_rotate, spd_move;
+	private: double destination;
+	private: int direction;
+	public:  bool running;
 	private: std::thread thread;
 	
 	private: void Run();
