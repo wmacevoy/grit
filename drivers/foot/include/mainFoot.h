@@ -11,18 +11,18 @@ class Foot
 	private: Tone pulse_l;
 	private: Tone pulse_l;
 	private: int cutoff;
-	private: double speed;
+	private: double dir_speed, mov_speed;
 	private: int destination;
 	private: int direction;
 	private: volatile bool running;
 	private: std::thread thread;
+	private: double cutoff;
 	
 	private: void Run();
-	public: Foot();
-	public: void setSpeed(int _speed);
+	public: Foot(int potpin, int enablepin, int dlpin, int drpin, int plpin, int prpin);
+	public: void setDirSpeed(int _speed);
+	public: void setMovSpeed(int _speed);
 	public: void setDirection(boolean _direction);
-	public: void setDestination(int _destination);
-	public: void rotate(int _destination, double _speed);
-	public: void drive(int _speed, boolean _direction)
+	public: void setDestination(double _destination);
 	public: ~Foot();	
 	}
