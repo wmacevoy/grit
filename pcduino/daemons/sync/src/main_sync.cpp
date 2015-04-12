@@ -9,7 +9,7 @@ struct Daemon
 {
   volatile bool running;
   std::thread *thread;
-  volatile double frequency;
+  volatile float frequency;
   Daemon()  : running(false), thread(0), frequency(1) {}
 
   void start()

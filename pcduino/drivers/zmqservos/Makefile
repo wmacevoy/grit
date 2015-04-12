@@ -1,7 +1,7 @@
-all : libs progs py
+all : libs progs
 
 DEPS=utilities zmqpp
-MY_FLAGS=`python2.7-config --cflags`
-MY_LIBS=`python2.7-config --ldflags`
+MY_FLAGS=
+MY_LIBS=
 
 include ../rules.mk
