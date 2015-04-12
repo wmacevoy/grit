@@ -1,8 +1,8 @@
 name,value
-control.ip,192.168.2.102
+control.ip,192.168.10.119
 xcontrol.ip,127.0.0.1
 control.user,cogburn
-centaur.ip,192.168.2.104
+centaur.ip,192.168.10.120
 xcentaur.ip,127.0.0.1
 centaur.user,fit-pc
 legs.minspeed,15,Degrees per second on the servo
