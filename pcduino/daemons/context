@@ -89,6 +89,7 @@ prioritize()
 	    app_pid=$(pid $app)
 	    case $app in
 		steppers) priority=-10;;
+		foot) priority=-10;;
 	    esac
 	    if renice -n $priority -p $(pid $app)
 	    then
@@ -113,8 +114,8 @@ start_app()
   
   mkdir -p $MOJAVATON_DIR/pids
   mkdir -p $MOJAVATON_DIR/logs
-  cd $MOJAVATON_DIR/centaur/$app
-  $MOJAVATON_DIR/centaur/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
+  cd $MOJAVATON_DIR/daemons/$app
+  $MOJAVATON_DIR/daemons/$app/bin/$app >$MOJAVATON_DIR/logs/$app.log 2>&1 &
   app_pid=$!
   echo $app_pid > $MOJAVATON_DIR/pids/$app.pid
   echo $app started as pid $app_pid
@@ -136,13 +137,13 @@ start_apps()
 setup()
 {
   # add bin folders to PATH
-  for bin in $MOJAVATON_DIR/centaur/*/bin
+  for bin in $MOJAVATON_DIR/daemons/*/bin
   do
     PATH="$bin:$PATH"
   done
 
   # add 3rd party and project library paths
-  for lib in $MOJAVATON_DIR/libs/lib $MOJAVATON_DIR/pre/*/lib $MOJAVATON_DIR/drivers/*/lib $MOJAVATON_DIR/centaur/*/lib
+  for lib in $MOJAVATON_DIR/libs/lib $MOJAVATON_DIR/pre/*/lib $MOJAVATON_DIR/drivers/*/lib $MOJAVATON_DIR/daemons/*/lib
   do
     export LD_LIBRARY_PATH="$app_dir:$lib:$LD_LIBRARY_PATH"
     export PYTHONPATH="$lib:$PYTHONPATH"
@@ -162,14 +163,6 @@ build()
   for dir in setup libs pre drivers daemons
   do
       make -C $MOJAVATON_DIR/$dir "$@"
-  done
-}
-
-commit()
-{
-  for dir in setup libs pre drivers centaur control
-  do
-      svn commit -m "$@ - in $dir" $MOJAVATON_DIR/$dir
   done
 }
 
