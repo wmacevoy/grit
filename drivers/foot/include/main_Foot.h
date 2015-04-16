@@ -1,6 +1,7 @@
 #include "GPIO.h"
 #include "AnalogIn.h"
 #include "Tone.h"
+#include <atomic>
 
 class Foot
 	{
@@ -9,20 +10,24 @@ class Foot
 	private: DigitalOut direction_l;
 	private: DigitalOut direction_r;
 	private: Tone pulse_l;
-	private: Tone pulse_l;
-	private: int cutoff;
-	private: double dir_speed, mov_speed;
-	private: int destination;
-	private: int direction;
-	private: volatile bool running;
-	private: std::thread thread;
+	private: Tone pulse_r;
 	private: double cutoff;
+	private: double error;
+	private: double pos;
+	private: double tmp_destination;
+	private: double spd_rotate, spd_move;
+	private: double destination;
+	private: int direction;
+	public:  bool running;
+	private: std::thread thread;
 	
 	private: void Run();
+	private: void move(int speed_l, int speed_r, int dir, bool rotate);
 	public: Foot(int potpin, int enablepin, int dlpin, int drpin, int plpin, int prpin);
 	public: void setDirSpeed(int _speed);
 	public: void setMovSpeed(int _speed);
-	public: void setDirection(boolean _direction);
+	public: void setDirection(int _direction);
 	public: void setDestination(double _destination);
+	public: bool isRunning();
 	public: ~Foot();	
-	}
+	};

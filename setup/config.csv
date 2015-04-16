@@ -1,5 +1,5 @@
 name,value
-control.ip,192.168.2.102
+control.ip,192.168.10.119
 xcontrol.ip,127.0.0.1
 rsync.parts,"pcduino"
 rsync.dests,"${leg1.user}@${leg1.ip}:grit"
@@ -12,7 +12,7 @@ sync.local,"~/grit"
 sync.files,"setup/config.csv,setup/servomap.csv"
 sync.onchange,"../context restart"
 control.user,cogburn
-centaur.ip,192.168.2.104
+centaur.ip,192.168.10.120
 xcentaur.ip,127.0.0.1
 centaur.user,fit-pc
 legs.minspeed,15,Degrees per second on the servo
