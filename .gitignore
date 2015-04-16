@@ -22,3 +22,9 @@
 
 # Make temp dependency files
 *.d
+
+# Temp/build directories
+bin/
+lib/
+tmp/
+*~
