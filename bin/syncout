@@ -41,5 +41,5 @@ do
     else
 	args=""
     fi
-    rsync --verbose --progress  --checksum $args --files-from=$dir/files  ./ $dest 2>&1 | sed -e "s|^|[$dest] |"
+    rsync -e "ssh -i $HOME/id_grit" --verbose --progress  --checksum $args --files-from=$dir/files  ./ $dest 2>&1 | sed -e "s|^|[$dest] |"
 done
