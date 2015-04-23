@@ -20,8 +20,8 @@ bool verbose;
 
 class StepperServo
 {
+public:
   AnalogIn position;
-  DigitalOut enable;
   DigitalOut direction;
   Tone pulse;
 
@@ -40,9 +40,8 @@ class StepperServo
 public: 
   
 
-  StepperServo(int _position, int _enable, int _direction, int _pulse) 
+  StepperServo(int _position, int _direction, int _pulse)
     : position(_position), 
-      enable(_enable), 
       direction(_direction), 
       pulse(_pulse),
       minPosition(-180.0),
@@ -87,6 +86,7 @@ public:
       t += dt;
       
       double p=position.value()/double(position.maximum);
+      std::cout << "p=" << p << std::endl;
       double error = p-goalPosition;
       if (fabs(error) > cutoff) {
 	double g=-KP*maxFrequency/200.0*error;
@@ -111,8 +111,8 @@ public:
       }
 
       direction.value(frequency >= 0);
-      enable.value(frequency != 0);
-      pulse.value(fabs(frequency));
+      pulse.value(1000*fabs(frequency));
+      std::cout << "freq=" << frequency << std::endl;
       usleep(10000);
     }
   }
@@ -125,24 +125,53 @@ public:
 
 std::map < int , std::shared_ptr < StepperServo > > servos;
 
+void test2()
+{
+  DigitalOut enable(9);
+  StepperServo servo(3,5,6);
+  AnalogIn pot(4);
+
+  enable.value(1);
+  for (;;) {
+    double value = double(pot.value()) / double(pot.maximum);
+    servo.goalPosition = value;
+    //    std::cout << value << std::endl;
+    usleep(100000);
+  }
+}
+
+void test0()
+{
+  Tone pin(9);
+  pin.value(15000);
+  for (;;) {
+    sleep(1);
+  }
+}
+
 void test1()
 {
-  AnalogIn pot(2);
-  //  DigitalOut enable(3);
-  //  DigitalOut direction(4);
-  Tone pulse(4);
+  AnalogIn pot(3);
+  DigitalOut direction(7);
+  Tone pulse(8);
+  DigitalOut enable(9);
 
   //  enable.value(true);
   
   for (;;) {
     double position = 2.0*double(pot.value())/double(pot.maximum)-1.0;
     double frequency = 4000.0*position;
-    //    enable.value(frequency != 0.0);
-    //    direction.value(frequency > 0);
-    //    std::cout << "position=" << position << " frequency=" << position << std::endl;
+    enable.value(frequency != 0.0);
+    direction.value(frequency > 0);
+    std::cout << "position=" << position << " frequency=" << frequency << std::endl;
     pulse.value(fabs(frequency));
   }
 }
+
+std::string get_id();
+
+const std::string id(get_id());
+
 
 std::string get_id()
 {
@@ -151,27 +180,27 @@ std::string get_id()
   char *HOME=getenv("HOME");
   std::string id_path=HOME;
   id_path += "/id";
+  std::cout << "id=" << id;
   std::ifstream id_file(id_path.c_str());
   std::getline(id_file,ans);
   return ans;
 }
 
-const std::string id(get_id());
-
 
 int main(int argc, char *argv[])
 {
-  std::cout << "id=" << id << std::endl;
-  if (id != "leg1") { exit(1); }
-  cfg = std::shared_ptr < Configure > ( new Configure() );
-  cfg->path("../../../setup");
-  cfg->args(id + ".",argv);
-  if (argc == 1) cfg->load("config.csv");
-  cfg->servos();
-  verbose = cfg->flag(id + ".verbose",false);
-  if (verbose) cfg->show();
+  //  if (id != "leg1") { exit(1); }
+  //  cfg = std::shared_ptr < Configure > ( new Configure() );
+  //  cfg->path("../../setup");
+  //  cfg->args(id + ".",argv);
+  //  if (argc == 1) cfg->load("config.csv");
+  //  cfg->servos();
+  //  verbose = cfg->flag(id + ".verbose",false);
+  //  if (verbose) cfg->show();
 
   system("sudo modprobe adc");
+
+  test0();
 
   return 0;
 }
