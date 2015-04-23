@@ -88,7 +88,7 @@ prioritize()
 	    priority=0
 	    app_pid=$(pid $app)
 	    case $app in
-		steppers) priority=-10;;
+		leg) priority=-10;;
 		foot) priority=-10;;
 	    esac
 	    if renice -n $priority -p $(pid $app)
@@ -172,7 +172,7 @@ start()
     if [ $# -gt 0 ] ; then
 	start_apps "$@"
     else
-	start_apps legs
+	start_apps leg foot
     fi
 }
 

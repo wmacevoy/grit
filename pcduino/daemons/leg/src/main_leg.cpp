@@ -1,7 +1,9 @@
 #include <iostream>
+#include <fstream>
 #include <math.h>
 #include <thread>
 #include <chrono>
+#include <memory>
 
 #include "GPIO.h"
 #include "AnalogIn.h"
@@ -9,7 +11,8 @@
 #include "now.h"
 #include "Configure.h"
 
-Configure cfg;
+std::shared_ptr < Configure > cfg;
+bool verbose;
 
 //# 7 - dir
 //#   - tone
@@ -141,8 +144,33 @@ void test1()
   }
 }
 
+std::string get_id()
+{
+  std::string ans;
+
+  char *HOME=getenv("HOME");
+  std::string id_path=HOME;
+  id_path += "/id";
+  std::ifstream id_file(id_path.c_str());
+  std::getline(id_file,ans);
+  return ans;
+}
+
+const std::string id(get_id());
+
+
 int main(int argc, char *argv[])
 {
+  std::cout << "id=" << id << std::endl;
+  if (id != "leg1") { exit(1); }
+  cfg = std::shared_ptr < Configure > ( new Configure() );
+  cfg->path("../../../setup");
+  cfg->args(id + ".",argv);
+  if (argc == 1) cfg->load("config.csv");
+  cfg->servos();
+  verbose = cfg->flag(id + ".verbose",false);
+  if (verbose) cfg->show();
+
   system("sudo modprobe adc");
 
   return 0;

@@ -1,6 +1,6 @@
 % :
 	$(MAKE) -C foot $@
-	$(MAKE) -C steppers $@
+	$(MAKE) -C leg $@
 	$(MAKE) -C sync $@
 
 

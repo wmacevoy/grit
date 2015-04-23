@@ -5,16 +5,16 @@ rsync.parts,"pcduino"
 rsync.dests,"${leg1.user}@${leg1.ip}:grit"
 sync.ip,192.168.1.116
 leg1.ip,leg1
-leg1.user,ubuntu
+leg1.user,user
 sync.user,wmacevoy
 sync.remote,${sync.user}@${sync.ip}:/grit
 sync.local,"~/grit"
 sync.files,"setup/config.csv,setup/servomap.csv"
 sync.onchange,"../context restart"
-control.user,cogburn
+control.user,user
 centaur.ip,192.168.10.120
 xcentaur.ip,127.0.0.1
-centaur.user,fit-pc
+centaur.user,user
 legs.minspeed,15,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,20,Degrees per second on the servo
