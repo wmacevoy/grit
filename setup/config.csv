@@ -1,18 +1,18 @@
 name,value
-control.ip,192.168.10.119
+control.ip,192.168.2.102
 xcontrol.ip,127.0.0.1
-rsync.parts,"pcduino"
+rsync.parts,"pcduino,setup/config.csv,setup/servomap.csv,bin"
 rsync.dests,"${leg1.user}@${leg1.ip}:grit"
 sync.ip,192.168.1.116
 leg1.ip,leg1
 leg1.user,user
-sync.user,wmacevoy
+sync.user,user
 sync.remote,${sync.user}@${sync.ip}:/grit
 sync.local,"~/grit"
 sync.files,"setup/config.csv,setup/servomap.csv"
 sync.onchange,"../context restart"
 control.user,user
-centaur.ip,192.168.10.120
+centaur.ip,192.168.2.104
 xcentaur.ip,127.0.0.1
 centaur.user,user
 legs.minspeed,15,Degrees per second on the servo
@@ -53,7 +53,7 @@ servos.publish.port,5500
 servos.publish,tcp://*:${servos.publish.port}
 servos.subscribe,tcp://${servos.publish.ip}:${servos.publish.port}
 servos.subscribers,"tcp://127.0.0.1:5501,tcp://127.0.0.1:5503"
-servos.map,../../setup/servomap.csv
+servos.map,servomap.csv
 proxyservos.port,5599
 proxyservos.ip,${centaur.ip}
 proxyservos.publish,tcp://*:${proxyservos.port}
@@ -160,3 +160,10 @@ leg4.touchpressure,750
 ik.epsilon,1e-2
 ik.steps,4
 ik.speed,4,"inches/sec"
+steppers.kp,20
+steppers.kd,0
+steppers.ki,0
+steppers.maxfrequency,40000
+steppers.minfrequency,0
+leg1.verbose,true
+

@@ -23,6 +23,7 @@ std::string Configure::pathfind(const std::string &file)
 	name.append("/");
       }
       name.append(file);
+      std::cout << "look for " << name << std::endl;
       if (!!ifstream(name.c_str())) break;
       name = "";
     }
