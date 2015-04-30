@@ -4,6 +4,7 @@
 #include <thread>
 #include <chrono>
 #include <memory>
+#include <iomanip>
 
 #include "GPIO.h"
 #include "AnalogIn.h"
@@ -142,32 +143,65 @@ void test2()
 
 void test0()
 {
-  Tone pin(9);
-  pin.value(15000);
+  DigitalOut enable(8); 
+  enable.value(0);
+  DigitalOut dir(6);
+  
+  
+  std::cout << "test0" << std::endl;
+  //DigitalOut enable(8);
+  Tone pin(7);
+  pin.value(25000);
   for (;;) {
-    sleep(1);
+	 dir.value(0);
+    sleep(5);
+    dir.value(1);
+    sleep(5);
   }
 }
 
 void test1()
 {
-  AnalogIn pot(3);
-  DigitalOut direction(7);
-  Tone pulse(8);
-  DigitalOut enable(9);
-
-  //  enable.value(true);
+  AnalogIn pot3(3);
+  AnalogIn pot2(4);
+  AnalogIn pot1(5);
+  
+  DigitalOut direction3(6);
+  DigitalOut direction2(4);
+  DigitalOut direction1(2);
+  Tone pulse3(7);
+  Tone pulse2(5);
+  Tone pulse1(3);
+  DigitalOut enable(8);                                  
   
   for (;;) {
-    double position = 2.0*double(pot.value())/double(pot.maximum)-1.0;
-    double frequency = 4000.0*position;
-    enable.value(frequency != 0.0);
-    direction.value(frequency > 0);
-    std::cout << "position=" << position << " frequency=" << frequency << std::endl;
-    pulse.value(fabs(frequency));
+    double position1 = 2.0*double(pot1.value())/double(pot1.maximum)-1.0;
+    double frequency1 = 30000.0*position1;
+    
+    double position2 = 2.0*double(pot2.value())/double(pot2.maximum)-1.0;
+    double frequency2 = 30000.0*position2;
+    
+    double position3 = 2.0*double(pot3.value())/double(pot3.maximum)-1.0;
+    double frequency3 = 30000.0*position3;
+    
+    enable.value(frequency1 == 0.0 || frequency2 == 0.0 || frequency3 == 0.0);
+    
+    direction1.value(frequency1 > 0);
+    direction2.value(frequency2 > 0);
+    direction3.value(frequency3 > 0);
+    
+    std::cout << std::setw(5) << std::fixed << std::setprecision(3) << "p1=" << position1 << "  f1=" << frequency1;
+    std::cout << std::setw(5) << std::fixed << std::setprecision(3) << "  p2=" << position2 << "  f2=" << frequency2; 
+    std::cout << std::setw(5) << std::fixed << std::setprecision(3) << "  p3=" << position3 << "  f3=" << frequency3 << std::endl;
+    //std::cout << "position3=" << position3 << " frequency3=" << frequency3 << std::endl;
+    pulse1.value(fabs(frequency1));
+    pulse2.value(fabs(frequency2));
+    pulse3.value(fabs(frequency3));
+    
+    usleep(1000);
   }
 }
-
+/*
 std::string get_id();
 
 const std::string id(get_id());
@@ -185,7 +219,7 @@ std::string get_id()
   std::getline(id_file,ans);
   return ans;
 }
-
+*/
 
 int main(int argc, char *argv[])
 {
@@ -200,7 +234,7 @@ int main(int argc, char *argv[])
 
   system("sudo modprobe adc");
 
-  test0();
+  test1();
 
   return 0;
 }
