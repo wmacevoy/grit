@@ -120,7 +120,7 @@ class guicmdr : public Gtk::Window
 {
 protected:
   Glib::RefPtr<Gtk::Builder> builder;
-  Gtk::Button *send, *f, *ff, *b, *r, *l, *sr, *sl, *h, *safe_on, *safe_off, *mh, *mf, *mb, *ml, *mr, *mrl, *mrr;
+  Gtk::Button *send, *f, *ff, *b, *r, *l, *sr, *sl, *h, *safe_on, *safe_off, *mh, *mf, *mb, *ml, *mr, *mrl, *mrr, *spd0, *spdhalf;
 	Gtk::Button *hy_n175, *hy_n90, *hy_0, *hy_90, *hy_175, *hp_0, *hp_20, *hp_65, *hy_l, *hy_r, *hp_u, *hp_d;
 	Gtk::Button *halx1, *halx2, *haly1, *haly2, *halz1, *halz2, *harx1, *harx2, *hary1, *hary2, *harz1, *harz2, *hald1, *hald2, *hard1, *hard2;
 	Gtk::CheckButton *chk_left, *chk_right, *chk_leap, *chk_neck, *chk_hands, *chk_mec_enable;
@@ -197,6 +197,8 @@ public:
 		builder->get_widget("btn_mr", mr);
 		builder->get_widget("btn_mrl", mrl);
 		builder->get_widget("btn_mrr", mrr);
+		builder->get_widget("btn_szero", spd0);
+		builder->get_widget("btn_shalf", spdhalf);
 		
 
 		tb_old = Gtk::TextBuffer::create();
@@ -255,6 +257,9 @@ public:
 		mr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_mr_clicked) );
 		mrl->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_mrl_clicked) );
 		mrr->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_mrr_clicked) );
+		
+		spd0->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_spdzero_clicked) );
+		spdhalf->signal_clicked().connect( sigc::mem_fun(*this, &guicmdr::on_button_spdhalf_clicked) );
 
 		Glib::signal_timeout().connect( sigc::mem_fun(*this, &guicmdr::on_timer), 100 );
 
@@ -359,7 +364,7 @@ public:
 		if(verbose) std::cout << "btn_hp_0 clicked" << std::endl;
 		hp = 0;
 		ent_cmd->set_text("hp " + NumberToString(hp));
-		if(mode) {
+		if(mode) { 
 			on_button_send_clicked();
 		}
 	}
@@ -434,6 +439,23 @@ public:
 			on_button_send_clicked();
 		}
 		ent_cmd->set_text("mecanum rotatel");
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+	
+	
+	void on_button_spdzero_clicked() {
+		if(verbose) std::cout << "btn_spd0 clicked" << std::endl;
+		ent_cmd->set_text("speed 0");
+		if(mode) {
+			on_button_send_clicked();
+		}
+	}
+	
+	void on_button_spdhalf_clicked() {
+		if(verbose) std::cout << "btn_spdhalf clicked" << std::endl;
+		ent_cmd->set_text("speed 0.25");
 		if(mode) {
 			on_button_send_clicked();
 		}

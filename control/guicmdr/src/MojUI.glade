@@ -37,6 +37,16 @@
     <property name="can_focus">False</property>
     <property name="icon_name">media-playback-stop</property>
   </object>
+  <object class="GtkImage" id="img_h_btn2">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">media-playback-stop</property>
+  </object>
+  <object class="GtkImage" id="img_h_btn3">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">media-playback-stop</property>
+  </object>
   <object class="GtkImage" id="img_hand_lr-">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -200,7 +210,8 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn_safe_on">
-                    <property name="width_request">25</property>
+                    <property name="label" translatable="yes">On</property>
+                    <property name="width_request">40</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -214,7 +225,8 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn_safe_off">
-                    <property name="width_request">25</property>
+                    <property name="label" translatable="yes">Off</property>
+                    <property name="width_request">40</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -1447,7 +1459,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
-                <property name="image">img_l_btn1</property>
+                <property name="image">img_r_btn1</property>
               </object>
               <packing>
                 <property name="x">305</property>
@@ -1462,11 +1474,43 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
-                <property name="image">img_r_btn1</property>
+                <property name="image">img_l_btn1</property>
               </object>
               <packing>
                 <property name="x">375</property>
                 <property name="y">35</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_shalf">
+                <property name="label" translatable="yes">.25</property>
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_h_btn2</property>
+              </object>
+              <packing>
+                <property name="x">260</property>
+                <property name="y">100</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="btn_szero">
+                <property name="label" translatable="yes">0</property>
+                <property name="width_request">30</property>
+                <property name="height_request">30</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_action_appearance">False</property>
+                <property name="image">img_h_btn3</property>
+              </object>
+              <packing>
+                <property name="x">260</property>
+                <property name="y">60</property>
               </packing>
             </child>
           </object>
