@@ -5,29 +5,32 @@
 
 class Foot
 {
- private: AnalogIn pot;
+ private: static const double KP;
+ private: static const double TO_FPS;
+ private: static const double TO_RPS;
+
+ private: AnalogIn position;
  private: DigitalOut enable;
- private: DigitalOut direction_l;
- private: DigitalOut direction_r;
- private: Tone pulse_l;
- private: Tone pulse_r;
+ private: DigitalOut leftDirection;
+ private: DigitalOut rightDirection;
+ private: Tone leftPulse;
+ private: Tone rightPulse;
  private: double cutoff;
- private: double error;
- private: double pos;
- private: double tmp_destination;
- private: double spd_rotate, spd_move;
- private: double destination;
- private: int direction;
+ private: int reversed;
+ private: double goalHeading;
+ private: double goalSpeed;
  public:  bool running;
  private: std::thread thread;
-	
- private: void Run();
- private: void move(int speed_l, int speed_r, int dir, bool rotate);
- public: Foot(int potpin, int enablepin, int dlpin, int drpin, int plpin, int prpin);
- public: void setDirSpeed(int _speed);
- public: void setMovSpeed(int _speed);
- public: void setDirection(int _direction);
- public: void setDestination(double _destination);
+
+ private: double getCurrentHeading();
+
+ public: void setGoalHeading(double value); // 0-1 0.5 = away from tab
+ public: void setGoalSpeed(double value); // feet per second
+  
+ private: void run();
+ public: Foot(int positionPin, int enablePin, 
+	      int leftDirectionPin,  int rightDirectionPin,
+	      int leftPulsePin, int rightPulsePin);
  public: bool isRunning();
  public: ~Foot();	
 };

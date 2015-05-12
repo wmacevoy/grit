@@ -2,10 +2,10 @@ name,value
 control.ip,192.168.2.102
 xcontrol.ip,127.0.0.1
 rsync.parts,"pcduino,setup/config.csv,setup/servomap.csv,bin"
-rsync.dests,"${leg1.user}@${leg1.ip}:grit"
+rsync.dests,"${pcd1.user}@${pcd1.ip}:grit"
 sync.ip,192.168.1.116
-leg1.ip,leg1
-leg1.user,user
+pcd1.ip,pcd1
+pcd1.user,user
 sync.user,user
 sync.remote,${sync.user}@${sync.ip}:/grit
 sync.local,"~/grit"

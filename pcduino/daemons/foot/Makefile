@@ -1,7 +1,7 @@
 all :bin libs progs
 
 DEPS= 
-DRIVER_DEPS=
+DRIVER_DEPS=utilities
 
 MY_FLAGS=
 MY_LIBS=

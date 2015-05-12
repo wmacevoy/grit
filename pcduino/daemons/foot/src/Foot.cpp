@@ -1,95 +1,81 @@
+#include <math.h>
+#include <iostream>
 #include "Foot.h"
 
-void Foot::Run() 
+
+Foot::Foot(int positionPin, int enablePin, 
+	   int leftDirectionPin, int rightDirectionPin,
+	   int leftPulsePin,int rightPulsePin)
+  : position(positionPin), enable(enablePin),
+    leftDirection(leftDirectionPin), rightDirection(rightDirectionPin), 
+    leftPulse(leftPulsePin), rightPulse(rightPulsePin),
+    cutoff(0.1),reversed(1),goalHeading(0.5),goalSpeed(0),running(true),
+    thread(&Foot::run,this)
 {
-  while (running) 
-    {
-       pos = pot.value();
-      tmp_destination = destination<0.5?destination:destination-0.5;
-      error = pos - tmp_destination;
-		
-      //Rotate first, if our error is too great we want to only rotate
-      if(abs(error) > cutoff)
-	{
-	  if(pos < tmp_destination)
-	    {
-	      move(spd_rotate, spd_rotate, direction, true); //TODO: Check direction
-	    }
-	  else if(pos > tmp_destination)
-	    {
-	      move(spd_rotate, spd_rotate, !direction, true); //TODO: Check direction
-	    }
-	}
-      //Drive forward or backward, we will use the error to make small speed adjustments to try and stay in out goal position.
-      else if(spd_move > 0)
-	{
-	  direction = destination<0.5?1:0;
-			
-	  int speed_l = spd_move;
-	  int speed_r = spd_move;
-	  if(error < 0) //TODO: Check direction
-	    {
-	      speed_r -= 100*error; //TODO: test multiplier
-	    }
-	  else
-	    {
-	      speed_l -= 100*error; //TODO: test multiplier
-	    }
-			
-	  move(speed_l, speed_r, direction, false);
-	}
-      //No movent needed.
-      else
-	{
-	  enable.value(0);
-	}
-      usleep(1000);
-    }
-}
-	
-void Foot::move(int speed_l, int speed_r, int dir, bool rotate)
-{
-  enable.value(1);
-			
-  //Set each motor direction
-  direction_l.value(dir);
-  direction_r.value(rotate?dir:!dir);
-	
-  //Pulse at the specified speed
-  pulse_l.value(speed_l);
-  pulse_r.value(speed_r);
 }
 
-Foot::Foot(int potpin, int enablepin, int dlpin, int drpin, int plpin, int prpin):
-  pot(potpin), enable(enablepin),
-  direction_l(dlpin), direction_r(drpin),
-  pulse_l(plpin), pulse_r(prpin), 
-  cutoff(0.05), error(0), pos(0), tmp_destination(0),
-  spd_rotate(0), spd_move(0), 
-  destination(512), direction(1),
-  running(true), thread(&Foot::Run,this){}
-			 
-	
-void Foot::setDirSpeed(int _speed)
+
+
+// freq 2 feet per second
+const double Foot::TO_FPS=(2*M_PI*2.0/12.0)/(4*200); // freq 2 feet per second
+// freq 2 radians per second
+const double Foot::TO_RPS=(2*M_PI*3.0/12.0)/(4*200); 
+
+const double Foot::KP=10.0/TO_RPS;
+
+double Foot::getCurrentHeading()
 {
-  spd_rotate = _speed;
+  double value=position.value() / (position.maximum*0.90); // 10% resistor on +VDD
+  if (reversed == -1) {
+    value = value+0.5;
+  }
+  value=value-floor(value);
+  return value;
 }
-void Foot::setMovSpeed(int _speed)
+
+void Foot::setGoalHeading(double value)
 {
-  spd_move = _speed;
+  value = value - floor(value);
+
+  if (reversed == -1) {
+    if (0.3 < value && value  < 0.70) {
+      reversed = 1;
+    }
+  } else {
+    if (value < 0.2 || 0.8 < value) {
+      reversed = -1;
+    }
+  }
+  goalHeading=value;
 }
-void Foot::setDirection(int _direction)
+
+void Foot::setGoalSpeed(double value)
 {
-  direction = _direction;
+  goalSpeed = value/TO_FPS;
 }
-void Foot::setDestination(double _destination)
+
+void Foot::run()
 {
-  destination = _destination;
+  while (running) {
+    double currentHeading=getCurrentHeading();
+    double delta = currentHeading-goalHeading;
+    //    if (delta < -0.5) delta += 1.0;
+    // else if (delta > 0.5) delta -= 1.0;
+
+    double leftFrequency  = -KP*delta+reversed*goalSpeed;
+    double rightFrequency =  KP*delta+reversed*goalSpeed;
+
+    enable.value(1);
+    leftDirection.value(leftFrequency >= 0);
+    leftPulse.value(abs(leftFrequency));
+    rightDirection.value(rightFrequency <= 0);
+    rightPulse.value(abs(rightFrequency));
+
+    std::cout << "reversed=" << reversed << " currentHeading = " << currentHeading << " goalHeading=" << goalHeading << " left=" << leftFrequency << " right=" << rightFrequency << std::endl; 
+    usleep(100000);
+  }
 }
-bool Foot::isRunning()
-{
-  return running;
-}
+
 Foot::~Foot()
 {
   running = false;

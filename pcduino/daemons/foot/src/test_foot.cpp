@@ -1,13 +1,21 @@
-#include "main_Foot.h"
-
+#include "Foot.h"
+#include "now.h"
+#include <stdlib.h>
 
 void testFoot()
-	{
-	Foot f(2,3,4,5,6,7);
-	}
+{
+  AnalogIn p2(2);
+  Foot foot(3,8,2,4,3,5);
+  while (true) {
+    foot.setGoalHeading(now()/120);
+    foot.setGoalSpeed(0);
+    usleep(10000);
+  }
+}
 
 int main(int argc, char** argv)
-	{
-	testFoot();
-	return 0;
-	}
+{
+  system("sudo modprobe adc");
+  testFoot();
+  return 0;
+}
