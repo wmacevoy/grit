@@ -6,6 +6,7 @@ void testFoot()
 {
   AnalogIn p2(2);
   Foot foot(3,8,2,4,3,5);
+  foot.start();
   while (true) {
     foot.setGoalHeading(now()/120);
     foot.setGoalSpeed(0);

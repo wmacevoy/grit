@@ -4,13 +4,22 @@ xcontrol.ip,127.0.0.1
 rsync.parts,"pcduino,setup/config.csv,setup/servomap.csv,bin"
 rsync.dests,"${pcd1.user}@${pcd1.ip}:grit"
 sync.ip,192.168.1.116
-pcd1.ip,pcd1
-pcd1.user,user
 sync.user,user
 sync.remote,${sync.user}@${sync.ip}:/grit
 sync.local,"~/grit"
 sync.files,"setup/config.csv,setup/servomap.csv"
 sync.onchange,"../context restart"
+pcd1.ip,pcd1
+pcd1.user,user
+pcd1.devs,1
+pcd1.verbose,true
+pcd1.dev0.pins.position,4
+pcd1.dev0.pins.enable,8
+pcd1.dev0.pins.direction.left,2
+pcd1.dev0.pins.direction.right,4
+pcd1.dev0.pins.step.left,3
+pcd1.dev0.pins.step.right,5
+feet.verbose,true
 control.user,user
 centaur.ip,192.168.2.104
 xcentaur.ip,127.0.0.1
@@ -166,4 +175,3 @@ steppers.ki,0
 steppers.maxfrequency,40000
 steppers.minfrequency,0
 leg1.verbose,true
-
