@@ -1,20 +1,22 @@
 name,value
-control.ip,192.168.10.119
+xfieldpc.ip,10.23.1.21
+fieldpc.ip,127.0.0.1
+control.ip,10.23.3.1
 xcontrol.ip,127.0.0.1
 rsync.parts,"pcduino"
 rsync.dests,"${leg1.user}@${leg1.ip}:grit"
 sync.ip,192.168.1.116
 leg1.ip,leg1
-leg1.user,ubuntu
+leg1.user,user
 sync.user,wmacevoy
 sync.remote,${sync.user}@${sync.ip}:/grit
 sync.local,"~/grit"
 sync.files,"setup/config.csv,setup/servomap.csv"
 sync.onchange,"../context restart"
-control.user,cogburn
-centaur.ip,192.168.10.120
+control.user,user
+centaur.ip,10.23.1.1
 xcentaur.ip,127.0.0.1
-centaur.user,fit-pc
+centaur.user,user
 legs.minspeed,15,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,20,Degrees per second on the servo
@@ -25,7 +27,7 @@ safety.delayoff,2.5,seconds of warning
 safety.txtimeout,2.0,seconds for stale receives
 safety.rxtimeout,2.0,seconds for stale sends
 safety.rate,4,update rate (hertz)
-safety.verbose,true
+safety.verbose,false
 safety.publish,tcp://*:${safety.port}
 safety.subscribe,tcp://${safety.ip}:${safety.port}
 safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port},tcp://${guicmdr.ip}:${guicmdr.safety.port}"
@@ -88,11 +90,10 @@ lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
 webcam.requester.calibration,"false"
 webcam.requester.sleep_time,"10"
-webcam.requester.oculus,"false"
-webcam.provider.verbose,"true"
+webcam.provider.verbose,"false"
 webcam.provider.index,"0"
 webcam.provider.sleep_time,"20"
-webcam.provider.detect,"true"
+webcam.provider.detect,"false"
 webcam.provider.port,"9993"
 webcam.provider.ip,"${centaur.ip}"
 webcam.provider.c_ip,"${control.ip}"
@@ -137,7 +138,7 @@ sensors.subscribe,"tcp://${sensors.ip}:${sensors.port}"
 sensors.safety.port,5603
 sensors.safety.publish,"tcp://*:${sensors.safety.port}
 sensors.safety.subscribe,"tcp://${safety.ip}:${safety.port}"
-sensors.verbose,"true"
+sensors.verbose,"false"
 sensors.rxpolltimeout,0.5
 sensors.rxtimeout,5.0
 sensors.readtimeout,5.0
@@ -160,3 +161,8 @@ leg4.touchpressure,750
 ik.epsilon,1e-2
 ik.steps,4
 ik.speed,4,"inches/sec"
+detector.verbose,true
+detector.sleep_time,100
+detector.calibration,false
+detector.camfovx,60
+detector.camfovy,45

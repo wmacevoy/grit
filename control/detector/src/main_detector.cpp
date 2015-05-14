@@ -1,5 +1,7 @@
 #include "opencv2/opencv.hpp"
 #include "opencv2/highgui/highgui.hpp"
+#include "opencv2/objdetect/objdetect.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
 
 #include "Configure.h"
 #include "LidarMessage.h"
@@ -110,7 +112,7 @@ void mouseEvent(int evt, int x, int y, int flags, void* param) {
 	}
 }
 
-std::vector<int> getHpHy(Mat frame, float fovx, float fovy)
+std::vector<int> getHpHy(Mat frame, float fovx, float fovy, int fx, int fy)
  {
  std::vector<int> ret;
  int centreX = (float)frame.cols / 2.0;
@@ -119,17 +121,17 @@ std::vector<int> getHpHy(Mat frame, float fovx, float fovy)
  float degPerPixelX = fovx / (float)frame.cols;
  float degPerPixelY = fovy / (float)frame.rows;
 
- float diffX = centreX - centreX;/*detected object x centre*/ 
- float diffY = centreY - centreY;/*detected object y centre*/
+ float diffX = centreX - fx;/*detected object x centre*/ 
+ float diffY = centreY - fy;/*detected object y centre*/
 
  int thetaX = degPerPixelX * diffX;
  int thetaY = degPerPixelY * diffY * -1.0;
  
- std::cout << centreX << ", " << centreY << ", " << degPerPixelX << ", " << degPerPixelY << ", " << diffX << ", " << diffY << ", " << 
-           thetaX << ", " << thetaY << std::endl;
+ if(verbose) std::cout << "centerx: " << centreX << ", centery: " << centreY << ", dppx: " << degPerPixelX << ", dppy: " << degPerPixelY << ", diffX: " << 
+                          diffX << ", diffY: " << diffY << ", thetaX: " << thetaX << ", thetaY: " << thetaY << ", fx: " << fx << ", fy: " << fy << std::endl;
  
- ret.push_back(thetaX);
- ret.push_back(thetaY);
+ ret.push_back(thetaX/2);
+ ret.push_back(thetaY/4);
  
  return ret;
  }
@@ -198,6 +200,9 @@ int main(int argc, char** argv)
 
 	cvSetMouseCallback(windowName.c_str(), mouseEvent, 0);
 
+    int x = 0, y = 0;
+    Mat grayframe;
+    Mat tmpframe;
 	while(!die) {
 		//Grab image
 		if(receiving) {
@@ -208,10 +213,28 @@ int main(int argc, char** argv)
         catch(int e)
           {
           std::cout << "No data available!" << std::endl;
-          }
+          }  
 
         if(!frame.empty())
          {
+			cvtColor(frame,grayframe,CV_BGR2GRAY);
+			GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
+			vector<Vec3f> circles;
+			HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,20,70,155,10,300 );
+			if(circles.size() > 0)
+			{
+				tmpframe = frame;
+				x = cvRound(circles[0][0]);
+				y = cvRound(circles[0][1]);
+				Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
+				//cv::cvSaveImage(convert.str().c_str(),text)
+				//cv::putText(frame, text,cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(255),1,8,false);
+				int radius = cvRound(circles[0][2]);
+				// circle center
+				circle( frame, center, 3, Scalar(0,255,0), -1, 8, 0 );
+				// circle outline
+				circle( frame, center, radius, Scalar(0,0,255), 3, 8, 0 );
+			}
 		 imshow(windowName, frame);
          }
 		}
@@ -230,41 +253,44 @@ int main(int argc, char** argv)
 		}
 		else if(c == 'd') {
 			//Detect object and populate list of commands
-			std::stringstream format;
-			std::vector<std::string> commandsToSend;
-			std::vector<int> headmove = getHpHy(frame, fovx, fovy);
-			if(headmove.size() == 2)
-			{
-			 if(headmove[0] != 0)
+			if(!tmpframe.empty())
 			  {
-			  format << commands[2] << headmove[0];
-			  commandsToSend.push_back(format.str());
-			  if(verbose) std::cout << "sending command: " << format.str() << std::endl;
-			  }
-			 format.str( std::string() );
-			 format.clear();
-			 if(headmove[1] != 0)
-			  {
-			  format << commands[1] << headmove[1];
-			  commandsToSend.push_back(format.str());
-			  if(verbose) std::cout << "sending command: " << format.str() << std::endl;
-			  }
+				std::stringstream format;
+				std::vector<std::string> commandsToSend;
+				std::vector<int> headmove = getHpHy(frame, fovx, fovy, x, y);
+				if(headmove.size() == 2)
+				{
+				 if(headmove[0] != 0)
+				  {
+				  format << commands[2] << headmove[0];
+				  commandsToSend.push_back(format.str());
+				  if(verbose) std::cout << "sending command: " << format.str() << std::endl;
+				  }
+				 format.str( std::string() );
+				 format.clear();
+				 if(headmove[1] != 0)
+				  {
+				  format << commands[1] << headmove[1];
+				  commandsToSend.push_back(format.str());
+				  if(verbose) std::cout << "sending command: " << format.str() << std::endl;
+				  }
+				 }
+				
+				//Send commands to body
+				std::string recv;
+				for(int i=0; i<commandsToSend.size(); ++i)
+				 {
+				  commander->send(commandsToSend[i]);
+				  /*commander->recv(recv);
+				  if(recv.find("ok") == std::string::npos)
+				   {
+					if(verbose) std::cout << "Error processing commands. " + recv << std::endl;
+					break;  
+				   }*/
+				 }
+				 commandsToSend.resize(0);
 			 }
-			/*
-			//Send commands to body
-			std::string recv;
-			for(int i=0; i<commandsToSend.size(); ++i)
-			 {
-			  commander->send(commandsToSend[i]);
-			  commander->recv(recv);
-			  if(recv.find("ok") == std::string::npos)
-			   {
-				if(verbose) std::cout << "Error processing commands. " + recv << std::endl;
-				break;  
-			   }
-			 }
-			 commandsToSend.resize(0);
-			 **/
+			 
 		}
 	}
 
