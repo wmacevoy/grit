@@ -1,0 +1,4 @@
+% :
+	$(MAKE) -C detector $@
+
+
