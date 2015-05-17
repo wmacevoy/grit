@@ -220,7 +220,7 @@ int main(int argc, char** argv)
 			cvtColor(frame,grayframe,CV_BGR2GRAY);
 			GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
 			vector<Vec3f> circles;
-			HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,20,70,155,10,300 );
+			HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,30,80,100,1,200 );
 			if(circles.size() > 0)
 			{
 				tmpframe = frame;

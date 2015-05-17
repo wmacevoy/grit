@@ -13,18 +13,18 @@ RobotWatcher::~RobotWatcher()
 {
 	std::cout << "Quitting Robowatcher..." << std::endl;
 	std::cout << "releasing capture and freeing mat memory..." << std::endl;
-  decoded.release();
-  my_socket->close();
+    decoded.release();
+    my_socket->close();
 	free(my_socket);
-  std::cout << "--done!" << std::endl;
+    std::cout << "--done!" << std::endl;
 }
 
 bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false)
 {
-  port = port_;
-  MAX_SIZE = 10000;
-  die = false;
-  receiving = true;
+    port = port_;
+    MAX_SIZE = 30000;
+    die = false;
+    receiving = true;
 	inside = false;
 	hasLidar = _hasLidar;
 	verbose = _verbose;
@@ -52,13 +52,13 @@ Mat RobotWatcher::grab_image()
 
   	buff.resize(MAX_SIZE);
   	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
-    //if(verbose) std::cout << "lenght = " << length << std::endl;
+    if(verbose) std::cout << "lenght = " << length << std::endl;
   	
     if(length > 0)
      {
 		 buff.resize(length);
-  	 decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
-		 //if(verbose) std::cout << decoded.cols << "  " << decoded.rows << std::endl;
+  	     decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
+		 if(verbose) std::cout << "width: " << decoded.cols << ", height: " << decoded.rows << std::endl;
 		 d.setBounds(decoded.cols, decoded.rows);
 		 if(hasLidar) {
 			 d.recvData();
@@ -66,7 +66,7 @@ Mat RobotWatcher::grab_image()
 			 if(inside) {
 				 d.writeDistance(decoded, mx);			
 			 }
-		  }
+		  } 
      }
   	return decoded;
 }
@@ -79,7 +79,7 @@ void RobotWatcher::run()
     if (receiving) {
       grab_image();
       imshow("Camera",decoded);
-      waitKey(20);
+      waitKey(10);//20
     }
   }
   destroyWindow("Camera");

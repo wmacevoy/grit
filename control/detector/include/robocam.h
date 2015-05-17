@@ -5,8 +5,8 @@
 #include <boost/asio.hpp>
 #include "lidarLayer.h"
 
-const int normalWidth = 256;
-const int normalHeight = 144;
+const int normalWidth = 640;//const int normalWidth = 256;
+const int normalHeight = 480;//const int normalHeight = 144;
 
 class RobotWatcher 
 {
@@ -17,20 +17,20 @@ class RobotWatcher
   int MAX_SIZE;
   bool receiving;
   bool die;
-	bool inside;
-	bool hasLidar;
-	bool verbose;
-	int mx;
-	int my;
-	int currentWidth;
-	int currentHeight;
-	std::string winName;
+  bool inside;
+  bool hasLidar;
+  bool verbose;
+  int mx;
+  int my;
+  int currentWidth;
+  int currentHeight;
+  std::string winName;
 
   boost::asio::io_service my_io_service;
   boost::asio::ip::udp::socket *my_socket;
   boost::asio::ip::udp::endpoint sender_endpoint;
 
-	LidarLayer d;
+  LidarLayer d;
 
  public:
   RobotWatcher();
