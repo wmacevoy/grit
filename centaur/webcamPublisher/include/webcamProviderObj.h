@@ -24,17 +24,15 @@ namespace fs = boost::filesystem;
 
 typedef std::chrono::duration<int,std::milli> millisecs_t;
 
-const int IMAGE_QUALITY=70;
-const int DEFAULT_WIDTH = 256;
-const int DEFAULT_HEIGHT = 144;
+const int IMAGE_QUALITY= 30;
+const int DEFAULT_WIDTH = 640;
+const int DEFAULT_HEIGHT = 480;
 
 class webcamProvider {
 	std::atomic<bool> die;
 	bool verbose;
-	std::atomic<int> detectionTime;
 	int index;
 	int sleep_time; 
-	bool detect;
 	std::string address;
 	std::string port;
 	std::string path;
@@ -47,12 +45,6 @@ class webcamProvider {
 	boost::asio::ip::udp::socket *socket;
 	bool connected;
 
-	//SURF items
-	std::vector<Mat> detectableObjects;
-	int minHessian;
-	int minGoodMatches;
-	high_resolution_clock timer;
-
 	//Image items
 	VideoCapture capture;
 	int width, height;
@@ -64,15 +56,13 @@ class webcamProvider {
 	std::string output_type;
 
 public:
-	webcamProvider(int, int, bool, bool, const char*, std::string, std::string);
+	webcamProvider(int, int, bool, const char*, std::string, std::string);
 	bool init();
 	void provide();
 	bool setResolution(int _width, int _height);
 	bool setQuality(int _quality);
 	bool setFramerate(int _framerate);
 	bool kill();
-	bool findObjectSURF( std::vector<Mat>& img_1, Mat img_2);
-	void loadImagesAndKeypoints(std::string _path, std::vector<Mat>& detectableObjects);
 	~webcamProvider();
 };
 
