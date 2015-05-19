@@ -53,10 +53,6 @@
 #define DXL_GOAL_TORQUE_WORD     71
 #define DXL_GOAL_ACCEL_BYTE      73
 
-#define DEFAULT_BAUDNUM		34
-#define DEFAULT_ID		0
-
-
 using namespace std;
 
 const int UPDATE_RATE = 10;
@@ -212,7 +208,7 @@ ServoController* CreateDynamixelServoController(int deviceIndex,int baudNum)
   return new DynamixelServoController(deviceIndex,baudNum);
 }
 
-const int DEVICEINDEX=1;
+const int DEVICEINDEX=0;
 const int BAUDNUM=34;
 
 ServoController* CreateDynamixelServoController()
