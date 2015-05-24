@@ -1,30 +1,22 @@
 name,value
-<<<<<<< HEAD
 xfieldpc.ip,10.23.1.21
 fieldpc.ip,127.0.0.1
 control.ip,10.23.3.1
-=======
 //control.ip,192.168.2.102
->>>>>>> d4aed66a39b814ec849698fa8f4a5a8d3ee1d79b
 xcontrol.ip,127.0.0.1
 rsync.parts,"pcduino,setup/config.csv,setup/servomap.csv,bin"
 rsync.dests,"${pcd1.user}@${pcd1.ip}:grit"
 sync.ip,192.168.1.116
-<<<<<<< HEAD
 leg1.ip,leg1
 leg1.user,user
 sync.user,wmacevoy
-=======
 sync.user,user
->>>>>>> d4aed66a39b814ec849698fa8f4a5a8d3ee1d79b
 sync.remote,${sync.user}@${sync.ip}:/grit
 sync.local,"~/grit"
 sync.files,"setup/config.csv,setup/servomap.csv"
 sync.onchange,"../context restart"
-<<<<<<< HEAD
 control.user,user
 centaur.ip,10.23.1.1
-=======
 pcd1.ip,pcd1
 pcd1.user,user
 pcd1.devs,1
@@ -38,7 +30,6 @@ pcd1.dev0.pins.step.right,5
 feet.verbose,true
 control.user,user
 centaur.ip,10.23.1.1
->>>>>>> d4aed66a39b814ec849698fa8f4a5a8d3ee1d79b
 xcentaur.ip,127.0.0.1
 centaur.user,user
 legs.minspeed,15,Degrees per second on the servo
@@ -115,7 +106,7 @@ webcam.requester.verbose,"false"
 webcam.requester.calibration,"false"
 webcam.requester.sleep_time,"10"
 webcam.provider.verbose,"false"
-webcam.provider.index,"0"
+webcam.provider.index,"1"
 webcam.provider.sleep_time,"20"
 webcam.provider.detect,"false"
 webcam.provider.port,"9993"
@@ -185,17 +176,20 @@ leg4.touchpressure,750
 ik.epsilon,1e-2
 ik.steps,4
 ik.speed,4,"inches/sec"
-<<<<<<< HEAD
-detector.verbose,true
+detector.verbose,"false"
 detector.sleep_time,10
 detector.calibration,false
 detector.camfovx,60
 detector.camfovy,45
-=======
+detector.leftCamIndex,0
+detector.rightCamIndex,1
+detector.circleMin,30
+detector.circleMax,200
+detector.intensity,70
 steppers.kp,20
 steppers.kd,0
 steppers.ki,0
 steppers.maxfrequency,40000
 steppers.minfrequency,0
 leg1.verbose,true
->>>>>>> d4aed66a39b814ec849698fa8f4a5a8d3ee1d79b
+

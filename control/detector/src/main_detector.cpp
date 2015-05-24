@@ -111,6 +111,11 @@ void mouseEvent(int evt, int x, int y, int flags, void* param) {
 		ghost->setMouse(x, y);
 	}
 }
+void rotate(cv::Mat& src, double angle, cv::Mat& dst){
+	cv::Point2f src_center(src.cols/2.0f,src.rows/2.0f);
+	cv::Mat rot_mat = cv::getRotationMatrix2D(src_center,angle,1.0);
+	cv::warpAffine(src, dst, rot_mat, src.size());
+}
 
 std::vector<int> getHpHy(Mat frame, float fovx, float fovy, int fx, int fy)
  {
@@ -118,7 +123,7 @@ std::vector<int> getHpHy(Mat frame, float fovx, float fovy, int fx, int fy)
  int centreX = (float)frame.cols / 2.0;
  int centreY = (float)frame.rows / 2.0;
  
- float degPerPixelX = fovx / (float)frame.cols;
+ float degPerPixelX = fovx / (float)(frame.cols);
  float degPerPixelY = fovy / (float)frame.rows;
 
  float diffX = centreX - fx;/*detected object x centre*/ 
@@ -127,21 +132,24 @@ std::vector<int> getHpHy(Mat frame, float fovx, float fovy, int fx, int fy)
  int thetaX = degPerPixelX * diffX;
  int thetaY = degPerPixelY * diffY * -1.0;
  
- if(verbose) std::cout << "centerx: " << centreX << ", centery: " << centreY << ", dppx: " << degPerPixelX << ", dppy: " << degPerPixelY << ", diffX: " << 
+ //if(verbose)
+  std::cout <<"frame.rows: "<< frame.rows<<" frame.cols: "<< frame.cols<<", centerx: " << centreX << ", centery: " << centreY << ", dppx: " << degPerPixelX << ", dppy: " << degPerPixelY << ", diffX: " << 
                           diffX << ", diffY: " << diffY << ", thetaX: " << thetaX << ", thetaY: " << thetaY << ", fx: " << fx << ", fy: " << fy << std::endl;
  
- ret.push_back(thetaX/2);
- ret.push_back(thetaY/4);
+ ret.push_back(thetaX);
+ ret.push_back(thetaY);
  
  return ret;
  }
+
+
 
 int main(int argc, char** argv)
 {
 	cfg.path("../../setup");
 	cfg.args("detector.", argv);
 	if (argc == 1) cfg.load("config.csv");
-	verbose = cfg.flag("detector.verbose", false);
+	verbose = cfg.flag("detector.verbose", true);
 	if (verbose) cfg.show();
 
 	int sleep_time = (int)cfg.num("detector.sleep_time");
@@ -150,12 +158,18 @@ int main(int argc, char** argv)
 	bool lidarCalibration = cfg.flag("detector.calibration", false);
 	float fovx = (float)cfg.num("detector.camfovx");
 	float fovy = (float)cfg.num("detector.camfovy");
+	float intensity = (float)cfg.num("detector.intensity");
+	float circleMin = (float)cfg.num("detector.circleMin");
+	float circleMax = (float)cfg.num("detector.circleMax");
+	
 	
 	commander = std::shared_ptr < Commander > (new Commander());
     commander->publish = cfg.str("guicmdr.publish");
     commander->subscribers = cfg.list("guicmdr.subscribers");
     commander->rxTimeout = 1e6;
     commander->start();
+    
+    int t1 = 0, t2 = 0, timeOut = 0;
     
     std::string commands[20];
     commands[0] = "dhome";
@@ -186,7 +200,7 @@ int main(int argc, char** argv)
 	bool receiving = true;
 	Mat frame;
 
-	std::string windowName = "ICU";
+	std::string windowName = "CAM 1";
 	std::string imageName = "";
 	namedWindow(windowName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
 
@@ -195,14 +209,15 @@ int main(int argc, char** argv)
 	signal(SIGQUIT, quitproc);
 	
 	//Initialize watcher
-	my_watcher.setup(port, true, verbose);
-	my_watcher.setupLidar(lidarAddress, lidarCalibration, verbose);
+	my_watcher.setup(port,verbose);
+	//my_watcher.setupLidar(lidarAddress, lidarCalibration, verbose);
 
 	cvSetMouseCallback(windowName.c_str(), mouseEvent, 0);
 
     int x = 0, y = 0;
     Mat grayframe;
     Mat tmpframe;
+    Mat rot_frame;
 	while(!die) {
 		//Grab image
 		if(receiving) {
@@ -217,47 +232,44 @@ int main(int argc, char** argv)
 
         if(!frame.empty())
          {
-			cvtColor(frame,grayframe,CV_BGR2GRAY);
+			
+			rotate(frame,90,rot_frame);
+			cvtColor(rot_frame,grayframe,CV_BGR2GRAY);
 			GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
 			vector<Vec3f> circles;
-			HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,30,80,100,1,200 );
+			HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,120,100,circleMin,circleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
 			if(circles.size() > 0)
 			{
-				tmpframe = frame;
+				tmpframe = cv::Mat(rot_frame);
 				x = cvRound(circles[0][0]);
 				y = cvRound(circles[0][1]);
 				Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
-				//cv::cvSaveImage(convert.str().c_str(),text)
-				//cv::putText(frame, text,cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(255),1,8,false);
+				
 				int radius = cvRound(circles[0][2]);
 				// circle center
-				circle( frame, center, 3, Scalar(0,255,0), -1, 8, 0 );
+				circle( rot_frame, center, 3, Scalar(0,255,0), -1, 8, 0 );
 				// circle outline
-				circle( frame, center, radius, Scalar(0,0,255), 3, 8, 0 );
+				circle( rot_frame, center, radius, Scalar(0,0,255), 2, 8, 0 );
+				//putText(frame,"Searching for rainbows",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
+				//frame.setEmpty(true);
 			}
-		 imshow(windowName, frame);
+		 imshow(windowName, rot_frame);
          }
-		}
-		
-		//Sleep and allow user interaction
-		char c = waitKey(sleep_time);
-		if(c == 'q') die = true;
-		else if(c == 's') {
-			imageName = "image";
-			imageName += itoa(imgNum++);
-			imageName += ".jpg";
-			imwrite(imageName,  frame);
-		}
-		else if(c == 'p') {
-			receiving = !receiving;
-		}
-		else if(c == 'd') {
-			//Detect object and populate list of commands
+	
+	
+	//Detect object and populate list of commands//////////////////////////////////////////////////////////////////////////
+		t2 = time(0);
+		//std::cout << "t1: " << t1 << ", t2: " << t2 << std::endl;
+		if(t2 - t1 > timeOut) 
+			{
+				//std::cout << "detecting!" << std::endl;
+			
 			if(!tmpframe.empty())
 			  {
 				std::stringstream format;
 				std::vector<std::string> commandsToSend;
-				std::vector<int> headmove = getHpHy(frame, fovx, fovy, x, y);
+				std::vector<int> headmove = getHpHy(rot_frame, fovx, fovy, x, y);
+				std::cout<<x<< " "<<y<<std::endl;
 				if(headmove.size() == 2)
 				{
 				 if(headmove[0] != 0)
@@ -281,6 +293,7 @@ int main(int argc, char** argv)
 				for(int i=0; i<commandsToSend.size(); ++i)
 				 {
 				  commander->send(commandsToSend[i]);
+				  //usleep(10000);
 				  /*commander->recv(recv);
 				  if(recv.find("ok") == std::string::npos)
 				   {
@@ -289,9 +302,29 @@ int main(int argc, char** argv)
 				   }*/
 				 }
 				 commandsToSend.resize(0);
-			 }
-			 
+			}
+			t1 = time(0);
+			rot_frame.release();
 		}
+	
+		
+		
+		//Sleep and allow user interaction
+		usleep(5);
+		char c = waitKey(10); 
+		if(c == 'q') die = true;
+		else if(c == 's') {
+			imageName = "image";
+			imageName += itoa(imgNum++);
+			imageName += ".jpg";
+			imwrite(imageName,  frame);
+		}
+		else if(c == 'p') {
+			receiving = !receiving;
+		}
+		else if(c == 'd') {
+			} 
+		} 
 	}
 
 	std::cout << std::endl << "Quitting..." << std::endl;

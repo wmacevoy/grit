@@ -19,14 +19,14 @@ RobotWatcher::~RobotWatcher()
     std::cout << "--done!" << std::endl;
 }
 
-bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false)
+bool RobotWatcher::setup(int port_, bool _verbose = false)
 {
     port = port_;
-    MAX_SIZE = 30000;
+    MAX_SIZE = 50000;
     die = false;
     receiving = true;
 	inside = false;
-	hasLidar = _hasLidar;
+	//hasLidar = _hasLidar;
 	verbose = _verbose;
 	mx = 0;
 	my = 0;
@@ -39,11 +39,17 @@ bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false
   return true; //get this better
 }
 
-bool RobotWatcher::setupLidar(std::string _address, bool _calibration, bool _verbose) {
+/*bool RobotWatcher::setupLidar(std::string _address, bool _calibration, bool _verbose) {
 	if(hasLidar) {
 		d.setup(_address, _calibration, _verbose);
 		d.setBounds(currentWidth, currentHeight);
 	}
+}*/
+int RobotWatcher::getWidth(){
+	return currentWidth;
+}
+int RobotWatcher::getHeight(){
+	return currentHeight;
 }
 
 Mat RobotWatcher::grab_image()
@@ -52,37 +58,23 @@ Mat RobotWatcher::grab_image()
 
   	buff.resize(MAX_SIZE);
   	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
-    if(verbose) std::cout << "lenght = " << length << std::endl;
+    if(verbose) std::cout << "length = " << length << std::endl;
   	
     if(length > 0)
      {
 		 buff.resize(length);
   	     decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
-		 if(verbose) std::cout << "width: " << decoded.cols << ", height: " << decoded.rows << std::endl;
-		 d.setBounds(decoded.cols, decoded.rows);
-		 if(hasLidar) {
+		 if(verbose) std::cout << "width: " << decoded.cols+80 << ", height: " << decoded.rows << std::endl;
+		 //d.setBounds(decoded.cols, decoded.rows);
+		/*if(hasLidar) {
 			 d.recvData();
 			 d.drawGraph(decoded, decoded.cols, decoded.rows);
 			 if(inside) {
 				 d.writeDistance(decoded, mx);			
 			 }
-		  } 
+		  } */
      }
   	return decoded;
-}
-
-void RobotWatcher::run()
-{
-  namedWindow("Camera", CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
-
-  while(!die) {
-    if (receiving) {
-      grab_image();
-      imshow("Camera",decoded);
-      waitKey(10);//20
-    }
-  }
-  destroyWindow("Camera");
 }
 
 void RobotWatcher::kill()
@@ -94,11 +86,11 @@ void RobotWatcher::kill()
 void RobotWatcher::setMouse(int _x, int _y) {
 	mx = _x;
 	my = _y;
-	if(mx >=0 && mx <= currentWidth && my >= d.getLine() - 5 && my <= d.getLine() + 5) {
+	/*if(mx >=0 && mx <= currentWidth && my >= d.getLine() - 5 && my <= d.getLine() + 5) {
 		inside = true;
 	} else {
 		inside = false;
-	}
+	}*/
 }
 
 

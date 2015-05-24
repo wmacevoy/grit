@@ -57,11 +57,11 @@ int LidarLayer::recvData() {
 				}
 			}
 		}
-		if(rc == 0) {
+		/*if(rc == 0) {
 			std::cout << "Connection successfully set/reset" << std::endl;				
 			t1 = time(0);
 		}
-		else std::cout << "Connection un-successfully set/reset" << std::endl;
+		else std::cout << "Connection un-successfully set/reset" << std::endl;*/
 	}	
 
 	return rc;

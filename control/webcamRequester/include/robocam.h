@@ -5,8 +5,8 @@
 #include <boost/asio.hpp>
 #include "lidarLayer.h"
 
-const int normalWidth = 256;
-const int normalHeight = 144;
+const int normalWidth = 144;
+const int normalHeight = 256;
 
 class RobotWatcher 
 {
