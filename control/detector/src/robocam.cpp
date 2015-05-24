@@ -13,7 +13,7 @@ RobotWatcher::~RobotWatcher()
 {
 	std::cout << "Quitting Robowatcher..." << std::endl;
 	std::cout << "releasing capture and freeing mat memory..." << std::endl;
-    decoded.release();
+    decoded.second.release();
     my_socket->close();
 	free(my_socket);
     std::cout << "--done!" << std::endl;
@@ -52,7 +52,7 @@ int RobotWatcher::getHeight(){
 	return currentHeight;
 }
 
-Mat RobotWatcher::grab_image()
+std::pair<char, cv::Mat> RobotWatcher::grab_image()
 {
     boost::system::error_code ec;
 
@@ -64,12 +64,12 @@ Mat RobotWatcher::grab_image()
      {
 		 char lr = buff[0];
 		 if(verbose) std::cout << "left or right: " << lr << std::endl;
-		 
+		 decoded.first = lr;
 		 buff.erase(buff.begin());
 		 
 		 buff.resize(length);
-  	     decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
-		 if(verbose) std::cout << "width: " << decoded.cols+80 << ", height: " << decoded.rows << std::endl;
+  	     decoded.second = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
+		 if(verbose) std::cout << "width: " << decoded.second.cols << ", height: " << decoded.second.rows << std::endl;
 		 //d.setBounds(decoded.cols, decoded.rows);
 		/*if(hasLidar) {
 			 d.recvData();

@@ -11,7 +11,7 @@ const int normalHeight = 240;//const int normalHeight = 144;
 class RobotWatcher 
 {
  private:
-  cv::Mat decoded;
+  std::pair<char, cv::Mat> decoded;
   std::vector<uchar> buff;
   int port;
   int MAX_SIZE;
@@ -39,7 +39,7 @@ class RobotWatcher
   int getWidth();
   int getHeight();
 	//bool setupLidar(std::string _address, bool _calibration, bool _verbose);
-  cv::Mat grab_image();
+  std::pair<char, cv::Mat> grab_image();
   void kill();
 	void setMouse(int _x, int _y);
 };

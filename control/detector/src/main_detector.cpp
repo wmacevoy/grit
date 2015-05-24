@@ -200,10 +200,12 @@ int main(int argc, char** argv)
 	bool receiving = true;
 	Mat frame;
 
-	std::string windowName = "CAM 1";
+	std::string windowNameL = "Left";
 	std::string imageName = "";
-	namedWindow(windowName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
+	namedWindow(windowNameL, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
 
+	std::string windowNameR = "Right";
+	namedWindow(windowNameR, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
@@ -212,18 +214,22 @@ int main(int argc, char** argv)
 	my_watcher.setup(port,verbose);
 	//my_watcher.setupLidar(lidarAddress, lidarCalibration, verbose);
 
-	cvSetMouseCallback(windowName.c_str(), mouseEvent, 0);
+	//cvSetMouseCallback(windowNameR.c_str(), mouseEvent, 0);
 
     int x = 0, y = 0;
     Mat grayframe;
     Mat tmpframe;
     Mat rot_frame;
+    char lr = '\0';
+    std::pair<char, cv::Mat> decoded;
 	while(!die) {
 		//Grab image
 		if(receiving) {
         try
           {
-		  frame = my_watcher.grab_image();
+		  decoded = my_watcher.grab_image();
+		  lr = decoded.first;
+		  frame = decoded.second;
           }
         catch(int e)
           {
@@ -231,30 +237,36 @@ int main(int argc, char** argv)
           }  
 
         if(!frame.empty())
-         {
-			
-			rotate(frame,90,rot_frame);
-			cvtColor(rot_frame,grayframe,CV_BGR2GRAY);
-			GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
-			vector<Vec3f> circles;
-			HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,120,100,circleMin,circleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
-			if(circles.size() > 0)
 			{
-				tmpframe = cv::Mat(rot_frame);
-				x = cvRound(circles[0][0]);
-				y = cvRound(circles[0][1]);
-				Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
-				
-				int radius = cvRound(circles[0][2]);
-				// circle center
-				circle( rot_frame, center, 3, Scalar(0,255,0), -1, 8, 0 );
-				// circle outline
-				circle( rot_frame, center, radius, Scalar(0,0,255), 2, 8, 0 );
-				//putText(frame,"Searching for rainbows",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
-				//frame.setEmpty(true);
+			rotate(frame,90,rot_frame);
+			if(lr == 'L')
+				{
+				cvtColor(rot_frame,grayframe,CV_BGR2GRAY);
+				GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
+				vector<Vec3f> circles;
+				HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,intensity,100,circleMin,circleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
+				if(circles.size() > 0)
+					{
+					tmpframe = cv::Mat(rot_frame);
+					x = cvRound(circles[0][0]);
+					y = cvRound(circles[0][1]);
+					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
+					
+					int radius = cvRound(circles[0][2]);
+					// circle center
+					circle( rot_frame, center, 3, Scalar(0,255,0), -1, 8, 0 );
+					// circle outline
+					circle( rot_frame, center, radius, Scalar(0,0,255), 2, 8, 0 );
+					//putText(frame,"Searching for rainbows",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
+					//frame.setEmpty(true);
+					}
+				imshow(windowNameL, rot_frame);
+				}		
+			else if(lr == 'R')
+				{
+				imshow(windowNameR, rot_frame);
+				}
 			}
-		 imshow(windowName, rot_frame);
-         }
 	
 	
 	//Detect object and populate list of commands//////////////////////////////////////////////////////////////////////////
@@ -329,7 +341,8 @@ int main(int argc, char** argv)
 
 	std::cout << std::endl << "Quitting..." << std::endl;
 	std::cout << "destroying window and freeing mat memory..." << std::endl;
-	destroyWindow(windowName);
+	destroyWindow(windowNameR);
+	destroyWindow(windowNameL);
 	frame.release();
 	std::cout << "--done!" << std::endl;
 	return 0;
