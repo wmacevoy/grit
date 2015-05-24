@@ -62,6 +62,11 @@ Mat RobotWatcher::grab_image()
   	
     if(length > 0)
      {
+		 char lr = buff[0];
+		 if(verbose) std::cout << "left or right: " << lr << std::endl;
+		 
+		 buff.erase(buff.begin());
+		 
 		 buff.resize(length);
   	     decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
 		 if(verbose) std::cout << "width: " << decoded.cols+80 << ", height: " << decoded.rows << std::endl;
