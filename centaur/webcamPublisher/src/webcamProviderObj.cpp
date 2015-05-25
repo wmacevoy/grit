@@ -1,9 +1,10 @@
 #include "webcamProviderObj.h"
 
-webcamProvider::webcamProvider(int _index, int _sleep_time, bool _verbose, const char* _argv0, std::string _address, std::string _port) : resolver(this->io_service) {
+webcamProvider::webcamProvider(int _indexR, int _indexL, int _sleep_time, bool _verbose, const char* _argv0, std::string _address, std::string _port) : resolver(this->io_service) {
 	die.store(false);
 	verbose = _verbose;
-	index = _index;
+	indexR = _indexR;
+	indexL = _indexL;
 	sleep_time = _sleep_time;
 	address = _address;
 	port = _port;
@@ -26,44 +27,75 @@ webcamProvider::webcamProvider(int _index, int _sleep_time, bool _verbose, const
 
 	
 	path = fs::system_complete(_argv0).string();
+
 }
 
 bool webcamProvider::init() {
 	socket->open(boost::asio::ip::udp::v4());
 
-	capture.open(CV_CAP_ANY);
-	if(!capture.isOpened())
+	captureR.open(indexR);
+	if(!captureR.isOpened())
 	{
-		std::cout << "ERROR: capture is NULL on device " << index << "\n";
-		capture.release();
-		capture.open(++index);
-		if(!capture.isOpened())
-		{
-			std::cout << "ERROR: capture is NULL on device " << index << "\n";
-			capture.release();
-		}
+		std::cout << "ERROR: capture is NULL on device " << indexR << "\n";
+		captureR.release();
+		return false;
+	}
+	
+	captureL.open(indexL);
+	if(!captureL.isOpened())
+	{
+		std::cout << "ERROR: capture is NULL on device " << indexL << "\n";
+		captureL.release();
 		return false;
 	}
 
-	capture.set(CV_CAP_PROP_FRAME_WIDTH, width);//width
-	capture.set(CV_CAP_PROP_FRAME_HEIGHT,height);//height
+
+	captureR.set(CV_CAP_PROP_FRAME_WIDTH, width);//width
+	captureR.set(CV_CAP_PROP_FRAME_HEIGHT,height);//height
+	
+	captureL.set(CV_CAP_PROP_FRAME_WIDTH, width);//width
+	captureL.set(CV_CAP_PROP_FRAME_HEIGHT,height);//height
+	//std::cout<<width<<" "<<height<<std::endl;
+
 
 	return true;
+}
+
+void webcamProvider::rotate(cv::Mat& src, double angle, cv::Mat& dst){
+	cv::Point2f src_center(src.cols/2.0f,src.rows/2.0f);
+	cv::Mat rot_mat = cv::getRotationMatrix2D(src_center,angle,1.0);
+	cv::warpAffine(src, dst, rot_mat, src.size());
 }
 
 void webcamProvider::provide() {
 	while(!die.load())
 	{
-		capture >> frame;
+		captureR >> frameR;
+		captureL >> frameL;
 
-		imencode(output_type.c_str(), frame, buff, param);
-		if(verbose) std::cout<<"coded file size(jpg)"<<buff.size()<< ", width: " << frame.cols << ", height: " << height << std::endl;
-		socket->send_to(boost::asio::buffer(buff,buff.size()), receiver_endpoint);
+		imencode(output_type.c_str(), frameR, buff, param);
+		buff.insert(buff.begin(), 'R');
+		if(verbose) std::cout<<"coded file size(jpg) R"<<buff.size()<< ", width: " << width << ", height: " << height << std::endl;
+		socket->send_to(boost::asio::buffer(buff, buff.size()), receiver_endpoint);
+		
+		buff.resize(0);
+		
+		imencode(output_type.c_str(), frameL, buff, param);
+		buff.insert(buff.begin(), 'L');
+		if(verbose) std::cout<<"coded file size(jpg) L"<<buff.size()<< ", width: " << width << ", height: " << height << std::endl;
+		socket->send_to(boost::asio::buffer(buff, buff.size()), receiver_endpoint);
 
 		waitKey(sleep_time);
 	}
 }
 
+int webcamProvider::getwidth(){
+	return width;
+}
+int webcamProvider::getheight(){
+	return height;
+}
+/*
 bool webcamProvider::setResolution(int _width, int _height) {
 	if(_width >= 160 && _width <= 1280 && _height >= 120 && _height <= 720) {
 		width = _width;
@@ -73,7 +105,7 @@ bool webcamProvider::setResolution(int _width, int _height) {
 		return true;
 	}
 	return false;
-}
+}*/
 
 bool webcamProvider::setQuality(int _quality) {
 	if(_quality > 0 && _quality <= 100) {
@@ -102,9 +134,11 @@ bool webcamProvider::kill() {
 webcamProvider::~webcamProvider() {
 	//Cleanup
 	std::cout << std::endl << "releasing capture and freeing mat memory..." << std::endl;
-	capture.release();
-	frame.release();
-	gray.release();
+	captureR.release();
+	captureL.release();
+	frameR.release();
+	frameL.release();
+	//gray.release();
 	std::cout << "--done!" << std::endl;
 	std::cout << "closing boost socket..." << std::endl;
 	socket->close();
