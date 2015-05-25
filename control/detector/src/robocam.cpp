@@ -50,7 +50,7 @@ std::pair<char, cv::Mat> RobotWatcher::grab_image()
 
   	buff.resize(MAX_SIZE);
   	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
-    if(verbose) std::cout << "length = " << length << std::endl;
+    if(verbose) std::cout << "Robocam recv length = " << length << std::endl;
   	
     if(length > 0)
      {

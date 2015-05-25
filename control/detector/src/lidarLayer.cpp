@@ -1,5 +1,7 @@
 #include "lidarLayer.h"
 
+using namespace boost::asio::ip;
+
 //Helper functions
 std::string convstr(const float t) {
 	std::stringstream ftoa;
@@ -9,13 +11,9 @@ std::string convstr(const float t) {
 //End helper functions
 
 LidarLayer::LidarLayer() {
-	context_lidar = zmq_ctx_new ();
-	sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
-
-	hwm = 1;
-	linger = 25;
 	index = 0;	
 	timeOut = 3.0;
+	MAX_SIZE = 5;
 
 	fontFace = FONT_HERSHEY_SIMPLEX;
 	fontScale = 0.35;
@@ -25,47 +23,38 @@ LidarLayer::LidarLayer() {
 	t2 = 0;
 }
 
-bool LidarLayer::setup(std::string _address, bool _verbose = false) {
-	address = _address;
+bool LidarLayer::setup(int _port, bool _verbose = false) {
+	port = _port;
 	verbose = _verbose;
+	
+	my_socket = new udp::socket(my_io_service, udp::endpoint(udp::v4(), port));
+    my_socket->non_blocking(true);
 	return true;
 }
 
 int LidarLayer::recvData() {
 	int ret = 0;
-	zmq_msg_t msg;
-	int rc = zmq_msg_init (&msg);
-	if(rc == 0)
-		{
-		rc = zmq_recvmsg(sub_lidar, &msg, ZMQ_DONTWAIT);		
-		if(rc > 0) {
-			ret = *((int*)zmq_msg_data(&msg));
-			if(verbose) std::cout << "Lidar data received " << rc << " bytes, ret: " << ret << std::endl;
-			t1 = time(0);
-			}
-		}
+	boost::system::error_code ec;
 
-	t2 = time(0);
-	if(t2 - t1 > timeOut) {
-		zmq_close(sub_lidar);
-		sub_lidar = zmq_socket(context_lidar, ZMQ_SUB);
-	
-		if(zmq_setsockopt(sub_lidar, ZMQ_SUBSCRIBE, "", 0) == 0) {
-			if(zmq_setsockopt(sub_lidar, ZMQ_RCVHWM, &hwm, sizeof(hwm)) == 0) {
-				if(zmq_setsockopt(sub_lidar, ZMQ_LINGER, &linger, sizeof(linger)) == 0) {
-					rc = zmq_connect(sub_lidar, address.c_str());
-				}
+  	buff.resize(MAX_SIZE);
+	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
+    if(verbose) std::cout << "Lidar recv length = " << length << std::endl;
+	if(length > 0)
+		{
+		for(int i=0; i<buff.size(); ++i)
+			{
+			std::cout << buff[i];
 			}
+			std::cout << std::endl;
 		}
-	}	
-	zmq_msg_close (&msg);
+	
 	return ret;
 }
 
 LidarLayer::~LidarLayer() {
 	std::cout << "Quitting Lidar..." << std::endl;
-	std::cout << "closing and destroying zmq..." << std::endl;
-	zmq_close(sub_lidar);
-	zmq_ctx_destroy(context_lidar);
+	std::cout << "closing and destroying zmqz..." << std::endl;
+	my_socket->close();
+	free(my_socket);
 	std::cout << "--done!" << std::endl;
 }

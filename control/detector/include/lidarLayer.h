@@ -7,17 +7,20 @@
 #include <zmq.h>
 #include <time.h>
 #include "opencv2/opencv.hpp"
+#include <boost/asio.hpp>
 
 using namespace cv;
 
 
 class LidarLayer {
-	void* context_lidar;
-	void* sub_lidar;
-	std::string address;
+	std::vector<uchar> buff;
+    int port;
+    int MAX_SIZE;
 	
-	int hwm;
-	int linger;
+    boost::asio::io_service my_io_service;
+    boost::asio::ip::udp::socket *my_socket;
+    boost::asio::ip::udp::endpoint sender_endpoint;
+	
 	int index;
 	float timeOut;
 	
@@ -30,7 +33,7 @@ class LidarLayer {
 
 public:
 	LidarLayer();
-	bool setup(std::string _address, bool _verbose);
+	bool setup(int _port, bool _verbose);
 	int recvData();
 	~LidarLayer();
 };

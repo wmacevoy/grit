@@ -148,7 +148,7 @@ int main(int argc, char** argv)
 
 	int sleep_time = (int)cfg.num("detector.sleep_time");
 	int port = (int)cfg.num("webcam.provider.port");
-	std::string lidarAddress = cfg.str("lidar.provider.subscribe");
+	int lidarPort = (int)cfg.num("lidar.provider.port");
 	float fovx = (float)cfg.num("detector.camfovx");
 	float fovy = (float)cfg.num("detector.camfovy");
 	float camLeftIntensity = (float)cfg.num("detector.camLeftIntensity");
@@ -164,7 +164,6 @@ int main(int argc, char** argv)
     commander->subscribers = cfg.list("guicmdr.subscribers");
     commander->rxTimeout = 1e6;
     commander->start();
-    
     
     
     int t1 = 0, t2 = 0, timeOut = 0;
@@ -214,7 +213,7 @@ int main(int argc, char** argv)
 	
 	//Initialize watcher
 	my_watcher.setup(port, verbose);
-	lidarLayer.setup(lidarAddress, verbose);
+	lidarLayer.setup(lidarPort, verbose);
 	
 
     int x = 0, y = 0;
@@ -258,7 +257,7 @@ int main(int argc, char** argv)
 				HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,camLeftIntensity,100,LcircleMin,LcircleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
 				if(circles.size() > 0)
 					{
-					tmpframe = cv::Mat(rot_image);
+					tmpframe = cv::Mat(rot_imageL);
 					x = cvRound(circles[0][0]);
 					y = cvRound(circles[0][1]);
 					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
@@ -369,6 +368,7 @@ int main(int argc, char** argv)
 		}
 		else if(c == 'd') 
 		{
+			/*
 			/////////////////////////////////////////Disparity stuff///////////////////////////////////////////////////////				
 			  Mat imgDisparity16S = Mat( rot_imageL.rows, rot_imageL.cols, CV_16S );
 			  Mat imgDisparity8U = Mat( rot_imageL.rows, rot_imageL.cols, CV_8UC1 );
