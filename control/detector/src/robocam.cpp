@@ -28,8 +28,6 @@ bool RobotWatcher::setup(int port_, bool _verbose = false)
 	inside = false;
 	//hasLidar = _hasLidar;
 	verbose = _verbose;
-	mx = 0;
-	my = 0;
 	currentWidth = normalWidth;
 	currentHeight = normalHeight;
 
@@ -39,12 +37,6 @@ bool RobotWatcher::setup(int port_, bool _verbose = false)
   return true; //get this better
 }
 
-/*bool RobotWatcher::setupLidar(std::string _address, bool _calibration, bool _verbose) {
-	if(hasLidar) {
-		d.setup(_address, _calibration, _verbose);
-		d.setBounds(currentWidth, currentHeight);
-	}
-}*/
 int RobotWatcher::getWidth(){
 	return currentWidth;
 }
@@ -86,16 +78,6 @@ void RobotWatcher::kill()
 {
   receiving = false;
   die = true;
-}
-
-void RobotWatcher::setMouse(int _x, int _y) {
-	mx = _x;
-	my = _y;
-	/*if(mx >=0 && mx <= currentWidth && my >= d.getLine() - 5 && my <= d.getLine() + 5) {
-		inside = true;
-	} else {
-		inside = false;
-	}*/
 }
 
 

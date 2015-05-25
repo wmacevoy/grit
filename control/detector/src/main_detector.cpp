@@ -18,7 +18,8 @@
 #include <string>
 #include <mutex>
 #include <string.h>
-#include <sstream> 
+#include <sstream>
+#include <fcntl.h> 
 
 using namespace cv;
 
@@ -106,11 +107,6 @@ void quitproc(int param) {
 	ghost->kill();
 }
 
-void mouseEvent(int evt, int x, int y, int flags, void* param) {
-	if(evt == CV_EVENT_MOUSEMOVE) {
-		ghost->setMouse(x, y);
-	}
-}
 void rotate(cv::Mat& src, double angle, cv::Mat& dst){
 	cv::Point2f src_center(src.cols/2.0f,src.rows/2.0f);
 	cv::Mat rot_mat = cv::getRotationMatrix2D(src_center,angle,1.0);
@@ -132,7 +128,7 @@ std::vector<int> getHpHy(Mat frame, float fovx, float fovy, int fx, int fy)
  int thetaX = degPerPixelX * diffX;
  int thetaY = degPerPixelY * diffY * -1.0;
  
- //if(verbose)
+ if(verbose)
   std::cout <<"frame.rows: "<< frame.rows<<" frame.cols: "<< frame.cols<<", centerx: " << centreX << ", centery: " << centreY << ", dppx: " << degPerPixelX << ", dppy: " << degPerPixelY << ", diffX: " << 
                           diffX << ", diffY: " << diffY << ", thetaX: " << thetaX << ", thetaY: " << thetaY << ", fx: " << fx << ", fy: " << fy << std::endl;
  
@@ -141,8 +137,6 @@ std::vector<int> getHpHy(Mat frame, float fovx, float fovy, int fx, int fy)
  
  return ret;
  }
-
-
 
 int main(int argc, char** argv)
 {
@@ -155,12 +149,14 @@ int main(int argc, char** argv)
 	int sleep_time = (int)cfg.num("detector.sleep_time");
 	int port = (int)cfg.num("webcam.provider.port");
 	std::string lidarAddress = cfg.str("lidar.provider.subscribe");
-	bool lidarCalibration = cfg.flag("detector.calibration", false);
 	float fovx = (float)cfg.num("detector.camfovx");
 	float fovy = (float)cfg.num("detector.camfovy");
-	float intensity = (float)cfg.num("detector.intensity");
-	float circleMin = (float)cfg.num("detector.circleMin");
-	float circleMax = (float)cfg.num("detector.circleMax");
+	float camLeftIntensity = (float)cfg.num("detector.camLeftIntensity");
+	float LcircleMin = (float)cfg.num("detector.LcircleMin");
+	float LcircleMax = (float)cfg.num("detector.LcircleMax");
+	float RcircleMin = (float)cfg.num("detector.RcircleMin");
+	float RcircleMax = (float)cfg.num("detector.RcircleMax");
+	float camRightIntensity = (float)cfg.num("detector.camRightIntensity");
 	
 	
 	commander = std::shared_ptr < Commander > (new Commander());
@@ -168,6 +164,8 @@ int main(int argc, char** argv)
     commander->subscribers = cfg.list("guicmdr.subscribers");
     commander->rxTimeout = 1e6;
     commander->start();
+    
+    
     
     int t1 = 0, t2 = 0, timeOut = 0;
     
@@ -198,152 +196,228 @@ int main(int argc, char** argv)
 	
 	int imgNum = 0;
 	bool receiving = true;
-	Mat frame;
+	LidarLayer lidarLayer;
 
 	std::string windowNameL = "Left";
 	std::string imageName = "";
-	namedWindow(windowNameL, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
+	namedWindow(windowNameL, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_WINDOW_AUTOSIZE);
 
 	std::string windowNameR = "Right";
-	namedWindow(windowNameR, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
+	namedWindow(windowNameR, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_WINDOW_AUTOSIZE);
+	
+	std::string windowDisparity = "Disparity";
+	namedWindow(windowDisparity, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_WINDOW_AUTOSIZE);
+	
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 	
 	//Initialize watcher
-	my_watcher.setup(port,verbose);
-	//my_watcher.setupLidar(lidarAddress, lidarCalibration, verbose);
-
-	//cvSetMouseCallback(windowNameR.c_str(), mouseEvent, 0);
+	my_watcher.setup(port, verbose);
+	lidarLayer.setup(lidarAddress, verbose);
+	
 
     int x = 0, y = 0;
     Mat grayframe;
     Mat tmpframe;
-    Mat rot_frame;
+    Mat rot_imageL;
+    Mat rot_imageR;
+    Mat imgRight;
+    Mat imgLeft;
+	
     char lr = '\0';
     std::pair<char, cv::Mat> decoded;
-	while(!die) {
+	while(!die) 
+		{
 		//Grab image
-		if(receiving) {
-        try
-          {
-		  decoded = my_watcher.grab_image();
-		  lr = decoded.first;
-		  frame = decoded.second;
-          }
-        catch(int e)
-          {
-          std::cout << "No data available!" << std::endl;
-          }  
-
-        if(!frame.empty())
+		if(receiving) 
 			{
-			rotate(frame,90,rot_frame);
-			if(lr == 'L')
+				
+			int dist = lidarLayer.recvData();
+			
+			try
+			  {
+			  decoded = my_watcher.grab_image();
+			  lr = decoded.first;
+			  if (lr == 'L')
+				imgLeft = decoded.second;
+			  else if (lr == 'R')
+				imgRight = decoded.second;
+			  }
+			catch(int e)
+			  {
+			  std::cout << "No data available!" << std::endl;
+			  }  
+			
+			if(!imgLeft.empty() && lr == 'L')
 				{
-				cvtColor(rot_frame,grayframe,CV_BGR2GRAY);
+				rotate(imgLeft,90,rot_imageL);
+				cvtColor(rot_imageL,grayframe,CV_BGR2GRAY);
 				GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
 				vector<Vec3f> circles;
-				HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,intensity,100,circleMin,circleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
+				HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,camLeftIntensity,100,LcircleMin,LcircleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
 				if(circles.size() > 0)
 					{
-					tmpframe = cv::Mat(rot_frame);
+					tmpframe = cv::Mat(rot_image);
 					x = cvRound(circles[0][0]);
 					y = cvRound(circles[0][1]);
 					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
 					
 					int radius = cvRound(circles[0][2]);
 					// circle center
-					circle( rot_frame, center, 3, Scalar(0,255,0), -1, 8, 0 );
+					circle( rot_imageL, center, 3, Scalar(0,255,0), -1, 8, 0 );
 					// circle outline
-					circle( rot_frame, center, radius, Scalar(0,0,255), 2, 8, 0 );
-					//putText(frame,"Searching for rainbows",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
-					//frame.setEmpty(true);
+					circle( rot_imageL, center, radius, Scalar(0,0,255), 2, 8, 0 );
+					//putText(rot_frame,"Lidar Data",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
 					}
-				imshow(windowNameL, rot_frame);
-				}		
-			else if(lr == 'R')
-				{
-				imshow(windowNameR, rot_frame);
-				}
-			}
-	
-	
-	//Detect object and populate list of commands//////////////////////////////////////////////////////////////////////////
-		t2 = time(0);
-		//std::cout << "t1: " << t1 << ", t2: " << t2 << std::endl;
-		if(t2 - t1 > timeOut) 
-			{
-				//std::cout << "detecting!" << std::endl;
-			
-			if(!tmpframe.empty())
-			  {
-				std::stringstream format;
-				std::vector<std::string> commandsToSend;
-				std::vector<int> headmove = getHpHy(rot_frame, fovx, fovy, x, y);
-				std::cout<<x<< " "<<y<<std::endl;
-				if(headmove.size() == 2)
-				{
-				 if(headmove[0] != 0)
-				  {
-				  format << commands[2] << headmove[0];
-				  commandsToSend.push_back(format.str());
-				  if(verbose) std::cout << "sending command: " << format.str() << std::endl;
-				  }
-				 format.str( std::string() );
-				 format.clear();
-				 if(headmove[1] != 0)
-				  {
-				  format << commands[1] << headmove[1];
-				  commandsToSend.push_back(format.str());
-				  if(verbose) std::cout << "sending command: " << format.str() << std::endl;
-				  }
-				 }
+				//putText(imgLeft,"Lidar Data",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
+				imshow(windowNameL, rot_imageL);
 				
-				//Send commands to body
-				std::string recv;
-				for(int i=0; i<commandsToSend.size(); ++i)
-				 {
-				  commander->send(commandsToSend[i]);
-				  //usleep(10000);
-				  /*commander->recv(recv);
-				  if(recv.find("ok") == std::string::npos)
-				   {
-					if(verbose) std::cout << "Error processing commands. " + recv << std::endl;
-					break;  
-				   }*/
-				 }
-				 commandsToSend.resize(0);
+				}			
+			if(!imgRight.empty() && lr == 'R')
+				{
+				rotate(imgRight,90,rot_imageR);
+				cvtColor(rot_imageR,grayframe,CV_BGR2GRAY);
+				GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
+				vector<Vec3f> circles;
+				HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,camRightIntensity,100,RcircleMin,RcircleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
+				if(circles.size() > 0)
+					{
+					x = cvRound(circles[0][0]);
+					y = cvRound(circles[0][1]);
+					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
+					
+					int radius = cvRound(circles[0][2]);
+					// circle center
+					circle( rot_imageR, center, 3, Scalar(0,255,0), -1, 8, 0 );
+					// circle outline
+					circle( rot_imageR, center, radius, Scalar(0,0,255), 2, 8, 0 );
+					//putText(frame,"Searching for rainbows",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
+					}
+				
+				imshow(windowNameR, rot_imageR);
+				
+				}
+		
+			}	
+	
+		
+		//Detect object and populate list of commands//////////////////////////////////////////////////////////////////////////
+			t2 = time(0);
+			//std::cout << "t1: " << t1 << ", t2: " << t2 << std::endl;
+			if(t2 - t1 > timeOut) 
+				{
+					//std::cout << "detecting!" << std::endl;
+				
+				if(lr == 'L' && !tmpframe.empty())
+				  {
+					std::stringstream format;
+					std::vector<std::string> commandsToSend;
+					std::vector<int> headmove = getHpHy(tmpframe, fovx, fovy, x, y);
+					std::cout<<x<< " "<<y<<std::endl;
+					if(headmove.size() == 2)
+					{
+					 if(headmove[0] != 0)
+					  {
+					  format << commands[2] << headmove[0];
+					  commandsToSend.push_back(format.str());
+					  if(verbose) std::cout << "sending command: " << format.str() << std::endl;
+					  }
+					 format.str( std::string() );
+					 format.clear();
+					 if(headmove[1] != 0)
+					  {
+					  format << commands[1] << headmove[1];
+					  commandsToSend.push_back(format.str());
+					  if(verbose) std::cout << "sending command: " << format.str() << std::endl;
+					  }
+					 }
+					
+					//Send commands to body
+					std::string recv;
+					for(int i=0; i<commandsToSend.size(); ++i)
+					 {
+					  commander->send(commandsToSend[i]);
+					  //usleep(10000);
+					  /*commander->recv(recv);
+					  if(recv.find("ok") == std::string::npos)
+					   {
+						if(verbose) std::cout << "Error processing commands. " + recv << std::endl;
+						break;  
+					   }*/
+					 }
+					 commandsToSend.resize(0);
+				}
+				t1 = time(0);
+				
 			}
-			t1 = time(0);
-			rot_frame.release();
-		}
 	
 		
 		
 		//Sleep and allow user interaction
-		usleep(5);
-		char c = waitKey(10); 
+		//usleep(5);
+		char c = waitKey(sleep_time); 
 		if(c == 'q') die = true;
 		else if(c == 's') {
 			imageName = "image";
 			imageName += itoa(imgNum++);
 			imageName += ".jpg";
-			imwrite(imageName,  frame);
+			imwrite(imageName,  imgLeft);
 		}
 		else if(c == 'p') {
 			receiving = !receiving;
 		}
-		else if(c == 'd') {
-			} 
+		else if(c == 'd') 
+		{
+			/////////////////////////////////////////Disparity stuff///////////////////////////////////////////////////////				
+			  Mat imgDisparity16S = Mat( rot_imageL.rows, rot_imageL.cols, CV_16S );
+			  Mat imgDisparity8U = Mat( rot_imageL.rows, rot_imageL.cols, CV_8UC1 );
+
+			  if( !rot_imageL.data || !rot_imageR.data )
+			  { std::cout<< " --(!) Error reading images " << std::endl; return -1; }
+
+			  //-- 2. Call the constructor for StereoBM
+			  int ndisparities = 16*5;  // /**< Range of disparity 
+			  int SADWindowSize = 21; // /**< Size of the block window. Must be odd 
+
+			  StereoBM sbm( StereoBM::BASIC_PRESET,ndisparities,SADWindowSize );
+
+			  //-- 3. Calculate the disparity image
+			  sbm( rot_imageL, rot_imageR, imgDisparity16S, CV_16S );
+
+			  //-- Check its extreme values
+			  double minVal; double maxVal;
+
+			  minMaxLoc( imgDisparity16S, &minVal, &maxVal );
+
+			  printf("Min disp: %f Max value: %f \n", minVal, maxVal);
+
+			  //-- 4. Display it as a CV_8UC1 image
+			  imgDisparity16S.convertTo( imgDisparity8U, CV_8UC1, 255/(maxVal - minVal));
+
+			  
+			  imshow( windowDisparity, imgDisparity8U );
+
+			  //-- 5. Save the image
+			 // imwrite("SBM_sample.png", imgDisparity16S);
+*/
 		} 
-	}
+		imgRight.release();
+		imgLeft.release();
+		tmpframe.release();
+		rot_imageL.release();
+		rot_imageR.release();
+	 } 
 
 	std::cout << std::endl << "Quitting..." << std::endl;
 	std::cout << "destroying window and freeing mat memory..." << std::endl;
 	destroyWindow(windowNameR);
 	destroyWindow(windowNameL);
-	frame.release();
+	imgLeft.release();
+	imgRight.release();
+	tmpframe.release();
+	rot_imageL.release();
+	rot_imageR.release();
 	std::cout << "--done!" << std::endl;
 	return 0;
 }

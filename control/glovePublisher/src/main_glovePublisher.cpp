@@ -6,7 +6,8 @@
 #include <sstream>
 #include <signal.h>
 #include <strings.h>
-#include <stdint.h>
+#include <stdio.h>
+#include <unistd.h>
 #include "glovestruct.h"
 
 #include "Configure.h"

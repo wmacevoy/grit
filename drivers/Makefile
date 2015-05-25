@@ -6,4 +6,4 @@
 	$(MAKE) -C centaur $@
 	$(MAKE) -C ik $@
 	$(MAKE) -C safety $@
-	$(MAKE) -C foot $@
+
