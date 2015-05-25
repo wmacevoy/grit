@@ -43,9 +43,13 @@ int LidarLayer::recvData() {
 		{
 		for(int i=0; i<buff.size(); ++i)
 			{
-			std::cout << buff[i];
+			if(isdigit(buff[i]))
+				{
+				ret*=10;
+				ret+= (buff[i]-'0');
+				}
 			}
-			std::cout << std::endl;
+		if(verbose) std::cout << "ret: " << ret << std::endl;
 		}
 	
 	return ret;

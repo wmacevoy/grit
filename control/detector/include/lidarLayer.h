@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <zmq.h>
 #include <time.h>
+#include <ctype.h>
 #include "opencv2/opencv.hpp"
 #include <boost/asio.hpp>
 
