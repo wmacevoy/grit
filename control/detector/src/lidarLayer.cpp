@@ -5,7 +5,7 @@ using namespace boost::asio::ip;
 //Helper functions
 std::string convstr(const float t) {
 	std::stringstream ftoa;
-	ftoa << std::setprecision(3) << std::setw(4) << t;
+	ftoa << std::setprecision(3) << std::setw(4) << t << " CM";
 	return ftoa.str();
 }
 //End helper functions
@@ -38,7 +38,7 @@ int LidarLayer::recvData() {
 
   	buff.resize(MAX_SIZE);
 	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
-    if(verbose) std::cout << "Lidar recv length = " << length << std::endl;
+   // if(verbose) std::cout << "Lidar recv length = " << length << std::endl;
 	if(length > 0)
 		{
 		for(int i=0; i<buff.size(); ++i)

@@ -50,18 +50,18 @@ std::pair<char, cv::Mat> RobotWatcher::grab_image()
 
   	buff.resize(MAX_SIZE);
   	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
-    if(verbose) std::cout << "Robocam recv length = " << length << std::endl;
+   // if(verbose) std::cout << "Robocam recv length = " << length << std::endl;
   	
     if(length > 0)
      {
 		 char lr = buff[0];
-		 if(verbose) std::cout << "left or right: " << lr << std::endl;
+		// if(verbose) std::cout << "left or right: " << lr << std::endl;
 		 decoded.first = lr;
 		 buff.erase(buff.begin());
 		 
 		 buff.resize(length);
   	     decoded.second = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
-		 if(verbose) std::cout << "width: " << decoded.second.cols << ", height: " << decoded.second.rows << std::endl;
+		 //if(verbose) std::cout << "width: " << decoded.second.cols << ", height: " << decoded.second.rows << std::endl;
 		 //d.setBounds(decoded.cols, decoded.rows);
 		/*if(hasLidar) {
 			 d.recvData();

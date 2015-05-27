@@ -112,7 +112,11 @@ void rotate(cv::Mat& src, double angle, cv::Mat& dst){
 	cv::Mat rot_mat = cv::getRotationMatrix2D(src_center,angle,1.0);
 	cv::warpAffine(src, dst, rot_mat, src.size());
 }
-
+std::string convstr(const float t) {
+	std::stringstream ftoa;
+	ftoa << std::setprecision(3) << std::setw(4) << t << " CM";
+	return ftoa.str();
+}
 std::vector<int> getHpHy(Mat frame, float fovx, float fovy, int fx, int fy)
  {
  std::vector<int> ret;
@@ -160,8 +164,8 @@ int main(int argc, char** argv)
 	
 	
 	commander = std::shared_ptr < Commander > (new Commander());
-    commander->publish = cfg.str("guicmdr.publish");
-    commander->subscribers = cfg.list("guicmdr.subscribers");
+    commander->publish = cfg.str("detector.publish");
+    commander->subscribers = cfg.list("detector.subscribers");
     commander->rxTimeout = 1e6;
     commander->start();
     
@@ -257,7 +261,7 @@ int main(int argc, char** argv)
 				HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,camLeftIntensity,100,LcircleMin,LcircleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
 				if(circles.size() > 0)
 					{
-					tmpframe = cv::Mat(rot_imageL);
+					
 					x = cvRound(circles[0][0]);
 					y = cvRound(circles[0][1]);
 					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
@@ -269,7 +273,6 @@ int main(int argc, char** argv)
 					circle( rot_imageL, center, radius, Scalar(0,0,255), 2, 8, 0 );
 					//putText(rot_frame,"Lidar Data",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
 					}
-				//putText(imgLeft,"Lidar Data",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
 				imshow(windowNameL, rot_imageL);
 				
 				}			
@@ -282,10 +285,11 @@ int main(int argc, char** argv)
 				HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,camRightIntensity,100,RcircleMin,RcircleMax);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
 				if(circles.size() > 0)
 					{
+					
 					x = cvRound(circles[0][0]);
 					y = cvRound(circles[0][1]);
 					Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
-					
+					tmpframe = cv::Mat(rot_imageR);
 					int radius = cvRound(circles[0][2]);
 					// circle center
 					circle( rot_imageR, center, 3, Scalar(0,255,0), -1, 8, 0 );
@@ -293,7 +297,7 @@ int main(int argc, char** argv)
 					circle( rot_imageR, center, radius, Scalar(0,0,255), 2, 8, 0 );
 					//putText(frame,"Searching for rainbows",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
 					}
-				
+				putText(rot_imageL,convstr(dist),cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
 				imshow(windowNameR, rot_imageR);
 				
 				}
@@ -308,7 +312,7 @@ int main(int argc, char** argv)
 				{
 					//std::cout << "detecting!" << std::endl;
 				
-				if(lr == 'L' && !tmpframe.empty())
+				if(lr == 'R' && !tmpframe.empty())
 				  {
 					std::stringstream format;
 					std::vector<std::string> commandsToSend;
@@ -338,12 +342,9 @@ int main(int argc, char** argv)
 					 {
 					  commander->send(commandsToSend[i]);
 					  //usleep(10000);
-					  /*commander->recv(recv);
-					  if(recv.find("ok") == std::string::npos)
-					   {
-						if(verbose) std::cout << "Error processing commands. " + recv << std::endl;
-						break;  
-					   }*/
+					  commander->recv(recv);
+					  if(verbose) std::cout << "recv: " + recv << std::endl;
+						
 					 }
 					 commandsToSend.resize(0);
 				}
