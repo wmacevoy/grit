@@ -205,6 +205,7 @@ void setup()
 
    POSITION = (uint16_t) analogRead(POTPIN);
    lastpos = POSITION; 
+   GOAL = 512;
    
    t=millis();
 }

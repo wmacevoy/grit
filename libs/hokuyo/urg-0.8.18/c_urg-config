@@ -1,6 +1,6 @@
 #!/bin/sh
 
-prefix=/home/user/grit/libs
+prefix=/usr/local
 
 usage="Usage: c_urg-config [--version] [--cflags] [--libs]"
 

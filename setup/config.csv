@@ -1,9 +1,14 @@
 name,value
-control.ip,192.168.2.102
+fieldpc.ip,10.23.1.21
+xfieldpc.ip,127.0.0.1
+control.ip,10.23.3.1
 xcontrol.ip,127.0.0.1
 rsync.parts,"pcduino,setup/config.csv,setup/servomap.csv,bin"
 rsync.dests,"${pcd1.user}@${pcd1.ip}:grit"
 sync.ip,192.168.1.116
+leg1.ip,leg1
+leg1.user,user
+sync.user,wmacevoycontrol
 sync.user,user
 sync.remote,${sync.user}@${sync.ip}:/grit
 sync.local,"~/grit"
@@ -21,7 +26,7 @@ pcd1.dev0.pins.step.left,3
 pcd1.dev0.pins.step.right,5
 feet.verbose,true
 control.user,user
-centaur.ip,192.168.2.104
+centaur.ip,10.23.1.1
 xcentaur.ip,127.0.0.1
 centaur.user,user
 legs.minspeed,15,Degrees per second on the servo
@@ -34,7 +39,7 @@ safety.delayoff,2.5,seconds of warning
 safety.txtimeout,2.0,seconds for stale receives
 safety.rxtimeout,2.0,seconds for stale sends
 safety.rate,4,update rate (hertz)
-safety.verbose,true
+safety.verbose,false
 safety.publish,tcp://*:${safety.port}
 safety.subscribe,tcp://${safety.ip}:${safety.port}
 safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port},tcp://${guicmdr.ip}:${guicmdr.safety.port}"
@@ -97,14 +102,13 @@ lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
 webcam.requester.calibration,"false"
 webcam.requester.sleep_time,"10"
-webcam.requester.oculus,"false"
-webcam.provider.verbose,"true"
-webcam.provider.index,"0"
+webcam.provider.verbose,"false"
+webcam.provider.index,"1"
 webcam.provider.sleep_time,"20"
-webcam.provider.detect,"true"
+webcam.provider.detect,"false"
 webcam.provider.port,"9993"
 webcam.provider.ip,"${centaur.ip}"
-webcam.provider.c_ip,"${control.ip}"
+webcam.provider.c_ip,"${fieldpc.ip}"
 leap.provider.verbose,"true"
 leap.provider.decay_time,1.0,seconds
 leap.provider.ip,"${control.ip}"
@@ -146,7 +150,7 @@ sensors.subscribe,"tcp://${sensors.ip}:${sensors.port}"
 sensors.safety.port,5603
 sensors.safety.publish,"tcp://*:${sensors.safety.port}
 sensors.safety.subscribe,"tcp://${safety.ip}:${safety.port}"
-sensors.verbose,"true"
+sensors.verbose,"false"
 sensors.rxpolltimeout,0.5
 sensors.rxtimeout,5.0
 sensors.readtimeout,5.0
@@ -169,9 +173,21 @@ leg4.touchpressure,750
 ik.epsilon,1e-2
 ik.steps,4
 ik.speed,4,"inches/sec"
+detector.verbose,"false"
+detector.sleep_time,10
+detector.calibration,false
+detector.camfovx,60
+detector.camfovy,45
+detector.RcircleMin,20
+detector.RcircleMax,150
+detector.LcircleMin,20
+detector.LcircleMax,150
+detector.camLeftIntensity,70
+detector.camRightIntensity,100
 steppers.kp,20
 steppers.kd,0
 steppers.ki,0
 steppers.maxfrequency,40000
 steppers.minfrequency,0
 leg1.verbose,true
+

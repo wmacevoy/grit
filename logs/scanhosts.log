@@ -1,30 +1,13 @@
 
-Starting Nmap 5.21 ( http://nmap.org ) at 2015-04-15 20:07 MDT
-Note: Host seems down. If it is really up, but blocking our ping probes, try -PN
-Nmap done: 1 IP address (0 hosts up) scanned in 3.00 seconds
-
-Starting Nmap 5.21 ( http://nmap.org ) at 2015-04-15 20:07 MDT
-Nmap scan report for 192.168.1.1
-Host is up (0.0065s latency).
-Nmap scan report for control (192.168.1.102)
-Host is up (0.079s latency).
-Nmap scan report for 192.168.1.106
-Host is up (0.00070s latency).
-Nmap scan report for 192.168.1.111
-Host is up (0.075s latency).
-Nmap scan report for 192.168.1.112
-Host is up (0.075s latency).
-Nmap scan report for 192.168.1.115
-Host is up (0.13s latency).
-Nmap scan report for 192.168.1.116
-Host is up (0.0014s latency).
-Nmap scan report for 192.168.1.122
-Host is up (0.077s latency).
-Nmap scan report for 192.168.1.123
-Host is up (0.087s latency).
-Nmap scan report for 192.168.1.124
-Host is up (0.070s latency).
-Nmap done: 256 IP addresses (10 hosts up) scanned in 18.57 seconds
-
-Starting Nmap 5.21 ( http://nmap.org ) at 2015-04-15 20:08 MDT
-Nmap done: 256 IP addresses (0 hosts up) scanned in 15.03 seconds
+Starting Nmap 5.21 ( http://nmap.org ) at 2015-04-19 11:02 MDT
+Nmap scan report for DD-WRT (192.168.10.1)
+Host is up (0.00043s latency).
+Nmap scan report for 192.168.10.2
+Host is up (0.0027s latency).
+Nmap scan report for cogburn-Inspiron-3531 (192.168.10.119)
+Host is up (0.00038s latency).
+Nmap scan report for ubuntu (192.168.10.137)
+Host is up (0.0031s latency).
+Nmap scan report for 192.168.10.138
+Host is up (0.00097s latency).
+Nmap done: 256 IP addresses (5 hosts up) scanned in 18.51 seconds
