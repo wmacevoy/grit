@@ -15,6 +15,7 @@ class Settings {
   short high;
   byte address;
   byte speed;
+  byte gateway;
   void writeMemory() {
     byte *ptr=(byte *)this;
     for (int i=0;i<sizeof(Settings);i++){
@@ -37,12 +38,15 @@ class Settings {
     Serial.println(address);
     Serial.print("speed: ");
     Serial.println(speed);
+    Serial.print("gateway: ");
+    Serial.println(gateway);
   }
 };
 Settings settings;
 
 void showMenu() {
-  Serial.println("s,l,h,a,w,g,m, and p");
+  Serial.println("r, s,l,h,a,w,g,m, and p");
+  Serial.println("r gateway address [0 to 127]");
   Serial.println("s show sensor values");
   Serial.println("l low position 0 degrees [0 to 1023]");
   Serial.println("h high position 180 degrees [0 to 1023]");
@@ -100,6 +104,14 @@ void handleUI(char c) {
     } else {
       Serial.println("Invalid Goal Position");
     }
+  } else if (c=='r' || c=='R') {
+    int newGateway=Serial.parseInt();
+    if (newGateway>=0 && newGateway<=127) {
+      Serial.println("Ok");
+      settings.gateway=newGateway;
+    } else {
+      Serial.println("Invalid Goal Position");
+    }
   } else if (c=='p' || c=='P') {
     settings.show();
     Serial.print("Goal: ");
@@ -134,14 +146,12 @@ void hardStop() { // Braking
 void receiveEvent(int howMany) {
   int newGoal=goal;
   int newSpeed=settings.speed;
-  while (!Wire.available());
   if (Wire.available()>0) {
     newGoal=Wire.read();
   }
   if (newGoal>=0 && newGoal<=180) {
     goal=newGoal;
   }
-  while (!Wire.available());
   if (Wire.available()>0) {
     newSpeed=Wire.read();
   }
