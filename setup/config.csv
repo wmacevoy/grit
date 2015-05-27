@@ -56,10 +56,12 @@ servos.safety.port,5601
 servos.safety.publish,tcp://*:${servos.safety.port}
 servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
 servos.verbose,true
-servos.body.type,real
-servos.legs.type,fake
-servos.deviceindex,1
-servos.baudnum,8
+servos.body.type,dynamixel
+servos.legs.type,grit
+servos.dynamixel.deviceindex,1
+servos.dynamixel.baudnum,8
+servos.grit.deviceindex,1
+servos.grit.baudnum,8
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
 servos.dynamixel.rate.tx,20.0
 servos.publish.ip,${centaur.ip}
