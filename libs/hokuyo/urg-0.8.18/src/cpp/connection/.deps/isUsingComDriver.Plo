@@ -1,0 +1,6 @@
+isUsingComDriver.lo: isUsingComDriver.cpp isUsingComDriver.h \
+ ../../../include/cpp/DetectOS.h
+
+isUsingComDriver.h:
+
+../../../include/cpp/DetectOS.h:
