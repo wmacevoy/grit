@@ -8,5 +8,6 @@
 	$(MAKE) -C heartBeatRequester $@
 	$(MAKE) -C glView $@
 	$(MAKE) -C guicmdr $@
+	$(MAKE) -C detector $@
 
 
