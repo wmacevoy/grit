@@ -1,23 +1,19 @@
 name,value
-fieldpc.user,user
 fieldpc.ip,10.23.1.21
 xfieldpc.ip,127.0.0.1
-control.user,user
 control.ip,10.23.3.1
 xcontrol.ip,127.0.0.1
-centaur.ip,10.23.1.1
 rsync.parts,"pcduino,setup/config.csv,setup/servomap.csv,bin"
 rsync.dests,"${pcd1.user}@${pcd1.ip}:grit"
 sync.ip,192.168.1.116
 leg1.ip,leg1
 leg1.user,user
+sync.user,wmacevoycontrol
 sync.user,user
 sync.remote,${sync.user}@${sync.ip}:/grit
 sync.local,"~/grit"
 sync.files,"setup/config.csv,setup/servomap.csv"
 sync.onchange,"../context restart"
-control.user,user
-centaur.ip,10.23.1.1
 pcd1.ip,pcd1
 pcd1.user,user
 pcd1.devs,1
@@ -51,7 +47,7 @@ xsafety.subscribers,"tcp://${servos.ip}:${servos.safety.port}"
 gui.ip,${control.ip}
 gui.safety.port,5604
 gui.safety.publish,"tcp://*:${gui.safety.port}"
-gui.verbose,false
+gui.verbose,true
 gui.address_t,"tcp://${centaur.ip}:9001"
 gui.address_s,"tcp://${centaur.ip}:5508"
 gui.sleep_t,"200"
@@ -62,7 +58,7 @@ servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
 servos.verbose,false
 servos.type,real
 xservos.type,fake
-servos.deviceindex,0
+servos.deviceindex,1
 servos.baudnum,8
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
 servos.dynamixel.rate.tx,20.0
@@ -88,7 +84,7 @@ body.servos.publish,tcp://*:5503
 body.servos.subscribers,tcp://127.0.0.1:5500
 body.commander.port,5502
 body.commander.publish,tcp://*:${body.commander.port}
-body.commander.subscribers,"tcp://${commander.ip}:${commander.port},tcp://${guicmdr.ip}:${guicmdr.port}"
+body.commander.subscribers,"tcp://${commander.ip}:${commander.port},tcp://${guicmdr.ip}:${guicmdr.port},tcp://${detector.ip}:${detector.port}"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
 body.commander.neckAddress,"tcp://${control.ip}:5556"
 body.verbose,false
@@ -99,34 +95,27 @@ commander.subscribers,"tcp://${body.ip}:${body.commander.port}"
 lidar.provider.port,9997
 lidar.provider.ip,${centaur.ip}
 lidar.provider.c_ip,"${fieldpc.ip}"
-lidar.provider.dev_path,"/dev/ttyUSB2"
+lidar.provider.ip,"${centaur.ip}"
+lidar.provider.dev_path,"/dev/ttyACM2"
 lidar.provider.sleep_time,"20"
-lidar.provider.verbose,"true"
+lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
 webcam.requester.calibration,"false"
 webcam.requester.sleep_time,"10"
-<<<<<<< HEAD
-webcam.requester.oculus,"false"
-webcam.provider.verbose,"true"
-webcam.provider.indexR,"0"
-webcam.provider.indexL,"1"
-webcam.provider.sleep_time,"30"
-=======
 webcam.provider.verbose,"false"
 webcam.provider.index,"1"
 webcam.provider.sleep_time,"20"
->>>>>>> 70e3918c81ad19f69899ce83b0cd6bcf0d913aef
 webcam.provider.detect,"false"
 webcam.provider.port,"9993"
 webcam.provider.ip,"${centaur.ip}"
 webcam.provider.c_ip,"${fieldpc.ip}"
-leap.provider.verbose,"false"
+leap.provider.verbose,"true"
 leap.provider.decay_time,1.0,seconds
 leap.provider.ip,"${control.ip}"
 leap.provider.port,"9990"
 leap.provider.publish,"tcp://*:${leap.provider.port}"
 leap.provider.subscribe,"tcp://${leap.provider.ip}:${leap.provider.port}"
-leap.requester.verbose,"false"
+leap.requester.verbose,"true"
 leap.requester.sleep_time,"10000"
 leap.origin.x,0.0,offset (inches)
 leap.origin.y,26.0,offset (inches)
@@ -135,14 +124,14 @@ leap.scale.x,1.0
 leap.scale.y,1.0
 leap.scale.z,1.0
 heartbeat.provider.address,"tcp://*:9800"
-heartbeat.provider.verbose,"false"
+heartbeat.provider.verbose,"true"
 heartbeat.provider.sleep_time,"100"
 heartbeat.requester.address,"tcp://${centaur.ip}:9800"
 heartbeat.requester.verbose,"false"
 heartbeat.requester.sleep_time,"100"
 glView.subscriber.verbose,"false"
 glView.subscriber.sleep_time,25
-guicmdr.verbose,"false"
+guicmdr.verbose,"true"
 guicmdr.ip,${control.ip}
 guicmdr.port,5505
 guicmdr.publish,"tcp://*:${guicmdr.port}"
@@ -159,7 +148,7 @@ sensors.port,"5506"
 sensors.publish,"tcp://*:${sensors.port}"
 sensors.subscribe,"tcp://${sensors.ip}:${sensors.port}"
 sensors.safety.port,5603
-sensors.safety.publish,"tcp://*:${sensors.safety.port}"
+sensors.safety.publish,"tcp://*:${sensors.safety.port}
 sensors.safety.subscribe,"tcp://${safety.ip}:${safety.port}"
 sensors.verbose,"false"
 sensors.rxpolltimeout,0.5
@@ -167,7 +156,7 @@ sensors.rxtimeout,5.0
 sensors.readtimeout,5.0
 sensors.txtimeout,5.0
 sensors.rate,10.0
-sensors.dev_path,"/dev/ttyUSB1"
+sensors.dev_path,"/dev/ttyUSB0"
 proxysensors.port,5596
 proxysensors.ip,${centaur.ip}
 proxysensors.publish,tcp://*:${proxysensors.port}
@@ -175,7 +164,7 @@ proxysensors.subscribe,tcp://${proxysensors.ip}:${proxysensors.port}
 proxysensors.rate,1.0
 proxysensors.verbose,"false"
 gloves.publisher.dev_path,"/dev/ttyACM0"
-gloves.publisher.verbose,"false"
+gloves.publisher.verbose,"true"
 legs.cutoff,1.0,cutoff for linearity (0 = always linear)
 leg1.touchpressure,750
 leg2.touchpressure,750
@@ -184,8 +173,11 @@ leg4.touchpressure,750
 ik.epsilon,1e-2
 ik.steps,4
 ik.speed,4,"inches/sec"
-detector.verbose,true
-detector.verbose,"false"
+detector.ip,${fieldpc.ip}
+detector.port,6653
+detector.publish,"tcp://*:${detector.port}"
+detector.subscribers,"tcp://${body.ip}:${body.commander.port}"
+detector.verbose,"true"
 detector.sleep_time,10
 detector.calibration,false
 detector.camfovx,60
@@ -201,3 +193,5 @@ steppers.kd,0
 steppers.ki,0
 steppers.maxfrequency,40000
 steppers.minfrequency,0
+leg1.verbose,true
+
