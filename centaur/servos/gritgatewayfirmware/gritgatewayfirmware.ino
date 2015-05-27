@@ -70,7 +70,7 @@ void loop()
         Wire.write(value);
         Wire.endTransmission();
 	if (command == 'g') {
-          Wire.requestFrom(address, 1);
+          Wire.requestFrom((int)address, 1);
   	  timeout=millis()+TIMEOUT;
 	  state = 3;
 	} else {
