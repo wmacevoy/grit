@@ -24,14 +24,14 @@ namespace fs = boost::filesystem;
 
 typedef std::chrono::duration<int,std::milli> millisecs_t;
 
-const int IMAGE_QUALITY=70;
-const int DEFAULT_WIDTH = 256;
-const int DEFAULT_HEIGHT = 144;
+const int IMAGE_QUALITY= 40;
+const int DEFAULT_WIDTH = 320;
+const int DEFAULT_HEIGHT = 240;
 
 class webcamProvider {
 	std::atomic<bool> die;
 	bool verbose;
-	int index;
+	int indexR, indexL;
 	int sleep_time; 
 	std::string address;
 	std::string port;
@@ -46,19 +46,23 @@ class webcamProvider {
 	bool connected;
 
 	//Image items
-	VideoCapture capture;
+	VideoCapture captureR;
+	VideoCapture captureL;
 	int width, height;
 	int image_quality;
-	Mat frame;
+	Mat frameR, frameL;
 	Mat gray;	
 	std::vector<uchar> buff;
 	std::vector<int> param;
 	std::string output_type;
 
 public:
-	webcamProvider(int, int, bool, const char*, std::string, std::string);
+	webcamProvider(int, int, int, bool, const char*, std::string, std::string);
 	bool init();
 	void provide();
+	int getwidth();
+	int getheight();
+	void rotate(cv::Mat&,double,cv::Mat&);
 	bool setResolution(int _width, int _height);
 	bool setQuality(int _quality);
 	bool setFramerate(int _framerate);

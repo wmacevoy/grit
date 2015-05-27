@@ -1,0 +1,15 @@
+#!/bin/bash                                                                     
+ip=`egrep '^control\.ip,' "$HOME/grit/setup/config.csv" | cut -d, -f2`
+user=`egrep '^control\.user,' "$HOME/grit/setup/config.csv" | cut -d, -f2`
+sshargs="-Y"
+while [ $# -gt 0 ]
+do
+  case $1
+  in
+    --) break;;
+    -*) sshargs="$sshargs $1"; shift;;
+    *) break;;
+  esac
+done
+
+ssh $sshargs $user@$ip "$@"
