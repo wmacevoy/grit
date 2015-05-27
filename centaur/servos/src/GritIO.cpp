@@ -18,12 +18,12 @@ using namespace std;
 
 GritIO::GritIO(int deviceIndex_, int baudNum_)
 {
+  baudNum=baudNum_;
+  deviceIndex=deviceIndex_;
   char tmp[32];
   snprintf(tmp,sizeof(tmp),"/dev/ttyUSB%d",deviceIndex);
   dev=tmp;
   baud = 2000000.0/(baudNum + 1)+0.5;
-  deviceIndex=deviceIndex_;
-  baudNum=baudNum_;
 
   fd = -1;
   open();

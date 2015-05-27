@@ -8,6 +8,7 @@
 #include "CreateFakeServoController.h"
 #include "CreateZMQServoController.h"
 #include "CreateDynamixelServoController.h"
+#include "CreateGritServoController.h"
 #include "Configure.h"
 #include "now.h"
 
@@ -26,7 +27,8 @@ int main(int argc, char **argv)
 {
   cfg.path("../../setup");
   cfg.args("servos.",argv);
-  if (argc == 1) cfg.load("config.csv");
+  cfg.load("config.csv");
+  cfg.servos();
   verbose = cfg.flag("servos.verbose",false);
   if (verbose) cfg.show();
 
@@ -51,6 +53,10 @@ int main(int argc, char **argv)
     }
     if (strcmp(argv[argi],"--dynamixel")==0) {
       use_controller = "dynamixel";
+      continue;
+    }
+    if (strcmp(argv[argi],"--grit")==0) {
+      use_controller = "grit";
       continue;
     }
     if (strcmp(argv[argi],"--fake")==0) {
@@ -111,6 +117,7 @@ int main(int argc, char **argv)
       cout << "\t --help (print help)"  << endl;
       cout << "\t --verbose"  << endl;
       cout << "\t --fake (use fake controller)" << endl;
+      cout << "\t --grit (use grit controller)" << endl;
       cout << "\t --zmq (use zmq controller)" << endl;
       cout << "\t --dynamixel (use direct dynamixel controller)" << endl;
       cout << "\t --servo [id] (use this servo id)" << endl;
@@ -140,6 +147,11 @@ int main(int argc, char **argv)
     cout << "dynamixel controller device index " << deviceIndex << " baud number " << baudNum << endl;
     controller = shared_ptr<ServoController>(CreateDynamixelServoController(deviceIndex,baudNum));    
   }
+  if (use_controller == "grit") {
+    cout << "grit controller device index " << deviceIndex << " baud number " << baudNum << endl;
+    controller = shared_ptr<ServoController>(CreateGritServoController(deviceIndex,baudNum));    
+  }
+  
   shared_ptr<Servo> servo(controller->servo(servoId));
 
   controller->start();
