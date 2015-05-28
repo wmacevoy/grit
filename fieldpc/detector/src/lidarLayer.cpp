@@ -15,10 +15,6 @@ LidarLayer::LidarLayer() {
 	timeOut = 3.0;
 	MAX_SIZE = 5;
 
-	fontFace = FONT_HERSHEY_SIMPLEX;
-	fontScale = 0.35;
-	thickness = 1;
-
 	t1 = 0;
 	t2 = 0;
 }
@@ -38,7 +34,7 @@ int LidarLayer::recvData() {
 
   	buff.resize(MAX_SIZE);
 	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
-   // if(verbose) std::cout << "Lidar recv length = " << length << std::endl;
+    // if(verbose) std::cout << "Lidar recv length = " << length << std::endl;
 	if(length > 0)
 		{
 		for(int i=0; i<buff.size(); ++i)
@@ -57,8 +53,9 @@ int LidarLayer::recvData() {
 
 LidarLayer::~LidarLayer() {
 	std::cout << "Quitting Lidar..." << std::endl;
-	std::cout << "closing and destroying zmqz..." << std::endl;
+	std::cout << "closing connection..." << std::endl;
 	my_socket->close();
+	std::cout << "Closed Socket" << std::endl;
 	free(my_socket);
 	std::cout << "--done!" << std::endl;
 }
