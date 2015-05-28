@@ -1,18 +1,22 @@
 #include "webcamProviderObj.h"
 
-webcamProvider::webcamProvider(int _indexR, int _indexL, int _sleep_time, bool _verbose, const char* _argv0, std::string _address, std::string _port) : resolver(this->io_service) {
+webcamProvider::webcamProvider(int _indexR, int _indexL, int _sleep_time, bool _verbose, const char* _argv0, std::string _addressf, std::string _addressc, std::string _port) : resolver(this->io_service) {
 	die.store(false);
 	verbose = _verbose;
 	indexR = _indexR;
 	indexL = _indexL;
 	sleep_time = _sleep_time;
-	address = _address;
+	addressf = _addressf;
+	addressc = _addressc;
 	port = _port;
 
 	//Boost items
-	query = new boost::asio::ip::udp::resolver::query(boost::asio::ip::udp::v4(), address, port);
+	query = new boost::asio::ip::udp::resolver::query(boost::asio::ip::udp::v4(), addressf, port);
+	query2 = new boost::asio::ip::udp::resolver::query(boost::asio::ip::udp::v4(), addressc, port);
 	receiver_endpoint = *resolver.resolve(*query);
+	receiver_endpoint2 = *resolver.resolve(*query2);
 	socket = new boost::asio::ip::udp::socket(io_service);
+	socket2 = new boost::asio::ip::udp::socket(io_service);
 	connected = false;	
 
 	//Image items
@@ -32,6 +36,7 @@ webcamProvider::webcamProvider(int _indexR, int _indexL, int _sleep_time, bool _
 
 bool webcamProvider::init() {
 	socket->open(boost::asio::ip::udp::v4());
+	socket2->open(boost::asio::ip::udp::v4());
 
 	captureR.open(indexR);
 	if(!captureR.isOpened())
@@ -73,6 +78,8 @@ void webcamProvider::provide() {
 		captureR >> frameR;
 		captureL >> frameL;
 
+		buff.resize(0);
+
 		imencode(output_type.c_str(), frameR, buff, param);
 		buff.insert(buff.begin(), 'R');
 		if(verbose) std::cout<<"coded file size(jpg) R"<<buff.size()<< ", width: " << width << ", height: " << height << std::endl;
@@ -84,6 +91,12 @@ void webcamProvider::provide() {
 		buff.insert(buff.begin(), 'L');
 		if(verbose) std::cout<<"coded file size(jpg) L"<<buff.size()<< ", width: " << width << ", height: " << height << std::endl;
 		socket->send_to(boost::asio::buffer(buff, buff.size()), receiver_endpoint);
+
+		buff.resize(0);
+		
+		imencode(output_type.c_str(), frameL, buff, param);
+		if(verbose) std::cout<<"coded file size(jpg) "<<buff.size()<< ", width: " << width << ", height: " << height << std::endl;
+		socket2->send_to(boost::asio::buffer(buff, buff.size()), receiver_endpoint2);
 
 		waitKey(sleep_time);
 	}
@@ -142,5 +155,6 @@ webcamProvider::~webcamProvider() {
 	std::cout << "--done!" << std::endl;
 	std::cout << "closing boost socket..." << std::endl;
 	socket->close();
+	socket2->close();
 	std::cout << "--done!" << std::endl;	
 }

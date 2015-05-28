@@ -33,7 +33,8 @@ class webcamProvider {
 	bool verbose;
 	int indexR, indexL;
 	int sleep_time; 
-	std::string address;
+	std::string addressf;
+	std::string addressc;
 	std::string port;
 	std::string path;
 
@@ -41,8 +42,11 @@ class webcamProvider {
 	boost::asio::io_service io_service;
 	boost::asio::ip::udp::resolver resolver;
 	boost::asio::ip::udp::resolver::query *query;
+	boost::asio::ip::udp::resolver::query *query2;
 	boost::asio::ip::udp::endpoint receiver_endpoint;
+	boost::asio::ip::udp::endpoint receiver_endpoint2;
 	boost::asio::ip::udp::socket *socket;
+	boost::asio::ip::udp::socket *socket2;
 	bool connected;
 
 	//Image items
@@ -57,7 +61,7 @@ class webcamProvider {
 	std::string output_type;
 
 public:
-	webcamProvider(int, int, int, bool, const char*, std::string, std::string);
+	webcamProvider(int, int, int, bool, const char*, std::string, std::string, std::string);
 	bool init();
 	void provide();
 	int getwidth();

@@ -55,9 +55,9 @@ servos.ip,${centaur.ip}
 servos.safety.port,5601
 servos.safety.publish,tcp://*:${servos.safety.port}
 servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
-servos.verbose,false
-servos.type,real
-xservos.type,fake
+servos.verbose,true
+servos.body.type,real
+servos.legs.type,fake
 servos.deviceindex,1
 servos.baudnum,8
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
@@ -74,7 +74,7 @@ proxyservos.publish,tcp://*:${proxyservos.port}
 proxyservos.subscribe,tcp://${proxyservos.ip}:${proxyservos.port}
 proxyservos.anglerate,0.25
 proxyservos.temprate,0.25,0.0167
-proxyservos.verbose,false
+proxyservos.verbose,true
 body.ip,${centaur.ip}
 body.safety.port,5602
 body.safety.publish,tcp://*:${body.safety.port}
@@ -87,7 +87,7 @@ body.commander.publish,tcp://*:${body.commander.port}
 body.commander.subscribers,"tcp://${commander.ip}:${commander.port},tcp://${guicmdr.ip}:${guicmdr.port},tcp://${detector.ip}:${detector.port}"
 body.commander.glovesAddress,"tcp://${control.ip}:6689"
 body.commander.neckAddress,"tcp://${control.ip}:5556"
-body.verbose,false
+body.verbose,true
 commander.ip,${control.ip}
 commander.port,5504
 commander.publish,"tcp://*:${commander.port}"
@@ -102,13 +102,15 @@ lidar.provider.verbose,"false"
 webcam.requester.verbose,"false"
 webcam.requester.calibration,"false"
 webcam.requester.sleep_time,"10"
-webcam.provider.verbose,"false"
-webcam.provider.index,"1"
+webcam.provider.verbose,"true"
+webcam.provider.indexL,"1"
+webcam.provider.indexR,"0"
 webcam.provider.sleep_time,"20"
 webcam.provider.detect,"false"
 webcam.provider.port,"9993"
 webcam.provider.ip,"${centaur.ip}"
-webcam.provider.c_ip,"${fieldpc.ip}"
+webcam.provider.f_ip,"${fieldpc.ip}"
+webcam.provider.c_ip,"${control.ip}"
 leap.provider.verbose,"true"
 leap.provider.decay_time,1.0,seconds
 leap.provider.ip,"${control.ip}"
@@ -148,7 +150,7 @@ sensors.port,"5506"
 sensors.publish,"tcp://*:${sensors.port}"
 sensors.subscribe,"tcp://${sensors.ip}:${sensors.port}"
 sensors.safety.port,5603
-sensors.safety.publish,"tcp://*:${sensors.safety.port}
+sensors.safety.publish,"tcp://*:${sensors.safety.port}"
 sensors.safety.subscribe,"tcp://${safety.ip}:${safety.port}"
 sensors.verbose,"false"
 sensors.rxpolltimeout,0.5
@@ -156,7 +158,7 @@ sensors.rxtimeout,5.0
 sensors.readtimeout,5.0
 sensors.txtimeout,5.0
 sensors.rate,10.0
-sensors.dev_path,"/dev/ttyUSB0"
+sensors.dev_path,"/dev/ttyUSB2"
 proxysensors.port,5596
 proxysensors.ip,${centaur.ip}
 proxysensors.publish,tcp://*:${proxysensors.port}
@@ -193,5 +195,4 @@ steppers.kd,0
 steppers.ki,0
 steppers.maxfrequency,40000
 steppers.minfrequency,0
-leg1.verbose,true
 
