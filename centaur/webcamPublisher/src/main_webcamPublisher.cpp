@@ -20,14 +20,15 @@ int main(int argc, char** argv) {
 	int indexR = (int)cfg.num("webcam.provider.indexR");
 	int indexL = (int)cfg.num("webcam.provider.indexL");
 	int sleep_time = (int)cfg.num("webcam.provider.sleep_time");
-	std::string address = cfg.str("webcam.provider.c_ip").c_str();
+	std::string addressf = cfg.str("webcam.provider.f_ip").c_str();
+	std::string addressc = cfg.str("webcam.provider.c_ip").c_str();
 	std::string port = cfg.str("webcam.provider.port").c_str();
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
 	signal(SIGQUIT, quitproc);
 
-	webcamProvider p(indexR, indexL, sleep_time, verbose, argv[0], address.c_str(), port);
+	webcamProvider p(indexR, indexL, sleep_time, verbose, argv[0], addressf.c_str(), addressc.c_str(), port);
 	ghost = &p;	
 	if(p.init()) {
 		//p.rotate();
