@@ -37,12 +37,6 @@ bool RobotWatcher::setup(int port_, bool _verbose = false)
   return true; //get this better
 }
 
-int RobotWatcher::getWidth(){
-	return currentWidth;
-}
-int RobotWatcher::getHeight(){
-	return currentHeight;
-}
 
 std::pair<char, cv::Mat> RobotWatcher::grab_image()
 {

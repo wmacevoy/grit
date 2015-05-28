@@ -6,27 +6,22 @@
 #include <iomanip>
 #include <zmq.h>
 #include <time.h>
+#include <ctype.h>
 #include "opencv2/opencv.hpp"
-#include "LidarMessage.h"
-#include "fk_lidar.h"
+#include <boost/asio.hpp>
 
 using namespace cv;
 
-//Some sort of mapping needs to be created that allows these numbers to be dynamically set.
-//OR we can just map them for the resolutions we know we will use and store them all.
-const int x_min = 6;
-const int x_max = 146;
-const int ind_min = 494;
-const int ind_max = 588;
 
 class LidarLayer {
-	LidarMessage lidarMessage;
-	void* context_lidar;
-	void* sub_lidar;
-	std::string address;
+	std::vector<uchar> buff;
+    int port;
+    int MAX_SIZE;
 	
-	int hwm;
-	int linger;
+    boost::asio::io_service my_io_service;
+    boost::asio::ip::udp::socket *my_socket;
+    boost::asio::ip::udp::endpoint sender_endpoint;
+	
 	int index;
 	float timeOut;
 	
@@ -35,36 +30,13 @@ class LidarLayer {
 	int thickness;
 
 	bool verbose;
-	bool calibration;
 	int t1, t2;
-
-	int lidarLine;	
-
-	Point pt1;
-	Point pt2;
-
-	Point tick5l1;
-	Point tick5l2;
-	Point tick5r1;
-	Point tick5r2;
-
-	Point tick10l1;
-	Point tick10l2;
-	Point tick10r1;
-	Point tick10r2;
-
-	Point textOrg;
 
 public:
 	LidarLayer();
-	bool setup(std::string _address, bool _calibration, bool _verbose);
+	bool setup(int _port, bool _verbose);
 	int recvData();
-	std::string at(int index);
-	void writeDistance(Mat& drawable, int mx);
-	void drawGraph(Mat& drawable, int width, int height);
-	void setBounds(int _width, int _height);
-	int getLine();
 	~LidarLayer();
 };
 
-#endif //LIDARLAYER_H_
+#endif
