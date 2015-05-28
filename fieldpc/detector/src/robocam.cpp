@@ -26,7 +26,6 @@ bool RobotWatcher::setup(int port_, bool _verbose = false)
     die = false;
     receiving = true;
 	inside = false;
-	//hasLidar = _hasLidar;
 	verbose = _verbose;
 	currentWidth = normalWidth;
 	currentHeight = normalHeight;
@@ -44,7 +43,7 @@ std::pair<char, cv::Mat> RobotWatcher::grab_image()
 
   	buff.resize(MAX_SIZE);
   	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
-   // if(verbose) std::cout << "Robocam recv length = " << length << std::endl;
+    if(verbose) std::cout << "Robocam recv length = " << length << std::endl;
   	
     if(length > 0)
      {
@@ -56,14 +55,6 @@ std::pair<char, cv::Mat> RobotWatcher::grab_image()
 		 buff.resize(length);
   	     decoded.second = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
 		 //if(verbose) std::cout << "width: " << decoded.second.cols << ", height: " << decoded.second.rows << std::endl;
-		 //d.setBounds(decoded.cols, decoded.rows);
-		/*if(hasLidar) {
-			 d.recvData();
-			 d.drawGraph(decoded, decoded.cols, decoded.rows);
-			 if(inside) {
-				 d.writeDistance(decoded, mx);			
-			 }
-		  } */
      }
   	return decoded;
 }

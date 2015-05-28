@@ -4,8 +4,6 @@
 #include "opencv2/imgproc/imgproc.hpp"
 
 #include "Configure.h"
-#include "LidarMessage.h"
-#include "fk_lidar.h"
 #include "robocam.h"
 #include "BodyMessage.h"
 #include "CSVRead.h"
@@ -19,6 +17,7 @@
 #include <string.h>
 #include <sstream>
 #include <fcntl.h> 
+#include <iomanip>
 
 using namespace cv;
 
@@ -102,8 +101,6 @@ std::string itoa(const T& t) {
 
 void quitproc(int param) {
   die = true;
-  commander.reset();
-  ghost->kill();
 }
 
 void rotate(cv::Mat& src, double angle, cv::Mat& dst){
@@ -225,7 +222,7 @@ void move(cv::Mat& tmpframe, float fovx, float fovy, int x, int y, std::string c
     }
   commandsToSend.resize(0);
 }
-void circleDetect(cv::Mat& src,cv::Mat& dst,cv::Mat& grayframe,cv::Mat& tmpframe,std::string windowName, int Intensity, int Min, int Max, int x, int y){
+void circleDetect(cv::Mat& src,cv::Mat& dst,cv::Mat& grayframe,cv::Mat& tmpframe, int Intensity, int Min, int Max, int x, int y){
   rotate(src,90,dst);
   cvtColor(dst,grayframe,CV_BGR2GRAY);
   GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
@@ -244,8 +241,7 @@ void circleDetect(cv::Mat& src,cv::Mat& dst,cv::Mat& grayframe,cv::Mat& tmpframe
       // circle outline
       circle( dst, center, radius, Scalar(0,0,255), 2, 8, 0 );
       //putText(rot_frame,"Lidar Data",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
-    }
-				
+    }	
 }
 int main(int argc, char** argv)
 {
@@ -267,7 +263,6 @@ int main(int argc, char** argv)
   float RcircleMin = (float)cfg.num("detector.RcircleMin");
   float RcircleMax = (float)cfg.num("detector.RcircleMax");
   float camRightIntensity = (float)cfg.num("detector.camRightIntensity");
-  char c = waitKey(sleep_time);
 	
   commander = std::shared_ptr < Commander > (new Commander());
   commander->publish = cfg.str("detector.publish");
@@ -276,7 +271,7 @@ int main(int argc, char** argv)
   commander->start();
     
     
-  int t1 = 0, t2 = 0, timeOut = 1;
+  int t1 = 0, t2 = 0, timeOut = 0;
     
   std::string commands[20];
   commands[0] = "dhome";
@@ -309,10 +304,10 @@ int main(int argc, char** argv)
 
   std::string windowNameL = "Left";
   std::string imageName = "";
-  namedWindow(windowNameL,CV_WINDOW_AUTOSIZE);
+  namedWindow(windowNameL, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO |CV_WINDOW_AUTOSIZE);
 
   std::string windowNameR = "Right";
-  namedWindow(windowNameR,CV_WINDOW_AUTOSIZE);
+  namedWindow(windowNameR, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO |CV_WINDOW_AUTOSIZE);
 	
   std::string windowDisparity = "Disparity";
   namedWindow(windowDisparity, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_WINDOW_AUTOSIZE);
@@ -340,82 +335,79 @@ int main(int argc, char** argv)
     {
       //Grab image
       if(receiving) 
-	{
+	  {
 				
 	  int dist = lidarLayer.recvData();
 			
 	  try
-	    {
-	      decoded = my_watcher.grab_image();
-	      lr = decoded.first;
-	      if (lr == 'L')
-		imgLeft = decoded.second;
-	      else if (lr == 'R')
-		imgRight = decoded.second;
+	   {
+		decoded = my_watcher.grab_image();
+
+		lr = decoded.first;
+		if (lr == 'L')
+		 imgLeft = decoded.second;
+		else if (lr == 'R')
+		 imgRight = decoded.second;
 	    }
 	  catch(int e)
 	    {
-	      std::cout << "No data available!" << std::endl;
+	    std::cout << "No data available!" << std::endl;
 	    }  
-	  //if (c == 'f'){
-	  while (c != 's'){
-	    if(!imgLeft.empty() && lr == 'L')
-	      {
-		circleDetect(imgLeft,rot_imageL,grayframe,tmpframe,windowNameL,camLeftIntensity,LcircleMin,LcircleMax,x,y);
-		imshow(windowNameL, rot_imageL);
+	 
+	    if(!imgLeft.empty() && lr == 'L') {
+			circleDetect(imgLeft,rot_imageL,grayframe,tmpframe,camLeftIntensity,LcircleMin,LcircleMax,x,y);
+			imshow(windowNameL, rot_imageL);
 	      }			
-	    if(!imgRight.empty() && lr == 'R')
-	      {
-		circleDetect(imgRight,rot_imageR,grayframe,tmpframe,windowNameR,camRightIntensity,RcircleMin,RcircleMax,x,y);
-		imshow(windowNameR, rot_imageR);
+	    if(!imgRight.empty() && lr == 'R'){
+			circleDetect(imgRight,rot_imageR,grayframe,tmpframe,camRightIntensity,RcircleMin,RcircleMax,x,y);
+			imshow(windowNameR, rot_imageR);
 	      }
-	  }
-	}
-      /*	else{
-		if(!imgLeft.empty() && lr == 'L')
-		{
-		rotate(imgLeft,90,rot_imageL);
-		imshow(windowNameL, rot_imageL);
-		}			
-		if(!imgRight.empty() && lr == 'R')
-		{
-		rotate(imgRight,90,rot_imageR);
-		imshow(windowNameR, rot_imageR);
-		}
-		//}*/
+	  
+	
+			/*else{
+			if(!imgLeft.empty() && lr == 'L')
+			{
+			rotate(imgLeft,90,rot_imageL);
+			imshow(windowNameL, rot_imageL);
+			}			
+			if(!imgRight.empty() && lr == 'R')
+			{
+			rotate(imgRight,90,rot_imageR);
+			imshow(windowNameR, rot_imageR);
+			}
+			}*/
 
-      t2 = time(0);
-			
-      if(t2 - t1 > timeOut) 
-	{
-	  if(lr == 'R' && !tmpframe.empty())
-	    {
-	      move(tmpframe,fovx,fovy,x,y,commands);
-	    }
-	  t1 = time(0);
+		  t2 = time(0);
 				
-	}
+		  if(t2 - t1 > timeOut) {
+			if(lr == 'R' && !tmpframe.empty())
+				{
+				move(tmpframe,fovx,fovy,x,y,commands);
+				}
+			t1 = time(0);
+			}		
+		}
 	
 		
 		
       //Sleep and allow user interaction
       //usleep(5);
-      //		char c = waitKey(sleep_time); 
+      char c = waitKey(sleep_time); 
       if(c == 'q') die = true;
       else if(c == 'c') {
-	imageName = "image";
-	imageName += itoa(imgNum++);
-	imageName += ".jpg";
-	imwrite(imageName,  imgLeft);
-      }
-      else if(c == 'p') {
-	receiving = !receiving;
-      }
-      else if(c == 'h') {
+		imageName = "image";
+		imageName += itoa(imgNum++);
+		imageName += ".jpg";
+		imwrite(imageName,  imgLeft);
+	  }
+	  else if(c == 'p') {
+		receiving = !receiving;
+		  }
+	  else if(c == 'h') {
 	//check this befor using bf
 	//moveHome(rot_imageR,fovx,fovy,x,y,commands);
 
-      } else if(c == 'd') {
+      }/* else if(c == 'd') {
 	Mat imgDisparity16S = Mat( rot_imageL.rows, rot_imageL.cols, CV_16S );
 	Mat imgDisparity8U = Mat( rot_imageL.rows, rot_imageL.cols, CV_8UC1 );
 
@@ -447,7 +439,7 @@ int main(int argc, char** argv)
 
 	//-- 5. Save the image
 	// imwrite("SBM_sample.png", imgDisparity16S);
-      }
+      }*/
 
       imgRight.release();
       imgLeft.release();

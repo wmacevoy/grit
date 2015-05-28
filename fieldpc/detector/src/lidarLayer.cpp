@@ -53,8 +53,9 @@ int LidarLayer::recvData() {
 
 LidarLayer::~LidarLayer() {
 	std::cout << "Quitting Lidar..." << std::endl;
-	std::cout << "closing and destroying zmqz..." << std::endl;
+	std::cout << "closing connection..." << std::endl;
 	my_socket->close();
+	std::cout << "Closed Socket" << std::endl;
 	free(my_socket);
 	std::cout << "--done!" << std::endl;
 }
