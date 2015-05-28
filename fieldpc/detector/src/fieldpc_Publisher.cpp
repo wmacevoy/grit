@@ -12,17 +12,17 @@ void quitproc(int sig) {
 
 int main(int argc, char** argv) {
 	cfg.path("../../setup");
-	cfg.args("webcam.provider.", argv);
+	cfg.args("detector.webcam.provider.", argv);
 	if (argc == 1) cfg.load("config.csv");
-	bool verbose = cfg.flag("webcam.provider.verbose", true);
+	bool verbose = cfg.flag("detector.webcam.provider.verbose", true);
 	if (verbose) cfg.show();
 		
-	int indexR = (int)cfg.num("webcam.provider.indexR");
-	int indexL = (int)cfg.num("webcam.provider.indexL");
-	int sleep_time = (int)cfg.num("webcam.provider.sleep_time");
-	std::string addressf = cfg.str("webcam.provider.f_ip").c_str();
-	std::string addressc = cfg.str("webcam.provider.c_ip").c_str();
-	std::string port = cfg.str("webcam.provider.port").c_str();
+	int indexR = (int)cfg.num("detector.webcam.provider.indexR");
+	int indexL = (int)cfg.num("detector.webcam.provider.indexL");
+	int sleep_time = (int)cfg.num("detector.webcam.provider.sleep_time");
+	std::string addressf = cfg.str("detector.webcam.provider.f_ip").c_str();
+	std::string addressc = cfg.str("detector.webcam.provider.c_ip").c_str();
+	std::string port = cfg.str("detector.webcam.provider.port").c_str();
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);
