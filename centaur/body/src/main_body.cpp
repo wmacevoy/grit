@@ -1143,10 +1143,10 @@ void leapHand() {
     }
 
     if (head == "HStep") {
-      float radius=4,ystep=0,xstep=0,left=1.0,right=1.0;
+      float radius=5,ystep=0,xstep=0,left=1.0,right=1.0;
       iss >> radius >> xstep >> ystep;
       if (fabs(radius)<6 && fabs(xstep)<6 && fabs(ystep)<6) {
-        mover->stepMove(radius,13.9,13.9,-19.665,xstep,ystep,8,left,right);  // High Narrow Pose
+        mover->stepMove(radius,13.9,13.9,-19.665,xstep,ystep,12,left,right);  // High Narrow Pose
         ostringstream oss;
         oss << "HStep r=" << radius << " xstep=" << xstep << " ystep=" << xstep << " :ok."; 
       } else {

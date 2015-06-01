@@ -1,0 +1,6 @@
+#!/bin/bash                                                                     
+if [ $# -gt 0 ] ; then
+   control export MOJAVATON_REMOTE=1 \&\& bash --login -c "$@"
+else
+   control -t export MOJAVATON_REMOTE=1 \&\& bash --login
+fi

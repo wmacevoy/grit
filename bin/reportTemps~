@@ -1,0 +1,2 @@
+#!/bin/shell
+tail -f ~/logs/servos.log | perl ~/bin/maxTemp.pl

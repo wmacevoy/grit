@@ -80,6 +80,7 @@ void Configure::args(const std::string &prefix, char **argv)
       if (name == "configure") {
 	load(op);
       } else {
+	cout << fullname << "->" << value << endl;
 	values[fullname]=value;
       }
     }
@@ -187,6 +188,7 @@ void Configure::show(std::ostream &out) const
 void Configure::servos()
 {
   string file = pathfind(str("servos.map"));
+  cout << "looking for servomap at '" << file << "'" << endl;
   servos(file);
 }
 

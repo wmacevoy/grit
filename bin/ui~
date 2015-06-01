@@ -1,0 +1,6 @@
+#!/bin/bash                                                                     
+if [ $# -gt 0 ] ; then
+   control '$HOME/bin/ctx' "$@"
+else
+   control '$HOME/bin/ctx' bash --login
+fi

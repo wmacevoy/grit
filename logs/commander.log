@@ -1,3 +1,0 @@
-?ZMQHub::rxOpen(this=0x7fff5ff5a810,tcp://192.168.2.104:5502)
-ZMQHub::txOpen(this=0x7fff5ff5a810,tcp://*:5504)
-done
