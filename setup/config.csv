@@ -1,8 +1,12 @@
 name,value
-fieldpc.ip,10.23.1.21
+fieldpc.ip,10.23.3.11
 xfieldpc.ip,127.0.0.1
-control.ip,10.23.3.1
+control.ip,10.23.2.10
 xcontrol.ip,127.0.0.1
+centaur.ip,10.23.3.10
+xcentaur.ip,127.0.0.1
+control.user,user
+centaur.user,user
 rsync.parts,"pcduino,setup/config.csv,setup/servomap.csv,bin"
 rsync.dests,"${pcd1.user}@${pcd1.ip}:grit"
 sync.ip,192.168.1.116
@@ -25,10 +29,6 @@ pcd1.dev0.pins.direction.right,4
 pcd1.dev0.pins.step.left,3
 pcd1.dev0.pins.step.right,5
 feet.verbose,true
-control.user,user
-centaur.ip,10.23.1.1
-xcentaur.ip,127.0.0.1
-centaur.user,user
 legs.minspeed,15,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,20,Degrees per second on the servo
