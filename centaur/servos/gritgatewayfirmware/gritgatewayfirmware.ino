@@ -43,6 +43,11 @@ void setup()
   state = 0;
   Wire.begin(I2C_ADDRESS);
   Wire.onReceive(receiveEvent);
+  pinMode(LED_PIN,OUTPUT);
+  for (int i=0; i<10; ++i) {
+    digitalWrite(LED_PIN,i % 2 == 0);
+    delay(100);
+  }
 }
 
 void loop() 

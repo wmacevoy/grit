@@ -112,9 +112,11 @@ public:
   void update()
   {
     uint8_t outmsg[3];
-    outmsg[0] = id;
-    outmsg[1] = (goalPosition & 4096) >> 2;
-    outmsg[2] = (goalSpeed >> 1);
+    outmsg[0] = 'g';
+    outmsg[1] = id;
+    outmsg[2] = (goalPosition & 4096) >> 2;
+    //    outmsg[3] = (goalSpeed >> 1);
+    std::cout << "write: [" << int(outmsg[0]) << "," << int(outmsg[1]) << "," << int(outmsg[2]) << "]" << std::endl;
     io.write(sizeof(outmsg),outmsg);
 
     uint8_t inmsg[1];

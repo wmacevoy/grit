@@ -43,8 +43,8 @@ GritIO::GritIO(const char *dev_, size_t baud_)
 
 void GritIO::open()
 {
-  //  struct termios newtio;
-  //  struct serial_struct serinfo;
+  struct termios newtio;
+  struct serial_struct serinfo;
 
   close();
   fd = ::open(dev.c_str(),O_RDWR|O_NOCTTY|O_NONBLOCK);
@@ -52,10 +52,10 @@ void GritIO::open()
     cerr << "GritIO::open(): cannot open device " << dev << endl;
   }
 
-#if 0
+#if 1
   memset(&newtio, 0, sizeof(newtio));
 
-  newtio.c_cflag	= B38400|CS8|CLOCAL|CREAD;
+  newtio.c_cflag	= B9600|CS8|CLOCAL|CREAD;
   newtio.c_iflag	= IGNPAR;
   newtio.c_oflag	= 0;
   newtio.c_lflag	= 0;
