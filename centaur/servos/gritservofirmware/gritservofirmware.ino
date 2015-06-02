@@ -1,6 +1,8 @@
 #include <EEPROM.h>
 #include <Wire.h>
 
+int ledstatus = 13;
+
 const int ENB=3;
 const int INC=4;
 const int IND=7;
@@ -144,6 +146,10 @@ void hardStop() { // Braking
 }
 
 void receiveEvent(int howMany) {
+  if(digitalRead(ledstatus) == HIGH)
+    digitalWrite(ledstatus,LOW);
+   else
+     digitalWrite(ledstatus,HIGH); 
   int newGoal=goal;
   int newSpeed=settings.speed;
   if (Wire.available()>0) {
@@ -175,6 +181,8 @@ void setup() {
   digitalWrite(INC,LOW);
   pinMode(IND,OUTPUT);
   digitalWrite(IND,LOW);
+  pinMode(ledstatus,OUTPUT);
+  digitalWrite(ledstatus,LOW);
   analogWrite(ENB,255);
   settings.readMemory();
   Wire.begin(settings.address);
