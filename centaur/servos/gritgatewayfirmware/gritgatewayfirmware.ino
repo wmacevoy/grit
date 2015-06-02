@@ -20,7 +20,9 @@ void receiveEvent(int howMany)
 {
   if (state == 3) {
     while (howMany > 0) {
-      Serial.write(Wire.read());
+      int c=Wire.read();
+      Serial.println(c);
+//      Serial.write(Wire.read());
       --howMany;
     }
     state=0;
@@ -71,9 +73,12 @@ void loop()
     break;
   case 2:
     if (ch(value)) {
+        address=40;
+        value=66;
         Wire.beginTransmission(address);
         Wire.write(value);
         Wire.endTransmission();
+        Serial.println("sent.");
 	if (command == 'g') {
           Wire.requestFrom((int)address, 1);
   	  timeout=millis()+TIMEOUT;
