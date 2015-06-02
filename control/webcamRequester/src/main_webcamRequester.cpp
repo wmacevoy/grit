@@ -69,7 +69,7 @@ int main(int argc, char** argv)
 	
 	//Initialize watcher
 	my_watcher.setup(port, true, verbose);
-	my_watcher.setupLidar(lidarAddress, lidarCalibration, verbose);
+	//my_watcher.setupLidar(lidarAddress, lidarCalibration, verbose);
 
 	cvSetMouseCallback(windowName.c_str(), mouseEvent, 0);
 
@@ -77,7 +77,7 @@ int main(int argc, char** argv)
 		if(receiving) {
         try
           {
-				  frame = my_watcher.grab_image();
+		  frame = my_watcher.grab_image();
           }
         catch(int e)
           {
@@ -86,9 +86,9 @@ int main(int argc, char** argv)
 
         if(!frame.empty())
          {
-				 imshow(windowName, frame);
+		 imshow(windowName, frame);
          }
-			}
+		}
 
 		char c = waitKey(sleep_time);
 		if(c == 'q') die = true;
@@ -100,6 +100,12 @@ int main(int argc, char** argv)
 		}
 		else if(c == 'p') {
 			receiving = !receiving;
+		}
+		else if(c =='u') {
+			if(sleep_time < 10000) sleep_time += 100;
+		}
+		else if(c =='t') {
+			if(sleep_time > 100)  sleep_time -= 100;
 		}
 	}
 

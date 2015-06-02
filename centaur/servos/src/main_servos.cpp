@@ -15,6 +15,7 @@
 #include "ZMQServoMessage.h"
 #include "CreateFakeServoController.h"
 #include "CreateDynamixelServoController.h"
+#include "CreateGritServoController.h"
 #include "Servo.h"
 #include "ScaledServo.h"
 #include "CSVRead.h"
@@ -27,7 +28,8 @@ using namespace std;
 // manage all servo controllers (real or fake)
 
 SPServoController fakeServoController;
-SPServoController realServoController;
+SPServoController dynamixelServoController;
+SPServoController gritServoController;
 
 SPServo servo(string device, int id)
 {
@@ -41,11 +43,17 @@ SPServo servo(string device, int id)
     }
     controller = fakeServoController;
   }
-  if (device == "real") {
-    if (realServoController.get() == 0) {
-      realServoController = SPServoController(CreateDynamixelServoController(cfg.num("servos.deviceindex"),cfg.num("servos.baudnum")));
+  if (device == "dynamixel") {
+    if (dynamixelServoController.get() == 0) {
+      dynamixelServoController = SPServoController(CreateDynamixelServoController(cfg.num("servos.dynamixel.deviceindex"),cfg.num("servos.dynamixel.baudnum")));
     }
-    controller=realServoController;
+    controller=dynamixelServoController;
+  }
+  if (device == "grit") {
+    if (gritServoController.get() == 0) {
+      gritServoController = SPServoController(CreateGritServoController(cfg.num("servos.grit.deviceindex"),cfg.num("servos.grit.baudnum")));
+    }
+    controller=gritServoController;
   }
   
 //  if (controller.get() == 0) throw out_of_range(device);
@@ -268,14 +276,16 @@ void run() {
   signal(SIGQUIT, SigIntHandler);
 
   if (fakeServoController) fakeServoController->start();
-  if (realServoController) realServoController->start();
+  if (dynamixelServoController) dynamixelServoController->start();
+  if (gritServoController) gritServoController->start();
   server->start();
 
   server->join();
 
   server.reset();
   fakeServoController.reset();
-  realServoController.reset();
+  dynamixelServoController.reset();
+  gritServoController.reset();
 }
 
 int main(int argc,char **argv) {
