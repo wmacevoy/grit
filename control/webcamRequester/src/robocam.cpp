@@ -4,6 +4,14 @@
 using namespace cv;
 using namespace boost::asio::ip;
 
+cv::Mat rotate(cv::Mat& src, double angle){
+	cv::Mat dst;
+	cv::Point2f src_center(src.cols/2.0f,src.rows/2.0f);
+	cv::Mat rot_mat = cv::getRotationMatrix2D(src_center,angle,1.0);
+	cv::warpAffine(src, dst, rot_mat, src.size());
+	return dst;
+}
+
 RobotWatcher::RobotWatcher()
 {
 
@@ -13,10 +21,10 @@ RobotWatcher::~RobotWatcher()
 {
 	std::cout << "Quitting Robowatcher..." << std::endl;
 	std::cout << "releasing capture and freeing mat memory..." << std::endl;
-  decoded.release();
-  my_socket->close();
+    decoded.release();
+	my_socket->close();
 	free(my_socket);
-  std::cout << "--done!" << std::endl;
+    std::cout << "--done!" << std::endl;
 }
 
 bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false)
@@ -25,16 +33,19 @@ bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false
   MAX_SIZE = 10000;
   die = false;
   receiving = true;
-	inside = false;
-	hasLidar = _hasLidar;
-	verbose = _verbose;
-	mx = 0;
-	my = 0;
-	currentWidth = normalWidth;
-	currentHeight = normalHeight;
+  inside = false; 
+  hasLidar = _hasLidar;
+  verbose = _verbose;
+  mx = 0;
+  my = 0;
+  currentWidth = normalWidth;
+  currentHeight = normalHeight;
 
   my_socket = new udp::socket(my_io_service, udp::endpoint(udp::v4(), port));
   my_socket->non_blocking(true);
+  
+  boost::asio::socket_base::receive_buffer_size option(12000);
+  my_socket->set_option(option);
 
   return true; //get this better
 }
@@ -57,17 +68,10 @@ Mat RobotWatcher::grab_image()
     if(length > 0)
      {
 		 buff.resize(length);
-  	 decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
+  	     decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
 		 if(verbose) std::cout << decoded.cols << "  " << decoded.rows << std::endl;
-		 d.setBounds(decoded.cols, decoded.rows);
-		 if(hasLidar) {
-			 d.recvData();
-			 d.drawGraph(decoded, decoded.cols, decoded.rows);
-			 if(inside) {
-				 d.writeDistance(decoded, mx);			
-			 }
-		  }
-     }
+	     decoded = rotate(decoded, 90);
+	 }
   	return decoded;
 }
 

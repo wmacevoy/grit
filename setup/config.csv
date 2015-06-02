@@ -102,7 +102,7 @@ lidar.provider.verbose,false
 webcam.requester.verbose,"false"
 webcam.requester.calibration,"false"
 webcam.requester.sleep_time,"10"
-webcam.provider.verbose,true
+webcam.provider.verbose,false
 webcam.provider.indexL,"1"
 webcam.provider.indexR,"0"
 webcam.provider.sleep_time,"20"
