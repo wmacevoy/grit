@@ -27,31 +27,31 @@ using namespace std;
 
 // manage all servo controllers (real or fake)
 
-SPServoController fakeServoController;
-SPServoController dynamixelServoController;
-SPServoController gritServoController;
+ServoController *fakeServoController=0;
+ServoController *dynamixelServoController=0;
+ServoController *gritServoController=0;
 
 SPServo servo(string device, int id)
 {
-  SPServoController controller;
+  ServoController *controller;
   if (device == "generic") {
     device = cfg.str("servos.generic","real");
   }
   if (device == "fake") {
-    if (fakeServoController.get() == 0) {
-      fakeServoController = SPServoController(CreateFakeServoController());
+    if (fakeServoController == 0) {
+      fakeServoController = CreateFakeServoController();
     }
     controller = fakeServoController;
   }
   if (device == "dynamixel") {
-    if (dynamixelServoController.get() == 0) {
-      dynamixelServoController = SPServoController(CreateDynamixelServoController(cfg.num("servos.dynamixel.deviceindex"),cfg.num("servos.dynamixel.baudnum")));
+    if (dynamixelServoController == 0) {
+      dynamixelServoController = CreateDynamixelServoController(cfg.num("servos.dynamixel.deviceindex"),cfg.num("servos.dynamixel.baudnum"));
     }
     controller=dynamixelServoController;
   }
   if (device == "grit") {
-    if (gritServoController.get() == 0) {
-      gritServoController = SPServoController(CreateGritServoController(cfg.num("servos.grit.deviceindex"),cfg.num("servos.grit.baudnum")));
+    if (gritServoController == 0) {
+      gritServoController = CreateGritServoController(cfg.num("servos.grit.deviceindex"),cfg.num("servos.grit.baudnum"));
     }
     controller=gritServoController;
   }
@@ -116,6 +116,7 @@ public:
   shared_ptr <Servo> servo(ZMQServoMessage *message)
   {
     Servos::iterator i = servos.find(message->servoId);
+
     if (i != servos.end()) return i->second;
     
     cout << "zmqservoserver: !!! request for unknown servo id: " << message->servoId << endl;
@@ -263,10 +264,10 @@ void run() {
   placebo->subscribers=cfg.list("servos.subscribers");
 
   placebo->start();
-  while (!placebo->ready) {
-    cout << "waiting for body messages..." << endl;
-    sleep(1);
-  }
+  //  while (!placebo->ready) {
+  //    cout << "waiting for body messages..." << endl;
+  //    sleep(1);
+  //  }
   placebo->stop();
   placebo->join();
   placebo = shared_ptr < ZMQServoPlacebo >();
@@ -283,9 +284,9 @@ void run() {
   server->join();
 
   server.reset();
-  fakeServoController.reset();
-  dynamixelServoController.reset();
-  gritServoController.reset();
+  delete fakeServoController;
+  delete dynamixelServoController;
+  delete gritServoController;
 }
 
 int main(int argc,char **argv) {

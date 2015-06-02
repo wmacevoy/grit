@@ -42,13 +42,17 @@
 #include "Mat3d.h"
 
 #define USE_PY 0
+#define USE_LEAP 0
 
 #if USE_PY != 0
 #include "Script.h"
 #endif
 
 #include "StdCapture.h"
+#if USE_LEAP
 #include "LeapMessage.h"
+#endif
+
 #include "joystick.h"
 #include "ik_leftarm.h"
 #include "ik_rightarm.h"
@@ -59,6 +63,7 @@ SPScript py;
 
 using namespace std;
 
+#if USE_LEAP
 class LeapRx : public ZMQHub
 {
 public:
@@ -100,6 +105,7 @@ public:
 
   bool tx(ZMQPublishSocket &socket) { return true; }
 };
+#endif
 
 class Sensors : public ZMQHub
 {
@@ -182,7 +188,9 @@ public:
     answer(oss.str());
   }
 
+#if USE_LEAP
   LeapRx leapRx;
+#endif
 
   Sensors sensors;
 
@@ -640,6 +648,7 @@ public:
     //    setRElbow(-10);
   }
   
+
 void leapHand() {
     //Lift arm and place over handle
     setLElbow(-40);
@@ -659,7 +668,6 @@ void leapHand() {
     //    setRUD(10);
     //    setRElbow(-10);
   }
-
 
   void handDownPush() {
     //Push handle down
@@ -831,16 +839,20 @@ void leapHand() {
      }
   }
 
+#if USE_LEAP
   void leapOn()
   {
     leapRx.start();
   }
+#endif
 
+#if USE_LEAP
    void leapOff()
   {
     leapRx.stop();
     leapRx.join();
   }
+#endif
 
 
   void enable(string part, bool value)
@@ -1434,6 +1446,7 @@ void leapHand() {
     //   }
     // }
 
+#if USE_LEAP
     if (head=="leap"){
       string value;
       iss >> value;
@@ -1445,6 +1458,8 @@ void leapHand() {
 	answer("leap no longer controls arms.");
       }
     }
+#endif
+
     if (head=="shake") {
 	  shake();
 	  answer("Shake");
