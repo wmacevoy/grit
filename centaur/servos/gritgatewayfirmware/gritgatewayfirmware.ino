@@ -20,7 +20,9 @@ void receiveEvent(int howMany)
 {
   if (state == 3) {
     while (howMany > 0) {
-      Serial.write(Wire.read());
+      int c=Wire.read();
+      Serial.println(c);
+//      Serial.write(Wire.read());
       --howMany;
     }
     state=0;
@@ -50,8 +52,13 @@ void setup()
   }
 }
 
+int lastState = -1;
+
 void loop() 
 {
+  if (state != lastState) {
+    lastState = state;
+  }
   if (state != 0 && (long(millis())-timeout) > 0) {
     state = 0;
   }
@@ -64,19 +71,23 @@ void loop()
     }
     break;
   case 1:
-    if (ch(address) && (address > 0 && address < 127)) {
+    if (ch(address) && (address >= 0 && address <= 127)) {
 	timeout=millis()+TIMEOUT;
 	state = 2;
     }
     break;
   case 2:
     if (ch(value)) {
+        address=40;
+        value=66;
+
         Wire.beginTransmission(address);
         Wire.write(value);
         Wire.endTransmission();
 	if (command == 'g') {
           Wire.requestFrom((int)address, 1);
   	  timeout=millis()+TIMEOUT;
+          Serial.print(value); Serial.print("@"); Serial.println(address);
 	  state = 3;
 	} else {
 	  state = 0;

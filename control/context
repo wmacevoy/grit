@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export APPS="glovePublisher heartBeatRequester gui glView guicmdr webcamRequester"
+export APPS="glovePublisher heartBeatRequester gui guicmdr webcamRequester"
 
 # find mojavaton base directory
 if [ -z "$MOJAVATON_DIR" -o ! -d $MOJAVATON_DIR/drivers ]

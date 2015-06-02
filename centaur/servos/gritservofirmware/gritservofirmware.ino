@@ -1,6 +1,7 @@
 #include <EEPROM.h>
 #include <Wire.h>
 
+const int LED=13;
 const int ENB=3;
 const int INC=4;
 const int IND=7;
@@ -168,6 +169,20 @@ void getCurrent() {
   current=map(analogRead(0),settings.low,settings.high,0,180);
 }
 
+unsigned long flipLed = 0;
+void showGoal()
+{
+  if (long(flipLed) - long(millis()) < 0) {
+    if (digitalRead(LED)) {
+      flipLed = millis()+(256-goal);
+      digitalWrite(LED,0);
+    } else {
+      flipLed = millis()+(goal);
+      digitalWrite(LED,1);
+    }
+  }
+}
+
 void setup() {
   pinMode(ENB,OUTPUT);
   digitalWrite(ENB,LOW);
@@ -175,6 +190,9 @@ void setup() {
   digitalWrite(INC,LOW);
   pinMode(IND,OUTPUT);
   digitalWrite(IND,LOW);
+  flipLed = millis();
+  pinMode(LED,OUTPUT);
+  digitalWrite(LED,LOW);
   analogWrite(ENB,255);
   settings.readMemory();
   Wire.begin(settings.address);
@@ -192,7 +210,10 @@ void setup() {
   showMenu();
 }
 
+unsigned long flip = 0;
+
 void loop() {
+
   int dd=(abs(settings.low-settings.high)*7)/100;
   if (dd==0) dd=1;
   int joint=analogRead(0);

@@ -7,34 +7,12 @@ centaur.ip,10.23.3.10
 xcentaur.ip,127.0.0.1
 control.user,user
 centaur.user,user
-rsync.parts,"pcduino,setup/config.csv,setup/servomap.csv,bin"
-rsync.dests,"${pcd1.user}@${pcd1.ip}:grit"
-sync.ip,192.168.1.116
-leg1.ip,leg1
-leg1.user,user
-sync.user,wmacevoycontrol
-sync.user,user
-sync.remote,${sync.user}@${sync.ip}:/grit
-sync.local,"~/grit"
-sync.files,"setup/config.csv,setup/servomap.csv"
-sync.onchange,"../context restart"
-pcd1.ip,pcd1
-pcd1.user,user
-pcd1.devs,1
-pcd1.verbose,true
-pcd1.dev0.pins.position,4
-pcd1.dev0.pins.enable,8
-pcd1.dev0.pins.direction.left,2
-pcd1.dev0.pins.direction.right,4
-pcd1.dev0.pins.step.left,3
-pcd1.dev0.pins.step.right,5
-feet.verbose,true
 legs.minspeed,15,Degrees per second on the servo
 legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,20,Degrees per second on the servo
 arms.maxspeed,40,Degrees per second on the servo 
 safety.ip,${centaur.ip}
-safety.port,5600
+safety.port,1100
 safety.delayoff,2.5,seconds of warning
 safety.txtimeout,2.0,seconds for stale receives
 safety.rxtimeout,2.0,seconds for stale sends
@@ -45,14 +23,14 @@ safety.subscribe,tcp://${safety.ip}:${safety.port}
 safety.subscribers,"tcp://${servos.ip}:${servos.safety.port},tcp://${body.ip}:${body.safety.port},tcp://${sensors.ip}:${sensors.safety.port},tcp://${guicmdr.ip}:${guicmdr.safety.port}"
 xsafety.subscribers,"tcp://${servos.ip}:${servos.safety.port}"
 gui.ip,${control.ip}
-gui.safety.port,5604
+gui.safety.port,1101
 gui.safety.publish,"tcp://*:${gui.safety.port}"
 gui.verbose,true
 gui.address_t,"tcp://${centaur.ip}:9001"
 gui.address_s,"tcp://${centaur.ip}:5508"
 gui.sleep_t,"200"
 servos.ip,${centaur.ip}
-servos.safety.port,5601
+servos.safety.port,1102
 servos.safety.publish,tcp://*:${servos.safety.port}
 servos.safety.subscribe,tcp://${safety.ip}:${safety.port}
 servos.verbose,false
@@ -63,12 +41,12 @@ servos.grit.baudnum,8
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
 servos.dynamixel.rate.tx,20.0
 servos.publish.ip,${centaur.ip}
-servos.publish.port,5500
+servos.publish.port,1103
 servos.publish,tcp://*:${servos.publish.port}
 servos.subscribe,tcp://${servos.publish.ip}:${servos.publish.port}
-servos.subscribers,"tcp://127.0.0.1:5501,tcp://127.0.0.1:5503"
+servos.subscribers,"tcp://127.0.0.1:1104,tcp://127.0.0.1:1105"
 servos.map,servomap.csv
-proxyservos.port,5599
+proxyservos.port,1106
 proxyservos.ip,${centaur.ip}
 proxyservos.publish,tcp://*:${proxyservos.port}
 proxyservos.subscribe,tcp://${proxyservos.ip}:${proxyservos.port}
@@ -76,23 +54,26 @@ proxyservos.anglerate,0.25
 proxyservos.temprate,0.25,0.0167
 proxyservos.verbose,false
 body.ip,${centaur.ip}
-body.safety.port,5602
+body.safety.port,1107
 body.safety.publish,tcp://*:${body.safety.port}
 body.safety.subscribe,tcp://${safety.ip}:${safety.port}
 body.servos.rate,40
-body.servos.publish,tcp://*:5503
-body.servos.subscribers,tcp://127.0.0.1:5500
-body.commander.port,5502
+body.servos.port,1108
+body.servos.publish,tcp://*:${body.servos.port}
+body.servos.subscribers,tcp://127.0.0.1:${servos.publish.port}
+body.commander.port,1109
 body.commander.publish,tcp://*:${body.commander.port}
 body.commander.subscribers,"tcp://${commander.ip}:${commander.port},tcp://${guicmdr.ip}:${guicmdr.port},tcp://${detector.ip}:${detector.port}"
-body.commander.glovesAddress,"tcp://${control.ip}:6689"
-body.commander.neckAddress,"tcp://${control.ip}:5556"
+body.commander.gloves.port,1110
+body.commander.glovesAddress,"tcp://${control.ip}:${body.commander.gloves.port}"
+body.commander.neck.port,1111
+body.commander.neckAddress,"tcp://${control.ip}:${body.commander.neck.port}"
 body.verbose,false
 commander.ip,${control.ip}
-commander.port,5504
+commander.port,1112
 commander.publish,"tcp://*:${commander.port}"
 commander.subscribers,"tcp://${body.ip}:${body.commander.port}"
-lidar.provider.port,9997
+lidar.provider.port,1113
 lidar.provider.ip,${centaur.ip}
 lidar.provider.c_ip,"${fieldpc.ip}"
 lidar.provider.ip,"${centaur.ip}"
@@ -107,49 +88,34 @@ webcam.provider.indexL,"1"
 webcam.provider.indexR,"0"
 webcam.provider.sleep_time,"20"
 webcam.provider.detect,"false"
-webcam.provider.port,"9993"
+webcam.provider.port,17000
 webcam.provider.ip,"${centaur.ip}"
 webcam.provider.f_ip,"${fieldpc.ip}"
 webcam.provider.c_ip,"${control.ip}"
-leap.provider.verbose,false
-leap.provider.decay_time,1.0,seconds
-leap.provider.ip,"${control.ip}"
-leap.provider.port,"9990"
-leap.provider.publish,"tcp://*:${leap.provider.port}"
-leap.provider.subscribe,"tcp://${leap.provider.ip}:${leap.provider.port}"
-leap.requester.verbose,false
-leap.requester.sleep_time,"10000"
-leap.origin.x,0.0,offset (inches)
-leap.origin.y,26.0,offset (inches)
-leap.origin.z,12.0,offset (inches)
-leap.scale.x,1.0
-leap.scale.y,1.0
-leap.scale.z,1.0
-heartbeat.provider.address,"tcp://*:9800"
+heartbeat.provider.port,1114
+heartbeat.provider.address,"tcp://*:${heartbeat.provider.port}"
 heartbeat.provider.verbose,false
 heartbeat.provider.sleep_time,"100"
-heartbeat.requester.address,"tcp://${centaur.ip}:9800"
+heartbeat.requester.address,"tcp://${centaur.ip}:${heartbeat.provider.port}"
 heartbeat.requester.verbose,false
 heartbeat.requester.sleep_time,"100"
-glView.subscriber.verbose,false
-glView.subscriber.sleep_time,25
 guicmdr.verbose,false
 guicmdr.ip,${control.ip}
-guicmdr.port,5505
+guicmdr.port,1115
 guicmdr.publish,"tcp://*:${guicmdr.port}"
 guicmdr.subscribers,"tcp://${body.ip}:${body.commander.port}"
-guicmdr.safety.port,5605
+guicmdr.safety.port,1116
 guicmdr.safety.publish,"tcp://*:${guicmdr.safety.port}"
 sensorscontrol.ip,"${centaur.ip}"
-sensorscontrol.port,"5507"
+sensorscontrol.port,1117
 sensorscontrol.publish,"tcp://*:${sensorscontrol.port}"
 sensorscontrol.subscribe,"tcp://${sensorscontrol.ip}:${sensorscontrol.port}"
 sensorscontrol.rate,4
 sensors.ip,"${centaur.ip}"
-sensors.port,"5506"
+sensors.port,1118
 sensors.publish,"tcp://*:${sensors.port}"
 sensors.subscribe,"tcp://${sensors.ip}:${sensors.port}"
-sensors.safety.port,5603
+sensors.safety.port,1119
 sensors.safety.publish,"tcp://*:${sensors.safety.port}"
 sensors.safety.subscribe,"tcp://${safety.ip}:${safety.port}"
 sensors.verbose,false
@@ -159,7 +125,7 @@ sensors.readtimeout,5.0
 sensors.txtimeout,5.0
 sensors.rate,10.0
 sensors.dev_path,"/dev/ttyUSB2"
-proxysensors.port,5596
+proxysensors.port,1120
 proxysensors.ip,${centaur.ip}
 proxysensors.publish,tcp://*:${proxysensors.port}
 proxysensors.subscribe,tcp://${proxysensors.ip}:${proxysensors.port}
@@ -176,7 +142,7 @@ ik.epsilon,1e-2
 ik.steps,4
 ik.speed,4,"inches/sec"
 detector.ip,${fieldpc.ip}
-detector.port,6653
+detector.port,17001
 detector.publish,"tcp://*:${detector.port}"
 detector.subscribers,"tcp://${body.ip}:${body.commander.port}"
 detector.verbose,"true"
@@ -198,8 +164,7 @@ detector.webcam.provider.indexL,"1"
 detector.webcam.provider.indexR,"0"
 detector.webcam.provider.sleep_time,"20"
 detector.webcam.provider.detect,"false"
-detector.webcam.provider.port,"6109"
+detector.webcam.provider.port,17002
 detector.webcam.provider.ip,"${centaur.ip}"
 detector.webcam.provider.f_ip,"${fieldpc.ip}"
 detector.webcam.provider.c_ip,"${control.ip}"
-

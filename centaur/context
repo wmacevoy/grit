@@ -1,5 +1,7 @@
 #!/bin/bash
 
+APPS="safetyProvider servos proxyservos body sensors proxysensors webcamPublisher LidarProvider"
+
 # find mojavaton base directory
 if [ -z "$MOJAVATON_DIR" -o ! -d $MOJAVATON_DIR/drivers ]
 then
@@ -180,7 +182,7 @@ start()
     if [ $# -gt 0 ] ; then
 	start_apps "$@"
     else
-	start_apps safetyProvider servos proxyservos body sensors proxysensors webcamPublisher LidarProvider
+	start_apps $APPS
     fi
 }
 
@@ -189,7 +191,7 @@ stop()
     if [ $# -gt 0 ] ; then
 	stop_apps "$@"
     else
-	stop_apps body sensors proxysensors webcamPublisher LidarProvider proxyservos servos safetyProvider
+	stop_apps $APPS
     fi
 }
 
