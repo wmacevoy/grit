@@ -84,9 +84,13 @@ int main(int argc, char** argv)
 			  FD_SET(fd, &set);
 
 			  rv = select(fd+1, &set, NULL, NULL, &ts);
+			  std::cout << "rv: " << rv <<std::endl;
 			  if (rv > 0) {
 				 memset(buffer, '\0', 5);
 				 int rec = read(fd,buffer,5);
+				 //buffer[0] = '6';
+				 //buffer[1] = '9';
+				 //buffer[2] = '\0';
 				 std::cout << "read in: " << rec << ", buffer: " << buffer << std::endl;
 				 socket.send_to(boost::asio::buffer(buffer, 5), receiver_endpoint);
 			  }

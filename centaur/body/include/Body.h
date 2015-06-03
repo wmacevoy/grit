@@ -3,6 +3,7 @@
 #include <memory>
 #include <iostream>
 
+#include "Feet.h"
 #include "Legs.h"
 #include "Neck.h"
 #include "Arms.h"
@@ -10,6 +11,7 @@
 class Body
 {
  public:
+  Feet feet;
   Legs legs;
   std::shared_ptr < Servo > waist;
   Neck neck;

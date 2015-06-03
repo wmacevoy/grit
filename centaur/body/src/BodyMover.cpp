@@ -34,12 +34,13 @@ WalkParameters::WalkParameters(double newRadius,double x,double y,double newZ,do
 
 
 BodyMover::BodyMover()
-  : legs(this), left(this), right(this)
+  : feet(this), legs(this), left(this), right(this)
 {
 }
 
 void BodyMover::move(Body &body)
 {
+  feet.move(body.feet);
   legs.move(body.legs);
   waist.move(*body.waist);
   neck.move(body.neck);
@@ -820,18 +821,22 @@ ServoMover* BodyMover::getMover(const std::string &name)
   if (name == "RIGHTARM_RING") return &right.ring;
   if (name == "RIGHTARM_THUMB") return &right.thumb;
 
+  if (name == "LEG1_FOOT") return &feet.foot[LEG1];
   if (name == "LEG1_KNEE") return &*legs.legMovers[LEG1]->kneeMover;
   if (name == "LEG1_FEMUR") return &*legs.legMovers[LEG1]->femurMover;
   if (name == "LEG1_HIP") return &*legs.legMovers[LEG1]->hipMover;
 
+  if (name == "LEG2_FOOT") return &feet.foot[LEG2];
   if (name == "LEG2_KNEE") return &*legs.legMovers[LEG2]->kneeMover;
   if (name == "LEG2_FEMUR") return &*legs.legMovers[LEG2]->femurMover;
   if (name == "LEG2_HIP") return &*legs.legMovers[LEG2]->hipMover;
 
+  if (name == "LEG3_FOOT") return &feet.foot[LEG3];
   if (name == "LEG3_KNEE") return &*legs.legMovers[LEG3]->kneeMover;
   if (name == "LEG3_FEMUR") return &*legs.legMovers[LEG3]->femurMover;
   if (name == "LEG3_HIP") return &*legs.legMovers[LEG3]->hipMover;
 
+  if (name == "LEG4_FOOT") return &feet.foot[LEG4];
   if (name == "LEG4_KNEE") return &*legs.legMovers[LEG4]->kneeMover;
   if (name == "LEG4_FEMUR") return &*legs.legMovers[LEG4]->femurMover;
   if (name == "LEG4_HIP") return &*legs.legMovers[LEG4]->hipMover;
