@@ -68,7 +68,7 @@ void loop()
 	for (int i=0; i<4; ++i) {
 	  Wire.beginTransmission(10*(i+1));
 	  Wire.write(angles[i]);
-	  Wire.write(128+4*dirs[i]);
+	  Wire.write(uint8_t(128+4*dirs[i]));
 	  Wire.endTransmission();
 	  delay(10);
 	}
@@ -76,8 +76,8 @@ void loop()
       case 's':
 	for (int i=0; i<4; ++i) {
 	  Wire.beginTransmission(10*(i+1));
-	  Wire.write(90);
-	  Wire.write(0);
+	  Wire.write(angles[i]);
+	  Wire.write(uint8_t(0));
 	  Wire.endTransmission();
 	  delay(10);
 	}
