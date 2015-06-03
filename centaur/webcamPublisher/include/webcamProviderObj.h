@@ -72,7 +72,6 @@ public:
 	void provide();
 	int getwidth();
 	int getheight();
-	void rotate(cv::Mat&,double,cv::Mat&);
 	bool setResolution(int _width, int _height);
 	bool setQuality(int _quality);
 	bool setFramerate(int _framerate);

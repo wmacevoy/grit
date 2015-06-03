@@ -89,7 +89,7 @@ void webcamProvider::provide() {
 	{
 		captureR >> frameR;
 		captureL >> frameL;
-
+		param[1]=image_quality;
 	    //To detector
 		buff.resize(0);
 
@@ -116,12 +116,14 @@ void webcamProvider::provide() {
 		t2 = now();
 		if(t2-t1>lowsend)
 		  {
+		  param[1]=20;
 		  buff.resize(0);
 
 		  Mat im_gray;
 		  cvtColor(frameL,im_gray,CV_RGB2GRAY);
 		  Rect region_of_interest = Rect(110, 70, 100, 100);
           Mat image_roi = im_gray(region_of_interest);
+          image_roi.convertTo(image_roi, CV_8UC1);
 		  
 	      imencode(output_type.c_str(), image_roi, buff, param);
 		  if(verbose) std::cout<<"coded file size(jpg) Low "<<buff.size()<< ", width: " << image_roi.cols << ", height: " << image_roi.rows << std::endl;
