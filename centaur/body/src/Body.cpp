@@ -6,6 +6,7 @@ using namespace std;
 
 void Body::init()
 {
+  feet.init();
   legs.init();
   neck.init();
   waist = servo("WAIST");

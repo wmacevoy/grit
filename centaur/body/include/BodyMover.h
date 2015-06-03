@@ -6,6 +6,7 @@
 #include <atomic>
 
 #include "Body.h"
+#include "FeetMover.h"
 #include "LegsMover.h"
 #include "ServoMover.h"
 #include "NeckMover.h"
@@ -32,6 +33,7 @@ class WalkParameters {
 class BodyMover
 {
  public:
+  FeetMover feet;
   LegsMover legs;
   ServoMover waist;
   NeckMover neck;

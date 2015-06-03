@@ -32,6 +32,7 @@ struct GritServo : Servo
 public:
   GritIO io;
   int id;
+  bool isFoot;
 
   int presentPosition;
   float minAngle;
@@ -54,6 +55,7 @@ public:
   GritServo(GritIO &io_, int id_)
     : io(io_), id(id_), presentPosition(2048), goalPosition(2048) 
   {
+    isFoot = (id%10 == 0);
     enabled=true;
     minSpeed = atof(cfg.servo(id,"minspeed").c_str());
     maxSpeed = atof(cfg.servo(id,"maxspeed").c_str());
@@ -83,13 +85,13 @@ public:
   }
 
   float angle() const { 
-    return (180.0/2048)*(presentPosition-2048); 
+    return isFoot ? presentPosition : (180.0/2048)*(presentPosition-2048); 
   }
 
   void angle0(float value) {
     if (value < minAngle || !isfinite(value)) value = minAngle;
     else if (value > maxAngle) value = maxAngle;
-    goalPosition = value*(2048/180.0)+2048;
+    goalPosition = isFoot ? value : value*(2048/180.0)+2048;
   }
 
   void angle(float value) {
@@ -101,22 +103,27 @@ public:
     value = fabs(value);
     if (value < minSpeed || !isfinite(value)) { value = minSpeed; }
     else if (value > maxSpeed) { value = maxSpeed; }
-    goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*SPEED_FACTOR;
-    if (goalSpeed > 480) goalSpeed = 480;
+    if (isFoot) {
+      goalSpeed = value;
+    } else {
+      goalSpeed = fabs(value)*(60.0/360.0)*(1023/117.07)*SPEED_FACTOR;
+      if (goalSpeed > 480) goalSpeed = 480;
+    }
   }
 
   float speed() const {
-    return goalSpeed/((60.0/360.0)*(1023/117.07));
+    return isFoot ? goalSpeed : goalSpeed/((60.0/360.0)*(1023/117.07));
   }
 
   void update()
   {
-    uint8_t outmsg[3];
+    uint8_t outmsg[4];
     outmsg[0] = 'g';
     outmsg[1] = id;
-    outmsg[2] = (goalPosition & 4096) >> 2;
+    outmsg[2] = goalPosition;
+    outmsg[3] = goalSpeed;
     //    outmsg[3] = (goalSpeed >> 1);
-    std::cout << "write: [" << int(outmsg[0]) << "," << int(outmsg[1]) << "," << int(outmsg[2]) << "]" << std::endl;
+    std::cout << "write: [" << int(outmsg[0]) << "," << int(outmsg[1]) << "," << int(outmsg[2]) << "," << int(outmsg[3]) << "]" << std::endl;
     io.write(sizeof(outmsg),outmsg);
 
     uint8_t inmsg[1];

@@ -1093,6 +1093,19 @@ void leapHand() {
       enable(part,false);
     }
 
+    if (head == "feet") { // :o)
+      double vx;
+      double vy;
+      double omega;
+      if (iss >> vx >> vy >> omega) {
+	mover->feet.goals(vx,vy,omega);
+	ostringstream oss;
+	oss << "feet vx=" << vx << " vy=" << vy << " omega=" << omega;
+	answer(oss.str());
+      }
+    }
+
+
     if (head == "torque") {
       string part;
       float value;
