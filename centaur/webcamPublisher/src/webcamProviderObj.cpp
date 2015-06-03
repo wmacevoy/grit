@@ -109,22 +109,26 @@ void webcamProvider::provide() {
 		buff.resize(0);
 		
 		imencode(output_type.c_str(), frameL, buff, param);
-		//if(verbose) std::cout<<"coded file size(jpg) Hi "<<buff.size()<< ", width: " << frameL.cols << ", height: " << frameL.rows << std::endl;
+		if(verbose) std::cout<<"coded file size(jpg) Hi "<<buff.size()<< ", width: " << frameL.cols << ", height: " << frameL.rows << std::endl;
 		socket2->send_to(boost::asio::buffer(buff, buff.size()), receiver_endpoint2);
 		
 		//To control (Low res)
-		buff.resize(0);
-		
-		Size size(100,100);
-		Mat dst;
-		resize(frameL,dst,size);
-		
 		t2 = now();
 		if(t2-t1>lowsend)
 		  {
-	      imencode(output_type.c_str(), dst, buff, param);
-		  if(verbose) std::cout<<"coded file size(jpg) Low "<<buff.size()<< ", width: " << dst.cols << ", height: " << dst.rows << std::endl;
+		  buff.resize(0);
+
+		  Mat im_gray;
+		  cvtColor(frameL,im_gray,CV_RGB2GRAY);
+		  Rect region_of_interest = Rect(110, 70, 100, 100);
+          Mat image_roi = im_gray(region_of_interest);
+		  
+	      imencode(output_type.c_str(), image_roi, buff, param);
+		  if(verbose) std::cout<<"coded file size(jpg) Low "<<buff.size()<< ", width: " << image_roi.cols << ", height: " << image_roi.rows << std::endl;
 		  socket3->send_to(boost::asio::buffer(buff, buff.size()), receiver_endpoint3);
+	      
+	      image_roi.release();
+	      im_gray.release();
 	      t1=now();
 		  }
 		  
