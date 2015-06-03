@@ -9,6 +9,7 @@
 #include "CSVRead.h"
 #include "ZMQHub.h"
 #include "Lock.h"
+#include "now.h"
 
 #include <iostream>
 #include <signal.h>
@@ -103,11 +104,6 @@ void quitproc(int param) {
   die = true;
 }
 
-void rotate(cv::Mat& src, double angle, cv::Mat& dst){
-  cv::Point2f src_center(src.cols/2.0f,src.rows/2.0f);
-  cv::Mat rot_mat = cv::getRotationMatrix2D(src_center,angle,1.0);
-  cv::warpAffine(src, dst, rot_mat, src.size());
-}
 std::string convstr(const float t) {
   std::stringstream ftoa;
   ftoa << std::setprecision(3) << std::setw(4) << t << " CM";
@@ -222,9 +218,8 @@ void move(cv::Mat& tmpframe, float fovx, float fovy, int x, int y, std::string c
     }
   commandsToSend.resize(0);
 }
-void circleDetect(cv::Mat& src,cv::Mat& dst,cv::Mat& grayframe,cv::Mat& tmpframe, int Intensity, int Min, int Max, int& x, int& y){
-  rotate(src,90,dst);
-  cvtColor(dst,grayframe,CV_BGR2GRAY);
+void circleDetect(cv::Mat& src, cv::Mat& grayframe,cv::Mat& tmpframe, int Intensity, int Min, int Max, int& x, int& y){
+  cvtColor(src,grayframe,CV_BGR2GRAY);
   GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
   vector<Vec3f> circles;
   HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,Intensity,100,Min,Max);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
@@ -234,12 +229,12 @@ void circleDetect(cv::Mat& src,cv::Mat& dst,cv::Mat& grayframe,cv::Mat& tmpframe
       x = cvRound(circles[0][0]);
       y = cvRound(circles[0][1]);
       Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
-      tmpframe = cv::Mat(dst);
+      tmpframe = cv::Mat(src);
       int radius = cvRound(circles[0][2]);
       // circle center
-      circle( dst, center, 3, Scalar(0,255,0), -1, 8, 0 );
+      circle( src, center, 3, Scalar(0,255,0), -1, 8, 0 );
       // circle outline
-      circle( dst, center, radius, Scalar(0,0,255), 2, 8, 0 );
+      circle( src, center, radius, Scalar(0,0,255), 2, 8, 0 );
       //putText(rot_frame,"Lidar Data",cv::Point(50,50), CV_FONT_HERSHEY_SIMPLEX, 0.5,cv::Scalar(0,0,255),1,8,false);
     }	
 }
@@ -324,8 +319,6 @@ int main(int argc, char** argv)
   int x = 0, y = 0;
   Mat grayframe;
   Mat tmpframe;
-  Mat rot_imageL;
-  Mat rot_imageR;
   Mat imgRight;
   Mat imgLeft;
 	
@@ -354,25 +347,24 @@ int main(int argc, char** argv)
 	    }  
 	 
 	    if(!imgLeft.empty() && lr == 'L') {
-			circleDetect(imgLeft,rot_imageL,grayframe,tmpframe,camLeftIntensity,LcircleMin,LcircleMax,x,y);
-			imshow(windowNameL, rot_imageL);
+			circleDetect(imgLeft,grayframe,tmpframe,camLeftIntensity,LcircleMin,LcircleMax,x,y);
+			imshow(windowNameL, imgLeft);
 	      }			
 	    if(!imgRight.empty() && lr == 'R'){
-			circleDetect(imgRight,rot_imageR,grayframe,tmpframe,camRightIntensity,RcircleMin,RcircleMax,x,y);
-			imshow(windowNameR, rot_imageR);
+			circleDetect(imgRight,grayframe,tmpframe,camRightIntensity,RcircleMin,RcircleMax,x,y);
+			imshow(windowNameR, imgRight);
 	      }
 
-		  t2 = time(0);
+		  t2=now();
 			
-			
+		  if(t2-t1>timeOut)
 			if(lr == 'R' && !tmpframe.empty())
 				{
 				move(tmpframe,fovx,fovy,x,y,commands);
+				t1=now();
 				}		
 		}
-	
-		
-		
+
       //Sleep and allow user interaction
       //usleep(5);
       char c = waitKey(sleep_time); 
@@ -392,7 +384,7 @@ int main(int argc, char** argv)
 
       }
        else if(c == 'd') {
-		    if(!rot_imageL.empty() && ! rot_imageR.empty())
+		    if(!imgLeft.empty() && ! imgRight.empty())
 				{/*
 				Mat g1, g2;
 				cvtColor(rot_imageL, g1, CV_RGB2GRAY);
@@ -440,8 +432,6 @@ int main(int argc, char** argv)
       imgRight.release();
       imgLeft.release();
       tmpframe.release();
-      //rot_imageL.release();
-      //rot_imageR.release();
     }
 
 
@@ -451,8 +441,6 @@ int main(int argc, char** argv)
   imgLeft.release();
   imgRight.release();
   tmpframe.release();
-  rot_imageL.release();
-  rot_imageR.release();
   std::cout << "--Detector done!" << std::endl;
   return 0;
 }
