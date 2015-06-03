@@ -200,7 +200,8 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn_safe_on">
-                    <property name="width_request">25</property>
+                    <property name="label" translatable="yes">On</property>
+                    <property name="width_request">35</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -214,12 +215,14 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="btn_safe_off">
-                    <property name="width_request">25</property>
+                    <property name="label" translatable="yes">Off</property>
+                    <property name="width_request">35</property>
                     <property name="height_request">25</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
+                    <property name="yalign">0.44999998807907104</property>
                   </object>
                   <packing>
                     <property name="x">130</property>
@@ -929,23 +932,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="chk_leap">
-                <property name="label" translatable="yes">Leap</property>
-                <property name="width_request">60</property>
-                <property name="height_request">20</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_action_appearance">False</property>
-                <property name="xalign">0</property>
-                <property name="draw_indicator">True</property>
-              </object>
-              <packing>
-                <property name="x">170</property>
-                <property name="y">10</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkCheckButton" id="chk_neck">
                 <property name="label" translatable="yes">Neck</property>
                 <property name="width_request">60</property>
@@ -1145,7 +1131,7 @@
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="max_length">3</property>
+                <property name="max_length">1</property>
                 <property name="invisible_char">•</property>
                 <property name="width_chars">3</property>
                 <property name="primary_icon_activatable">False</property>
@@ -1164,7 +1150,7 @@
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="max_length">3</property>
+                <property name="max_length">1</property>
                 <property name="invisible_char">•</property>
                 <property name="width_chars">3</property>
                 <property name="invisible_char_set">True</property>
@@ -1299,13 +1285,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="lbl_mechanum">
+              <object class="GtkLabel" id="lbl_feet">
                 <property name="width_request">135</property>
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="xalign">0.40000000596046448</property>
-                <property name="label" translatable="yes">Mechanum controls:</property>
+                <property name="label" translatable="yes">Feet controls:</property>
               </object>
               <packing>
                 <property name="x">287</property>
@@ -1313,7 +1299,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_ml">
+              <object class="GtkButton" id="btn_feetl">
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -1328,7 +1314,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_mf">
+              <object class="GtkButton" id="btn_feetf">
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -1343,7 +1329,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_mr">
+              <object class="GtkButton" id="btn_feetr">
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -1358,7 +1344,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_mb">
+              <object class="GtkButton" id="btn_feetb">
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -1373,7 +1359,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_mh">
+              <object class="GtkButton" id="btn_feeth">
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -1393,10 +1379,10 @@
                 <property name="height_request">20</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="max_length">4</property>
+                <property name="max_length">2</property>
                 <property name="invisible_char">•</property>
                 <property name="width_chars">4</property>
-                <property name="text" translatable="yes">750</property>
+                <property name="text" translatable="yes">1</property>
                 <property name="invisible_char_set">True</property>
                 <property name="primary_icon_activatable">False</property>
                 <property name="secondary_icon_activatable">False</property>
@@ -1406,22 +1392,6 @@
               <packing>
                 <property name="x">465</property>
                 <property name="y">45</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkCheckButton" id="chk_mecanum">
-                <property name="label" translatable="yes">Enable</property>
-                <property name="width_request">75</property>
-                <property name="height_request">30</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
-                <property name="use_action_appearance">False</property>
-                <property name="draw_indicator">True</property>
-              </object>
-              <packing>
-                <property name="x">415</property>
-                <property name="y">100</property>
               </packing>
             </child>
             <child>
@@ -1440,7 +1410,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_mrl">
+              <object class="GtkButton" id="btn_feetrl">
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>
@@ -1455,7 +1425,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="btn_mrr">
+              <object class="GtkButton" id="btn_feetrr">
                 <property name="width_request">30</property>
                 <property name="height_request">30</property>
                 <property name="visible">True</property>

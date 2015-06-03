@@ -147,12 +147,14 @@ void hardStop() { // Braking
 void receiveEvent(int howMany) {
   int newGoal=goal;
   int newSpeed=settings.speed;
+  while (Wire.available()==0);
   if (Wire.available()>0) {
     newGoal=Wire.read();
   }
   if (newGoal>=0 && newGoal<=180) {
     goal=newGoal;
   }
+  while (Wire.available()==0);
   if (Wire.available()>0) {
     newSpeed=Wire.read();
   }
@@ -213,7 +215,7 @@ void setup() {
 unsigned long flip = 0;
 
 void loop() {
-
+  //showGoal();
   int dd=(abs(settings.low-settings.high)*7)/100;
   if (dd==0) dd=1;
   int joint=analogRead(0);
