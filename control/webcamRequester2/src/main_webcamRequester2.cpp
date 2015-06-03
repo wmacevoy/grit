@@ -38,13 +38,13 @@ void mouseEvent(int evt, int x, int y, int flags, void* param) {
 int main(int argc, char** argv)
 {
 	cfg.path("../../setup");
-	cfg.args("webcam.requester.", argv);
+	cfg.args("webcam.requester2.", argv);
 	if (argc == 1) cfg.load("config.csv");
-	verbose = cfg.flag("webcam.requester.verbose", false);
+	verbose = cfg.flag("webcam.requester2.verbose", false);
 	if (verbose) cfg.show();
 
-	int sleep_time_gray = cfg.num("webcam.requester.sleep_time");
-	int port = (int)cfg.num("webcam.provider.port");
+	int sleep_time = cfg.num("webcam.requester2.sleep_time");
+	int port = (int)cfg.num("webcam.provider2.port");
 	//std::string lidarAddress = cfg.str("lidar.provider.subscribe");
 	//bool lidarCalibration = cfg.flag("detector.webcam.requester.calibration", false);
 
@@ -53,13 +53,12 @@ int main(int argc, char** argv)
 	ghost = &my_watcher;
 	
 	int imgNum = 0;
-	int sleep_time = sleep_time_gray;
 	bool receiving = true;
 	Mat frame;
 
-	std::string windowName = "ICU (HIGH - Right Eye)";
+	std::string windowName = "ICU (LOW - Left Eye)";
 	std::string imageName = "";
-	namedWindow(windowName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
+	namedWindow(windowName, CV_WINDOW_NORMAL | CV_GUI_NORMAL);
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);

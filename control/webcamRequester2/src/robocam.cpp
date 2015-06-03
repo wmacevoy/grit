@@ -22,7 +22,7 @@ RobotWatcher::~RobotWatcher()
 bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false)
 {
   port = port_;
-  MAX_SIZE = 20000;
+  MAX_SIZE = 10000;
   die = false;
   receiving = true;
   inside = false; 
@@ -36,7 +36,7 @@ bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false
   my_socket = new udp::socket(my_io_service, udp::endpoint(udp::v4(), port));
   my_socket->non_blocking(true);
   
-  boost::asio::socket_base::receive_buffer_size option(1);
+  boost::asio::socket_base::receive_buffer_size option(8192);
   my_socket->set_option(option);
 
   return true; //get this better

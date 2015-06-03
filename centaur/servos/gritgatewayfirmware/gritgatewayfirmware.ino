@@ -6,7 +6,7 @@ const uint32_t TIMEOUT = 15; // milliseconds
 const int LED_PIN = 13;
 uint8_t state;
 
-// 'p', position is the only command supported.
+// 'g' goto , position is the only command supported.
 uint8_t command; 
 
 // 0-127 i2c address to send to 
@@ -51,35 +51,43 @@ void setup()
   }
 }
 
-int lastState = -1;
+static uint8_t angles[4] = {45,135,45,135};
+static int8_t  dirs[4] = {1,1,-1,-1};
 
 void loop() 
 {
-        Wire.beginTransmission(10);
-        Wire.write(90);
-        Wire.write(160);
-        Wire.endTransmission();
-        delay(100);
-        Wire.beginTransmission(20);
-        Wire.write(90);
-        Wire.write(160);
-        Wire.endTransmission();
-        delay(100);
-        digitalWrite(LED_PIN,1-digitalRead(LED_PIN));
-  #if 0 
-  if (state != lastState) {
-    Serial.println(state);
-    lastState = state;
-  }
   if (state != 0 && (long(millis())-timeout) > 0) {
     state = 0;
   }
   digitalWrite(LED_PIN, state != 0);
   switch(state) {
   case 0:
-    if (ch(command) && command == 'g') {
-      timeout=millis()+TIMEOUT;
-      state = 1;
+    if (ch(command)) {
+      switch(command) {
+      case 'f':
+	for (int i=0; i<4; ++i) {
+	  Wire.beginTransmission(10*(i+1));
+	  Wire.write(angles[i]);
+	  Wire.write(uint8_t(128+4*dirs[i]));
+	  Wire.endTransmission();
+	  delay(10);
+	}
+	break;
+      case 's':
+	for (int i=0; i<4; ++i) {
+	  Wire.beginTransmission(10*(i+1));
+	  Wire.write(angles[i]);
+	  Wire.write(uint8_t(0));
+	  Wire.endTransmission();
+	  delay(10);
+	}
+	digitalWrite(LED_PIN,1-digitalRead(LED_PIN));
+	break;
+      case 'g':
+	timeout=millis()+TIMEOUT;
+	state = 1;
+	break;
+      }
     }
     break;
   case 1:
@@ -95,30 +103,17 @@ void loop()
     }
   case 3:
     if (ch(value1)) {
-//        Serial.write(address);
-//        Serial.write(value0);
-//        Serial.write(value1);
-        address=10;
-        value0=90;
-        value1=160;
         Wire.beginTransmission(address);
         Wire.write(value0);
         Wire.write(value1);
         Wire.endTransmission();
-	if (command == 'g') {
-//          Wire.requestFrom((int)address, 1);
-//  	  timeout=millis()+TIMEOUT;
-//	  state = 4;
-          state = 0;
-	} else {
-	  state = 0;
-	}
+	Wire.requestFrom((int)address, 1);
+	timeout=millis()+TIMEOUT;
+	state = 4;
     }
     break;
   case 4:
     /* rx on i2c message should reset this */
     break;
   }
-#endif
-
 }
