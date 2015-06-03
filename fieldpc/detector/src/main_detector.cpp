@@ -154,7 +154,7 @@ void moveHome(cv::Mat& tmpframe, float fovx, float fovy, int x, int y, std::stri
   std::vector<int> headmove = home(tmpframe);
   std::cout<<x<< " "<<y<<std::endl;
 	
-  if(headmove.size() <= 3)
+  if(headmove.size() <= 2)
     {
       if(headmove[0] != 0)
 	{
@@ -192,7 +192,7 @@ void move(cv::Mat& tmpframe, float fovx, float fovy, int x, int y, std::string c
   std::vector<int> headmove = getHpHy(tmpframe, fovx, fovy, x, y);
   std::cout<<x<< " "<<y<<std::endl;
 	
-  if(headmove.size() <= 3)
+  if(headmove.size() <= 2)
     {
       if(headmove[0] != 0)
 	{
@@ -222,7 +222,7 @@ void move(cv::Mat& tmpframe, float fovx, float fovy, int x, int y, std::string c
     }
   commandsToSend.resize(0);
 }
-void circleDetect(cv::Mat& src,cv::Mat& dst,cv::Mat& grayframe,cv::Mat& tmpframe, int Intensity, int Min, int Max, int x, int y){
+void circleDetect(cv::Mat& src,cv::Mat& dst,cv::Mat& grayframe,cv::Mat& tmpframe, int Intensity, int Min, int Max, int& x, int& y){
   rotate(src,90,dst);
   cvtColor(dst,grayframe,CV_BGR2GRAY);
   GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
@@ -271,7 +271,7 @@ int main(int argc, char** argv)
   commander->start();
     
     
-  int t1 = 0, t2 = 0, timeOut = 0;
+  int t1 = 0, t2 = 0, timeOut = 2;
     
   std::string commands[20];
   commands[0] = "dhome";
@@ -336,7 +336,6 @@ int main(int argc, char** argv)
       //Grab image
       if(receiving) 
 	  {
-				
 	  int dist = lidarLayer.recvData();
 			
 	  try
@@ -362,30 +361,14 @@ int main(int argc, char** argv)
 			circleDetect(imgRight,rot_imageR,grayframe,tmpframe,camRightIntensity,RcircleMin,RcircleMax,x,y);
 			imshow(windowNameR, rot_imageR);
 	      }
-	  
-	
-			/*else{
-			if(!imgLeft.empty() && lr == 'L')
-			{
-			rotate(imgLeft,90,rot_imageL);
-			imshow(windowNameL, rot_imageL);
-			}			
-			if(!imgRight.empty() && lr == 'R')
-			{
-			rotate(imgRight,90,rot_imageR);
-			imshow(windowNameR, rot_imageR);
-			}
-			}*/
 
 		  t2 = time(0);
-				
-		  if(t2 - t1 > timeOut) {
+			
+			
 			if(lr == 'R' && !tmpframe.empty())
 				{
 				move(tmpframe,fovx,fovy,x,y,commands);
-				}
-			t1 = time(0);
-			}		
+				}		
 		}
 	
 		
@@ -407,58 +390,69 @@ int main(int argc, char** argv)
 	//check this befor using bf
 	//moveHome(rot_imageR,fovx,fovy,x,y,commands);
 
-      }/* else if(c == 'd') {
-	Mat imgDisparity16S = Mat( rot_imageL.rows, rot_imageL.cols, CV_16S );
-	Mat imgDisparity8U = Mat( rot_imageL.rows, rot_imageL.cols, CV_8UC1 );
+      }
+       else if(c == 'd') {
+		    if(!rot_imageL.empty() && ! rot_imageR.empty())
+				{/*
+				Mat g1, g2;
+				cvtColor(rot_imageL, g1, CV_RGB2GRAY);
+				cvtColor(rot_imageR, g2, CV_RGB2GRAY);
+				
+				std::cout << "R: " << g1.total()*g1.elemSize() << ", L: " << g2.total()*g2.elemSize() << std::endl;
+				
+				Mat imgDisparity16S = Mat( rot_imageL.rows, rot_imageL.cols, CV_16S );
+				Mat imgDisparity8U = Mat( rot_imageL.rows, rot_imageL.cols, CV_8UC1 );
 
-	if( !rot_imageL.data || !rot_imageR.data ) {
-	  std::cout<< " --(!) Error reading images " << std::endl; 
-	}
+				if( !rot_imageL.data || !rot_imageR.data ) {
+				  std::cout<< " --(!) Error reading images " << std::endl; 
+				}
 
-	//-- 2. Call the constructor for StereoBM
-	int ndisparities = 16*5;  // < Range of disparity 
-	int SADWindowSize = 21; // < Size of the block window. Must be odd 
+				//-- 2. Call the constructor for StereoBM
+				int ndisparities = 16*5;  // < Range of disparity 
+				int SADWindowSize = 21; // < Size of the block window. Must be odd 
 
-	StereoBM sbm( StereoBM::BASIC_PRESET,ndisparities,SADWindowSize );
+				StereoBM sbm( StereoBM::BASIC_PRESET,ndisparities,SADWindowSize );
 
-	//-- 3. Calculate the disparity image
-	sbm( rot_imageL, rot_imageR, imgDisparity16S, CV_16S );
+				
+				//-- 3. Calculate the disparity image
+				sbm( g1, g2, imgDisparity16S, CV_16S );
 
-	//-- Check its extreme values
-	double minVal; double maxVal;
+				//-- Check its extreme values
+				double minVal; double maxVal;
 
-	minMaxLoc( imgDisparity16S, &minVal, &maxVal );
+				minMaxLoc( imgDisparity16S, &minVal, &maxVal );
 
-	printf("Min disp: %f Max value: %f \n", minVal, maxVal);
+				printf("Min disp: %f Max value: %f \n", minVal, maxVal);
 
-	//-- 4. Display it as a CV_8UC1 image
-	imgDisparity16S.convertTo( imgDisparity8U, CV_8UC1, 255/(maxVal - minVal));
+				//-- 4. Display it as a CV_8UC1 image
+				imgDisparity16S.convertTo( imgDisparity8U, CV_8UC1, 255/(maxVal - minVal));
 
-			  
-	imshow( windowDisparity, imgDisparity8U );
+						  
+				imshow( windowDisparity, imgDisparity8U );
 
-	//-- 5. Save the image
-	// imwrite("SBM_sample.png", imgDisparity16S);
-      }*/
+				//-- 5. Save the image
+				// imwrite("SBM_sample.png", imgDisparity16S);
+				g1.release();
+				g2.release();*/
+			    }
+		  }
 
       imgRight.release();
       imgLeft.release();
       tmpframe.release();
-      rot_imageL.release();
-      rot_imageR.release();
- 
+      //rot_imageL.release();
+      //rot_imageR.release();
     }
 
 
-  std::cout << std::endl << "Quitting..." << std::endl;
-  std::cout << "destroying window and freeing mat memory..." << std::endl;
+  std::cout << std::endl << "Quitting main_Detector..." << std::endl;
   destroyAllWindows();
-  
+  commander.reset();
   imgLeft.release();
   imgRight.release();
   tmpframe.release();
   rot_imageL.release();
   rot_imageR.release();
-  std::cout << "--done!" << std::endl;
+  std::cout << "--Detector done!" << std::endl;
   return 0;
 }
