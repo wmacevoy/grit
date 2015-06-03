@@ -56,9 +56,9 @@ int main(int argc, char** argv)
 	bool receiving = true;
 	Mat frame;
 
-	std::string windowName = "ICU (LOW)";
+	std::string windowName = "ICU (LOW - Left Eye)";
 	std::string imageName = "";
-	namedWindow(windowName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
+	namedWindow(windowName, CV_WINDOW_NORMAL | CV_GUI_NORMAL);
 
 	signal(SIGINT, quitproc);
 	signal(SIGTERM, quitproc);

@@ -5,8 +5,6 @@
 #include <sstream>
 #include <string>
 #include "Configure.h"
-#include "LidarMessage.h"
-#include "fk_lidar.h"
 #include "robocam.h"
 
 using namespace cv;
@@ -32,9 +30,9 @@ void quitproc(int param) {
 }
 
 void mouseEvent(int evt, int x, int y, int flags, void* param) {
-	if(evt == CV_EVENT_MOUSEMOVE) {
+	/*if(evt == CV_EVENT_MOUSEMOVE) {
 		ghost->setMouse(x, y);
-	}
+	}*/
 }
 
 int main(int argc, char** argv)
@@ -47,8 +45,8 @@ int main(int argc, char** argv)
 
 	int sleep_time_gray = cfg.num("webcam.requester.sleep_time");
 	int port = (int)cfg.num("webcam.provider.port");
-	std::string lidarAddress = cfg.str("lidar.provider.subscribe");
-	bool lidarCalibration = cfg.flag("webcam.requester.calibration", false);
+	//std::string lidarAddress = cfg.str("lidar.provider.subscribe");
+	//bool lidarCalibration = cfg.flag("detector.webcam.requester.calibration", false);
 
 
 	RobotWatcher my_watcher;
@@ -59,7 +57,7 @@ int main(int argc, char** argv)
 	bool receiving = true;
 	Mat frame;
 
-	std::string windowName = "ICU";
+	std::string windowName = "ICU (HIGH - Right Eye)";
 	std::string imageName = "";
 	namedWindow(windowName, CV_WINDOW_NORMAL | CV_WINDOW_KEEPRATIO | CV_GUI_NORMAL);
 
@@ -71,7 +69,7 @@ int main(int argc, char** argv)
 	my_watcher.setup(port, true, verbose);
 	//my_watcher.setupLidar(lidarAddress, lidarCalibration, verbose);
 
-	cvSetMouseCallback(windowName.c_str(), mouseEvent, 0);
+	//cvSetMouseCallback(windowName.c_str(), mouseEvent, 0);
 
 	while(!die) {
 		if(receiving) {

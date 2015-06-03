@@ -4,14 +4,6 @@
 using namespace cv;
 using namespace boost::asio::ip;
 
-cv::Mat rotate(cv::Mat& src, double angle){
-	cv::Mat dst;
-	cv::Point2f src_center(src.cols/2.0f,src.rows/2.0f);
-	cv::Mat rot_mat = cv::getRotationMatrix2D(src_center,angle,1.0);
-	cv::warpAffine(src, dst, rot_mat, src.size());
-	return dst;
-}
-
 RobotWatcher::RobotWatcher()
 {
 
@@ -71,7 +63,6 @@ Mat RobotWatcher::grab_image()
 		 buff.resize(length);
   	     decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
 		 if(verbose) std::cout << decoded.cols << "  " << decoded.rows << std::endl;
-	     decoded = rotate(decoded, 90);
 	 }
   	return decoded;
 }
