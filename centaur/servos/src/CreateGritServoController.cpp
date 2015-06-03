@@ -17,6 +17,7 @@
 #include "ServoGlobals.h"
 #include "ServoController.h"
 #include "Configure.h"
+#include "CRC16.h"
 
 #include "GritIO.h"
 
@@ -117,19 +118,30 @@ public:
 
   void update()
   {
-    uint8_t outmsg[4];
+    uint8_t outmsg[6];
     outmsg[0] = 'g';
     outmsg[1] = id;
+#if 1
     outmsg[2] = goalPosition;
     outmsg[3] = goalSpeed;
+#else
+    outmsg[2] = 90;
+    outmsg[3] = 160;
+#endif
+    (*(uint16_t*)&outmsg[4])=CRC16(outmsg,4);
     //    outmsg[3] = (goalSpeed >> 1);
-    std::cout << "write: [" << int(outmsg[0]) << "," << int(outmsg[1]) << "," << int(outmsg[2]) << "," << int(outmsg[3]) << "]" << std::endl;
+        std::cout << "write: [" << int(outmsg[0]) << "," << int(outmsg[1]) << "," << int(outmsg[2]) << "," << int(outmsg[3]) << "," << int(outmsg[4]) << "," << int(outmsg[5]) << "]" << std::endl;
     io.write(sizeof(outmsg),outmsg);
 
-    uint8_t inmsg[1];
+#if 0
+    uint8_t inmsg[3];
     if (io.read(sizeof(inmsg),inmsg) == sizeof(inmsg)) {
-      presentPosition = inmsg[0] << 2;
+      //      std::cout << "read: [" << int(inmsg[0]) << "," << int(inmsg[1]) <<"," << int(inmsg[2]) << "]" << std::endl;      
+      presentPosition = inmsg[1];
+    } else {
+      std::cout << "read: []" << std::endl;
     }
+#endif
   }
 
   ~GritServo()

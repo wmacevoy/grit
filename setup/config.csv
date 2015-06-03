@@ -38,7 +38,7 @@ servos.dynamixel.deviceindex,2
 servos.dynamixel.baudnum,8
 servos.grit.deviceindex,0
 servos.grit.baudnum,208
-servos.grit.rate.tx,1.0
+servos.grit.rate.tx,10.0
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
 servos.dynamixel.rate.tx,20.0
 servos.publish.port,1103
@@ -90,7 +90,7 @@ webcam.provider.verbose,true
 webcam.provider.indexL,"1"
 webcam.provider.indexR,"0"
 webcam.provider.sleep_time,"20"
-webcam.provider.lowsendtime,"1"
+webcam.provider.lowsendtime,"2"
 webcam.provider.detect,"false"
 webcam.provider.port,17000
 webcam.provider2.port,1121

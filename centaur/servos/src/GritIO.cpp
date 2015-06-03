@@ -52,7 +52,7 @@ void GritIO::open()
     cerr << "GritIO::open(): cannot open device " << dev << endl;
   }
 
-#if 1
+#if 0
   memset(&newtio, 0, sizeof(newtio));
 
   newtio.c_cflag	= B9600|CS8|CLOCAL|CREAD;
@@ -87,9 +87,11 @@ void GritIO::open()
   FD_ZERO(&fds);
   FD_SET(fd,&fds);
 
+#if 0
   double dt = 1.0;
   timeout.tv_sec=dt;
   timeout.tv_nsec=1e9*(dt-timeout.tv_sec);
+#endif
 }
 
 void GritIO::close()
