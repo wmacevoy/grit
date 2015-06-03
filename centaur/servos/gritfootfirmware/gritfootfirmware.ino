@@ -1,6 +1,7 @@
 #include <EEPROM.h>
 #include <Wire.h>
 
+const int LED=13;
 const int ENABLE=7;
 const int STEP1=3;
 const int DIR1=4;
@@ -133,6 +134,7 @@ void requestEvent() {
   Wire.write(goal);
   Wire.write(current);
   Wire.write(settings.speed);
+  digitalWrite(LED,1-digitalRead(LED));
 }
 
 void getCurrent() {
@@ -140,6 +142,7 @@ void getCurrent() {
 }
 
 void setup() {
+  pinMode(LED,OUTPUT);
   pinMode(ENABLE,OUTPUT);
   digitalWrite(ENABLE,LOW);
   pinMode(STEP1,OUTPUT);
