@@ -16,6 +16,7 @@
 #include <string>
 #include <fstream>
 #include <atomic>
+#include "now.h"
 
 using namespace cv;
 using namespace std;
@@ -36,6 +37,7 @@ class webcamProvider {
 	std::string addressf;
 	std::string addressc;
 	std::string port;
+	std::string port2;
 	std::string path;
 
 	//Boost items
@@ -43,10 +45,13 @@ class webcamProvider {
 	boost::asio::ip::udp::resolver resolver;
 	boost::asio::ip::udp::resolver::query *query;
 	boost::asio::ip::udp::resolver::query *query2;
+	boost::asio::ip::udp::resolver::query *query3;
 	boost::asio::ip::udp::endpoint receiver_endpoint;
 	boost::asio::ip::udp::endpoint receiver_endpoint2;
+	boost::asio::ip::udp::endpoint receiver_endpoint3;
 	boost::asio::ip::udp::socket *socket;
 	boost::asio::ip::udp::socket *socket2;
+	boost::asio::ip::udp::socket *socket3;
 	bool connected;
 
 	//Image items
@@ -54,6 +59,7 @@ class webcamProvider {
 	VideoCapture captureL;
 	int width, height;
 	int image_quality;
+	int lowsend;
 	Mat frameR, frameL;
 	Mat gray;	
 	std::vector<uchar> buff;
@@ -61,7 +67,7 @@ class webcamProvider {
 	std::string output_type;
 
 public:
-	webcamProvider(int, int, int, bool, const char*, std::string, std::string, std::string);
+	webcamProvider(int, int, int, int, bool, const char*, std::string, std::string, std::string, std::string);
 	bool init();
 	void provide();
 	int getwidth();
