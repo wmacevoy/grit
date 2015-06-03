@@ -20,9 +20,8 @@ void receiveEvent(int howMany)
 {
   if (state == 3) {
     while (howMany > 0) {
-      int c=Wire.read();
-      Serial.println(c);
-//      Serial.write(Wire.read());
+      while (Wire.available()==0);
+      Serial.write(Wire.read());
       --howMany;
     }
     state=0;
@@ -48,7 +47,7 @@ void setup()
   pinMode(LED_PIN,OUTPUT);
   for (int i=0; i<10; ++i) {
     digitalWrite(LED_PIN,i % 2 == 0);
-    delay(100);
+    delay(25);
   }
 }
 
@@ -78,16 +77,17 @@ void loop()
     break;
   case 2:
     if (ch(value)) {
-        address=40;
-        value=66;
-
+        uint8_t speed=100;
+        Serial.print(address); Serial.print(":"); Serial.print(value); Serial.println();
         Wire.beginTransmission(address);
         Wire.write(value);
+        Wire.write(speed);
         Wire.endTransmission();
+ //       Serial.println("sent.");
 	if (command == 'g') {
           Wire.requestFrom((int)address, 1);
   	  timeout=millis()+TIMEOUT;
-          Serial.print(value); Serial.print("@"); Serial.println(address);
+//          Serial.print(value); Serial.print("@"); Serial.println(address);
 	  state = 3;
 	} else {
 	  state = 0;
