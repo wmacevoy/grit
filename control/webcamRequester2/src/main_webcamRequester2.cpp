@@ -55,7 +55,6 @@ int main(int argc, char** argv)
 	int imgNum = 0;
 	bool receiving = true;
 	Mat frame;
-	int t1 = 0, t2 = 0;
 
 	std::string windowName = "ICU (LOW)";
 	std::string imageName = "";
