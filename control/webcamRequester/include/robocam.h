@@ -3,7 +3,7 @@
 #include <string>
 #include <opencv2/opencv.hpp>
 #include <boost/asio.hpp>
-#include "lidarLayer.h"
+//#include "lidarLayer.h"
 
 const int normalWidth = 320;
 const int normalHeight = 240;
@@ -12,9 +12,15 @@ class RobotWatcher
 {
  private:
   cv::Mat decoded;
-  std::vector<uchar> buff;
+  int show;
+  int load;
+  uint32_t counters[2];
+  uint32_t bytes[2];
+  std::vector<uchar> buffs[2];
+  std::vector<uchar> part;
+
   int port;
-  int MAX_SIZE;
+  int MAX_PART_SIZE;
   bool receiving;
   bool die;
   bool inside;
@@ -30,15 +36,15 @@ class RobotWatcher
   boost::asio::ip::udp::socket *my_socket;
   boost::asio::ip::udp::endpoint sender_endpoint;
 
-  LidarLayer d;
+  //LidarLayer d;
 
  public:
   RobotWatcher();
   ~RobotWatcher();
   bool setup(int port_, bool _hasLidar, bool _verbose);
-  bool setupLidar(std::string _address, bool _calibration, bool _verbose);
+  //bool setupLidar(std::string _address, bool _calibration, bool _verbose);
   cv::Mat grab_image();
   void run();
   void kill();
-  void setMouse(int _x, int _y);
+  //void setMouse(int _x, int _y);
 };

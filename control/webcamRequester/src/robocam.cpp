@@ -6,7 +6,12 @@ using namespace boost::asio::ip;
 
 RobotWatcher::RobotWatcher()
 {
-
+  show=0;
+  load=1;
+  counters[0]=~0;
+  counters[1]=~0;
+  bytes[0]=~0;
+  bytes[1]=~0;
 }
 
 RobotWatcher::~RobotWatcher()
@@ -22,7 +27,7 @@ RobotWatcher::~RobotWatcher()
 bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false)
 {
   port = port_;
-  MAX_SIZE = 20000;
+  MAX_PART_SIZE = 20000;
   die = false;
   receiving = true;
   inside = false; 
@@ -34,7 +39,7 @@ bool RobotWatcher::setup(int port_, bool _hasLidar = true, bool _verbose = false
   currentHeight = normalHeight;
 
   my_socket = new udp::socket(my_io_service, udp::endpoint(udp::v4(), port));
-  my_socket->non_blocking(true);
+  //  my_socket->non_blocking(true);
   
   boost::asio::socket_base::receive_buffer_size option(1);
   my_socket->set_option(option);
@@ -53,18 +58,41 @@ bool RobotWatcher::setupLidar(std::string _address, bool _calibration, bool _ver
 Mat RobotWatcher::grab_image()
 {
     boost::system::error_code ec;
+    bool ready = false;
+    while (!ready) {
+      part.resize(MAX_PART_SIZE);
+      size_t length = my_socket->receive_from(boost::asio::buffer(part, MAX_PART_SIZE), sender_endpoint, 0, ec);
 
-  	buff.resize(MAX_SIZE);
-  	size_t length = my_socket->receive_from(boost::asio::buffer(buff, MAX_SIZE), sender_endpoint, 0, ec);
-    std::cout << "lenght = " << length << std::endl;
-  	
-    if(length > 0)
-     {
-		 buff.resize(length);
-  	     decoded = imdecode(Mat(buff),CV_LOAD_IMAGE_COLOR);
-		 if(verbose) std::cout << decoded.cols << "  " << decoded.rows << std::endl;
-	 }
-  	return decoded;
+      if (length < 16) continue;
+      
+      uint32_t counter =*(uint32_t*)&part[0];
+      uint32_t size    =*(uint32_t*)&part[4];
+      uint32_t base    =*(uint32_t*)&part[8];
+      uint32_t partsize=*(uint32_t*)&part[12];
+
+      //      std::cout << "show=" << show << " load=" << load << " counter=" << counter << " size=" << size << " base=" << base << " partsize=" << partsize << std::endl;
+
+      if (counter != counters[load]) {
+	ready = (bytes[load]==0);
+	show = 1-show;
+	load = 1-load;
+	bytes[load]=size;
+	counters[load]=counter;
+      }
+
+      bytes[load] -= partsize;
+      if (buffs[load].size() != size) {
+	buffs[load].resize(size);
+      }
+      if (0 <= base &&  base < size 
+	  && 0 <= base+partsize && base+partsize <= size) {
+	memcpy(&buffs[load][base],&part[16],partsize);
+      }
+    }
+
+    decoded = imdecode(Mat(buffs[show]),CV_LOAD_IMAGE_COLOR);
+    if(verbose) std::cout << decoded.cols << "  " << decoded.rows << std::endl;
+    return decoded;
 }
 
 void RobotWatcher::run()
