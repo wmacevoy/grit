@@ -12,6 +12,8 @@ const int MULTIPLIER=64;
 byte goal=0;
 byte current=0;
 
+int myabs(int a) { return a > 0 ? a : -a; }
+
 const int STARTADDRESS=0;
 class Settings {
   public:
@@ -162,18 +164,18 @@ void setup() {
   int value=analogRead(0);
 //  Serial.println(current);
   if (current>180 || current<0) {
-    if (abs(value-settings.low)>abs(value-settings.high)) current=180;
+    if (myabs(value-settings.low)>myabs(value-settings.high)) current=180;
     else current=0;
   }
   goal=current;
   showMenu();
 }
 
-void swerve(int current,int goal,byte speed) {
+void swerve(int current,int goal,byte speed, byte eps) {
   if (speed>0) digitalWrite(ENABLE,HIGH);
   else digitalWrite(ENABLE,LOW);
-  int frequency=abs(speed-128);
-  if (abs(current-goal)<50) { // On target
+  int frequency=myabs(speed-128);
+  if (myabs(current-goal)<eps) { // On target
     if (speed>128) { // Reverse
       digitalWrite(DIR1,LOW); 
       digitalWrite(DIR2,HIGH);
@@ -185,34 +187,35 @@ void swerve(int current,int goal,byte speed) {
  //   tone(STEP2,frequency*MULTIPLIER);
   }
   else if (current<goal) {
-    if (speed>128) { // Reverse
+//    if (speed>128) { // Reverse
       digitalWrite(DIR1,HIGH); 
       digitalWrite(DIR2,HIGH);
-    } else {
-      digitalWrite(DIR1,LOW);
-      digitalWrite(DIR2,LOW);
-    }
+//    } else {
+//      digitalWrite(DIR1,LOW);
+//      digitalWrite(DIR2,LOW);
+//    }
     tone(STEP1,frequency*MULTIPLIER);
 //    tone(STEP2,frequency*MULTIPLIER);
   } else {
-    if (speed>128) { // Reverse
+//    if (speed>128) { // Reverse
       digitalWrite(DIR1,LOW); 
       digitalWrite(DIR2,LOW);
-    } else {
-      digitalWrite(DIR1,HIGH);
-      digitalWrite(DIR2,HIGH);
-    }
+//    } else {
+//      digitalWrite(DIR1,HIGH);
+//      digitalWrite(DIR2,HIGH);
+//    }
     tone(STEP1,frequency*MULTIPLIER);
 //    tone(STEP2,frequency*MULTIPLIER);    
   }
 }
 
 void loop() {
-  int dd=(abs(settings.low-settings.high)*7)/100;
-  if (dd==0) dd=1;
+//  int dd=(myabs(settings.low-settings.high)*7)/100;
+//  if (dd==0) dd=1;
+    int eps = myabs(settings.low-settings.high)/16;
   int joint=analogRead(0);
   getCurrent();
-  int goalPosition=map(goal,0,180,settings.low,settings.high);
+  int goalPosition=map(goal,0,180,settings.low,settings.high,eps);
   swerve(joint,goalPosition,settings.speed);
   if (Serial.available()) {
     handleUI(Serial.read());
