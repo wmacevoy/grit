@@ -110,11 +110,29 @@ void webcamProvider::provide() {
 
 		//To control (Hi res)
 		buff.resize(0);
-		
 		imencode(output_type.c_str(), frameL, buff, param);
-		if(verbose) std::cout<<"coded file size(jpg) Hi "<<buff.size()<< ", width: " << frameL.cols << ", height: " << frameL.rows << std::endl;
-		socket2->send_to(boost::asio::buffer(buff, buff.size()), receiver_endpoint2);
+
+		int maxpartsize=1400;
+		std::vector<uchar> part;
 		
+		static uint32_t counter = 0;
+		++counter;
+
+		for (size_t base=0; base<buff.size(); base += maxpartsize) {
+		  int partsize=buff.size()-base;
+		  if (partsize > maxpartsize) { 
+		    partsize = maxpartsize; 
+		  }
+		  part.resize(partsize+16);
+		  *((uint32_t*)&part[0])=counter;
+		  *((uint32_t*)&part[4])=buff.size();
+		  *((uint32_t*)&part[8])=base;
+		  *((uint32_t*)&part[12])=partsize;
+		  memcpy(&part[16],&buff[base],partsize);
+
+		  if(verbose) std::cout<<"coded file size(jpg) Hi "<<buff.size()<< ", count: " << counter << " width: " << frameL.cols << ", height: " << frameL.rows << std::endl << " base: " << base << " partsize: " << partsize;
+		  socket2->send_to(boost::asio::buffer(part,part.size()), receiver_endpoint2);
+		}
 		//To control (Low res)
 		t2 = now();
 		if(t2-t1>lowsend)
