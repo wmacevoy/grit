@@ -127,8 +127,8 @@ std::vector<int> getHpHy(Mat frame, float fovx, float fovy, int fx, int fy)
   if(verbose)std::cout <<"frame.rows: "<< frame.rows<<" frame.cols: "<< frame.cols<<", centerx: " << centreX << ", centery: " << centreY << ", dppx: " << degPerPixelX << ", dppy: " << degPerPixelY << ", diffX: " << 
 	       diffX << ", diffY: " << diffY << ", thetaX: " << thetaX << ", thetaY: " << thetaY << ", fx: " << fx << ", fy: " << fy << std::endl;
  
-  ret.push_back(thetaX);
-  ret.push_back(thetaY);
+  ret.push_back(thetaX/2);
+  ret.push_back(thetaY/4);
  
   return ret;
 }
@@ -175,7 +175,6 @@ void moveHome(cv::Mat& tmpframe, float fovx, float fovy, int x, int y, std::stri
   for(int i=0; i<commandsToSend.size(); ++i)
     {
       commander->send(commandsToSend[i]);
-      //usleep(10000);
       commander->recv(recv);
       if(verbose) std::cout << "recv: " + recv << std::endl;
 		
@@ -211,21 +210,20 @@ void move(cv::Mat& tmpframe, float fovx, float fovy, int x, int y, std::string c
   for(int i=0; i<commandsToSend.size(); ++i)
     {
       commander->send(commandsToSend[i]);
-      //usleep(10000);
       commander->recv(recv);
       if(verbose) std::cout << "recv: " + recv << std::endl;
 		
     }
   commandsToSend.resize(0);
 }
-void circleDetect(cv::Mat& src, cv::Mat& grayframe,cv::Mat& tmpframe, int Intensity, int Min, int Max, int& x, int& y){
+void circleDetect(cv::Mat& src, cv::Mat& grayframe,cv::Mat& tmpframe, int Intensity, int Min, int Max, int& x, int& y, bool& found){
   cvtColor(src,grayframe,CV_BGR2GRAY);
   GaussianBlur(grayframe,grayframe,Size(9,9),2,2);
   vector<Vec3f> circles;
   HoughCircles( grayframe, circles, CV_HOUGH_GRADIENT, 2,40,Intensity,100,Min,Max);//(inverting,spaceBetweenCenter,Circleresolution,centerResolution,minDia,maxDia)
   if(circles.size() > 0)
     {
-					
+	  found=true;	
       x = cvRound(circles[0][0]);
       y = cvRound(circles[0][1]);
       Point center(cvRound(circles[0][0]), cvRound(circles[0][1]));//<---- this is the coords for center
@@ -321,6 +319,7 @@ int main(int argc, char** argv)
   Mat tmpframe;
   Mat imgRight;
   Mat imgLeft;
+  bool found = false;
 	
   char lr = '\0';
   std::pair<char, cv::Mat> decoded;
@@ -337,9 +336,19 @@ int main(int argc, char** argv)
 
 		lr = decoded.first;
 		if (lr == 'L')
-		 imgLeft = decoded.second;
-		else if (lr == 'R')
-		 imgRight = decoded.second;
+			{
+			imgLeft = decoded.second;
+			//center of frame
+			Point fcenter(imgLeft.cols/2, imgLeft.rows/2);
+			circle( imgLeft, fcenter, 3, Scalar(0,255,0), -1, 8, 0 ); 
+			}
+		else if (lr == 'R'/* && !found*/)
+			{
+			imgRight = decoded.second;
+			//center of frame
+			Point fcenter(imgRight.cols/2, imgRight.rows/2);
+			circle( imgRight, fcenter, 3, Scalar(0,255,0), -1, 8, 0 ); 
+			}
 	    }
 	  catch(int e)
 	    {
@@ -347,11 +356,11 @@ int main(int argc, char** argv)
 	    }  
 	 
 	    if(!imgLeft.empty() && lr == 'L') {
-			circleDetect(imgLeft,grayframe,tmpframe,camLeftIntensity,LcircleMin,LcircleMax,x,y);
+			circleDetect(imgLeft,grayframe,tmpframe,camLeftIntensity,LcircleMin,LcircleMax,x,y, found);
 			imshow(windowNameL, imgLeft);
 	      }			
 	    if(!imgRight.empty() && lr == 'R'){
-			circleDetect(imgRight,grayframe,tmpframe,camRightIntensity,RcircleMin,RcircleMax,x,y);
+			circleDetect(imgRight,grayframe,tmpframe,camRightIntensity,RcircleMin,RcircleMax,x,y, found);
 			imshow(windowNameR, imgRight);
 	      }
 

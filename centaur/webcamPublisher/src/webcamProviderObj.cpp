@@ -1,5 +1,10 @@
 #include "webcamProviderObj.h"
 
+void rotate(cv::Mat &src){
+	cv::transpose(src, src);
+	cv::flip(src,src,0);
+}
+
 webcamProvider::webcamProvider(int _indexR, int _indexL, int _sleep_time, int _lowsend, bool _verbose, const char* _argv0, std::string _addressf, std::string _addressc, std::string _port, std::string _port2) : resolver(this->io_service) {
 	die.store(false);
 	verbose = _verbose;
@@ -77,18 +82,16 @@ bool webcamProvider::init() {
 	return true;
 }
 
-void webcamProvider::rotate(cv::Mat& src, double angle, cv::Mat& dst){
-	cv::Point2f src_center(src.cols/2.0f,src.rows/2.0f);
-	cv::Mat rot_mat = cv::getRotationMatrix2D(src_center,angle,1.0);
-	cv::warpAffine(src, dst, rot_mat, src.size());
-}
-
 void webcamProvider::provide() {
 	float t1 = 0, t2 = 0;
 	while(!die.load())
 	{
 		captureR >> frameR;
 		captureL >> frameL;
+		
+		rotate(frameR);
+		rotate(frameL);
+		
 		param[1]=image_quality;
 	    //To detector
 		buff.resize(0);
@@ -121,9 +124,8 @@ void webcamProvider::provide() {
 
 		  Mat im_gray;
 		  cvtColor(frameL,im_gray,CV_RGB2GRAY);
-		  Rect region_of_interest = Rect(110, 70, 100, 100);
+		  Rect region_of_interest = Rect(0, 140, 240, 40);
           Mat image_roi = im_gray(region_of_interest);
-          image_roi.convertTo(image_roi, CV_8UC1);
 		  
 	      imencode(output_type.c_str(), image_roi, buff, param);
 		  if(verbose) std::cout<<"coded file size(jpg) Low "<<buff.size()<< ", width: " << image_roi.cols << ", height: " << image_roi.rows << std::endl;
