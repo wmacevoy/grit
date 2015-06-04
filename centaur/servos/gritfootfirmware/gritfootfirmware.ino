@@ -1,18 +1,23 @@
 #include <EEPROM.h>
 #include <Wire.h>
 
-const int LED=13;
 const int ENABLE=7;
 const int STEP1=3;
 const int DIR1=4;
-//const int STEP2=5;
+const int STEP2=5;
 const int DIR2=6;
 const int MULTIPLIER=64;
+const int MAXFREQUENCY=10000;
+
+boolean tone1On=false;
+boolean tone2On=false;
+int reset1=0;
+int reset2=0;
+int count1=0;
+int count2=0;
 
 byte goal=0;
 byte current=0;
-
-int myabs(int a) { return a > 0 ? a : -a; }
 
 const int STARTADDRESS=0;
 class Settings {
@@ -136,25 +141,60 @@ void requestEvent() {
   Wire.write(goal);
   Wire.write(current);
   Wire.write(settings.speed);
-  digitalWrite(LED,1-digitalRead(LED));
 }
 
 void getCurrent() {
   current=map(analogRead(0),settings.low,settings.high,0,180);
 }
 
+void noTone1() {
+  tone1On=false;
+}
+
+void noTone2() {
+  tone2On=false;
+}
+
+void tone1(int frequency) {
+  reset1=MAXFREQUENCY/frequency;
+  tone1On=true;
+}
+
+void tone2(int frequency) {
+  reset2=MAXFREQUENCY/frequency;
+  tone2On=true;
+}
+
+void intHandler() {
+  if (tone1On) {
+    if (count1==0) {
+      count1=reset1;
+      digitalWrite(STEP1,!digitalRead(STEP1));
+    }
+    else count1--;
+  }
+  if (tone2On) {
+    if (count2==0) {
+      count2=reset2;
+      digitalWrite(STEP2,!digitalRead(STEP2));    
+    }
+    else count2--;
+  }
+}
+
 void setup() {
-  pinMode(LED,OUTPUT);
   pinMode(ENABLE,OUTPUT);
   digitalWrite(ENABLE,LOW);
   pinMode(STEP1,OUTPUT);
   digitalWrite(STEP1,LOW);
+  pinMode(STEP2,OUTPUT);
+  digitalWrite(STEP2,LOW);
   pinMode(DIR1,OUTPUT);
   digitalWrite(DIR1,LOW);
-//  pinMode(STEP2,OUTPUT);
-//  digitalWrite(STEP2,LOW);
   pinMode(DIR2,OUTPUT);
   digitalWrite(DIR1,LOW);
+  attachInterrupt(0,intHandler,CHANGE);
+  tone(2,MAXFREQUENCY);
   settings.readMemory();
   Wire.begin(settings.address);
   Wire.onReceive(receiveEvent);
@@ -162,71 +202,49 @@ void setup() {
   Serial.begin(9600);
   getCurrent();
   int value=analogRead(0);
-//  Serial.println(current);
   if (current>180 || current<0) {
-    if (myabs(value-settings.low)>myabs(value-settings.high)) current=180;
+    if (abs(value-settings.low)>abs(value-settings.high)) current=180;
     else current=0;
   }
   goal=current;
   showMenu();
 }
 
-void stop()
-{
-  digitalWrite(ENABLE,HIGH);
-  noTone(STEP1);
-}
-
-void swerve(int current,int goal,byte speed, byte eps) {
-  if (speed == 0) { 
-     stop();
-     return;
-  }
+void swerve(int current,int goal,byte speed) {
   if (speed>0) digitalWrite(ENABLE,HIGH);
   else digitalWrite(ENABLE,LOW);
-  int frequency=myabs(speed-128);
-  if (myabs(current-goal)<eps) { // On target
-    if (speed>128) { // Reverse
-      digitalWrite(DIR1,LOW); 
-      digitalWrite(DIR2,HIGH);
+  int frequency=abs(speed-128);
+  int error=abs(current-goal);
+  if (speed<128) { // Reverse
+    digitalWrite(DIR1,LOW); 
+    digitalWrite(DIR2,HIGH);
+    if (current<goal) {
+      tone1(frequency*MULTIPLIER+((128-error)*frequency*MULTIPLIER)/128);
+      tone2(frequency*MULTIPLIER+(error*frequency*MULTIPLIER)/128);
     } else {
-      digitalWrite(DIR1,HIGH);
-      digitalWrite(DIR2,LOW);
+      tone1(frequency*MULTIPLIER+(error*frequency*MULTIPLIER)/128);
+      tone2(frequency*MULTIPLIER+((128-error)*frequency*MULTIPLIER)/128);
     }
-    tone(STEP1,frequency*MULTIPLIER);
- //   tone(STEP2,frequency*MULTIPLIER);
-  }
-  else if (current<goal) {
-//    if (speed>128) { // Reverse
-      digitalWrite(DIR1,HIGH); 
-      digitalWrite(DIR2,HIGH);
-//    } else {
-//      digitalWrite(DIR1,LOW);
-//      digitalWrite(DIR2,LOW);
-//    }
-    tone(STEP1,frequency*MULTIPLIER);
-//    tone(STEP2,frequency*MULTIPLIER);
   } else {
-//    if (speed>128) { // Reverse
-      digitalWrite(DIR1,LOW); 
-      digitalWrite(DIR2,LOW);
-//    } else {
-//      digitalWrite(DIR1,HIGH);
-//      digitalWrite(DIR2,HIGH);
-//    }
-    tone(STEP1,frequency*MULTIPLIER);
-//    tone(STEP2,frequency*MULTIPLIER);    
+    digitalWrite(DIR1,HIGH);
+    digitalWrite(DIR2,LOW);
+    if (current<goal) {
+      tone1(frequency*MULTIPLIER+(error*frequency*MULTIPLIER)/128);
+      tone2(frequency*MULTIPLIER+((128-error)*frequency*MULTIPLIER)/128);
+    } else {
+      tone1(frequency*MULTIPLIER+((128-error)*frequency*MULTIPLIER)/128);
+      tone2(frequency*MULTIPLIER+(error*frequency*MULTIPLIER)/128);
+    }
   }
 }
 
 void loop() {
-//  int dd=(myabs(settings.low-settings.high)*7)/100;
-//  if (dd==0) dd=1;
-    int eps = myabs(settings.low-settings.high)/16;
+  int dd=(abs(settings.low-settings.high)*1)/100;
+  if (dd==0) dd=1;
   int joint=analogRead(0);
   getCurrent();
   int goalPosition=map(goal,0,180,settings.low,settings.high);
-  swerve(joint,goalPosition,settings.speed,eps);
+  swerve(joint,goalPosition,settings.speed);
   if (Serial.available()) {
     handleUI(Serial.read());
   }
