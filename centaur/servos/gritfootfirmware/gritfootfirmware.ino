@@ -171,7 +171,17 @@ void setup() {
   showMenu();
 }
 
+void stop()
+{
+  digitalWrite(ENABLE,HIGH);
+  noTone(STEP1);
+}
+
 void swerve(int current,int goal,byte speed, byte eps) {
+  if (speed == 0) { 
+     stop();
+     return;
+  }
   if (speed>0) digitalWrite(ENABLE,HIGH);
   else digitalWrite(ENABLE,LOW);
   int frequency=myabs(speed-128);
@@ -215,8 +225,8 @@ void loop() {
     int eps = myabs(settings.low-settings.high)/16;
   int joint=analogRead(0);
   getCurrent();
-  int goalPosition=map(goal,0,180,settings.low,settings.high,eps);
-  swerve(joint,goalPosition,settings.speed);
+  int goalPosition=map(goal,0,180,settings.low,settings.high);
+  swerve(joint,goalPosition,settings.speed,eps);
   if (Serial.available()) {
     handleUI(Serial.read());
   }
