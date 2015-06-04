@@ -186,24 +186,24 @@ void swerve(int current,int goal,byte speed, byte eps) {
     tone(STEP1,frequency*MULTIPLIER);
  //   tone(STEP2,frequency*MULTIPLIER);
   }
-  else if (current<goal) {
-//    if (speed>128) { // Reverse
+  else if (current>goal) {
+    if (speed>128) { // Reverse
       digitalWrite(DIR1,HIGH); 
       digitalWrite(DIR2,HIGH);
-//    } else {
-//      digitalWrite(DIR1,LOW);
-//      digitalWrite(DIR2,LOW);
-//    }
+    } else {
+      digitalWrite(DIR1,LOW);
+      digitalWrite(DIR2,LOW);
+    }
     tone(STEP1,frequency*MULTIPLIER);
 //    tone(STEP2,frequency*MULTIPLIER);
   } else {
-//    if (speed>128) { // Reverse
+    if (speed>128) { // Reverse
       digitalWrite(DIR1,LOW); 
       digitalWrite(DIR2,LOW);
-//    } else {
-//      digitalWrite(DIR1,HIGH);
-//      digitalWrite(DIR2,HIGH);
-//    }
+    } else {
+      digitalWrite(DIR1,HIGH);
+      digitalWrite(DIR2,HIGH);
+    }
     tone(STEP1,frequency*MULTIPLIER);
 //    tone(STEP2,frequency*MULTIPLIER);    
   }

@@ -130,7 +130,7 @@ public:
 #endif
     (*(uint16_t*)&outmsg[4])=CRC16(outmsg,4);
     //    outmsg[3] = (goalSpeed >> 1);
-        std::cout << "write: [" << int(outmsg[0]) << "," << int(outmsg[1]) << "," << int(outmsg[2]) << "," << int(outmsg[3]) << "," << int(outmsg[4]) << "," << int(outmsg[5]) << "]" << std::endl;
+    //        std::cout << "write: [" << int(outmsg[0]) << "," << int(outmsg[1]) << "," << int(outmsg[2]) << "," << int(outmsg[3]) << "," << int(outmsg[4]) << "," << int(outmsg[5]) << "]" << std::endl;
     io.write(sizeof(outmsg),outmsg);
 
 #if 0
