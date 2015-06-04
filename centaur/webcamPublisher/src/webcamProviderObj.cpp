@@ -130,8 +130,8 @@ void webcamProvider::provide() {
 		  *((uint32_t*)&part[12])=partsize;
 		  memcpy(&part[16],&buff[base],partsize);
 
-		  if(verbose) std::cout<<"coded file size(jpg) Hi "<<buff.size()<< ", count: " << counter << " width: " << frameL.cols << ", height: " << frameL.rows << std::endl << " base: " << base << " partsize: " << partsize;
-		  socket2->send_to(boost::asio::buffer(part,part.size()), receiver_endpoint2);
+		  size_t length = socket2->send_to(boost::asio::buffer(part,part.size()), receiver_endpoint2);
+		  if(verbose) std::cout<<"Length sent: " << length << ", coded file size(jpg) Hi "<<buff.size()<< ", count: " << counter << " width: " << frameL.cols << ", height: " << frameL.rows << " base: " << base << " partsize: " << partsize << std::endl;
 		}
 		//To control (Low res)
 		t2 = now();
