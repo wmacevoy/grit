@@ -22,6 +22,9 @@ void FeetMover::goals(double _vx, double _vy, double _omega)
 
 void FeetMover::move(Feet &target)
 {
+  double angle;
+  double speed;
+
   for (int i=0; i<4; ++i) {
     LegMover &legMover = *bodyMover->legs.legMovers[i];
     float x,y,z;
@@ -34,8 +37,8 @@ void FeetMover::move(Feet &target)
     double theta=(180/M_PI)*atan2(y,x);
     if ((vx != 0 || vy != 0) && omega == 0) {
       double goal = (180/M_PI)*atan2(vy,vx);
-      double angle = (goal-theta)+90;
-      double speed = sqrt(vx*vx+vy*vy);
+      angle = (goal-theta)+90;
+      speed = sqrt(vx*vx+vy*vy);
       while (angle < 0) angle += 360;
       while (angle >= 360) angle -= 360;
       if (angle > 180) {
@@ -45,11 +48,7 @@ void FeetMover::move(Feet &target)
 	speed =  speed;
       }
       std::cout << "foot " << (i+1) << ": hip=" << hip << " x=" << x << " y=" << y << " goal=" << goal << " theta=" << theta << " angle=" << angle << " speed=" << speed << std::endl;
-      target.foot[i]->angle(angle);
-      target.foot[i]->speed(speed);
     } else if ((vx == 0 && vy == 0) && (omega != 0)) {
-      double angle;
-      double speed;
       if (omega > 0) {
 	angle = 0;
 	speed=omega;
@@ -57,12 +56,17 @@ void FeetMover::move(Feet &target)
 	angle = 180;
 	speed=omega;
       }
-      target.foot[i]->angle(angle);
-      target.foot[i]->speed(speed);
     } else {
-      target.foot[i]->angle(90);
-      target.foot[i]->speed(0);
+      angle=90;
+      speed=0;
     }
+
+    if (i == 2 || i == 3) {
+      speed = -speed;
+    }
+
+    target.foot[i]->angle(angle);
+    target.foot[i]->speed(speed);
   }
 }
 
