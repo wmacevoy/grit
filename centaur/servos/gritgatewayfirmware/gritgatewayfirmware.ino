@@ -123,9 +123,24 @@ void setup()
   }
 }
 
+int ledValue = 0;
 
 void loop() 
 {
+#if 0
+  for (int i=0; i<4; ++i) {
+    Wire.beginTransmission(10*(i+1));
+    Wire.write(angles[i]);
+    Wire.write(uint8_t(128+0*dirs[i]));
+    Wire.endTransmission();
+    delay(10);
+  }
+  ledValue = 1-ledValue;
+  digitalWrite(LED_PIN,ledValue);
+  delay(1000);
+#endif
+
+#if 1
   if (state != 0 && (long(millis())-timeout) > 0) {
     state = 0;
   }
@@ -191,12 +206,14 @@ void loop()
       if (crc0 != (crc_lo + crc_hi*256)) {
 	state = 0;
       } else {
+        delay(1);
 	Wire.beginTransmission(address);
 	Wire.write(value0);
 	Wire.write(value1);
 	Wire.endTransmission();
         led = 1-led;
         digitalWrite(LED_PIN,led);
+        delay(1);
 //        Wire.requestFrom((int)address, 3);
 //	timeout=millis()+TIMEOUT;
 //        state = 6;
@@ -212,4 +229,5 @@ void loop()
     }
     break;
   }
+#endif
 }
