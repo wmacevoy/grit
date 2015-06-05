@@ -264,10 +264,10 @@ void run() {
   placebo->subscribers=cfg.list("servos.subscribers");
 
   placebo->start();
-  //  while (!placebo->ready) {
-  //    cout << "waiting for body messages..." << endl;
-  //    sleep(1);
-  //  }
+  while (!placebo->ready) {
+    cout << "waiting for body messages..." << endl;
+    sleep(1);
+  }
   placebo->stop();
   placebo->join();
   placebo = shared_ptr < ZMQServoPlacebo >();

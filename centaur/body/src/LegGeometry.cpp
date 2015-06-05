@@ -96,7 +96,7 @@ void LegGeometry::forward3D(float knee,float femur,float hip, float &x,float &y,
   }
   float aknee = M_PI/180.0*knee;
   float afemur = M_PI/180.0*femur;
-  float ahip = M_PI/180.0*hip;
+  float ahip = -M_PI/180.0*hip;
 
   //  cout << "achasis=" << ((360.0/(2.0*M_PI))*achasis) << endl;
   achasis = -achasis;

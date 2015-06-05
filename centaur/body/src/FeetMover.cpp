@@ -32,14 +32,35 @@ void FeetMover::move(Feet &target)
     legMover.forward3D(knee,femur,hip,x,y,z);
 
     double theta=(180/M_PI)*atan2(y,x);
-    if (vx != 0 && vy == 0 && omega == 0) {
-      double delta = (90-theta)-90;
-      if (i == 0) {
-	std::cout << "foot " << i << ": theta=" << theta << " delta=" << delta << std::endl;
+    if ((vx != 0 || vy != 0) && omega == 0) {
+      double goal = (180/M_PI)*atan2(vy,vx);
+      double angle = (goal-theta)+90;
+      double speed = sqrt(vx*vx+vy*vy);
+      while (angle < 0) angle += 360;
+      while (angle >= 360) angle -= 360;
+      if (angle > 180) {
+	angle -= 180;
+	speed = -speed;
+      } else {
+	speed =  speed;
       }
-      target.foot[i]->angle(delta);
-      target.foot[i]->speed(128+vx);
+      std::cout << "foot " << (i+1) << ": hip=" << hip << " x=" << x << " y=" << y << " goal=" << goal << " theta=" << theta << " angle=" << angle << " speed=" << speed << std::endl;
+      target.foot[i]->angle(angle);
+      target.foot[i]->speed(speed);
+    } else if ((vx == 0 && vy == 0) && (omega != 0)) {
+      double angle;
+      double speed;
+      if (omega > 0) {
+	angle = 0;
+	speed=omega;
+      } else {
+	angle = 180;
+	speed=omega;
+      }
+      target.foot[i]->angle(angle);
+      target.foot[i]->speed(speed);
     } else {
+      target.foot[i]->angle(90);
       target.foot[i]->speed(0);
     }
   }
