@@ -131,7 +131,7 @@ void loop()
   for (int i=0; i<4; ++i) {
     Wire.beginTransmission(10*(i+1));
     Wire.write(angles[i]);
-    Wire.write(uint8_t(128+0*dirs[i]));
+    Wire.write(uint8_t(128+4*dirs[i]));
     Wire.endTransmission();
     delay(10);
   }
@@ -206,14 +206,14 @@ void loop()
       if (crc0 != (crc_lo + crc_hi*256)) {
 	state = 0;
       } else {
-        delay(1);
+        delay(2);
 	Wire.beginTransmission(address);
 	Wire.write(value0);
 	Wire.write(value1);
 	Wire.endTransmission();
         led = 1-led;
         digitalWrite(LED_PIN,led);
-        delay(1);
+        delay(2);
 //        Wire.requestFrom((int)address, 3);
 //	timeout=millis()+TIMEOUT;
 //        state = 6;
