@@ -34,7 +34,7 @@ servos.safety.subscribe,tcp://${safety.ip}:${safety.port},
 servos.verbose,false,
 servos.dynamixel.deviceindex,2,
 servos.dynamixel.baudnum,8,
-servos.grit.dev,/dev/ttyUSB4,
+servos.grit.dev,/dev/ttyUSB0,
 servos.grit.baud,38400,
 servos.grit.rate.tx,5,
 servos.rate,40,Server TX delay divisor for a second 1/10 100ms delay
