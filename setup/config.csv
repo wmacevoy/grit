@@ -1,14 +1,12 @@
-name,value,
-fieldpc.ip,10.23.3.11,
-xfieldpc.ip,127.0.0.1,
-control.ip,10.23.2.10,
-xcontrol.ip,127.0.0.1,
-centaur.ip,10.23.3.10,
-xcentaur.ip,127.0.0.1,
-control.user,user,
-centaur.user,user,
-legs.minspeed,0,unknown units
-legs.maxspeed,2,unknown units
+name,value,comments
+fieldpc.ip,fieldpc
+fieldpc.user,dev
+control.ip,control
+control.user,user
+centaur.ip,cogburn
+centaur.user,user
+legs.minspeed,15,Degrees per second on the servo
+legs.maxspeed,300,Degrees per second on the servo 
 arms.minspeed,20,Degrees per second on the servo
 arms.maxspeed,40,Degrees per second on the servo 
 safety.ip,${centaur.ip},
